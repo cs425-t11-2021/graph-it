@@ -42,7 +42,7 @@ public class Graph
     {
         adj.Remove(u);
 
-        foreach ( KeyValuePair<int, List<int>> kvp in adj)
+        foreach (KeyValuePair<int, List<int>> kvp in adj)
         {
             // removes all occurences of u in the linked list
             while (kvp.Value.Remove(u));
