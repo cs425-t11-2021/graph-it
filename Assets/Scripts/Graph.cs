@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 // first attempt at a graph data structure
 // currently assumes the graph is undirected, can change later
