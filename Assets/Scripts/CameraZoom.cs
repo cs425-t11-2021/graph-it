@@ -4,17 +4,13 @@ using UnityEngine;
 
 public class CameraZoom : MonoBehaviour
 {
-    // The speed of zooming in and out, default at 1f
+    // The speed of zooming in and out, default at 6f
     public float zoomSpeed = 6f;
-    // Amount of zoom change per scroll unit
-    public float zoomDelta = 75f;
     // Minimum zoom size
     public float zoomMin = 2f;
     // Maximum zoom size
     public float zoomMax = 20f;
 
-    // Target zoom size of the camera, default at 9f at the start of the program
-    private float zoomTarget = 9f;
     // Reference to the Camera component attached to this object
     private Camera camera;
 
@@ -24,33 +20,46 @@ public class CameraZoom : MonoBehaviour
     }
 
     private void Update() {
-        // Increase or decrease the zoom target based on vertical component of scroll wheel vector
-        if (Input.mouseScrollDelta.y < 0f) {
-            zoomTarget -= zoomDelta * Time.deltaTime;
-        }
-        else if (Input.mouseScrollDelta.y > 0f) {
-            zoomTarget += zoomDelta * Time.deltaTime;
-        }
+        // Get the value of the scroll wheel multiplied by zoom speed
+        float mouseScrollWheel = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+        // Use percentage values when zooming in and our rather than absolute values for more consistent speed
+        float newZoomLevel = mouseScrollWheel > 0
+            ? camera.orthographicSize * (1 - (0.1f * mouseScrollWheel))
+            : camera.orthographicSize * (1 - (0.11111f * mouseScrollWheel));
 
-        // Limit the zoom to between a min value and a max value
-        zoomTarget = Mathf.Clamp(zoomTarget, zoomMin, zoomMax);
+        // Get Mouse Position before zoom
+        Vector3 mousePosBefore = camera.ScreenToWorldPoint(Input.mousePosition);
+        // Set the camera size to the zoom level, clamped between min zoom size and max zoom size
+        camera.orthographicSize = Mathf.Clamp(newZoomLevel, zoomMin, zoomMax);
+        // Get Mouse Position after zoom
+        Vector3 mousePosAfter = camera.ScreenToWorldPoint(Input.mousePosition);
 
-        ZoomUntilTarget();
+        // Calculate difference between mouse positions before and after zooming
+        Vector3 diff = mousePosBefore - mousePosAfter;
+
+        // Add Difference to Camera Position
+        Vector3 camPos = transform.position;
+        Vector3 targetPos = new Vector3(camPos.x + diff.x, camPos.y + diff.y, camPos.z);
+ 
+        // Set camera position to new position
+        transform.position = targetPos;
     }
 
-    // Method which changes the camera's orthographic size to zooom in or out until the zoom target is reached
-    // Uses the zoomSpeed variable to limit the speed at which the camera zoom occurs
-    private void ZoomUntilTarget() {
-        float zoomDifference = zoomTarget - camera.orthographicSize;
-        camera.orthographicSize += zoomDifference * zoomSpeed * Time.deltaTime;
+    // // Method which changes the camera's orthographic size to zooom in or out until the zoom target is reached
+    // // Uses the zoomSpeed variable to limit the speed at which the camera zoom occurs
+    // private void ZoomUntilTarget() {
+    //     // Change the camera size based on the difference between target size, current size, and zoom speed
+    //     float zoomDifference = zoomTarget - camera.orthographicSize;
+    //     camera.orthographicSize += zoomDifference * zoomSpeed * Time.deltaTime;
 
-        // Clamp the camera's size to make sure the zoom doesn't overshoot the target
-        if (zoomDifference > 0) {
-            camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 0f, zoomTarget);
-        }
-        else {
-            camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, zoomTarget, float.PositiveInfinity);
-        }
-        
-    }
+    //     // Clamp the camera's size to make sure the zoom doesn't overshoot the target
+    //     if (zoomDifference > 0) {
+    //         camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 0f, zoomTarget);
+    //     }
+    //     else {
+    //         camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, zoomTarget, float.PositiveInfinity);
+    //     }
+
+    //     transform.position = Vector3.MoveTowards(transform.position, zoomCenter, centeringSpeed * Time.deltaTime);
+    // }
 }

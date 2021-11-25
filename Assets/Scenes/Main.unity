@@ -246,8 +246,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   zoomSpeed: 6
   zoomDelta: 75
-  zoomMin: 2
+  zoomMin: 1
   zoomMax: 20
+  centeringSpeed: 10
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0

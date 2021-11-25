@@ -20,7 +20,7 @@ public class Controller : MonoBehaviour
     }
 
     // Utility method to help get the corresponding world position of the mouse cursor
-    public Vector2 GetCursorWorldPosition() {
-        return (Vector2) Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    public Vector3 GetCursorWorldPosition() {
+        return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
     }    
 }
