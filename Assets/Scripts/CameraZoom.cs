@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class CameraZoom : MonoBehaviour
 {
-    // The speed of zooming in and out, default at 6f
-    public float zoomSpeed = 6f;
+    // The speed of zooming in and out (default at 100f)
+    public float zoomSpeed = 100f;
     // Minimum zoom size
     public float zoomMin = 2f;
     // Maximum zoom size
@@ -21,7 +21,7 @@ public class CameraZoom : MonoBehaviour
 
     private void Update() {
         // Get the value of the scroll wheel multiplied by zoom speed
-        float mouseScrollWheel = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed;
+        float mouseScrollWheel = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
         // Use percentage values when zooming in and our rather than absolute values for more consistent speed
         float newZoomLevel = mouseScrollWheel > 0
             ? camera.orthographicSize * (1 - (0.1f * mouseScrollWheel))
