@@ -6,7 +6,8 @@ using UnityEngine;
 public class Tester : MonoBehaviour
 {
 
-    Graph graph_ds;
+    // Reference to main graph ds
+    private Graph graph_ds;
 
     private void Start() {
         graph_ds = Controller.singleton.graph;

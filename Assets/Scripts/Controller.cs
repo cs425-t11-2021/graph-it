@@ -7,6 +7,10 @@ public class Controller : MonoBehaviour
     // Singleton
     public static Controller singleton;
 
+    // Prefabs for the unity vertex and edge objects
+    public GameObject vertexObjPrefab;
+    public GameObject edgeObjPrefab;
+
     // Main graph DS
     // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
     public Graph graph;
@@ -29,5 +33,10 @@ public class Controller : MonoBehaviour
     // Utility method to help get the corresponding world position of the mouse cursor
     public Vector3 GetCursorWorldPosition() {
         return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+    }
+
+    // Creates the vertex and edge unity objects according to the contents of the graph ds
+    public void CreateUnityGraphObjs() {
+        
     }    
 }
