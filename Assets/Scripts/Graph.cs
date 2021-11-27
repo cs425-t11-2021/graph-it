@@ -10,6 +10,10 @@ public class Graph
 
     private int next_id = 0;
 
+    public Graph() {
+        adj = new Dictionary<int, List<int>>();
+    }
+
     // What is this method supposed to return? -Jimson
     public int AddNode()
     {

@@ -7,6 +7,10 @@ public class Controller : MonoBehaviour
     // Singleton
     public static Controller singleton;
 
+    // Main graph DS
+    // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
+    public Graph grpah;
+
     private void Awake() {
         // Singleton pattern setup
         if (singleton == null) {
