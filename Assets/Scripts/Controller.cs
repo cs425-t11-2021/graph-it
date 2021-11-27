@@ -9,7 +9,7 @@ public class Controller : MonoBehaviour
 
     // Main graph DS
     // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
-    public Graph grpah;
+    public Graph graph;
 
     private void Awake() {
         // Singleton pattern setup
@@ -21,6 +21,9 @@ public class Controller : MonoBehaviour
             Destroy(this);
             return;
         }
+
+        // Initiate graph ds
+        graph = new Graph();
     }
 
     // Utility method to help get the corresponding world position of the mouse cursor
