@@ -17,14 +17,11 @@ public class Tester : MonoBehaviour
             graph_ds.AddVertex();
         }
 
-        // Add 10 random edges to the graph
-        for (int i = 0; i < 10; i++) {
+        // Add 20 random edges to the graph
+        for (int i = 0; i < 9; i++) {
             graph_ds.AddEdge(graph_ds.vertices[Random.Range(0, 10)], graph_ds.vertices[Random.Range(0, 10)]);
+            // graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[i+1]);
         }
-
-        // Print out info about the graph ds into console
-        foreach (var kvp in graph_ds.adj) {
-            Debug.Log("Vertex: " + kvp.Key + " Edges: " + string.Join(",", kvp.Value));
-        }
+        // graph_ds.AddEdge(graph_ds.vertices[0], graph_ds.vertices[9]);
     }
 }

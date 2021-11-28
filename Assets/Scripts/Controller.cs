@@ -54,10 +54,21 @@ public class Controller : MonoBehaviour
 
         for (int i = 0; i < graph.adj.Count; i++) {
             foreach (Edge edge in graph.adj[i]) {
+                // Instantiate an edge object and set its parent to the source vertex
+                // Initiate the edge object script with the correct parameters
                 EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
                 edgeObj.transform.SetParent(graphObj.GetChild(i));
                 edgeObj.Initiate(i, edge.incidence.Item2.id, graphObj.GetChild(edge.incidence.Item2.id).gameObject);
+                Debug.Log("Creating edge between " + i + " and " + edge.incidence.Item2.id);
+
+                // Add a DistanceJoint2D which connects the two vertices
+                DistanceJoint2D joint = graphObj.GetChild(i).gameObject.AddComponent<DistanceJoint2D>();
+                joint.autoConfigureConnectedAnchor = false;
+                joint.enableCollision = false;
+                joint.distance = 1f;
+                joint.autoConfigureDistance = false;
+                joint.connectedBody = graphObj.GetChild(edge.incidence.Item2.id).gameObject.GetComponent<Rigidbody2D>();
             }
         }
-    }    
+    }   
 }
