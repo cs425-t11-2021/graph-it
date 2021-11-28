@@ -43,6 +43,7 @@ public class Controller : MonoBehaviour
     }
 
     // Creates the vertex and edge unity objects according to the contents of the graph ds
+    // TODO: add comments
     public void CreateUnityGraphObjs() {
         foreach (var kvp in graph.adj) {
             Vector2 pos = Random.insideUnitCircle * 5f;
