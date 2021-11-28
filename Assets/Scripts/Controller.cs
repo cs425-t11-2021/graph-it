@@ -11,6 +11,9 @@ public class Controller : MonoBehaviour
     public GameObject vertexObjPrefab;
     public GameObject edgeObjPrefab;
 
+    // Length of each edge (manually set for now, could implment an algorithm to determine the distance from graph size/shape or whatever)
+    public float edgeLength = 1f;
+
     // Reference to the parent object for all the vertex and edge objects in the scene hiearchy
     public Transform graphObj;
 
@@ -65,7 +68,7 @@ public class Controller : MonoBehaviour
                 DistanceJoint2D joint = graphObj.GetChild(i).gameObject.AddComponent<DistanceJoint2D>();
                 joint.autoConfigureConnectedAnchor = false;
                 joint.enableCollision = false;
-                joint.distance = 1f;
+                joint.distance = edgeLength;
                 joint.autoConfigureDistance = false;
                 joint.connectedBody = graphObj.GetChild(edge.incidence.Item2.id).gameObject.GetComponent<Rigidbody2D>();
             }
