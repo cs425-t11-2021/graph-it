@@ -14,12 +14,12 @@ public class Tester : MonoBehaviour
 
         // Add 10 vertices to the graph
         for (int i = 0; i < 10; i++) {
-            graph_ds.AddNode();
+            graph_ds.AddVertex();
         }
 
         // Add 10 random edges to the graph
         for (int i = 0; i < 10; i++) {
-            graph_ds.AddEdge(Random.Range(0, 10), Random.Range(0, 10));
+            graph_ds.AddEdge(graph_ds.vertices[Random.Range(0, 10)], graph_ds.vertices[Random.Range(0, 10)]);
         }
 
         // Print out info about the graph ds into console
