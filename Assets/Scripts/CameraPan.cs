@@ -25,6 +25,14 @@ public class CameraPan : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {
             // At the start of the pan, store cursor position
             lastPosition = camera.ScreenToWorldPoint(Input.mousePosition);
+
+            // Check if cursor is over collider, if so, ignore panning until the mouse button is released
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.NameToLayer("Selectable"));  //11f since camera is at z = -10
+            if (hit) {
+                cursorOverCollider = true;
+                return;
+            }
         }
 
         // Left mouse button held
@@ -37,15 +45,6 @@ public class CameraPan : MonoBehaviour
             // Do not pan camera if mouse is currently over an object with a collider (eg. vertices and edges)
             if (cursorOverCollider) {
                 return;
-            }
-            else {
-                // Check if cursor is over collider, if so, ignore panning until the mouse button is released
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f);  //11f since camera is at z = -10
-                if (hit) {
-                    cursorOverCollider = true;
-                    return;
-                }
             }
             
             // Calculate the direction the camera needs to move to move towards the mouse cursor

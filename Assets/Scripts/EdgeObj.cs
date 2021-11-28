@@ -10,7 +10,7 @@ public class EdgeObj : MonoBehaviour
     private int to_id = -1;
 
     // Reference to the game object of the target vertex
-    private GameObject targetVertexObj;
+    public GameObject targetVertexObj;
 
     private void Awake() {
         // Edge objects starts non active
@@ -31,7 +31,7 @@ public class EdgeObj : MonoBehaviour
     {
         transform.position = point1;
         Vector2 dir = point2 - point1;
-        transform.localScale = new Vector3(dir.magnitude, transform.localScale.y, 1);
+        transform.localScale = new Vector3(dir.magnitude * 2, transform.localScale.y, 1);
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
