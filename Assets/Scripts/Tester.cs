@@ -119,21 +119,19 @@ public class Tester : MonoBehaviour
             graph_ds.AddVertex();
         }
 
-<<<<<<< HEAD
         // Print out info about the graph ds into console
         foreach (var kvp in graph_ds.incidence) {
             Debug.Log("Vertex: " + kvp.Key + " Edges: " + string.Join(",", kvp.Value));
-=======
-        for (int i = 0; i < u_count; i++) {
-            for (int j = 0; j < v_count; j++) {
-                if (Random.value < .5f) {
-                    graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[u_count + j]);
+            for (int i = 0; i < u_count; i++) {
+                for (int j = 0; j < v_count; j++) {
+                    if (Random.value < .5f) {
+                        graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[u_count + j]);
+                    }
+                    // if (Random.value < .33f) {
+                    //     graph_ds.AddEdge(graph_ds.vertices[u_count + j], graph_ds.vertices[i]);
+                    // }
                 }
-                // if (Random.value < .33f) {
-                //     graph_ds.AddEdge(graph_ds.vertices[u_count + j], graph_ds.vertices[i]);
-                // }
             }
->>>>>>> main
         }
     }
 }

@@ -121,11 +121,15 @@ public class Graph
     public void AddEdge( Vertex vert1, Vertex vert2 )
     {
         if ( !this.incidence.ContainsKey( vert1.id ) && !this.incidence.ContainsKey( vert2.id ) || !this.vertices.Contains( vert1 ) && !this.vertices.Contains( vert2 ) )
+        {
             throw new System.Exception( "One or more vertices have not been added to the graph." );
+        }
 
         this.incidence[ vert1.id ].Add( new Edge( this.next_edge_id++, vert1, vert2 ) );
         if ( !this.directed )
+        {
             this.incidence[ vert2.id ].Add( new Edge( this.next_edge_id++, vert2, vert1 ) );
+        }
     }
 
     // TODO: determine if input should be vertex or vertex id
@@ -147,7 +151,9 @@ public class Graph
     public Edge RemoveEdge( Edge edge )
     {
         foreach ( KeyValuePair< int, List< Edge > > kvp in this.incidence )
+        {
             kvp.Value.Remove( edge );
+        }
         return edge;
     }
 
@@ -159,7 +165,9 @@ public class Graph
         {
             // TODO: evaluate if this is necessary
             if ( File.Exists( path ) )
+            {
                 File.Delete( path );
+            }
 
             using ( FileStream fs = File.Create( path ) )
             {
@@ -205,7 +213,9 @@ public class Graph
     {
         Graph.ExportText( fs, "vertices:\n" );
         foreach ( Vertex vert in this.vertices )
+        {
             Graph.ExportText( fs, String.Format( "{ {0} }\n", vert ) );
+        }
     }
 
     private void ExportEdges( FileStream fs )
@@ -213,11 +223,15 @@ public class Graph
         // TODO: make more efficient
         HashSet< Edge > edges = new HashSet< Edge >();
         foreach ( List< Edge > neighbors in this.incidence.Values )
+        {
             edges.UnionWith( new HashSet< Edge >( neighbors ) );
+        }
 
         Graph.ExportText( fs, "incidence:\n" );
         foreach ( Edge edge in edges )
+        {
             Graph.ExportText( fs, String.Format( "{ {0} }\n", edge ) );
+        }
     }
 
     private static void ExportText( FileStream fs, string value )

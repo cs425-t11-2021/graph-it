@@ -48,35 +48,36 @@ public class Controller : MonoBehaviour
     }
 
     // Creates the vertex and edge unity objects according to the contents of the graph ds
-<<<<<<< HEAD
     public void CreateUnityGraphObjs() {
-        foreach (var kvp in graph.incidence) {
+        foreach (var kvp in graph.incidence)
+        {
             Vector2 pos = Random.insideUnitCircle * 5f;
-=======
+        }
+    }
+
     // TODO: add comments
     public void CreateGraphObjs() {
-        foreach (var kvp in graph.adj) {
+        foreach (var kvp in graph.incidence) {
             Vector2 pos = Random.insideUnitCircle.normalized * 3f;
->>>>>>> main
             VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
             vertexObj.transform.SetParent(graphObj);
             vertexObj.Initiate(kvp.Key);
         }
 
-<<<<<<< HEAD
         for (int i = 0; i < graph.incidence.Count; i++) {
             foreach (Edge edge in graph.incidence[i]) {
                 EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
                 edgeObj.transform.SetParent(graphObj.GetChild(i));
                 edgeObj.Initiate(i, edge.vert2.id, graphObj.GetChild(edge.vert2.id).gameObject);
-=======
-        for (int i = 0; i < graph.adj.Count; i++) {
-            foreach (Edge edge in graph.adj[i]) {
+            }
+        }
+        for (int i = 0; i < graph.incidence.Count; i++) {
+            foreach (Edge edge in graph.incidence[i]) {
                 // Instantiate an edge object and set its parent to the source vertex
                 // Initiate the edge object script with the correct parameters
                 EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
                 edgeObj.transform.SetParent(graphObj.GetChild(i));
-                edgeObj.Initiate(i, edge.incidence.Item2.id, graphObj.GetChild(edge.incidence.Item2.id).gameObject);
+                edgeObj.Initiate(i, edge.vert2.id, graphObj.GetChild(edge.vert2.id).gameObject);
                 // Debug.Log("Creating edge between " + i + " and " + edge.incidence.Item2.id);
 
                 // Add a DistanceJoint2D which connects the two vertices
@@ -86,8 +87,7 @@ public class Controller : MonoBehaviour
                 joint.distance = edgeLength;
                 joint.maxDistanceOnly = true;
                 joint.autoConfigureDistance = false;
-                joint.connectedBody = graphObj.GetChild(edge.incidence.Item2.id).gameObject.GetComponent<Rigidbody2D>();
->>>>>>> main
+                joint.connectedBody = graphObj.GetChild(edge.vert2.id).gameObject.GetComponent<Rigidbody2D>();
             }
         }
     }
@@ -102,5 +102,5 @@ public class Controller : MonoBehaviour
             // TODO: Once object pooling is implmented, add deleted objs to pool rather than destroy them.
             Destroy(graphObj.GetChild(i).gameObject);
         }
-    }   
+    }
 }
