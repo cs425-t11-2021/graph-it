@@ -37,7 +37,7 @@ public class Controller : MonoBehaviour
     }
 
     private void Start() {
-        CreateUnityGraphObjs();
+        CreateGraphObjs();
     }
 
     // Utility method to help get the corresponding world position of the mouse cursor
@@ -47,7 +47,7 @@ public class Controller : MonoBehaviour
 
     // Creates the vertex and edge unity objects according to the contents of the graph ds
     // TODO: add comments
-    public void CreateUnityGraphObjs() {
+    public void CreateGraphObjs() {
         foreach (var kvp in graph.adj) {
             Vector2 pos = Random.insideUnitCircle * 5f;
             VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
@@ -62,7 +62,7 @@ public class Controller : MonoBehaviour
                 EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
                 edgeObj.transform.SetParent(graphObj.GetChild(i));
                 edgeObj.Initiate(i, edge.incidence.Item2.id, graphObj.GetChild(edge.incidence.Item2.id).gameObject);
-                Debug.Log("Creating edge between " + i + " and " + edge.incidence.Item2.id);
+                // Debug.Log("Creating edge between " + i + " and " + edge.incidence.Item2.id);
 
                 // Add a DistanceJoint2D which connects the two vertices
                 DistanceJoint2D joint = graphObj.GetChild(i).gameObject.AddComponent<DistanceJoint2D>();
@@ -72,6 +72,18 @@ public class Controller : MonoBehaviour
                 joint.autoConfigureDistance = false;
                 joint.connectedBody = graphObj.GetChild(edge.incidence.Item2.id).gameObject.GetComponent<Rigidbody2D>();
             }
+        }
+    }
+
+    // Remove all graph visualization objects from scene
+    // Warning: Could lead to visualizaion not matching up with the graph ds if the ds is not also cleared.
+    // TODO: add comments
+    public void ClearGraphObjs() {
+        Debug.LogWarning("[Controller] Calling ClearGraphObjs could lead to the visual not matching up with the graph data structure if the graph data structure isn't also cleared.");
+
+        for (int i = 0; i < graphObj.childCount; i++) {
+            // TODO: Once object pooling is implmented, add deleted objs to pool rather than destroy them.
+            Destroy(graphObj.GetChild(i).gameObject);
         }
     }   
 }

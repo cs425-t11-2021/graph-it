@@ -10,6 +10,29 @@ public class Tester : MonoBehaviour
     private Graph graph_ds;
 
     private void Start() {
+        CreateRandomGraph();
+        // graph_ds.AddEdge(graph_ds.vertices[0], graph_ds.vertices[9]);
+    }
+
+    private void Update() {
+        // Testing: Press D to delete exisintg graph
+        if (Input.GetKeyDown(KeyCode.D)) {
+            Debug.Log("[Tester] Deleting current graph.");
+
+            Controller.singleton.ClearGraphObjs();
+            Controller.singleton.graph = new Graph();
+        }
+
+        // Testing: Press R to regenerate random graph
+        if (Input.GetKeyDown(KeyCode.R)) {
+            Debug.Log("[Tester] Regenerating random graph.");
+
+            CreateRandomGraph();
+            Controller.singleton.CreateGraphObjs();
+        }
+    }
+
+    private void CreateRandomGraph() {
         graph_ds = Controller.singleton.graph;
 
         // Add 10 vertices to the graph
@@ -22,6 +45,5 @@ public class Tester : MonoBehaviour
             graph_ds.AddEdge(graph_ds.vertices[Random.Range(0, 10)], graph_ds.vertices[Random.Range(0, 10)]);
             // graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[i+1]);
         }
-        // graph_ds.AddEdge(graph_ds.vertices[0], graph_ds.vertices[9]);
     }
 }
