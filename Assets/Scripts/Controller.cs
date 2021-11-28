@@ -12,7 +12,7 @@ public class Controller : MonoBehaviour
     public GameObject edgeObjPrefab;
 
     // Length of each edge (manually set for now, could implment an algorithm to determine the distance from graph size/shape or whatever)
-    public float edgeLength = 1f;
+    private float edgeLength;
 
     // Reference to the parent object for all the vertex and edge objects in the scene hiearchy
     public Transform graphObj;
@@ -34,6 +34,8 @@ public class Controller : MonoBehaviour
 
         // Initiate graph ds
         graph = new Graph();
+        // Manually set edge length
+        edgeLength = 5;
     }
 
     private void Start() {
@@ -49,7 +51,7 @@ public class Controller : MonoBehaviour
     // TODO: add comments
     public void CreateGraphObjs() {
         foreach (var kvp in graph.adj) {
-            Vector2 pos = Random.insideUnitCircle * 5f;
+            Vector2 pos = Random.insideUnitCircle.normalized * 3f;
             VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
             vertexObj.transform.SetParent(graphObj);
             vertexObj.Initiate(kvp.Key);
@@ -67,8 +69,9 @@ public class Controller : MonoBehaviour
                 // Add a DistanceJoint2D which connects the two vertices
                 DistanceJoint2D joint = graphObj.GetChild(i).gameObject.AddComponent<DistanceJoint2D>();
                 joint.autoConfigureConnectedAnchor = false;
-                joint.enableCollision = false;
+                joint.enableCollision = true;
                 joint.distance = edgeLength;
+                joint.maxDistanceOnly = true;
                 joint.autoConfigureDistance = false;
                 joint.connectedBody = graphObj.GetChild(edge.incidence.Item2.id).gameObject.GetComponent<Rigidbody2D>();
             }

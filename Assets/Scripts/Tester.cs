@@ -11,7 +11,6 @@ public class Tester : MonoBehaviour
 
     private void Start() {
         CreateRandomGraph();
-        // graph_ds.AddEdge(graph_ds.vertices[0], graph_ds.vertices[9]);
     }
 
     private void Update() {
@@ -30,6 +29,22 @@ public class Tester : MonoBehaviour
             CreateRandomGraph();
             Controller.singleton.CreateGraphObjs();
         }
+
+        // Testing: Press S to generate random circular graph
+        if (Input.GetKeyDown(KeyCode.S)) {
+            Debug.Log("[Tester] Regenerating circular graph.");
+
+            CreateCircularGraph();
+            Controller.singleton.CreateGraphObjs();
+        }
+
+        // Testing: Press C to generate random complete graph
+        if (Input.GetKeyDown(KeyCode.C)) {
+            Debug.Log("[Tester] Regenerating complete graph.");
+
+            CreateCompleteGraph();
+            Controller.singleton.CreateGraphObjs();
+        }
     }
 
     private void CreateRandomGraph() {
@@ -43,7 +58,43 @@ public class Tester : MonoBehaviour
         // Add 20 random edges to the graph
         for (int i = 0; i < 9; i++) {
             graph_ds.AddEdge(graph_ds.vertices[Random.Range(0, 10)], graph_ds.vertices[Random.Range(0, 10)]);
-            // graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[i+1]);
+        }
+    }
+
+    private void CreateCircularGraph() {
+        graph_ds = Controller.singleton.graph;
+
+        int size = Random.Range(3, 20);
+
+        // Add random number of vertices
+        for (int i = 0; i < size; i++) {
+            graph_ds.AddVertex();
+        }
+
+        // Connect adjacent vertices
+        for (int i = 0; i < size - 1; i++) {
+            graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[i+1]);
+        }
+        graph_ds.AddEdge(graph_ds.vertices[0], graph_ds.vertices[size - 1]);
+    }
+
+    private void CreateCompleteGraph() {
+        graph_ds = Controller.singleton.graph;
+
+        int size = Random.Range(3, 10);
+
+        // Add random number of vertices
+        for (int i = 0; i < size; i++) {
+            graph_ds.AddVertex();
+        }
+
+        // Connected vertex to every other vertex
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (i != j) {
+                    graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[j]);
+                }
+            }
         }
     }
 }
