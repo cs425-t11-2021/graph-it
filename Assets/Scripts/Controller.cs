@@ -44,18 +44,18 @@ public class Controller : MonoBehaviour
 
     // Creates the vertex and edge unity objects according to the contents of the graph ds
     public void CreateUnityGraphObjs() {
-        foreach (var kvp in graph.adj) {
+        foreach (var kvp in graph.incidence) {
             Vector2 pos = Random.insideUnitCircle * 5f;
             VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
             vertexObj.transform.SetParent(graphObj);
             vertexObj.Initiate(kvp.Key);
         }
 
-        for (int i = 0; i < graph.adj.Count; i++) {
-            foreach (Edge edge in graph.adj[i]) {
+        for (int i = 0; i < graph.incidence.Count; i++) {
+            foreach (Edge edge in graph.incidence[i]) {
                 EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
                 edgeObj.transform.SetParent(graphObj.GetChild(i));
-                edgeObj.Initiate(i, edge.incidence.Item2.id, graphObj.GetChild(edge.incidence.Item2.id).gameObject);
+                edgeObj.Initiate(i, edge.vert2.id, graphObj.GetChild(edge.vert2.id).gameObject);
             }
         }
     }    

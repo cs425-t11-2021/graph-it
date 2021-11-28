@@ -23,7 +23,7 @@ public class Tester : MonoBehaviour
         }
 
         // Print out info about the graph ds into console
-        foreach (var kvp in graph_ds.adj) {
+        foreach (var kvp in graph_ds.incidence) {
             Debug.Log("Vertex: " + kvp.Key + " Edges: " + string.Join(",", kvp.Value));
         }
     }
