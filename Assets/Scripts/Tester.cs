@@ -45,6 +45,14 @@ public class Tester : MonoBehaviour
             CreateCompleteGraph();
             Controller.singleton.CreateGraphObjs();
         }
+
+        // Testing: Press B to generate random bipartite graph
+        if (Input.GetKeyDown(KeyCode.B)) {
+            Debug.Log("[Tester] Regenerating bipartite graph.");
+
+            CreateBipartiteGraph();
+            Controller.singleton.CreateGraphObjs();
+        }
     }
 
     private void CreateRandomGraph() {
@@ -94,6 +102,31 @@ public class Tester : MonoBehaviour
                 if (i != j) {
                     graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[j]);
                 }
+            }
+        }
+    }
+
+    private void CreateBipartiteGraph() {
+        graph_ds = Controller.singleton.graph;
+
+        int u_count = Random.Range(3, 6);
+        int v_count = Random.Range(3, 6);
+
+        for (int i = 0; i < u_count; i++) {
+            graph_ds.AddVertex();
+        }
+        for (int i = 0; i < v_count; i++) {
+            graph_ds.AddVertex();
+        }
+
+        for (int i = 0; i < u_count; i++) {
+            for (int j = 0; j < v_count; j++) {
+                if (Random.value < .5f) {
+                    graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[u_count + j]);
+                }
+                // if (Random.value < .33f) {
+                //     graph_ds.AddEdge(graph_ds.vertices[u_count + j], graph_ds.vertices[i]);
+                // }
             }
         }
     }
