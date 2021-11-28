@@ -75,7 +75,7 @@ public class Graph
     ~Graph() {} // TODO
 
     // assuming vertex is created via user interface and so position is specified
-    public void AddVertex( double x_pos, double y_pos )
+    public void AddVertex( Nullable< double > x_pos=null, Nullable< double > y_pos=null)
     {
         this.vertices.Add( new Vertex( id : this.next_vert_id, x_pos : x_pos, y_pos : y_pos ) );
         this.adj.Add( this.next_vert_id, new List< Edge >() );

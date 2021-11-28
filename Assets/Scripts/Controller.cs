@@ -52,10 +52,10 @@ public class Controller : MonoBehaviour
         }
 
         for (int i = 0; i < graph.adj.Count; i++) {
-            foreach (int connected_v in graph.adj[i]) {
+            foreach (Edge edge in graph.adj[i]) {
                 EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
                 edgeObj.transform.SetParent(graphObj.GetChild(i));
-                edgeObj.Initiate(i, connected_v, graphObj.GetChild(connected_v).gameObject);
+                edgeObj.Initiate(i, edge.incidence.Item2.id, graphObj.GetChild(edge.incidence.Item2.id).gameObject);
             }
         }
     }    
