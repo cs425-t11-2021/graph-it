@@ -8,6 +8,8 @@ public class VertexObj : MonoBehaviour
     private int vertex_id;
     // Reference to the rigidbody compoonent of the vertex object
     private Rigidbody2D rb;
+    // Reference to the sprite child object of the vertex object
+    private Transform spriteObj;
 
 
     private float lifetime;
@@ -16,7 +18,8 @@ public class VertexObj : MonoBehaviour
         // Vertex objects starts non active
         gameObject.SetActive(false);
 
-        rb = GetComponent<Rigidbody2D>(); 
+        rb = GetComponent<Rigidbody2D>();
+        spriteObj = transform.GetChild(0);
     }
 
     // Method called by a controller class to setup properties of the vertex object
@@ -62,8 +65,28 @@ public class VertexObj : MonoBehaviour
         else lifetime += Time.deltaTime;
     }
 
+    // When Cursor enters a vertex obj, increase its sprite object size by 10%
+    // TODO: Change this to be controlled by an animator later
     private void OnMouseOver()
     {
-        
+        // Check if cursor is over collider, if so, ignore panning until the mouse button is released
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex"));  //11f since camera is at z = -10
+        if (hit && hit.collider.gameObject == gameObject)
+        {
+            spriteObj.localScale = new Vector3(1.25f, 1.25f, 1f);
+        }
+        //else
+        //{
+        //    spriteObj.localScale = new Vector3(1f, 1f, 1f);
+        //}
+            
     }
+
+    private void OnMouseExit()
+    {
+        spriteObj.localScale = new Vector3(1f, 1f, 1f);
+    }
+
+    // TODO: CREATE A UNIVERSAL MOUSE INPUT MANAGEMENT SYSTEM
 }
