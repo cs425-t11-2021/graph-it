@@ -47,9 +47,7 @@ public class VertexObj : MonoBehaviour
         }
     }
 
-    private void Update() {
-        lifetime += Time.deltaTime;
-        
+    private void Update() {      
         // Once a vertex object has existed for more than half a second, turn on its edges and distance joints
         // This is to allow time for the vertices' mutual repulsive force to more evenly spread themselves out before they are connected.
         if (lifetime > 0.5f) {
@@ -61,5 +59,11 @@ public class VertexObj : MonoBehaviour
                 transform.GetChild(i).gameObject.SetActive(true);
             }
         }
+        else lifetime += Time.deltaTime;
+    }
+
+    private void OnMouseOver()
+    {
+        
     }
 }
