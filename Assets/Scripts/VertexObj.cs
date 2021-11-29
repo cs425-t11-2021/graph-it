@@ -6,6 +6,8 @@ public class VertexObj : MonoBehaviour
 {
     // ID of the associated vertex in the graph data structure
     private int vertex_id;
+    // Label of the vertex
+    private string vertex_label;
     // Reference to the rigidbody compoonent of the vertex object
     private Rigidbody2D rb;
     // Reference to the sprite child object of the vertex object
@@ -23,8 +25,10 @@ public class VertexObj : MonoBehaviour
     }
 
     // Method called by a controller class to setup properties of the vertex object
-    public void Initiate(int id) {
-        vertex_id = id;
+    // Updated to use Vertex struct
+    public void Initiate(Vertex vertex) {
+        vertex_id = vertex.id;
+        vertex_label = vertex.label;
 
         // Activate the vertex object once it has been initiated
         gameObject.SetActive(true);

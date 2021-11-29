@@ -61,7 +61,7 @@ public class Controller : MonoBehaviour
             Vector2 pos = Random.insideUnitCircle.normalized * 3f;
             VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
             vertexObj.transform.SetParent(graphObj);
-            vertexObj.Initiate(kvp.Key);
+            vertexObj.Initiate(graph.vertices[kvp.Key]);
         }
 
         for (int i = 0; i < graph.incidence.Count; i++) {

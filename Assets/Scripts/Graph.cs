@@ -91,8 +91,10 @@ public struct Edge : IEquatable< Edge >
 
 public class Graph
 {
-    public List< Vertex > vertices;
-    public Dictionary< int, List< Edge > > incidence;
+    // Vertices list is read-only from outside of class - Jimson
+    public List<Vertex> vertices { get; }
+    // Incidence dict is read-only from outside of class - Jimson
+    public Dictionary< int, List< Edge > > incidence { get;  }
 
     // TODO: default settings
     public bool directed;
