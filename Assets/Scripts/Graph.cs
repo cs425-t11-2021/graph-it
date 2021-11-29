@@ -94,7 +94,7 @@ public class Graph
     // Vertices list is read-only from outside of class - Jimson
     public List<Vertex> vertices { get; }
     // Incidence dict is read-only from outside of class - Jimson
-    public Dictionary< int, List< Edge > > incidence { get;  }
+    public Dictionary< int, List< Edge > > incidence { get; }
 
     // TODO: default settings
     public bool directed;

@@ -17,6 +17,10 @@ public class Controller : MonoBehaviour
     // Reference to the parent object for all the vertex and edge objects in the scene hiearchy
     public Transform graphObj;
 
+    // TODO: Move the visual settings away from controller and into its own object
+    [Header("Visual Settings")]
+    public bool displayVertexLabels;
+
     // Main graph DS
     // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
     public Graph graph;

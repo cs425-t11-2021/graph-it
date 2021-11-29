@@ -13,7 +13,6 @@ public class VertexObj : MonoBehaviour
     // Reference to the sprite child object of the vertex object
     private Transform spriteObj;
 
-
     private float lifetime;
 
     private void Awake() {
@@ -32,6 +31,9 @@ public class VertexObj : MonoBehaviour
 
         // Activate the vertex object once it has been initiated
         gameObject.SetActive(true);
+
+        // Initiate the label
+        transform.GetChild(2).GetComponent<LabelObj>().Initiate(vertex_label);
     }
 
     private void Start() {
