@@ -63,6 +63,7 @@ public class LabelObj : MonoBehaviour
         }
     }
 
+    // This code is slow as fuck, someone try to speed it up
     Nullable<Vector3> FindSuitablePosition()
     {
         for (float radius = 0.3f; radius < 0.8f; radius += 0.1f)
