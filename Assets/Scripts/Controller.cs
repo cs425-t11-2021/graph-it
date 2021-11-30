@@ -17,6 +17,10 @@ public class Controller : MonoBehaviour
     // Reference to the parent object for all the vertex and edge objects in the scene hiearchy
     public Transform graphObj;
 
+    // TODO: Move the visual settings away from controller and into its own object
+    [Header("Visual Settings")]
+    public bool displayVertexLabels;
+
     // Main graph DS
     // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
     public Graph graph;
@@ -61,7 +65,7 @@ public class Controller : MonoBehaviour
             Vector2 pos = Random.insideUnitCircle.normalized * 3f;
             VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
             vertexObj.transform.SetParent(graphObj);
-            vertexObj.Initiate(kvp.Key);
+            vertexObj.Initiate(graph.vertices[kvp.Key]);
         }
 
         for (int i = 0; i < graph.incidence.Count; i++) {

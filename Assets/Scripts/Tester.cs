@@ -64,7 +64,7 @@ public class Tester : MonoBehaviour
             graph_ds.AddVertex();
         }
 
-        // Add 20 random edges to the graph
+        // Add 9 random edges to the graph
         for (int i = 0; i < 9; i++) {
             graph_ds.AddEdge(graph_ds.vertices[Random.Range(0, 10)], graph_ds.vertices[Random.Range(0, 10)]);
         }
@@ -128,9 +128,6 @@ public class Tester : MonoBehaviour
                     if (Random.value < .5f) {
                         graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[u_count + j]);
                     }
-                    // if (Random.value < .33f) {
-                    //     graph_ds.AddEdge(graph_ds.vertices[u_count + j], graph_ds.vertices[i]);
-                    // }
                 }
             }
         }

@@ -29,7 +29,7 @@ public class EdgeObj : MonoBehaviour
     // Method to stretch the edge so it extends from one point to another 
     private void StretchBetweenPoints(Vector2 point1, Vector2 point2)
     {
-        transform.position = point1;
+        transform.position = new Vector3(point1.x, point1.y, 1);
         Vector2 dir = point2 - point1;
         transform.localScale = new Vector3(dir.magnitude * 2, transform.localScale.y, 1);
 

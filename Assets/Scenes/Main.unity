@@ -438,6 +438,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8178601238933541584, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8178601238933541584, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
       propertyPath: m_Name
       value: VertexObj (1)
@@ -576,6 +584,7 @@ MonoBehaviour:
   vertexObjPrefab: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
   edgeObjPrefab: {fileID: 709617791594073476, guid: f45080ed2c08c40deba533ea5f31daac, type: 3}
   graphObj: {fileID: 1670804266}
+  _displayVertexLabels: 1
 --- !u!114 &2144943524
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -602,10 +611,6 @@ PrefabInstance:
     - target: {fileID: 709617791594073476, guid: f45080ed2c08c40deba533ea5f31daac, type: 3}
       propertyPath: m_IsActive
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 709617791594073482, guid: f45080ed2c08c40deba533ea5f31daac, type: 3}
-      propertyPath: m_SortingOrder
-      value: -1
       objectReference: {fileID: 0}
     - target: {fileID: 709617791594073483, guid: f45080ed2c08c40deba533ea5f31daac, type: 3}
       propertyPath: m_RootOrder
