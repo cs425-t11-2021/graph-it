@@ -53,12 +53,13 @@ public struct Edge : IEquatable< Edge >
     public int style;
     public int color;
     public int thickness;
+    public int label_style;
     
     // when undirected, following styles should be ignored
     public int tail_style;
     public int head_style;
 
-    public Edge( int id, Vertex vert1, Vertex vert2, string label="", double weight=0, bool directed=false, int style=0, int color=0, int thickness=0, int tail_style=0, int head_style=0 )
+    public Edge( int id, Vertex vert1, Vertex vert2, string label="", double weight=0, bool directed=false, int style=0, int color=0, int thickness=0, int label_style=0, int tail_style=0, int head_style=0 )
     {
         this.id = id;
         this.vert1 = vert1;
@@ -69,6 +70,7 @@ public struct Edge : IEquatable< Edge >
         this.style = style;
         this.color = color;
         this.thickness = thickness;
+        this.label_style = label_style;
         this.tail_style = tail_style;
         this.head_style = head_style;
     }
@@ -85,7 +87,7 @@ public struct Edge : IEquatable< Edge >
 
     public static bool operator !=( Edge lhs, Edge rhs) => !( lhs == rhs );
 
-    public override string ToString() => String.Format( "id: {0}, vert1: {1}, vert2: {2}, label: {3}, weight: {4}, directed: {5}, style: {6}, color: {7}, thickness: {8}, tail_style: {9}, head_style: {10}", this.id, this.vert1.id, this.vert2.id, this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.tail_style, this.head_style );
+    public override string ToString() => String.Format( "id: {0}, vert1: {1}, vert2: {2}, label: {3}, weight: {4}, directed: {5}, style: {6}, color: {7}, thickness: {8}, label_style: {9} tail_style: {10}, head_style: {11}", this.id, this.vert1.id, this.vert2.id, this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
 }
 
 
@@ -110,26 +112,34 @@ public class Graph
 
     ~Graph() {} // TODO
 
-    // assuming vertex is created via user interface and so position is specified
     public void AddVertex( Nullable< double > x_pos=null, Nullable< double > y_pos=null)
     {
-        this.vertices.Add( new Vertex( this.next_vert_id, x_pos : x_pos, y_pos : y_pos ) );
-        this.incidence.Add( this.next_vert_id, new List< Edge >() );
+        this.AddVertex( new Vertex( this.next_vert_id, x_pos : x_pos, y_pos : y_pos ) );
+    }
+
+    public void AddVertex( Vertex vert )
+    {
+        this.vertices.Add( vert );
+        this.incidence.Add( vert.id, new List< Edge >() );
         this.next_vert_id++;
     }
 
     public void AddEdge( Vertex vert1, Vertex vert2 )
     {
         if ( !this.incidence.ContainsKey( vert1.id ) && !this.incidence.ContainsKey( vert2.id ) || !this.vertices.Contains( vert1 ) && !this.vertices.Contains( vert2 ) )
-        {
-            throw new System.Exception( "One or more vertices have not been added to the graph." );
-        }
+            Debug.Log( ( new System.Exception( "One or more vertices have not been added to the graph." ) ).ToString() );
 
         this.incidence[ vert1.id ].Add( new Edge( this.next_edge_id++, vert1, vert2 ) );
         if ( !this.directed )
-        {
             this.incidence[ vert2.id ].Add( new Edge( this.next_edge_id++, vert2, vert1 ) );
-        }
+    }
+
+    public void AddEdge( Edge edge )
+    {
+        if ( !this.incidence.ContainsKey( edge.vert1.id ) && !this.incidence.ContainsKey( edge.vert2.id ) || !this.vertices.Contains( edge.vert1 ) && !this.vertices.Contains( edge.vert2 ) )
+            Debug.Log( ( new System.Exception( "One or more vertices have not been added to the graph." ) ).ToString() );
+
+        this.incidence[ edge.vert1.id ].Add( edge );
     }
 
     // TODO: determine if input should be vertex or vertex id
@@ -151,71 +161,123 @@ public class Graph
     public Edge RemoveEdge( Edge edge )
     {
         foreach ( KeyValuePair< int, List< Edge > > kvp in this.incidence )
-        {
             kvp.Value.Remove( edge );
-        }
         return edge;
     }
 
-    public void Import() {} // TODO
+    public Vertex GetVertex( int id )
+    {
+        foreach ( Vertex vert in this.vertices )
+        {
+            if ( vert.id == id )
+                return vert;
+        }
+        throw new System.Exception( "Vertex could not be found." );
+    }
+
+    // TODO: relax import file formatting
+    // NOTE: import does not erase existing graph data, imported data may conflict with any existing ids
+    // public void Import( string path )
+    // {
+    //     try
+    //     {
+    //         if ( !File.Exists( path ) )
+    //         {
+    //             Debug.Log("file not found");
+    //             Debug.Log( ( new System.Exception( "The provided file cannot be found." ) ).ToString() );
+    //         }
+
+    //         bool flag = true;
+    //         foreach ( string line in System.IO.File.ReadLines( path ) )
+    //         {
+    //             if ( String.IsNullOrEmpty( line ) )
+    //                 continue;
+    //             if ( line.Trim() == "vertices:" )
+    //             {
+    //                 flag = true;
+    //                 continue;
+    //             }
+    //             if ( line.Trim() == "incidence:" )
+    //             {
+    //                 flag = false;
+    //                 continue;
+    //             }
+    //             this.ParseLine( line, flag );
+    //         }
+    //     }
+    //     catch ( Exception ex )
+    //     {
+    //         // TODO: inform user of issue
+    //         Debug.Log("exception thrown");
+    //         Debug.Log( ex.ToString() );
+    //     }
+    // }
+
+    // private void ParseLine( string line, bool flag )
+    // {
+    //     if ( flag )
+    //         this.AddVertex( this.ParseVertex( line ) );
+    //     else
+    //         this.AddEdge( this.ParseEdge( line ) );
+    // }
+
+    // private Vertex ParseVertex( string line )
+    // {
+    //     Dictionary< string, string > vect_data = line.Replace( " ", "" )
+    //                                                  .Replace( "{", "" )
+    //                                                  .Replace( "}", "" )
+    //                                                  .Split( ',' )
+    //                                                  .Select( part  => part.Split( ':' ) )
+    //                                                  .Where( part => part.Length == 2 )
+    //                                                  .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
+    //     return new Vertex( vect_data[ "id" ], vect_data[ "label" ], System.Convert.ToDouble( vect_data[ "x_pos" ] ), System.Convert.ToDouble( vect_data[ "y_pos" ] ), System.Convert.ToInt64( vect_data[ "style" ] ), System.Convert.ToInt64( vect_data[ "color" ] ), System.Convert.ToInt64( vect_data[ "label_style" ] )  );
+    // }
+
+    // // requires that all new vertices are already added
+    // private Edge ParseEdge( string line )
+    // {
+    //     Dictionary< string, string > edge_data = line.Replace( " ", "" )
+    //                                                  .Replace( "{", "" )
+    //                                                  .Replace( "}", "" )
+    //                                                  .Split( ',' )
+    //                                                  .Select( part  => part.Split( ':' ) )
+    //                                                  .Where( part => part.Length == 2 )
+    //                                                  .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
+    //     return new Edge( edge_data[ "id" ], this.GetVertex( edge_data[ "vert1" ] ), this.GetVertex( edge_data[ "vert2" ] ), edge_data[ "label" ], System.Convert.ToDouble( edge_data[ "weight" ] ), System.Convert.ToBoolean( edge_data[ "directed" ] ), System.Convert.ToInt64( edge_data[ "style" ] ), System.Convert.ToInt64( edge_data[ "color" ] ), System.Convert.ToInt64( edge_data[ "thickness" ] ), System.Convert.ToInt64( edge_data[ "label_style" ] ), System.Convert.ToInt64( edge_data[ "tail_style" ] ), System.Convert.ToInt64( edge_data[ "head_style" ] )  );
+    // }
 
     public void Export( string path )
     {
         try
         {
+            // Debug.Log("begin export");
             // TODO: evaluate if this is necessary
             if ( File.Exists( path ) )
-            {
                 File.Delete( path );
-            }
 
             using ( FileStream fs = File.Create( path ) )
             {
+                // Debug.Log("export file");
                 this.ExportVertices( fs );
                 Graph.ExportText( fs, "\n" );
                 this.ExportEdges( fs );
+                fs.Close();
+                // Debug.Log("closed file");
             }
         }
         catch ( Exception ex )
         {
-            Console.WriteLine( ex.ToString() );
+            // TODO: inform user of issue
+            // Debug.Log("exception thrown");
+            Debug.Log( ex.ToString() );
         }
-
-        
-
-        // //Create the file.
-        // using (FileStream fs = File.Create(path))
-        // {
-        //     AddText(fs, "This is some text");
-        //     AddText(fs, "This is some more text,");
-        //     AddText(fs, "\r\nand this is on a new line");
-        //     AddText(fs, "\r\n\r\nThe following is a subset of characters:\r\n");
-
-        //     for (int i=1;i < 120;i++)
-        //     {
-        //         AddText(fs, Convert.ToChar(i).ToString());
-        //     }
-        // }
-
-        // //Open the stream and read it back.
-        // using (FileStream fs = File.OpenRead(path))
-        // {
-        //     byte[] b = new byte[1024];
-        //     UTF8Encoding temp = new UTF8Encoding(true);
-        //     while (fs.Read(b,0,b.Length) > 0)
-        //     {
-        //         Console.WriteLine(temp.GetString(b));
-        //     }
-        // }
     }
 
     private void ExportVertices( FileStream fs )
     {
         Graph.ExportText( fs, "vertices:\n" );
         foreach ( Vertex vert in this.vertices )
-        {
-            Graph.ExportText( fs, String.Format( "{ {0} }\n", vert ) );
-        }
+            Graph.ExportText( fs, "{ " + vert.ToString() + " }\n" );
     }
 
     private void ExportEdges( FileStream fs )
@@ -223,15 +285,11 @@ public class Graph
         // TODO: make more efficient
         HashSet< Edge > edges = new HashSet< Edge >();
         foreach ( List< Edge > neighbors in this.incidence.Values )
-        {
             edges.UnionWith( new HashSet< Edge >( neighbors ) );
-        }
 
         Graph.ExportText( fs, "incidence:\n" );
         foreach ( Edge edge in edges )
-        {
-            Graph.ExportText( fs, String.Format( "{ {0} }\n", edge ) );
-        }
+            Graph.ExportText( fs, "{ " + edge.ToString() + " }\n" );
     }
 
     private static void ExportText( FileStream fs, string value )

@@ -11,6 +11,7 @@ public class Tester : MonoBehaviour
 
     private void Start() {
         CreateRandomGraph();
+        // graph_ds.Import( "export.txt" );
     }
 
     private void Update() {
