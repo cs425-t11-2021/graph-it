@@ -9,23 +9,31 @@ vertices:
 { id: 7, label: , x_pos: , y_pos: , style: 0, color: 0, label_style: 0 }
 { id: 8, label: , x_pos: , y_pos: , style: 0, color: 0, label_style: 0 }
 { id: 9, label: , x_pos: , y_pos: , style: 0, color: 0, label_style: 0 }
+{ id: 10, label: , x_pos: , y_pos: , style: 0, color: 0, label_style: 0 }
+{ id: 11, label: , x_pos: , y_pos: , style: 0, color: 0, label_style: 0 }
 
 incidence:
-{ id: 1, vert1: 0, vert2: 7, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 11, vert1: 0, vert2: 4, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 6, vert1: 1, vert2: 5, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 8, vert1: 2, vert2: 6, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 12, vert1: 2, vert2: 5, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 14, vert1: 2, vert2: 4, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 4, vert1: 3, vert2: 3, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 5, vert1: 3, vert2: 3, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 17, vert1: 3, vert2: 6, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 10, vert1: 4, vert2: 0, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 15, vert1: 4, vert2: 2, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 7, vert1: 5, vert2: 1, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 13, vert1: 5, vert2: 2, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 3, vert1: 6, vert2: 8, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 9, vert1: 6, vert2: 2, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 16, vert1: 6, vert2: 3, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 0, vert1: 7, vert2: 0, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
-{ id: 2, vert1: 8, vert2: 6, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, tail_style: 0, head_style: 0 }
+{ id: 0, vert1: 0, vert2: 1, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 22, vert1: 0, vert2: 11, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 1, vert1: 1, vert2: 0, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 2, vert1: 1, vert2: 2, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 3, vert1: 2, vert2: 1, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 4, vert1: 2, vert2: 3, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 5, vert1: 3, vert2: 2, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 6, vert1: 3, vert2: 4, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 7, vert1: 4, vert2: 3, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 8, vert1: 4, vert2: 5, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 9, vert1: 5, vert2: 4, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 10, vert1: 5, vert2: 6, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 11, vert1: 6, vert2: 5, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 12, vert1: 6, vert2: 7, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 13, vert1: 7, vert2: 6, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 14, vert1: 7, vert2: 8, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 15, vert1: 8, vert2: 7, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 16, vert1: 8, vert2: 9, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 17, vert1: 9, vert2: 8, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 18, vert1: 9, vert2: 10, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 19, vert1: 10, vert2: 9, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 20, vert1: 10, vert2: 11, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 21, vert1: 11, vert2: 10, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }
+{ id: 23, vert1: 11, vert2: 0, label: , weight: 0, directed: False, style: 0, color: 0, thickness: 0, label_style: 0, tail_style: 0, head_style: 0 }

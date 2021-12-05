@@ -11,7 +11,9 @@ public class Tester : MonoBehaviour
 
     private void Start() {
         CreateRandomGraph();
-        // graph_ds.Import( "export.txt" );
+
+        // graph_ds = Controller.singleton.graph;
+        // graph_ds.Import( "export.txt" ); // should create cycle of length 19
     }
 
     private void Update() {

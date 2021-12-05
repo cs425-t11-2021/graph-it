@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ using UnityEngine;
 
 public struct Vertex : IEquatable< Vertex >
 {
+    // TODO: make id long
     public int id;
     public string label;
     public Nullable< double > x_pos, y_pos;
@@ -44,6 +46,7 @@ public struct Vertex : IEquatable< Vertex >
 
 public struct Edge : IEquatable< Edge >
 {
+    // TODO: make id long
     public int id;
     public Vertex vert1, vert2;
     public string label;
@@ -87,7 +90,7 @@ public struct Edge : IEquatable< Edge >
 
     public static bool operator !=( Edge lhs, Edge rhs) => !( lhs == rhs );
 
-    public override string ToString() => String.Format( "id: {0}, vert1: {1}, vert2: {2}, label: {3}, weight: {4}, directed: {5}, style: {6}, color: {7}, thickness: {8}, label_style: {9} tail_style: {10}, head_style: {11}", this.id, this.vert1.id, this.vert2.id, this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
+    public override string ToString() => String.Format( "id: {0}, vert1: {1}, vert2: {2}, label: {3}, weight: {4}, directed: {5}, style: {6}, color: {7}, thickness: {8}, label_style: {9}, tail_style: {10}, head_style: {11}", this.id, this.vert1.id, this.vert2.id, this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
 }
 
 
@@ -101,6 +104,7 @@ public class Graph
     // TODO: default settings
     public bool directed;
 
+    // TODO: convert to long
     private int next_vert_id = 0;
     private int next_edge_id = 0;
 
@@ -144,6 +148,11 @@ public class Graph
         this.incidence[ edge.vert1.id ].Add( edge );
     }
 
+    public void Clear()
+    {
+        // TODO
+    }
+
     // TODO: determine if input should be vertex or vertex id
     public Vertex RemoveVertex( Vertex vert )
     {
@@ -179,80 +188,102 @@ public class Graph
 
     // TODO: relax import file formatting
     // NOTE: import does not erase existing graph data, imported data may conflict with any existing ids
-    // public void Import( string path )
-    // {
-    //     try
-    //     {
-    //         if ( !File.Exists( path ) )
-    //         {
-    //             Debug.Log("file not found");
-    //             Debug.Log( ( new System.Exception( "The provided file cannot be found." ) ).ToString() );
-    //         }
+    public void Import( string path )
+    {
+        try
+        {
+            if ( !File.Exists( path ) )
+            {
+                // Debug.Log( "file not found" );
+                Debug.Log( ( new System.Exception( "The provided file cannot be found." ) ).ToString() );
+            }
 
-    //         bool flag = true;
-    //         foreach ( string line in System.IO.File.ReadLines( path ) )
-    //         {
-    //             if ( String.IsNullOrEmpty( line ) )
-    //                 continue;
-    //             if ( line.Trim() == "vertices:" )
-    //             {
-    //                 flag = true;
-    //                 continue;
-    //             }
-    //             if ( line.Trim() == "incidence:" )
-    //             {
-    //                 flag = false;
-    //                 continue;
-    //             }
-    //             this.ParseLine( line, flag );
-    //         }
-    //     }
-    //     catch ( Exception ex )
-    //     {
-    //         // TODO: inform user of issue
-    //         Debug.Log("exception thrown");
-    //         Debug.Log( ex.ToString() );
-    //     }
-    // }
+            bool flag = true;
+            foreach ( string line in System.IO.File.ReadLines( path ) )
+            {
+                if ( String.IsNullOrEmpty( line ) )
+                    continue;
+                if ( line.Trim() == "vertices:" )
+                {
+                    flag = true;
+                    continue;
+                }
+                if ( line.Trim() == "incidence:" )
+                {
+                    flag = false;
+                    continue;
+                }
+                this.ParseLine( line, flag );
+            }
+        }
+        catch ( Exception ex )
+        {
+            // Debug.Log( "exception thrown" );
+            Debug.Log( ex.ToString() );
+        }
+    }
 
-    // private void ParseLine( string line, bool flag )
-    // {
-    //     if ( flag )
-    //         this.AddVertex( this.ParseVertex( line ) );
-    //     else
-    //         this.AddEdge( this.ParseEdge( line ) );
-    // }
+    private void ParseLine( string line, bool flag )
+    {
+        if ( flag )
+            this.AddVertex( this.ParseVertex( line ) );
+        else
+            this.AddEdge( this.ParseEdge( line ) );
+    }
 
-    // private Vertex ParseVertex( string line )
-    // {
-    //     Dictionary< string, string > vect_data = line.Replace( " ", "" )
-    //                                                  .Replace( "{", "" )
-    //                                                  .Replace( "}", "" )
-    //                                                  .Split( ',' )
-    //                                                  .Select( part  => part.Split( ':' ) )
-    //                                                  .Where( part => part.Length == 2 )
-    //                                                  .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
-    //     return new Vertex( vect_data[ "id" ], vect_data[ "label" ], System.Convert.ToDouble( vect_data[ "x_pos" ] ), System.Convert.ToDouble( vect_data[ "y_pos" ] ), System.Convert.ToInt64( vect_data[ "style" ] ), System.Convert.ToInt64( vect_data[ "color" ] ), System.Convert.ToInt64( vect_data[ "label_style" ] )  );
-    // }
+    private Vertex ParseVertex( string line )
+    {
+        Dictionary< string, string > vect_data = line.Replace( " ", "" )
+                                                     .Replace( "{", "" )
+                                                     .Replace( "}", "" )
+                                                     .Split( ',' )
+                                                     .Select( part  => part.Split( ':' ) )
+                                                     .Where( part => part.Length == 2 )
+                                                     .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
 
-    // // requires that all new vertices are already added
-    // private Edge ParseEdge( string line )
-    // {
-    //     Dictionary< string, string > edge_data = line.Replace( " ", "" )
-    //                                                  .Replace( "{", "" )
-    //                                                  .Replace( "}", "" )
-    //                                                  .Split( ',' )
-    //                                                  .Select( part  => part.Split( ':' ) )
-    //                                                  .Where( part => part.Length == 2 )
-    //                                                  .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
-    //     return new Edge( edge_data[ "id" ], this.GetVertex( edge_data[ "vert1" ] ), this.GetVertex( edge_data[ "vert2" ] ), edge_data[ "label" ], System.Convert.ToDouble( edge_data[ "weight" ] ), System.Convert.ToBoolean( edge_data[ "directed" ] ), System.Convert.ToInt64( edge_data[ "style" ] ), System.Convert.ToInt64( edge_data[ "color" ] ), System.Convert.ToInt64( edge_data[ "thickness" ] ), System.Convert.ToInt64( edge_data[ "label_style" ] ), System.Convert.ToInt64( edge_data[ "tail_style" ] ), System.Convert.ToInt64( edge_data[ "head_style" ] )  );
-    // }
+        return new Vertex(
+            System.Convert.ToInt32( vect_data[ "id" ] ),
+            vect_data[ "label" ],
+            Graph.ToNullableDouble( vect_data[ "x_pos" ] ),
+            Graph.ToNullableDouble( vect_data[ "y_pos" ] ),
+            System.Convert.ToInt32( vect_data[ "style" ] ),
+            System.Convert.ToInt32( vect_data[ "color" ] ),
+            System.Convert.ToInt32( vect_data[ "label_style" ] )
+        );
+    }
+
+    // requires that all new vertices are already added
+    private Edge ParseEdge( string line )
+    {
+        Dictionary< string, string > edge_data = line.Replace( " ", "" )
+                                                     .Replace( "{", "" )
+                                                     .Replace( "}", "" )
+                                                     .Split( ',' )
+                                                     .Select( part  => part.Split( ':' ) )
+                                                     .Where( part => part.Length == 2 )
+                                                     .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
+
+        return new Edge(
+            System.Convert.ToInt32( edge_data[ "id" ] ),
+            this.GetVertex( System.Convert.ToInt32( edge_data[ "vert1" ] ) ),
+            this.GetVertex( System.Convert.ToInt32( edge_data[ "vert2" ] ) ),
+            edge_data[ "label" ],
+            System.Convert.ToDouble( edge_data[ "weight" ] ),
+            System.Convert.ToBoolean( edge_data[ "directed" ] ),
+            System.Convert.ToInt32( edge_data[ "style" ] ),
+            System.Convert.ToInt32( edge_data[ "color" ] ),
+            System.Convert.ToInt32( edge_data[ "thickness" ] ),
+            System.Convert.ToInt32( edge_data[ "label_style" ] ),
+            System.Convert.ToInt32( edge_data[ "tail_style" ] ),
+            System.Convert.ToInt32( edge_data[ "head_style" ] ) 
+        );
+    }
 
     public void Export( string path )
     {
         try
         {
-            // Debug.Log("begin export");
+            // Debug.Log( "begin export" );
             // TODO: evaluate if this is necessary
             if ( File.Exists( path ) )
                 File.Delete( path );
@@ -264,13 +295,13 @@ public class Graph
                 Graph.ExportText( fs, "\n" );
                 this.ExportEdges( fs );
                 fs.Close();
-                // Debug.Log("closed file");
+                // Debug.Log( "closed file" );
             }
         }
         catch ( Exception ex )
         {
             // TODO: inform user of issue
-            // Debug.Log("exception thrown");
+            // Debug.Log( "exception thrown" );
             Debug.Log( ex.ToString() );
         }
     }
@@ -298,5 +329,13 @@ public class Graph
     {
         byte[] info = new UTF8Encoding( true ).GetBytes( value );
         fs.Write( info, 0, info.Length );
+    }
+
+    private static double? ToNullableDouble( string s )
+    {
+        double d;
+        if ( double.TryParse( s, out d ) )
+            return d;
+        return null;
     }
 }
