@@ -23,6 +23,7 @@ public class GeneralMenuButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //maybe inplement a listener instead for efficiency
         if (EventSystem.current.currentSelectedGameObject == this.gameObject){
             panelObj.gameObject.SetActive(true);
         }
