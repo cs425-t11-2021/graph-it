@@ -79,6 +79,14 @@ public class EdgeObj : MonoBehaviour
         }
     }
 
+    // When Cursor enters a edge obj, increase its sprite object size by 10%
+    // TODO: Change this to be controlled by an animator later
+    private void OnMouseOver()
+    {
+        this.transform.localScale = new Vector3(this.transform.localScale.x, .33f, 1f);
+
+    }
+
     // When user clicks a edge obj, select/deselect it using selection manager
     // Change color to blue when selected
     // TODO: Replace with Unity animator
@@ -87,14 +95,19 @@ public class EdgeObj : MonoBehaviour
         if (selected)
         {
             SelectionManager.singleton.DeselectEdge(this);
-            this.spriteRenderer.color = new Color32(255, 255, 255, 255);
-            selected = false;
+            this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+            this.selected = false;
         }
         else
         {
             SelectionManager.singleton.SelectEdge(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
-            selected = true;
+            this.selected = true;
         }
+    }
+
+    private void OnMouseExit()
+    {
+        this.transform.localScale = new Vector3(this.transform.localScale.x, .25f, 1f);
     }
 }

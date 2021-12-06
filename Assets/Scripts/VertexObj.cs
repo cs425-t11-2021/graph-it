@@ -88,7 +88,7 @@ public class VertexObj : MonoBehaviour
     // TODO: Change this to be controlled by an animator later
     private void OnMouseOver()
     {
-        // Check if cursor is over collider, if so, ignore panning until the mouse button is released
+        // Check if cursor is over collider
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex"));  //11f since camera is at z = -10
         if (hit && hit.collider.gameObject == gameObject)
@@ -110,13 +110,13 @@ public class VertexObj : MonoBehaviour
         {
             SelectionManager.singleton.DeselectVertex(this);
             this.spriteRenderer.color = new Color32(0, 0, 0, 255);
-            selected = false;
+            this.selected = false;
         }
         else
         {
             SelectionManager.singleton.SelectVertex(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
-            selected = true;
+            this.selected = true;
         }
     }
 
