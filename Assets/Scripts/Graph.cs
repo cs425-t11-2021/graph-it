@@ -388,10 +388,58 @@ public class Graph
 
     // algorithms ////////////////////////////////////////////////
 
-    // public bool IsBipartite()
-    // {
+    public bool IsBipartite()
+    {
+        return this.GetChromaticNumber() == 2;
+    }
 
-    // }
+    // brute force method
+    public int GetChromaticNumber()
+    {
+        int chi = this.vertices.Count;
+        HashSet< List< int > > colorings = this.GetAllColorings();
+        foreach ( List< int > coloring in colorings )
+        {
+            int num_colors = ( new HashSet< int >( coloring ) ).Count;
+            if ( num_colors < chi && this.IsProperColoring( coloring ) )
+                chi = num_colors;
+        }
+        return chi;
+    }
+
+    // NOTE: assumes id lines up with this.verticies indices
+    // NOTE: assumes that there are no loops
+    private bool IsProperColoring( List< int > coloring )
+    {
+        foreach ( Edge edge in this.adjacency.Values )
+        {
+            if ( coloring[ edge.vert1.id ] == coloring[ edge.vert2.id ] )
+                return false;
+        }
+        return true;
+    }
+
+    private HashSet< List< int > > GetAllColorings()
+    {
+        HashSet< List< int > > colorings = new HashSet< List< int > >();
+        GetAllColoringsHelper( colorings, new List< int >(), this.vertices.Count, this.vertices.Count );
+        return colorings;
+    }
+
+    private static void GetAllColoringsHelper( HashSet< List< int > > colorings, List< int > coloring, int num_vertices, int num_colors )
+    {
+        if ( coloring.Count >= num_vertices )
+            colorings.Add( coloring );
+        else
+        {
+            for ( int i = 0; i < num_colors; i++ )
+            {
+                List< int > new_coloring = new List< int >( coloring );
+                new_coloring.Add( i );
+                GetAllColoringsHelper( colorings, new_coloring, num_vertices, num_colors );
+            }
+        }
+    }
 
 
     // helper methods ////////////////////////////////////////////////
