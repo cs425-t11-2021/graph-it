@@ -18,6 +18,9 @@ public class Controller : MonoBehaviour
     // Reference to the parent object for all the vertex and edge objects in the scene hiearchy
     public Transform graphObj;
 
+    // Mask of Collider Layers that should receive mouse input
+    public LayerMask clickableLayers;
+
     // TODO: Move the visual settings away from controller and into its own object
     [Header("Visual Settings")]
     public bool displayVertexLabels;
@@ -41,6 +44,9 @@ public class Controller : MonoBehaviour
         graph = new Graph();
         // Manually set edge length
         edgeLength = 5;
+
+        // Set the camera's event mask to clickableLayers
+        Camera.main.eventMask = clickableLayers;
     }
 
     private void Start() {

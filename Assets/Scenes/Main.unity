@@ -585,6 +585,9 @@ MonoBehaviour:
   vertexObjPrefab: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
   edgeObjPrefab: {fileID: 709617791594073476, guid: f45080ed2c08c40deba533ea5f31daac, type: 3}
   graphObj: {fileID: 1670804266}
+  clickableLayers:
+    serializedVersion: 2
+    m_Bits: 416
   displayVertexLabels: 0
 --- !u!114 &2144943524
 MonoBehaviour:
@@ -678,18 +681,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 7229995773290448335, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
-      propertyPath: m_Color.b
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7229995773290448335, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
-      propertyPath: m_Color.g
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7229995773290448335, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
-      propertyPath: m_Color.r
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
       propertyPath: m_Name
       value: VertexObj
