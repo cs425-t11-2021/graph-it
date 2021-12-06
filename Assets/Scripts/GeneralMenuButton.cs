@@ -10,6 +10,7 @@ using UnityEngine.EventSystems;
 public class GeneralMenuButton : MonoBehaviour
 {
     private GameObject panelObj;
+    private GameObject menuItem;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,9 @@ public class GeneralMenuButton : MonoBehaviour
         panelObj = transform.GetChild(1).gameObject;
         //want the dropdown to not be shown or accessible when program first starts
         panelObj.gameObject.SetActive(false);
+
+        menuItem = panelObj.transform.GetChild(2).transform.GetChild(1).gameObject;
+        menuItem.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -28,6 +32,9 @@ public class GeneralMenuButton : MonoBehaviour
             panelObj.gameObject.SetActive(true);
             //Debug.Log("file was clicked");
         }
+        /*else if(EventSystem.current.currentSelectedGameObject == menuItem){
+            menuItem.gameObject.SetActive(true);
+        }*/
         else{
             panelObj.gameObject.SetActive(false);
         }
