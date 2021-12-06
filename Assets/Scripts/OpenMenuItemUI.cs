@@ -4,30 +4,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class OpenMenuItemUI : MonoBehaviour
 {
-    private GameObject menuObj;
+    private GameObject panelObj;
+    private Button menuButton;
 
     // Start is called before the first frame update
     void Start()
     {
         //menu item has an assciated menu to display to the user
-        menuObj = transform.GetChild(1).gameObject;
+        panelObj = transform.GetChild(1).gameObject;
         //do not want the associated menu to be shown or accessible when program first starts
-        menuObj.gameObject.SetActive(false);
+        panelObj.gameObject.SetActive(false);
+
+        //When the "Import from file" is clicked called the OpenPopUp function to display the menu pop-up
+        menuButton = panelObj.GetComponent<Button>();
+        menuButton.onClick.AddListener(OpenPopUp);
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        //maybe inplement a listener instead for efficiency
+        /*//TODO inplement a listener instead for efficiency
         if (EventSystem.current.currentSelectedGameObject == this.gameObject){
             menuObj.gameObject.SetActive(true);
-        }
-        else{
-            menuObj.gameObject.SetActive(false);
-        }
+        }*/
+    }
+
+    /*private void OnMouseClick(){
+        menuObj.gameObject.SetActive(true);
+        
+    }*/
+
+    private void OpenPopUp(){
+        panelObj.gameObject.SetActive(true);
+        Debug.Log("Import was clicked");
     }
 }
