@@ -20,6 +20,12 @@ public class EdgeObj : MonoBehaviour
     // Reference to the game object of the target vertex
     public GameObject targetVertexObj;
 
+    // TODO: Remove once animations are implemented
+    // Whether edge is selected in the SelectionManager
+    private bool selected = false;
+    // Reference to the spriteRenderer component of the object
+    private SpriteRenderer spriteRenderer;
+
     // Getter for id
     public int GetID()
     {
@@ -33,6 +39,8 @@ public class EdgeObj : MonoBehaviour
         // Do not let the physics engine update the collider of the edge in real time
         // as it causes massive lag at the start while the graph is still settling in.
         Physics2D.autoSyncTransforms = false;
+
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -68,6 +76,25 @@ public class EdgeObj : MonoBehaviour
         }
         else {
             this.physicsTimer += Time.fixedDeltaTime;
+        }
+    }
+
+    // When user clicks a edge obj, select/deselect it using selection manager
+    // Change color to blue when selected
+    // TODO: Replace with Unity animator
+    private void OnMouseDown()
+    {
+        if (selected)
+        {
+            SelectionManager.singleton.DeselectEdge(this);
+            this.spriteRenderer.color = new Color32(255, 255, 255, 255);
+            selected = false;
+        }
+        else
+        {
+            SelectionManager.singleton.SelectEdge(this);
+            this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+            selected = true;
         }
     }
 }

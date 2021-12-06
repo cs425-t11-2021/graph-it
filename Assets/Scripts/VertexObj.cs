@@ -110,11 +110,13 @@ public class VertexObj : MonoBehaviour
         {
             SelectionManager.singleton.DeselectVertex(this);
             this.spriteRenderer.color = new Color32(255, 255, 255, 255);
+            selected = false;
         }
         else
         {
             SelectionManager.singleton.SelectVertex(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+            selected = true;
         }
     }
 
