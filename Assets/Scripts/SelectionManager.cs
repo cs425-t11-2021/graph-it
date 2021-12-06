@@ -7,9 +7,10 @@ public class SelectionManager : MonoBehaviour
     // Singleton
     public static SelectionManager singleton;
 
-    // Lists to store the indices of currently selected vertices and edges
-    private List<int> selectedVertices;
-    private List<int> selectedEdges;
+    // Lists to store the graph objects of currently selected vertices and edges
+    // TODO: Figure out a way of doing this without storing Unity objects
+    private List<VertexObj> selectedVertices;
+    private List<EdgeObj> selectedEdges;
 
     private void Awake()
     {
@@ -24,32 +25,41 @@ public class SelectionManager : MonoBehaviour
         }
 
         // Initialize data structures
-        this.selectedVertices = new List<int>();
-        this.selectedEdges = new List<int>();
+        this.selectedVertices = new List<VertexObj>();
+        this.selectedEdges = new List<EdgeObj>();
+    }
+
+    private void Update()
+    {
+        // Delete selection if backspace or delete key is pressed
+        if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
+        {
+            DeleteSelection();
+        }
     }
 
     // Add a vertex to selectedVertices
-    public void SelectVertex(int id)
+    public void SelectVertex(VertexObj vertexObj)
     {
-        this.selectedVertices.Add(id);
+        this.selectedVertices.Add(vertexObj);
     }
 
     // Add an to selectedEdges
-    public void SelectEdge(int id)
+    public void SelectEdge(EdgeObj edgeObj)
     {
-        this.selectedEdges.Add(id);
+        this.selectedEdges.Add(edgeObj);
     }
 
     // Remove a vertex from selectedVertices
-    public bool DeselectVertex(int id)
+    public bool DeselectVertex(VertexObj vertexObj)
     {
-        return this.selectedVertices.Remove(id);
+        return this.selectedVertices.Remove(vertexObj);
     }
 
     // Remove am edge from selectedEdges
-    public bool DeselectEdge(int id)
+    public bool DeselectEdge(EdgeObj edgeObj)
     {
-        return this.selectedEdges.Remove(id);
+        return this.selectedEdges.Remove(edgeObj);
     }
 
     // Method called to delete the currently selected vertices and edges, updates graph objects and graph database
@@ -57,36 +67,35 @@ public class SelectionManager : MonoBehaviour
     {
         // Destroy the graph objects corresponding to the currently selected vertices and edges
         // TODO: object pooling
-        Transform graphObj = Controller.singleton.graphObj;
-        for (int i = graphObj.childCount - 1; i >= 0; i--)
+
+        // Destroy the gameObjects for edges in selectedEdges
+        foreach (EdgeObj edgeObj in this.selectedEdges)
         {
-            // If the vertex object's id is in the selectedVertices list, destroy its gameObject
-            VertexObj vertexObj = graphObj.GetChild(i).GetComponent<VertexObj>();
-            if (selectedVertices.Contains(vertexObj.GetID())) {
-                Destroy(vertexObj.gameObject);
-            }
-            // Else look through its edges and destroy any edge objects with id in selectedEdges
-            else
+            // Update the graph ds
+            Controller.singleton.graph.RemoveEdge(edgeObj.GetID());
+
+            Destroy(edgeObj.gameObject);
+        }
+        this.selectedEdges = new List<EdgeObj>();
+
+        // For each vertex to be deleted, find all edges connecting to the vertex, then destroy the vertex object
+        foreach (VertexObj vertexObj in this.selectedVertices)
+        {
+            // TODO: Find a faster way to do this without having to find all the edge objects in the scene
+            EdgeObj[] allEdgeObjs = GameObject.FindObjectsOfType<EdgeObj>();
+            foreach (EdgeObj edgeObj in allEdgeObjs)
             {
-                for (int j = graphObj.GetChild(i).childCount - 1; j >= 0; j--)
+                if (edgeObj.targetVertexObj == vertexObj.gameObject)
                 {
-                    EdgeObj edgeObj = graphObj.GetChild(i).GetChild(j).GetComponent<EdgeObj>();
-                    if (selectedEdges.Contains(edgeObj.GetID()))
-                    {
-                        Destroy(edgeObj.gameObject);
-                    }
+                    Destroy(edgeObj.gameObject);
                 }
             }
-        }
 
-        // Delete the selected vertices and edges from graph ds
-        foreach (int edgeID in selectedEdges)
-        {
-            Controller.singleton.graph.RemoveEdge(edgeID);
+            // Update the graph ds
+            Controller.singleton.graph.RemoveVertex(vertexObj.GetID());
+
+            Destroy(vertexObj.gameObject);
         }
-        foreach (int vertexID in selectedEdges)
-        {
-            Controller.singleton.graph.RemoveVertex(vertexID);
-        }
+        this.selectedVertices = new List<VertexObj>();
     }
 }

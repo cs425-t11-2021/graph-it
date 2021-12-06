@@ -12,8 +12,14 @@ public class VertexObj : MonoBehaviour
     private Rigidbody2D rb;
     // Reference to the sprite child object of the vertex object
     private Transform spriteObj;
-
+    // Amount of time this object has been in scene
     private float lifetime;
+
+    // TODO: Remove once animations are implemented
+    // Whether vertex is selected in the SelectionManager
+    private bool selected = false;
+    // Reference to the spriteRenderer component of the Sprite child object
+    private SpriteRenderer spriteRenderer;
 
     // Getter for id
     public int GetID()
@@ -27,6 +33,7 @@ public class VertexObj : MonoBehaviour
 
         rb = GetComponent<Rigidbody2D>();
         spriteObj = transform.GetChild(0);
+        spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
     }
 
     // Method called by a controller class to setup properties of the vertex object
@@ -92,7 +99,23 @@ public class VertexObj : MonoBehaviour
         //{
         //    spriteObj.localScale = new Vector3(1f, 1f, 1f);
         //}
-            
+    }
+
+    // When user clicks a vertex obj, select/deselect it using selection manager
+    // Change color to blue when selected
+    // TODO: Replace with Unity animator
+    private void OnMouseDown()
+    {
+        if (selected)
+        {
+            SelectionManager.singleton.DeselectVertex(this);
+            this.spriteRenderer.color = new Color32(255, 255, 255, 255);
+        }
+        else
+        {
+            SelectionManager.singleton.SelectVertex(this);
+            this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+        }
     }
 
     private void OnMouseExit()

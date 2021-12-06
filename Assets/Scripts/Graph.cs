@@ -200,11 +200,22 @@ public class Graph
     {
         this.vertices.Remove( vert );
 
+        // JIMSON - TEMPOARY FIX
+        List<(int, int)> toBeRemoved = new List<(int, int)>();
+
         foreach ( KeyValuePair< ( int, int ), Edge > kvp in this.adjacency )
         {
-            if ( kvp.Value.IncidentOn( vert ) )
-                this.adjacency.Remove( kvp.Key );
+            if (kvp.Value.IncidentOn(vert))
+                //this.adjacency.Remove( kvp.Key );
+                toBeRemoved.Add(kvp.Key);
         }
+
+        // JIMSON - TEMPOARY FIX
+        foreach (var remove in toBeRemoved)
+        {
+            this.adjacency.Remove(remove);
+        }
+
         return vert;
     }
 
