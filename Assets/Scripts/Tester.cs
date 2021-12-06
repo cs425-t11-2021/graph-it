@@ -123,8 +123,8 @@ public class Tester : MonoBehaviour
         }
 
         // Print out info about the graph ds into console
-        foreach (var kvp in graph_ds.incidence) {
-            Debug.Log("Vertex: " + kvp.Key + " Edges: " + string.Join(",", kvp.Value));
+        foreach (var kvp in graph_ds.adjacency) {
+            Debug.Log("Vertex: " + kvp.Key + " Edges: " + kvp.Value);
             for (int i = 0; i < u_count; i++) {
                 for (int j = 0; j < v_count; j++) {
                     if (Random.value < .5f) {
