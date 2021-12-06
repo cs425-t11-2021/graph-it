@@ -36,6 +36,18 @@ public class SelectionManager : MonoBehaviour
         {
             DeleteSelection();
         }
+
+        // Deselect all when the user clicks out of the graph
+        if (Input.GetMouseButtonDown(0))
+        {
+            // Check if cursor is over collider, if not, deselect all graph objects
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
+            if (!hit)
+            {
+                DeSelectAll();
+            }
+        }
     }
 
     // Add a vertex to selectedVertices
@@ -95,6 +107,21 @@ public class SelectionManager : MonoBehaviour
             Controller.singleton.graph.RemoveVertex(vertexObj.GetID());
 
             Destroy(vertexObj.gameObject);
+        }
+        this.selectedVertices = new List<VertexObj>();
+    }
+
+    // Method called to remove all selections
+    public void DeSelectAll()
+    {
+        for (int i = this.selectedEdges.Count - 1; i >= 0; i--)
+        {
+            this.selectedEdges[i].SetSelected(false);
+        }
+        this.selectedEdges = new List<EdgeObj>();
+        for (int i = this.selectedVertices.Count - 1; i >= 0; i--)
+        {
+            this.selectedVertices[i].SetSelected(false);
         }
         this.selectedVertices = new List<VertexObj>();
     }

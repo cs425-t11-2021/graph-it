@@ -106,17 +106,22 @@ public class VertexObj : MonoBehaviour
     // TODO: Replace with Unity animator
     private void OnMouseDown()
     {
-        if (selected)
+        SetSelected(!selected);
+    }
+
+    // Method for changing whether or not object is selected
+    public void SetSelected(bool selected)
+    {
+        this.selected = selected;
+        if (!selected)
         {
             SelectionManager.singleton.DeselectVertex(this);
             this.spriteRenderer.color = new Color32(0, 0, 0, 255);
-            this.selected = false;
         }
         else
         {
             SelectionManager.singleton.SelectVertex(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
-            this.selected = true;
         }
     }
 
