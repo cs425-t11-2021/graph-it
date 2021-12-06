@@ -80,7 +80,7 @@ public class Controller : MonoBehaviour
             int fromVertexIndex = Array.IndexOf(vertexTransformPositions, kvp.Key.Item1);
             int toVertexIndex = Array.IndexOf(vertexTransformPositions, kvp.Key.Item2);
             edgeObj.transform.SetParent(graphObj.GetChild(fromVertexIndex));
-            edgeObj.Initiate(kvp.Key.Item1, kvp.Key.Item2, graphObj.GetChild(toVertexIndex).gameObject);
+            edgeObj.Initiate(kvp.Value, graphObj.GetChild(toVertexIndex).gameObject);
 
             // Add a DistanceJoint2D which connects the two vertices
             DistanceJoint2D joint = graphObj.GetChild(fromVertexIndex).gameObject.AddComponent<DistanceJoint2D>();

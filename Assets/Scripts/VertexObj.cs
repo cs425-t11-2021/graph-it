@@ -4,16 +4,22 @@ using UnityEngine;
 
 public class VertexObj : MonoBehaviour
 {
-    // ID of the associated vertex in the graph data structure
-    private int vertex_id;
+    // ID of the associated vertex in the graph data structure, -1 is unintialized
+    private int id = -1;
     // Label of the vertex
-    private string vertex_label;
+    private string label;
     // Reference to the rigidbody compoonent of the vertex object
     private Rigidbody2D rb;
     // Reference to the sprite child object of the vertex object
     private Transform spriteObj;
 
     private float lifetime;
+
+    // Getter for id
+    public int GetID()
+    {
+        return id;
+    }
 
     private void Awake() {
         // Vertex objects starts non active
@@ -26,14 +32,14 @@ public class VertexObj : MonoBehaviour
     // Method called by a controller class to setup properties of the vertex object
     // Updated to use Vertex struct
     public void Initiate(Vertex vertex) {
-        vertex_id = vertex.id;
-        vertex_label = vertex.label;
+        id = vertex.id;
+        label = vertex.label;
 
         // Activate the vertex object once it has been initiated
         gameObject.SetActive(true);
 
         // Initiate the label
-        transform.GetChild(2).GetComponent<LabelObj>().Initiate(vertex_label);
+        transform.GetChild(2).GetComponent<LabelObj>().Initiate(label);
     }
 
     private void Start() {
