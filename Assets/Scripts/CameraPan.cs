@@ -14,10 +14,14 @@ public class CameraPan : MonoBehaviour
     private Vector3 lastPosition;
     // Whether or not cursor is over a collider
     private bool cursorOverCollider = false;
+    // The space that the camera is allowed to pan in
+    private Bounds cameraPanBounds;
 
     private void Awake() {
         // Get a reference to the Camera component of the current gameObject
         camera = gameObject.GetComponent<Camera>();
+
+        cameraPanBounds = new Bounds();
     }
 
     private void Update() {
@@ -33,6 +37,9 @@ public class CameraPan : MonoBehaviour
                 cursorOverCollider = true;
                 return;
             }
+
+            // Update the camera pan bounds according to the position of the vertices
+            UpdateBounds();
         }
 
         // Left mouse button held
@@ -50,7 +57,13 @@ public class CameraPan : MonoBehaviour
             // Calculate the direction the camera needs to move to move towards the mouse cursor
             Vector3 dir = lastPosition - camera.ScreenToWorldPoint(Input.mousePosition);
             // Translate the camera's position towards the direction, scaled by pan speed
-            transform.position = Vector3.MoveTowards(transform.position, transform.position + dir, panSpeed * Time.deltaTime);
+            Vector3 targetPosition = Vector3.MoveTowards(transform.position, transform.position + dir, panSpeed * Time.deltaTime);
+            // Only move the camera if the target position is still in camera pan bounds
+            if (cameraPanBounds.Contains(new Vector3(targetPosition.x, targetPosition.y, 0)))
+            {
+                transform.position = targetPosition;
+            }
+            
             // Update last position of camera
             lastPosition = camera.ScreenToWorldPoint(Input.mousePosition);
         }
@@ -59,6 +72,39 @@ public class CameraPan : MonoBehaviour
         if (Input.GetMouseButtonUp(0)) {
             if (cursorOverCollider) cursorOverCollider = false;
         }
-        
+
+    }
+
+    // Set the bounds for camera panning to be slightly bigger than the space taken up by the graph objects
+    private void UpdateBounds()
+    {
+        Transform graphObj = Controller.singleton.graphObj;
+        float xMin = float.PositiveInfinity, yMin = float.PositiveInfinity;
+        float xMax = float.NegativeInfinity, yMax = float.NegativeInfinity;
+
+        // Find the minimum and maxmimum x and y values of the vertices
+        for (int i = 0; i < graphObj.childCount; i++)
+        {
+            if (graphObj.GetChild(i).position.x < xMin)
+            {
+                xMin = graphObj.GetChild(i).position.x;
+            }
+            if (graphObj.GetChild(i).position.x > xMax)
+            {
+                xMax = graphObj.GetChild(i).position.x;
+            }
+            if (graphObj.GetChild(i).position.y < yMin)
+            {
+                yMin = graphObj.GetChild(i).position.y;
+            }
+            if (graphObj.GetChild(i).position.y > yMax)
+            {
+                yMax = graphObj.GetChild(i).position.y;
+            }
+        }
+
+        // Set camera pan bounds
+        cameraPanBounds.SetMinMax(new Vector3(xMin - 3, yMin - 3, 0), new Vector3(xMax + 3, yMax + 3, 0));
+
     }
 }
