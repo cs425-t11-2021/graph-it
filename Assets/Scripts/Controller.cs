@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,47 +53,43 @@ public class Controller : MonoBehaviour
     }
 
     // Creates the vertex and edge unity objects according to the contents of the graph ds
-    public void CreateUnityGraphObjs() {
-        foreach (var kvp in graph.incidence)
-        {
-            Vector2 pos = Random.insideUnitCircle * 5f;
-        }
-    }
-
     // TODO: add comments
     public void CreateGraphObjs() {
-        foreach (var kvp in graph.incidence) {
-            Vector2 pos = Random.insideUnitCircle.normalized * 3f;
+        // Array to store the child index under GraphObj of each vertex
+        // Index corresponds to the child index, value corresponds to vertex id
+        int[] vertexTransformPositions = new int[graph.vertices.Count];
+
+        // Currently avaiable child index of GraphObj
+        int childIndex = 0;
+        // Iterate through each vertex in the graph data structure and create a corresponding vertexObj
+        foreach (Vertex vertex in graph.vertices) {
+            // TODO: Change Testing code
+            // Testing: Vertex objs spawns in random position
+            Vector2 pos = UnityEngine.Random.insideUnitCircle.normalized * 3f;
             VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
             vertexObj.transform.SetParent(graphObj);
-            vertexObj.Initiate(graph.vertices[kvp.Key]);
+            vertexTransformPositions[childIndex++] = vertex.id;
+            vertexObj.Initiate(vertex);
         }
 
-        for (int i = 0; i < graph.incidence.Count; i++) {
-            foreach (Edge edge in graph.incidence[i]) {
-                EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
-                edgeObj.transform.SetParent(graphObj.GetChild(i));
-                edgeObj.Initiate(i, edge.vert2.id, graphObj.GetChild(edge.vert2.id).gameObject);
-            }
-        }
-        for (int i = 0; i < graph.incidence.Count; i++) {
-            foreach (Edge edge in graph.incidence[i]) {
-                // Instantiate an edge object and set its parent to the source vertex
-                // Initiate the edge object script with the correct parameters
-                EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
-                edgeObj.transform.SetParent(graphObj.GetChild(i));
-                edgeObj.Initiate(i, edge.vert2.id, graphObj.GetChild(edge.vert2.id).gameObject);
-                // Debug.Log("Creating edge between " + i + " and " + edge.incidence.Item2.id);
+        // Iterate through each edge in the graph data structure and create a correspoinding edgeObj
+        foreach (KeyValuePair<(int, int), Edge> kvp in graph.adjacency)
+        {
+            EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
+            // Find the child index of the from and to vertices and set the from vertex as the parent of edge object
+            int fromVertexIndex = Array.IndexOf(vertexTransformPositions, kvp.Key.Item1);
+            int toVertexIndex = Array.IndexOf(vertexTransformPositions, kvp.Key.Item2);
+            edgeObj.transform.SetParent(graphObj.GetChild(fromVertexIndex));
+            edgeObj.Initiate(kvp.Key.Item1, kvp.Key.Item2, graphObj.GetChild(toVertexIndex).gameObject);
 
-                // Add a DistanceJoint2D which connects the two vertices
-                DistanceJoint2D joint = graphObj.GetChild(i).gameObject.AddComponent<DistanceJoint2D>();
-                joint.autoConfigureConnectedAnchor = false;
-                joint.enableCollision = true;
-                joint.distance = edgeLength;
-                joint.maxDistanceOnly = true;
-                joint.autoConfigureDistance = false;
-                joint.connectedBody = graphObj.GetChild(edge.vert2.id).gameObject.GetComponent<Rigidbody2D>();
-            }
+            // Add a DistanceJoint2D which connects the two vertices
+            DistanceJoint2D joint = graphObj.GetChild(fromVertexIndex).gameObject.AddComponent<DistanceJoint2D>();
+            joint.autoConfigureConnectedAnchor = false;
+            joint.enableCollision = true;
+            joint.distance = edgeLength;
+            joint.maxDistanceOnly = true;
+            joint.autoConfigureDistance = false;
+            joint.connectedBody = graphObj.GetChild(toVertexIndex).gameObject.GetComponent<Rigidbody2D>();
         }
     }
 
