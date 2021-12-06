@@ -20,7 +20,8 @@ public class GeneralMenuButton : MonoBehaviour
         //want the dropdown to not be shown or accessible when program first starts
         panelObj.gameObject.SetActive(false);
 
-        menuItem = panelObj.transform.GetChild(2).transform.GetChild(1).gameObject;
+        menuItem = transform.GetChild(1).GetChild(2).GetChild(1).gameObject;
+
         menuItem.gameObject.SetActive(false);
     }
 
@@ -32,9 +33,9 @@ public class GeneralMenuButton : MonoBehaviour
             panelObj.gameObject.SetActive(true);
             //Debug.Log("file was clicked");
         }
-        /*else if(EventSystem.current.currentSelectedGameObject == menuItem){
-            menuItem.gameObject.SetActive(true);
-        }*/
+        else if(EventSystem.current.currentSelectedGameObject == transform.GetChild(1).GetChild(2).gameObject){
+            menuItem.SetActive(true);
+        }
         else{
             panelObj.gameObject.SetActive(false);
         }
