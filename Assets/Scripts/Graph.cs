@@ -240,7 +240,7 @@ public class Graph
     {
         this.vertices.Remove( vert );
 
-        List< ( int, int ) > to_be_removed = new List< ( int, int ) >( this.adjacency.Keys );
+        List< ( int, int ) > to_be_removed = new List< ( int, int ) >();
         foreach ( KeyValuePair< ( int, int ), Edge > kvp in this.adjacency )
         {
             if ( kvp.Value.IncidentOn( vert ) )
