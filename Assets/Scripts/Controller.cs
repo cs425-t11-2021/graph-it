@@ -98,6 +98,9 @@ public class Controller : MonoBehaviour
             joint.autoConfigureDistance = false;
             joint.connectedBody = graphObj.GetChild(toVertexIndex).gameObject.GetComponent<Rigidbody2D>();
         }
+
+        // Update the Grpah information UI
+        GraphInfo.singleton.UpateGraphInfo();
     }
 
     // Remove all graph visualization objects from scene
@@ -110,6 +113,9 @@ public class Controller : MonoBehaviour
             // TODO: Once object pooling is implmented, add deleted objs to pool rather than destroy them.
             Destroy(graphObj.GetChild(i).gameObject);
         }
+
+        // Update the Grpah information UI
+        GraphInfo.singleton.UpateGraphInfo();
     }
 
     // Returns true if any UI elements are being interacted with

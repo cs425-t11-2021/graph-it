@@ -109,6 +109,9 @@ public class SelectionManager : MonoBehaviour
             Destroy(vertexObj.gameObject);
         }
         this.selectedVertices = new List<VertexObj>();
+
+        // Update the Grpah information UI
+        GraphInfo.singleton.UpateGraphInfo();
     }
 
     // Method called to remove all selections
