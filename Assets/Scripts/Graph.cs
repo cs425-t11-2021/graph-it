@@ -145,91 +145,6 @@ public class Graph
         this.next_vert_id = 0;
         this.next_edge_id = 0;
     }
-    
-    public Vertex this[ int id ] // TODO: ensure one can modify parameters of vertices, e.g. graph[ id ].style = 3;
-    {
-        get => this.GetVertex( id );
-    }
-
-    public Edge this[ int id1, int id2 ]
-    {
-        get => this.adjacency[ ( id1, id2 ) ];
-    }
-
-    public void AddVertex( double? x_pos=null, double? y_pos=null )
-    {
-        this.AddVertex( new Vertex( this.next_vert_id, x_pos : x_pos, y_pos : y_pos ) );
-    }
-
-    public void AddVertex( Vertex vert )
-    {
-        this.vertices.Add( vert );
-        // this.adjacency.Add( vert.id, new List< Edge >() );
-        this.next_vert_id++;
-    }
-
-    public void AddEdge( Vertex vert1, Vertex vert2 )
-    {
-        if ( !this.vertices.Contains( vert1 ) || !this.vertices.Contains( vert2 ) )
-            Debug.Log( ( new System.Exception( "One or more vertices have not been added to the graph." ) ).ToString() );
-
-        if ( vert1 < vert2 )
-            this.adjacency[ ( vert1.id, vert2.id ) ] = new Edge( this.next_edge_id, vert1, vert2 );
-        else
-            this.adjacency[ ( vert2.id, vert1.id ) ] = new Edge( this.next_edge_id, vert2, vert1 );
-        this.next_edge_id++;
-    }
-
-    public void AddEdge( Edge edge )
-    {
-        if ( !this.vertices.Contains( edge.vert1 ) || !this.vertices.Contains( edge.vert2 ) )
-            Debug.Log( ( new System.Exception( "One or more vertices have not been added to the graph." ) ).ToString() );
-        if ( edge.vert1 >= edge.vert2 )
-            Debug.Log( ( new System.Exception( "Invalid edge added to graph." ) ).ToString() );
-
-        this.adjacency[ ( edge.vert1.id, edge.vert2.id ) ] = edge;
-        this.next_edge_id++;
-    }
-
-    public Vertex RemoveVertex( int id )
-    {
-        return this.RemoveVertex( this.GetVertex( id ) );
-    }
-
-    public Vertex RemoveVertex( Vertex vert )
-    {
-        this.vertices.Remove( vert );
-
-        // JIMSON - TEMPOARY FIX
-        List<(int, int)> toBeRemoved = new List<(int, int)>();
-
-        foreach ( KeyValuePair< ( int, int ), Edge > kvp in this.adjacency )
-        {
-            if (kvp.Value.IncidentOn(vert))
-                //this.adjacency.Remove( kvp.Key );
-                toBeRemoved.Add(kvp.Key);
-        }
-
-        // JIMSON - TEMPOARY FIX
-        foreach (var remove in toBeRemoved)
-        {
-            this.adjacency.Remove(remove);
-        }
-
-        return vert;
-    }
-
-    public Edge RemoveEdge( int id )
-    {
-        return this.RemoveEdge( this.GetEdge( id ) );
-    }
-
-    public Edge RemoveEdge( Edge edge )
-    {
-        this.adjacency.Remove( ( edge.vert1.id, edge.vert2.id ) );
-        this.adjacency.Remove( ( edge.vert2.id, edge.vert1.id ) );
-        return edge;
-    }
 
     private Vertex GetVertex( int id )
     {
@@ -251,6 +166,103 @@ public class Graph
         }
         Debug.Log( ( new System.Exception( "Edge could not be found." ) ).ToString() );
         throw new System.Exception( "Edge could not be found." );
+    }
+
+    public List< int > GetVertexIds()
+    {
+        List< int > ids = new List< int >();
+        foreach ( Vertex vert in this.vertices )
+            ids.Add( vert.id );
+        return ids;
+    }
+
+    public List< int > GetEdgeIds()
+    {
+        List< int > ids = new List< int >();
+        foreach ( KeyValuePair< ( int, int ), Edge > kvp in this.adjacency )
+            ids.Add( kvp.Value.id );
+        return ids;
+    }
+    
+    public Vertex this[ int id ] // TODO: ensure one can modify parameters of vertices, e.g. graph[ id ].style = 3;
+    {
+        get => this.GetVertex( id );
+    }
+
+    public Edge this[ int id1, int id2 ]
+    {
+        get => this.adjacency[ ( id1, id2 ) ];
+    }
+
+    public void AddVertex( double? x_pos=null, double? y_pos=null )
+    {
+        this.AddVertex( new Vertex( this.next_vert_id, x_pos : x_pos, y_pos : y_pos ) );
+    }
+
+    public void AddVertex( Vertex vert )
+    {
+        this.vertices.Add( vert );
+        this.next_vert_id++;
+    }
+
+    public void AddEdge( Vertex vert1, Vertex vert2 )
+    {
+        if ( !this.vertices.Contains( vert1 ) || !this.vertices.Contains( vert2 ) )
+            Debug.Log( ( new System.Exception( "One or more vertices have not been added to the graph." ) ).ToString() );
+        else if ( vert1 == vert2 )
+            Debug.Log( ( new System.Exception( "Invalid edge added to graph." ) ).ToString() );
+
+        else if ( vert1 < vert2 )
+            this.adjacency[ ( vert1.id, vert2.id ) ] = new Edge( this.next_edge_id++, vert1, vert2 );
+        else
+            this.adjacency[ ( vert2.id, vert1.id ) ] = new Edge( this.next_edge_id++, vert2, vert1 );
+    }
+
+    public void AddEdge( Edge edge )
+    {
+        if ( !this.vertices.Contains( edge.vert1 ) || !this.vertices.Contains( edge.vert2 ) )
+            Debug.Log( ( new System.Exception( "One or more vertices have not been added to the graph." ) ).ToString() );
+        else if ( edge.vert1 >= edge.vert2 )
+            Debug.Log( ( new System.Exception( "Invalid edge added to graph." ) ).ToString() );
+        else
+        {
+            this.adjacency[ ( edge.vert1.id, edge.vert2.id ) ] = edge;
+            this.next_edge_id++;
+        }
+    }
+
+    public Vertex RemoveVertex( int id )
+    {
+        return this.RemoveVertex( this.GetVertex( id ) );
+    }
+
+    public Vertex RemoveVertex( Vertex vert )
+    {
+        this.vertices.Remove( vert );
+
+        List< ( int, int ) > to_be_removed = new List< ( int, int ) >( this.adjacency.Keys );
+        foreach ( KeyValuePair< ( int, int ), Edge > kvp in this.adjacency )
+        {
+            if ( kvp.Value.IncidentOn( vert ) )
+                to_be_removed.Add( kvp.Key );
+        }
+
+        foreach ( ( int, int ) remove in to_be_removed )
+            this.adjacency.Remove( remove );
+
+        return vert;
+    }
+
+    public Edge RemoveEdge( int id )
+    {
+        return this.RemoveEdge( this.GetEdge( id ) );
+    }
+
+    public Edge RemoveEdge( Edge edge )
+    {
+        this.adjacency.Remove( ( edge.vert1.id, edge.vert2.id ) );
+        this.adjacency.Remove( ( edge.vert2.id, edge.vert1.id ) );
+        return edge;
     }
 
 
@@ -404,7 +416,7 @@ public class Graph
         return this.GetChromaticNumber() == 2;
     }
 
-    // brute force method
+    // brute force method, NOTE: exponential time complexity with respect to vertices
     public int GetChromaticNumber()
     {
         int chi = this.vertices.Count;
@@ -418,13 +430,11 @@ public class Graph
         return chi;
     }
 
-    // NOTE: assumes id lines up with this.verticies indices
-    // NOTE: assumes that there are no loops
     private bool IsProperColoring( List< int > coloring )
     {
         foreach ( Edge edge in this.adjacency.Values )
         {
-            if ( coloring[ edge.vert1.id ] == coloring[ edge.vert2.id ] )
+            if ( coloring[ this.vertices.IndexOf( edge.vert1 ) ] == coloring[ this.vertices.IndexOf( edge.vert2 ) ] )
                 return false;
         }
         return true;
@@ -450,6 +460,51 @@ public class Graph
                 GetAllColoringsHelper( colorings, new_coloring, num_vertices, num_colors );
             }
         }
+    }
+
+    public List< Edge > Prim( Vertex vert )
+    {
+        List< Edge > mst = new List< Edge >();
+        HashSet< Vertex > mst_vertices = new HashSet< Vertex >() { vert };
+        int mst_vertices_prev_count = -1;
+        while ( mst_vertices_prev_count != mst_vertices.Count )
+        {
+            mst_vertices_prev_count = mst_vertices.Count;
+            List< Edge > incident_edges = new List< Edge >( this.GetIncidentEdges( mst_vertices ).OrderBy( edge => edge.weight ) );
+            foreach ( Edge edge in incident_edges )
+            {
+                if ( !mst_vertices.Contains( edge.vert1 ) || !mst_vertices.Contains( edge.vert2 ) )
+                {
+                    mst_vertices.Add( edge.vert1 );
+                    mst_vertices.Add( edge.vert2 );
+                    mst.Add( edge );
+                }
+            }
+        }
+        return mst;
+    }
+
+    public List< Edge > GetIncidentEdges( HashSet< Vertex > verts )
+    {
+        List< Edge > incident_edges = new List< Edge >();
+        foreach ( KeyValuePair< ( int, int ), Edge > kvp in this.adjacency )
+        {
+            foreach ( Vertex vert in verts )
+            {
+                if ( kvp.Value.IncidentOn( vert ) )
+                    incident_edges.Add( kvp.Value );
+            }
+        }
+        return incident_edges;
+    }
+
+    private static int CompareEdges( Edge edge1, Edge edge2 )
+    {
+        if ( edge1.weight < edge2.weight )
+            return -1;
+        if ( edge1.weight == edge2.weight )
+            return 0;
+        return 1;
     }
 
 

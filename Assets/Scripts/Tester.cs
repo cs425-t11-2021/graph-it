@@ -11,9 +11,6 @@ public class Tester : MonoBehaviour
 
     private void Start() {
         CreateRandomGraph();
-
-        // graph_ds = Controller.singleton.graph;
-        // graph_ds.Import( "export.txt" ); // should create cycle of length 19
     }
 
     private void Update() {
@@ -123,13 +120,10 @@ public class Tester : MonoBehaviour
         }
 
         // Print out info about the graph ds into console
-        foreach (var kvp in graph_ds.adjacency) {
-            Debug.Log("Vertex: " + kvp.Key + " Edges: " + kvp.Value);
-            for (int i = 0; i < u_count; i++) {
-                for (int j = 0; j < v_count; j++) {
-                    if (Random.value < .5f) {
-                        graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[u_count + j]);
-                    }
+        for (int i = 0; i < u_count; i++) {
+            for (int j = 0; j < v_count; j++) {
+                if (Random.value < .5f) {
+                    graph_ds.AddEdge(graph_ds.vertices[i], graph_ds.vertices[u_count + j]);
                 }
             }
         }
