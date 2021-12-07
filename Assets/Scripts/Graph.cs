@@ -484,6 +484,25 @@ public class Graph
         return mst;
     }
 
+    public List< Edge > GetIncidentEdges( Vertex vert )
+    {
+        return this.GetIncidentEdges( new HashSet< Vertex >() { vert } );
+    }
+
+    public List< Edge > GetIncidentEdges( HashSet< Vertex > verts )
+    {
+        List< Edge > incident_edges = new List< Edge >();
+        foreach ( KeyValuePair< ( int, int ), Edge > kvp in this.adjacency )
+        {
+            foreach ( Vertex vert in verts )
+            {
+                if ( kvp.Value.IncidentOn( vert ) )
+                    incident_edges.Add( kvp.Value );
+            }
+        }
+        return incident_edges;
+    }
+
     public List< Edge > Kruskal()
     {
         List< Edge > mst = new List< Edge >();
@@ -516,19 +535,24 @@ public class Graph
         throw new System.Exception( "Vertex could not be found in collection of components." );
     }
 
-    public List< Edge > GetIncidentEdges( HashSet< Vertex > verts )
-    {
-        List< Edge > incident_edges = new List< Edge >();
-        foreach ( KeyValuePair< ( int, int ), Edge > kvp in this.adjacency )
-        {
-            foreach ( Vertex vert in verts )
-            {
-                if ( kvp.Value.IncidentOn( vert ) )
-                    incident_edges.Add( kvp.Value );
-            }
-        }
-        return incident_edges;
-    }
+    // public int GetNumComponents()
+    // {
+
+    // }
+
+    // private void DepthFirstSearch( Vertex vert, Action< Edge > f )
+    // {
+    //     List< Boolean > visited = new List< Boolean >( this.vertices.Count );
+    //     foreach ( Vertex vert in this.GetIncidentEdges( vert ) )
+    //     {
+
+    //     }
+    // }
+
+    // private void DepthFirstSearchHelper(  )
+    // {
+
+    // }
 
     // private static int CompareEdges( Edge edge1, Edge edge2 )
     // {
