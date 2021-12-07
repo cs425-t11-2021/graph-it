@@ -73,6 +73,9 @@ public class Controller : MonoBehaviour
             // TODO: Change Testing code
             // Testing: Vertex objs spawns in random position
             Vector2 pos = UnityEngine.Random.insideUnitCircle.normalized * 3f;
+            if (vertex.x_pos != null && vertex.y_pos != null) {
+                pos = new Vector2((float) vertex.x_pos, (float) vertex.y_pos);
+            }
             VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
             vertexObj.transform.SetParent(graphObj);
             vertexTransformPositions[childIndex++] = vertex.id;
@@ -116,6 +119,41 @@ public class Controller : MonoBehaviour
 
         // Update the Grpah information UI
         GraphInfo.singleton.UpateGraphInfo();
+    }
+
+    public void UpdateGraphObjs() {
+        // EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        // foreach (EdgeObj edgeObj in allEdgeObjs)
+        // {
+        //     if (primEdgeIDs.Contains(edgeObj.GetID()))
+        //         edgeObj.SetSelected(true);
+        // }
+
+        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        List<int> existingVertexObjIDs = new List<int>();
+        foreach (VertexObj vertexObj in allVertexObjs)
+        {
+            existingVertexObjIDs.Add(vertexObj.GetID());
+        }
+        foreach (Vertex vertex in graph.vertices) {
+            if (!existingVertexObjIDs.Contains(vertex.id)) {
+                CreateVertexObj(vertex);
+            }
+        }
+    }
+
+    public void CreateVertexObj(Vertex vertex) {
+        Vector2 pos = UnityEngine.Random.insideUnitCircle.normalized * 3f;
+        if (vertex.x_pos != null && vertex.y_pos != null) {
+            pos = new Vector2((float) vertex.x_pos, (float) vertex.y_pos);
+        }
+        VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
+        vertexObj.transform.SetParent(graphObj);
+        vertexObj.Initiate(vertex);
+    }
+
+    public void CreateEdgeObj(Edge edge) {
+        
     }
 
     // Returns true if any UI elements are being interacted with

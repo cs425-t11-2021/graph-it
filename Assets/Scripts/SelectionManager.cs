@@ -38,6 +38,7 @@ public class SelectionManager : MonoBehaviour
         }
 
         // Deselect all when the user clicks out of the graph
+        // DISABLED FOR NOW
         if (Input.GetMouseButtonDown(0))
         {
             // Check if cursor is over collider, if not, deselect all graph objects
@@ -190,7 +191,7 @@ public class SelectionManager : MonoBehaviour
                 vertexObj.SetSelected(true);
         }
 
-        
+
 
     }
 }
