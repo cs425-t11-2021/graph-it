@@ -112,9 +112,10 @@ public class Controller : MonoBehaviour
     public void ClearGraphObjs() {
         Debug.LogWarning("[Controller] Calling ClearGraphObjs could lead to the visual not matching up with the graph data structure if the graph data structure isn't also cleared.");
 
-        for (int i = 0; i < graphObj.childCount; i++) {
+        for (int i = graphObj.childCount - 1; i >= 0; i--) {
             // TODO: Once object pooling is implmented, add deleted objs to pool rather than destroy them.
             Destroy(graphObj.GetChild(i).gameObject);
+            graphObj.GetChild(i).SetParent(null);
         }
 
         // Update the Grpah information UI
