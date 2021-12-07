@@ -10,7 +10,7 @@ public class EdgeObj : MonoBehaviour
     //private int toID = -1;
 
     // ID of the associated edge in the graph data structure, -1 is unintialized
-    private int id = -1;
+    public int id = -1;
     // Label of the edge
     private string label;
 

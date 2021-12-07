@@ -378,7 +378,7 @@ GameObject:
   - component: {fileID: 134002496}
   - component: {fileID: 134002495}
   m_Layer: 5
-  m_Name: Disselect All
+  m_Name: Deselect All
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -633,8 +633,8 @@ GameObject:
   - component: {fileID: 150277625}
   - component: {fileID: 150277624}
   - component: {fileID: 150277623}
-  - component: {fileID: 150277628}
   - component: {fileID: 150277627}
+  - component: {fileID: 150277628}
   m_Layer: 5
   m_Name: View
   m_TagString: Untagged
@@ -1236,7 +1236,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Disselect All
+  m_text: Deselect All
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -3940,6 +3940,7 @@ GameObject:
   - component: {fileID: 798110304}
   - component: {fileID: 798110303}
   - component: {fileID: 798110307}
+  - component: {fileID: 798110308}
   m_Layer: 5
   m_Name: Edit
   m_TagString: Untagged
@@ -4082,6 +4083,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a34e3e421a81dfe4eb64be0ea28cf89b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &798110308
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 798110301}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80d19f9aa879d47f3a1734f1e0c5ff8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectAllButton: {fileID: 58407690}
+  deselectAllButton: {fileID: 134002493}
 --- !u!1 &798872253
 GameObject:
   m_ObjectHideFlags: 0

@@ -63,9 +63,18 @@ public class Tester : MonoBehaviour
             graph_ds.AddVertex();
         }
 
+        List<(Vertex, Vertex)> existing = new List<(Vertex, Vertex)>();
         // Add 9 random edges to the graph
         for (int i = 0; i < 9; i++) {
-            graph_ds.AddEdge(graph_ds.vertices[Random.Range(0, 10)], graph_ds.vertices[Random.Range(0, 10)]);
+            Vertex from = graph_ds.vertices[Random.Range(0, graph_ds.vertices.Count)];
+            Vertex to = graph_ds.vertices[Random.Range(0, graph_ds.vertices.Count)];
+
+            if (from != to && !existing.Contains((from, to)))
+            {
+                graph_ds.AddEdge(from, to);
+                existing.Add((from, to));
+                existing.Add((to, from));
+            }
         }
     }
 

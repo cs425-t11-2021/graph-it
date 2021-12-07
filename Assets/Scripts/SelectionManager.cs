@@ -45,7 +45,7 @@ public class SelectionManager : MonoBehaviour
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
             if (!hit)
             {
-                DeSelectAll();
+                //DeSelectAll();
             }
         }
     }
@@ -83,6 +83,7 @@ public class SelectionManager : MonoBehaviour
         // Destroy the gameObjects for edges in selectedEdges
         foreach (EdgeObj edgeObj in this.selectedEdges)
         {
+            Debug.Log("Deleting" + edgeObj.GetID());
             // Update the graph ds
             Controller.singleton.graph.RemoveEdge(edgeObj.GetID());
 
@@ -94,7 +95,7 @@ public class SelectionManager : MonoBehaviour
         foreach (VertexObj vertexObj in this.selectedVertices)
         {
             // TODO: Find a faster way to do this without having to find all the edge objects in the scene
-            EdgeObj[] allEdgeObjs = GameObject.FindObjectsOfType<EdgeObj>();
+            EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
             foreach (EdgeObj edgeObj in allEdgeObjs)
             {
                 if (edgeObj.targetVertexObj == vertexObj.gameObject)
@@ -114,6 +115,7 @@ public class SelectionManager : MonoBehaviour
     // Method called to remove all selections
     public void DeSelectAll()
     {
+        Debug.Log("Deselecting All Components");
         for (int i = this.selectedEdges.Count - 1; i >= 0; i--)
         {
             this.selectedEdges[i].SetSelected(false);
@@ -124,5 +126,24 @@ public class SelectionManager : MonoBehaviour
             this.selectedVertices[i].SetSelected(false);
         }
         this.selectedVertices = new List<VertexObj>();
+    }
+
+    // Method called to select all objects
+    public void SelectAll()
+    {
+        Debug.Log("Selecting All Components");
+        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        foreach (EdgeObj edgeObj in allEdgeObjs)
+        {
+            if (!selectedEdges.Contains(edgeObj))
+                edgeObj.SetSelected(true);
+        }
+
+        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        foreach (VertexObj vertexObj in allVertexObjs)
+        {
+            if (!selectedVertices.Contains(vertexObj))
+                vertexObj.SetSelected(true);
+        }
     }
 }

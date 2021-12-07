@@ -255,6 +255,7 @@ public class Graph
 
     public Edge RemoveEdge( int id )
     {
+        Debug.Log("Removing from ds: " + id);
         return this.RemoveEdge( this.GetEdge( id ) );
     }
 
