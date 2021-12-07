@@ -10,7 +10,7 @@ public class Tester : MonoBehaviour
     private Graph graph_ds;
 
     private void Start() {
-        CreateRandomGraph();
+        CreateRandomGraph(10);
     }
 
     private void Update() {
@@ -29,7 +29,28 @@ public class Tester : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.R)) {
             Debug.Log("[Tester] Regenerating random graph.");
 
-            CreateRandomGraph();
+            CreateRandomGraph(5);
+            Controller.singleton.CreateGraphObjs();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            CreateRandomGraph(3);
+            Controller.singleton.CreateGraphObjs();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha4)) {
+            CreateRandomGraph(4);
+            Controller.singleton.CreateGraphObjs();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha5)) {
+            CreateRandomGraph(5);
+            Controller.singleton.CreateGraphObjs();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha6)) {
+            CreateRandomGraph(6);
+            Controller.singleton.CreateGraphObjs();
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha7)) {
+            CreateRandomGraph(7);
             Controller.singleton.CreateGraphObjs();
         }
 
@@ -58,17 +79,17 @@ public class Tester : MonoBehaviour
         }
     }
 
-    private void CreateRandomGraph() {
+    private void CreateRandomGraph(int num) {
         graph_ds = Controller.singleton.graph;
 
         // Add 10 vertices to the graph
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < num; i++) {
             graph_ds.AddVertex();
         }
 
         List<(Vertex, Vertex)> existing = new List<(Vertex, Vertex)>();
         // Add 9 random edges to the graph
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < num; i++) {
             Vertex from = graph_ds.vertices[Random.Range(0, graph_ds.vertices.Count)];
             Vertex to = graph_ds.vertices[Random.Range(0, graph_ds.vertices.Count)];
 
