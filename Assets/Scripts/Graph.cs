@@ -540,19 +540,37 @@ public class Graph
 
     // }
 
-    // private void DepthFirstSearch( Vertex vert, Action< Edge > f )
-    // {
-    //     List< Boolean > visited = new List< Boolean >( this.vertices.Count );
-    //     foreach ( Vertex vert in this.GetIncidentEdges( vert ) )
-    //     {
-
-    //     }
-    // }
-
-    // private void DepthFirstSearchHelper(  )
+    // public void CountComponents( Edge edge, Vertex vert )
     // {
 
     // }
+
+    private void DepthFirstSearch( Vertex vert, Action< Edge, Vertex > f )
+    {
+        List< bool > visited = new List< bool >( this.vertices.Count );
+        this.DepthFirstSearchHelper( vert, visited, f );
+    }
+
+    private void DepthFirstSearchHelper( Vertex vert, List< bool > visited, Action< Edge, Vertex > f )
+    {
+        foreach ( Edge edge in this.GetIncidentEdges( vert ) )
+        {
+            int vert1_i = this.vertices.IndexOf( edge.vert1 );
+            int vert2_i = this.vertices.IndexOf( edge.vert2 );
+            visited[ vert1_i ] = true;
+            visited[ vert2_i ] = true;
+            if ( visited[ vert1_i ] )
+            {
+                f( edge, edge.vert1 );
+                this.DepthFirstSearchHelper( edge.vert1, visited, f );
+            }
+            if ( visited[ vert2_i ] )
+            {
+                f( edge, edge.vert2 );
+                this.DepthFirstSearchHelper( edge.vert2, visited, f );
+            }
+        }
+    }
 
     // private static int CompareEdges( Edge edge1, Edge edge2 )
     // {
