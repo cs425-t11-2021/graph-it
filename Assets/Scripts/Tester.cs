@@ -80,6 +80,9 @@ public class Tester : MonoBehaviour
     }
 
     private void CreateRandomGraph(int num) {
+        Controller.singleton.ClearGraphObjs();
+        Controller.singleton.graph = new Graph();
+
         graph_ds = Controller.singleton.graph;
 
         // Add 10 vertices to the graph
@@ -103,6 +106,9 @@ public class Tester : MonoBehaviour
     }
 
     private void CreateCircularGraph() {
+        Controller.singleton.ClearGraphObjs();
+        Controller.singleton.graph = new Graph();
+
         graph_ds = Controller.singleton.graph;
 
         int size = Random.Range(3, 20);
@@ -120,6 +126,9 @@ public class Tester : MonoBehaviour
     }
 
     private void CreateCompleteGraph() {
+        Controller.singleton.ClearGraphObjs();
+        Controller.singleton.graph = new Graph();
+
         graph_ds = Controller.singleton.graph;
 
         int size = Random.Range(3, 10);
@@ -140,6 +149,9 @@ public class Tester : MonoBehaviour
     }
 
     private void CreateBipartiteGraph() {
+        Controller.singleton.ClearGraphObjs();
+        Controller.singleton.graph = new Graph();
+
         graph_ds = Controller.singleton.graph;
 
         int u_count = Random.Range(3, 6);

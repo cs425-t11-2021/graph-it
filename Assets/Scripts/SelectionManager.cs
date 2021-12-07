@@ -190,7 +190,7 @@ public class SelectionManager : MonoBehaviour
                 vertexObj.SetSelected(true);
         }
 
-
+        
 
     }
 }
