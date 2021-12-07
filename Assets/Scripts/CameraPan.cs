@@ -25,6 +25,12 @@ public class CameraPan : MonoBehaviour
     }
 
     private void Update() {
+        // Disable panning if no graph
+        if (Controller.singleton.graphObj.childCount == 0)
+        {
+            return;
+        }
+
         // Left mouse button clicked
         if (Input.GetMouseButtonDown(0)) {
             // At the start of the pan, store cursor position
@@ -79,11 +85,6 @@ public class CameraPan : MonoBehaviour
     private void UpdateBounds()
     {
         Transform graphObj = Controller.singleton.graphObj;
-
-        if (graphObj.childCount == 0)
-        {
-            cameraPanBounds = new Bounds();
-        }
 
         float xMin = float.PositiveInfinity, yMin = float.PositiveInfinity;
         float xMax = float.NegativeInfinity, yMax = float.NegativeInfinity;
