@@ -50,6 +50,10 @@ public class Controller : MonoBehaviour
         Camera.main.eventMask = clickableLayers;
     }
 
+    private void Update() {
+        // Debug.Log(graph.vertices.Count + " " + graph.adjacency.Count);
+    }
+
     private void Start() {
         CreateGraphObjs();
     }

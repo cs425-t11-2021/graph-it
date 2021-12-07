@@ -55,8 +55,9 @@ public class ImportFile : MonoBehaviour
                 errorMessagePopUp.SetActive(true);
             }
             else {
+                EventSystem.current.SetSelectedGameObject(null);
+
                 // Clear existing graph
-                Controller.singleton.graph.Clear();
                 Controller.singleton.ClearGraphObjs();
 
                 // TODO: File selector, file always saved on desktop for now
@@ -67,12 +68,15 @@ public class ImportFile : MonoBehaviour
                 fileButton.enabled = true;
                 editButton.enabled = true;
                 viewButton.enabled = true;
+                algorithmsPanelPrims.enabled = true;
 
                 // Recrate graph objects
                 Controller.singleton.CreateGraphObjs();
             }
         }
         else if(EventSystem.current.currentSelectedGameObject == cancelButton){
+            EventSystem.current.SetSelectedGameObject(null);
+
             //when the user clicks on the cancel button, the pop-up should disappear and the disabled ui elements should be re-enabled
             this.gameObject.SetActive(false);
             fileButton.enabled = true;

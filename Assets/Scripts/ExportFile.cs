@@ -65,10 +65,12 @@ public class ExportFile : MonoBehaviour
                 fileButton.enabled = true;
                 editButton.enabled = true;
                 viewButton.enabled = true;
+                algorithmsPanelPrims.enabled = true;
                 
             }
         }
         else if(EventSystem.current.currentSelectedGameObject == cancelButton){
+            EventSystem.current.SetSelectedGameObject(null);
             //when the user clicks on the cancel button, the pop-up should disappear and the disabled ui elements should be re-enabled
             this.gameObject.SetActive(false);
             fileButton.enabled = true;

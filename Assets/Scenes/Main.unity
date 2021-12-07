@@ -6284,6 +6284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   importFileButton: {fileID: 646253996}
   exportFileButton: {fileID: 1983837607}
+  newGraphButton: {fileID: 1112343149}
 --- !u!114 &1119136495
 MonoBehaviour:
   m_ObjectHideFlags: 0

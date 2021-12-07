@@ -12,6 +12,9 @@ public class FileMenu : MonoBehaviour
     public GameObject importFileButton;
     public GameObject exportFileButton;
 
+    [SerializeField]
+    private GameObject newGraphButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -36,6 +39,11 @@ public class FileMenu : MonoBehaviour
         else if (EventSystem.current.currentSelectedGameObject == exportMenuItem)
         {
             exportFileButton.gameObject.SetActive(true);
+        }
+        else if (EventSystem.current.currentSelectedGameObject == newGraphButton)
+        {
+            Controller.singleton.ClearGraphObjs();
+            Controller.singleton.graph.Clear();
         }
     }
 }

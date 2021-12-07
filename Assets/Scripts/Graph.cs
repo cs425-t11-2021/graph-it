@@ -6,7 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
+[System.Serializable]
 public struct Vertex : IEquatable< Vertex >
 {
     // TODO: make id long
@@ -51,7 +51,7 @@ public struct Vertex : IEquatable< Vertex >
     public override string ToString() => String.Format( "id: {0}, label: {1}, x_pos: {2}, y_pos: {3}, style: {4}, color: {5}, label_style: {6}", this.id, this.label, this.x_pos, this.y_pos, this.style, this.color, this.label_style );
 }
 
-
+[System.Serializable]
 public struct Edge : IEquatable< Edge >
 {
     // TODO: make id long
@@ -109,6 +109,7 @@ public struct Edge : IEquatable< Edge >
 }
 
 
+[System.Serializable]
 public class Graph
 {
     // Vertices list is read-only from outside of class
