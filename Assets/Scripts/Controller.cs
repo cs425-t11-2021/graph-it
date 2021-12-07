@@ -140,6 +140,18 @@ public class Controller : MonoBehaviour
                 CreateVertexObj(vertex);
             }
         }
+
+        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        List<int> existingEdgeObjIDs = new List<int>();
+        foreach (EdgeObj edgeObj in allEdgeObjs)
+        {
+            existingEdgeObjIDs.Add(edgeObj.GetID());
+        }
+        foreach (KeyValuePair<(int, int), Edge> kvp in graph.adjacency) {
+            if (!existingEdgeObjIDs.Contains(kvp.Value.id)) {
+                CreateEdgeObj(kvp.Value);
+            }
+        }
     }
 
     public void CreateVertexObj(Vertex vertex) {
@@ -153,7 +165,31 @@ public class Controller : MonoBehaviour
     }
 
     public void CreateEdgeObj(Edge edge) {
-        
+        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        VertexObj fromVertexObj = null;
+        VertexObj toVertexObj = null;
+        foreach (VertexObj vertexObj in allVertexObjs) {
+            if (vertexObj.GetID() == edge.vert1.id) {
+                fromVertexObj = vertexObj;
+            }
+            if (vertexObj.GetID() == edge.vert2.id) {
+                toVertexObj = vertexObj;
+            }
+        }
+
+        EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
+        // Find the child index of the from and to vertices and set the from vertex as the parent of edge object
+        edgeObj.transform.SetParent(fromVertexObj.transform);
+        edgeObj.Initiate(edge, toVertexObj.gameObject);
+
+        // Add a DistanceJoint2D which connects the two vertices
+        DistanceJoint2D joint = fromVertexObj.gameObject.AddComponent<DistanceJoint2D>();
+        joint.autoConfigureConnectedAnchor = false;
+        joint.enableCollision = true;
+        joint.distance = edgeLength;
+        joint.maxDistanceOnly = true;
+        joint.autoConfigureDistance = false;
+        joint.connectedBody = toVertexObj.gameObject.GetComponent<Rigidbody2D>();
     }
 
     // Returns true if any UI elements are being interacted with

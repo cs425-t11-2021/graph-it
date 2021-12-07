@@ -11,10 +11,23 @@ public class EditMenu : MonoBehaviour
     private GameObject selectAllButton;
     [SerializeField]
     private GameObject deselectAllButton;
+    [SerializeField]
+    private Button addEdgeButton;
+
+    private void Awake() {
+        addEdgeButton.interactable = false;
+    }
 
     // Update is called once per frame
     void Update()
     {
+        if (SelectionManager.singleton.SelectedVertexCount() == 2 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
+            addEdgeButton.interactable = true;
+        }
+        else {
+            addEdgeButton.interactable = false;
+        }
+
         if (EventSystem.current.currentSelectedGameObject == selectAllButton)
         {
             EventSystem.current.SetSelectedGameObject(null);
@@ -25,5 +38,9 @@ public class EditMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(null);
             SelectionManager.singleton.DeSelectAll();
         }
+        else if (EventSystem.current.currentSelectedGameObject == addEdgeButton.gameObject) {
+            SelectionManager.singleton.AddEdge();
+        }
+       
     }
 }

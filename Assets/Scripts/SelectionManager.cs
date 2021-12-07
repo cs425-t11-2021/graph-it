@@ -190,8 +190,15 @@ public class SelectionManager : MonoBehaviour
             if (primVertexIDs.Contains(vertexObj.GetID()))
                 vertexObj.SetSelected(true);
         }
+    }
 
+    // Add a new edge between two selected vertices
+    public void AddEdge() {
+        VertexObj vertexObj1 = selectedVertices[0];
+        VertexObj vertexObj2 = selectedVertices[1];
 
-
+        Controller.singleton.graph.AddEdge(Controller.singleton.graph[vertexObj1.GetID()], Controller.singleton.graph[vertexObj2.GetID()]);
+        Controller.singleton.UpdateGraphObjs();
+        DeSelectAll();
     }
 }
