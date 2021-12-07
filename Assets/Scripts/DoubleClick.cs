@@ -4,6 +4,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class DoubleClick : MonoBehaviour
 {
@@ -32,6 +33,11 @@ public class DoubleClick : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge"));  //11f since camera is at z = -10
         if (hit) {
+            return;
+        }
+
+        // Do not pan camera if the cursor is over UI elements
+        if (EventSystem.current.IsPointerOverGameObject()) {
             return;
         }
 

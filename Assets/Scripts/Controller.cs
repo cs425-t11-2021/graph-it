@@ -104,6 +104,8 @@ public class Controller : MonoBehaviour
 
         // Update the Grpah information UI
         GraphInfo.singleton.UpateGraphInfo();
+
+        SelectionManager.singleton.DeSelectAll();
     }
 
     // Remove all graph visualization objects from scene

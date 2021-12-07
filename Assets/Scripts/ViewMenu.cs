@@ -22,7 +22,6 @@ public class ViewMenu : MonoBehaviour
     // Method called by the "Show Graph Labels" button in the view dropdown to toggle the display of vertex and edge labels
     public void ToggleLabels()
     {
-        Debug.Log("Test");
         if (Controller.singleton.displayVertexLabels)
         {
             Controller.singleton.displayVertexLabels = false;
