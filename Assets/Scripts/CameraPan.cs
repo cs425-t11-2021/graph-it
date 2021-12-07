@@ -79,6 +79,12 @@ public class CameraPan : MonoBehaviour
     private void UpdateBounds()
     {
         Transform graphObj = Controller.singleton.graphObj;
+
+        if (graphObj.childCount == 0)
+        {
+            cameraPanBounds = new Bounds();
+        }
+
         float xMin = float.PositiveInfinity, yMin = float.PositiveInfinity;
         float xMax = float.NegativeInfinity, yMax = float.NegativeInfinity;
 
