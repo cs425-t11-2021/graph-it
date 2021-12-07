@@ -148,4 +148,49 @@ public class SelectionManager : MonoBehaviour
                 vertexObj.SetSelected(true);
         }
     }
+
+    // Gets the number of vertices currently selected
+    public int SelectedVertexCount() {
+        return selectedVertices.Count;
+    }
+
+    // Gets the number of edges currently selected
+    public int SelectedEdgeCount() {
+        return selectedEdges.Count;
+    }
+
+    // TODO: Move somewhere else
+    // Runs the prim algorithm on the currently selected vertex
+    public void RunPrims() {
+        if (selectedVertices.Count != 1) {
+            Debug.Log( ( new System.Exception( "Cannot start Prim's algorithm." ) ).ToString() );
+            throw new System.Exception( "Cannot start Prim's algorithm." );
+        }
+
+        List<Edge> primEdges = Controller.singleton.graph.Prim(Controller.singleton.graph[selectedVertices[0].GetID()]);
+        List<int> primEdgeIDs = new List<int>();
+        List<int> primVertexIDs = new List<int>();
+        foreach (Edge e in primEdges) {
+            primEdgeIDs.Add(e.id);
+            primVertexIDs.Add(e.vert1.id);
+            primVertexIDs.Add(e.vert2.id);
+        }
+
+        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        foreach (EdgeObj edgeObj in allEdgeObjs)
+        {
+            if (primEdgeIDs.Contains(edgeObj.GetID()))
+                edgeObj.SetSelected(true);
+        }
+
+        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        foreach (VertexObj vertexObj in allVertexObjs)
+        {
+            if (primVertexIDs.Contains(vertexObj.GetID()))
+                vertexObj.SetSelected(true);
+        }
+
+
+
+    }
 }

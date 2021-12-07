@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 
 public class GraphInfo : MonoBehaviour
@@ -13,6 +14,9 @@ public class GraphInfo : MonoBehaviour
     [SerializeField]
     private TMP_Text bipartite_text;
 
+    [SerializeField]
+    private Button prim_button;
+
     private void Awake() {
         // Singleton pattern setup
         if (singleton == null) {
@@ -22,6 +26,18 @@ public class GraphInfo : MonoBehaviour
             Debug.LogError("[GraphInfo] Singleton pattern violation");
             Destroy(this);
             return;
+        }
+
+        prim_button.interactable = false;
+    }
+
+    private void FixedUpdate() {
+        // Only allow the prim button to be pressed if there is exactly one vertex selected
+        if (SelectionManager.singleton.SelectedVertexCount() == 1 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
+            prim_button.interactable = true;
+        }   
+        else {
+            prim_button.interactable = false;
         }
     }
 
@@ -35,6 +51,5 @@ public class GraphInfo : MonoBehaviour
             chromatic_text.text = "Chromatic Number: " + chromatic_num;
             bipartite_text.text = "Bipartite: " + (chromatic_num == 2 ? "Yes" : "No");
         }
-        
     }
 }
