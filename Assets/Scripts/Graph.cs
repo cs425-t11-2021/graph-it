@@ -123,6 +123,8 @@ public class Graph
     private int next_vert_id = 0;
     private int next_edge_id = 0;
 
+    private int? chromatic_num;
+
 
     public Graph()
     {
@@ -413,12 +415,16 @@ public class Graph
 
     public bool IsBipartite()
     {
-        return this.GetChromaticNumber() == 2;
+        if ( this.chromatic_num is null )
+            this.chromatic_num = this.GetChromaticNumber();
+        return this.chromatic_num == 2;
     }
 
     // brute force method, NOTE: exponential time complexity with respect to vertices
     public int GetChromaticNumber()
     {
+        if ( !( this.chromatic_num is null ) )
+            return ( int ) this.chromatic_num;
         int chi = this.vertices.Count;
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
@@ -427,6 +433,7 @@ public class Graph
             if ( num_colors < chi && this.IsProperColoring( coloring ) )
                 chi = num_colors;
         }
+        this.chromatic_num = chi;
         return chi;
     }
 
