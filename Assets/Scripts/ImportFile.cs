@@ -5,7 +5,6 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.IO;
 using TMPro;
-//using UnityEngine.UIElements.TextField;
 public class ImportFile : MonoBehaviour
 {
     private GameObject cancelButton;
@@ -19,7 +18,8 @@ public class ImportFile : MonoBehaviour
     public GameObject fileDropDown;
     public GameObject errorMessagePopUp;
     //public InputField importFilenameInput; //maybe consider making private
-    //public GameObject algorithmsPanel;
+    public Button algorithmsPanelPrims;//need to figure out how to deactivate them all at once, maybe put them all on the same panel and deactivate
+                                            //or as a dropdown and disable that
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +41,7 @@ public class ImportFile : MonoBehaviour
             fileButton.enabled = false;
             editButton.enabled = false;
             viewButton.enabled = false;
+            algorithmsPanelPrims.enabled = false;
             fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
         }
 
@@ -77,6 +78,7 @@ public class ImportFile : MonoBehaviour
             fileButton.enabled = true;
             editButton.enabled = true;
             viewButton.enabled = true;
+            algorithmsPanelPrims.enabled = true;
         }
     }
 }

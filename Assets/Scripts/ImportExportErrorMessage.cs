@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
+using TMPro;
 public class ImportExportErrorMessage : MonoBehaviour
 {
     private GameObject acknowledgeButton;
@@ -13,8 +13,8 @@ public class ImportExportErrorMessage : MonoBehaviour
     public Button exportButton;
     public Button importCancelButton;
     public Button exportCancelButton;
-    //public InputField importUserInput;
-   // public InputField exportUserInput;
+    public TMP_InputField exportUserInput;
+    public TMP_InputField importUserInput;
 
     // Start is called before the first frame update
     void Start()
@@ -33,8 +33,8 @@ public class ImportExportErrorMessage : MonoBehaviour
             exportButton.enabled = false;
             importCancelButton.enabled = false;
             exportCancelButton.enabled = false;
-           // importUserInput.enabled = false;
-           // exportUserInput.enabled = false;
+            importUserInput.enabled = false;
+            exportUserInput.enabled = false;
         }
 
         if(EventSystem.current.currentSelectedGameObject == acknowledgeButton){
@@ -43,8 +43,8 @@ public class ImportExportErrorMessage : MonoBehaviour
             exportButton.enabled = true;
             importCancelButton.enabled = true;
             exportCancelButton.enabled = true;
-           // importUserInput.enabled = true;
-            //exportUserInput.enabled = true;
+            importUserInput.enabled = true;
+            exportUserInput.enabled = true;
         }
     }
 }

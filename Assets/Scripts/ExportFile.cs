@@ -17,7 +17,9 @@ public class ExportFile : MonoBehaviour
     public GameObject fileDropDown;
     public GameObject errorMessagePopUp;
     public TMP_InputField exportFilenameInput; //maybe consider making private
-    //public GameObject algorithmsPanel;
+    
+    public Button algorithmsPanelPrims;//need to figure out how to deactivate them all at once, maybe put them all on the same panel and deactivate
+                                            //or as a dropdown and disable that
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +41,7 @@ public class ExportFile : MonoBehaviour
             fileButton.enabled = false;
             editButton.enabled = false;
             viewButton.enabled = false;
+            algorithmsPanelPrims.enabled = false;
             fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
         }
 
@@ -62,6 +65,7 @@ public class ExportFile : MonoBehaviour
                 fileButton.enabled = true;
                 editButton.enabled = true;
                 viewButton.enabled = true;
+                
             }
         }
         else if(EventSystem.current.currentSelectedGameObject == cancelButton){
@@ -70,6 +74,7 @@ public class ExportFile : MonoBehaviour
             fileButton.enabled = true;
             editButton.enabled = true;
             viewButton.enabled = true;
+            algorithmsPanelPrims.enabled = true;
         }
     }
 }
