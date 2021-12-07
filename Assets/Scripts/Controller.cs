@@ -110,6 +110,9 @@ public class Controller : MonoBehaviour
     // Warning: Could lead to visualizaion not matching up with the graph ds if the ds is not also cleared.
     // TODO: add comments
     public void ClearGraphObjs() {
+        // Deselect All
+        SelectionManager.singleton.DeSelectAll();
+
         Debug.LogWarning("[Controller] Calling ClearGraphObjs could lead to the visual not matching up with the graph data structure if the graph data structure isn't also cleared.");
 
         for (int i = graphObj.childCount - 1; i >= 0; i--) {
