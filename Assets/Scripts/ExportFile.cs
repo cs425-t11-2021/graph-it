@@ -3,41 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-//using UnityEngine.UIElements.TextField;
-public class ImportFile : MonoBehaviour
+
+public class ExportFile : MonoBehaviour
 {
     private GameObject cancelButton;
-    private GameObject importButton;
-    private Text importFilenameInput;
+    private GameObject exportButton;
 
-    //Need to disable the rest of the UI elements when the import from file menu pop-up is displayed
+    //Need to disable the rest of the UI elements when the export to file menu pop-up is displayed
     public Button fileButton;
     public Button editButton;
     public Button viewButton;
     public GameObject fileDropDown;
     public GameObject errorMessagePopUp;
-    //public InputField importFilenameInput; //maybe consider making private
+    public InputField exportFilenameInput; //maybe consider making private
     //public GameObject algorithmsPanel;
 
     // Start is called before the first frame update
     void Start()
     {
-        //when program first starts, user should not be able to access the import from file menu pop-up
+        //when program first starts, user should not be able to access the export from file menu pop-up
         this.gameObject.SetActive(false);
 
-        //getting references to the cancel and import buttons to perform their corresponding actions
-        importButton = transform.GetChild(2).gameObject;
+        //getting references to the cancel and export buttons to perform their corresponding actions
+        exportButton = transform.GetChild(2).gameObject;
         cancelButton = transform.GetChild(1).gameObject;
-
-        importFilenameInput = transform.GetChild(4).GetChild(0).GetChild(1).gameObject.GetComponent<Text>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
         //TODO need to disable (and later enable) the algorithms panel
-        //if the import from file menu pop-up is displayed, the user should not be able to perform any additional functions outside of the pop-up
+        //if the export to file menu pop-up is displayed, the user should not be able to perform any additional functions outside of the pop-up
         if(this.gameObject.activeInHierarchy){
             fileButton.enabled = false;
             editButton.enabled = false;
@@ -46,15 +42,14 @@ public class ImportFile : MonoBehaviour
         }
 
         
-        if(EventSystem.current.currentSelectedGameObject == importButton){
-            //TODO implement file import
-            //needs to check if a filename is provide is valid (exists)
+        if(EventSystem.current.currentSelectedGameObject == exportButton){
+            //TODO implement file export
+            //needs to check if a filename is provide (for export needs to check if such file already exists)
             //if no input is given, display an error
             //InputField obeject.text gets the user input
-            if(importFilenameInput.text == ""){
+            if(exportFilenameInput.text == ""){
                 errorMessagePopUp.SetActive(true);
             }
-            Debug.Log(importFilenameInput);
         }
         else if(EventSystem.current.currentSelectedGameObject == cancelButton){
             //when the user clicks on the cancel button, the pop-up should disappear and the disabled ui elements should be re-enabled
