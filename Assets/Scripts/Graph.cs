@@ -484,6 +484,38 @@ public class Graph
         return mst;
     }
 
+    public List< Edge > Kruskal()
+    {
+        List< Edge > mst = new List< Edge >();
+        List< Edge > edges = new List< Edge >( this.adjacency.Values.OrderBy( edge => edge.weight ) );
+        HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
+        foreach ( Vertex vert in this.vertices )
+            forest.Add( new HashSet< Vertex >() { vert } );
+        foreach ( Edge edge in edges )
+        {
+            HashSet< Vertex > tree1 = Graph.GetComponentOf( forest, edge.vert1 );
+            HashSet< Vertex > tree2 = Graph.GetComponentOf( forest, edge.vert2 );
+            if ( tree1 != tree2 )
+            {
+                forest.Remove( tree1 );
+                tree2.UnionWith( tree1 );
+                mst.Add( edge );
+            }
+        }
+        return mst;
+    }
+
+    private static HashSet< Vertex > GetComponentOf( HashSet< HashSet< Vertex > > components, Vertex vert )
+    {
+        foreach ( HashSet< Vertex > component in components )
+        {
+            if ( component.Contains( vert ) )
+                return component;
+        }
+        Debug.Log( ( new System.Exception( "Vertex could not be found in collection of components." ) ).ToString() );
+        throw new System.Exception( "Vertex could not be found in collection of components." );
+    }
+
     public List< Edge > GetIncidentEdges( HashSet< Vertex > verts )
     {
         List< Edge > incident_edges = new List< Edge >();
@@ -498,14 +530,14 @@ public class Graph
         return incident_edges;
     }
 
-    private static int CompareEdges( Edge edge1, Edge edge2 )
-    {
-        if ( edge1.weight < edge2.weight )
-            return -1;
-        if ( edge1.weight == edge2.weight )
-            return 0;
-        return 1;
-    }
+    // private static int CompareEdges( Edge edge1, Edge edge2 )
+    // {
+    //     if ( edge1.weight < edge2.weight )
+    //         return -1;
+    //     if ( edge1.weight == edge2.weight )
+    //         return 0;
+    //     return 1;
+    // }
 
 
     // helper methods ////////////////////////////////////////////////
