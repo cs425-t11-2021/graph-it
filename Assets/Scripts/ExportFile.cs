@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using TMPro;
 
 public class ExportFile : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class ExportFile : MonoBehaviour
     public Button viewButton;
     public GameObject fileDropDown;
     public GameObject errorMessagePopUp;
-    public InputField exportFilenameInput; //maybe consider making private
+    public TMP_InputField exportFilenameInput; //maybe consider making private
     //public GameObject algorithmsPanel;
 
     // Start is called before the first frame update
@@ -43,12 +44,24 @@ public class ExportFile : MonoBehaviour
 
         
         if(EventSystem.current.currentSelectedGameObject == exportButton){
+            EventSystem.current.SetSelectedGameObject(null);
+
             //TODO implement file export
             //needs to check if a filename is provide (for export needs to check if such file already exists)
             //if no input is given, display an error
             //InputField obeject.text gets the user input
-            if(exportFilenameInput.text == ""){
+            if (exportFilenameInput.text == ""){
                 errorMessagePopUp.SetActive(true);
+            }
+            else
+            {
+                // TODO: File selector, file always saved on desktop for now
+                string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+                Controller.singleton.graph.Export(desktop + "/" + exportFilenameInput.text + ".csv");
+                this.gameObject.SetActive(false);
+                fileButton.enabled = true;
+                editButton.enabled = true;
+                viewButton.enabled = true;
             }
         }
         else if(EventSystem.current.currentSelectedGameObject == cancelButton){

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Controller : MonoBehaviour
 {
@@ -109,5 +110,11 @@ public class Controller : MonoBehaviour
             // TODO: Once object pooling is implmented, add deleted objs to pool rather than destroy them.
             Destroy(graphObj.GetChild(i).gameObject);
         }
+    }
+
+    // Returns true if any UI elements are being interacted with
+    public bool IsUIactive()
+    {
+        return EventSystem.current.currentSelectedGameObject != null;
     }
 }

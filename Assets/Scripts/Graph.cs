@@ -367,7 +367,7 @@ public class Graph
     {
         try
         {
-            // Debug.Log( "begin export" );
+             Debug.Log( "begin export at " + path );
             if ( File.Exists( path ) )
                 File.Delete( path );
 

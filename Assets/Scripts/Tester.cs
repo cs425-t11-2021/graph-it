@@ -14,6 +14,9 @@ public class Tester : MonoBehaviour
     }
 
     private void Update() {
+        // Ignore keyboard input if UI active
+        if (Controller.singleton.IsUIactive()) return;
+
         // Testing: Press D to delete exisintg graph
         if (Input.GetKeyDown(KeyCode.D)) {
             Debug.Log("[Tester] Deleting current graph.");

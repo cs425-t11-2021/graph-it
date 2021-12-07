@@ -9600,7 +9600,7 @@ MonoBehaviour:
   viewButton: {fileID: 150277624}
   fileDropDown: {fileID: 798872253}
   errorMessagePopUp: {fileID: 0}
-  exportFilenameInput: {fileID: 0}
+  exportFilenameInput: {fileID: 506519946}
 --- !u!1 &2016784608
 GameObject:
   m_ObjectHideFlags: 0
