@@ -776,8 +776,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a34e3e421a81dfe4eb64be0ea28cf89b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  importFileButton: {fileID: 0}
-  exportFileButton: {fileID: 0}
 --- !u!1 &172606128
 GameObject:
   m_ObjectHideFlags: 0
@@ -3053,7 +3051,6 @@ MonoBehaviour:
   viewButton: {fileID: 150277624}
   fileDropDown: {fileID: 798872253}
   errorMessagePopUp: {fileID: 2075901294}
-  importFilenameInput: {fileID: 0}
 --- !u!1 &652385414
 GameObject:
   m_ObjectHideFlags: 0
@@ -4071,8 +4068,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a34e3e421a81dfe4eb64be0ea28cf89b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  importFileButton: {fileID: 0}
-  exportFileButton: {fileID: 0}
 --- !u!1 &798872253
 GameObject:
   m_ObjectHideFlags: 0
@@ -5274,6 +5269,7 @@ GameObject:
   - component: {fileID: 1119136489}
   - component: {fileID: 1119136492}
   - component: {fileID: 1119136493}
+  - component: {fileID: 1119136495}
   - component: {fileID: 1119136494}
   m_Layer: 5
   m_Name: File
@@ -5427,11 +5423,23 @@ MonoBehaviour:
   m_GameObject: {fileID: 1119136487}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a34e3e421a81dfe4eb64be0ea28cf89b, type: 3}
+  m_Script: {fileID: 11500000, guid: 74c351e234dfc48f7b78bfbaeb070b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   importFileButton: {fileID: 646253996}
   exportFileButton: {fileID: 1983837607}
+--- !u!114 &1119136495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1119136487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a34e3e421a81dfe4eb64be0ea28cf89b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1127464280
 GameObject:
   m_ObjectHideFlags: 0

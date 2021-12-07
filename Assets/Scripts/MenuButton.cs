@@ -8,14 +8,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class FileMenuButton : MonoBehaviour
+public class MenuButton : MonoBehaviour
 {
     private GameObject panelObj;
-    private GameObject importMenuItem;
-    private GameObject exportMenuItem;
-    private Button fileButton;
-    public GameObject importFileButton;
-    public GameObject exportFileButton;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -26,14 +22,7 @@ public class FileMenuButton : MonoBehaviour
         //want the dropdown to not be shown or accessible when program first starts
         panelObj.gameObject.SetActive(false);
 
-        //getting the "ImportToFile" button object to check if clicked
-        importMenuItem = transform.GetChild(1).GetChild(2).gameObject;
-        //getting the "ExportToFile" button object to check if clicked
-        exportMenuItem = transform.GetChild(1).GetChild(3).gameObject;
-
-        //getting the "file" button to monitor if selected
-        //fileButton = this.GetComponent<Button>();
-        //fileButton.onClick.AddListener(DisplayDropDown);
+        
     }
 
     // Update is called once per frame
@@ -43,13 +32,6 @@ public class FileMenuButton : MonoBehaviour
         if (EventSystem.current.currentSelectedGameObject == this.gameObject){
             //if the file button is clicked, the dropdown should be displayed
             panelObj.gameObject.SetActive(true);
-        }
-        else if(EventSystem.current.currentSelectedGameObject == importMenuItem){
-            //if the "ImportToFile" is clicked, show the import to file pop-up
-            importFileButton.gameObject.SetActive(true);
-        }
-        else if(EventSystem.current.currentSelectedGameObject == exportMenuItem){
-            exportFileButton.gameObject.SetActive(true);
         }
         else{
             //otherwise, the user clicked elsewhere and the dropdown should disappear
