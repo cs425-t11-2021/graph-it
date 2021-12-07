@@ -581,6 +581,66 @@ public class Graph
     //     return 1;
     // }
 
+    public List< Vertex > Dijkstra (Vertex src, Vertex dest)
+    {
+        HashSet<int> notVisited = new HashSet<int>();
+        Dictionary<int, double> dist = new Dictionary<int, double>();
+        Dictionary<int, int> prev = new Dictionary<int, int>();
+
+        foreach ( Vertex v in this.vertices )
+        {
+            notVisited.Add(v.id);
+            dist[v.id] = double.PositiveInfinity;
+            prev[v.id] = -1;
+        }
+
+        dist[src.id] = 0;
+
+        while (notVisited.Count() > 0)
+        {
+            // find u in notVisited such that dist[u] is minimal
+            int u = notVisited.First();
+            foreach ( int v in notVisited )
+            {
+                if (dist[v] < dist[u])
+                {
+                    u = v;
+                }
+            }
+
+            notVisited.Remove(u);
+
+            // update neighbors of u
+            foreach (int v in notVisited)
+            {
+                if (this.adjacency.ContainsKey((u, v)))
+                {
+                    double tmp = dist[u] + this.adjacency[(u, v)].weight;
+                    if (tmp < dist[v])
+                    {
+                        dist[v] = tmp;
+                        prev[v] = u;
+                    }
+                }
+            }
+        }
+
+        // put together final path 
+        List< Vertex > result = new List<Vertex>();
+        int curr = dest.id;
+        while (curr != src.id)
+        {
+            result.Add(this.GetVertex(curr));
+            curr = prev[curr];
+            if (curr == -1) return new List<Vertex>();
+        }
+        result.Add(src);
+        
+        result.Reverse();
+
+        return result;
+    }
+
 
     // helper methods ////////////////////////////////////////////////
 
