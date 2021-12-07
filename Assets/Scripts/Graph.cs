@@ -140,8 +140,8 @@ public class Graph
 
     public void Clear()
     {
-        this.vertices = null;
-        this.adjacency = null;
+        this.vertices = new List< Vertex >();
+        this.adjacency = new Dictionary< ( int, int ), Edge >();
         this.next_vert_id = 0;
         this.next_edge_id = 0;
     }
@@ -255,7 +255,6 @@ public class Graph
 
     public Edge RemoveEdge( int id )
     {
-        Debug.Log("Removing from ds: " + id);
         return this.RemoveEdge( this.GetEdge( id ) );
     }
 

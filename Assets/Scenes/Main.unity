@@ -3060,6 +3060,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98a3241799e088e49ae9c128faed2320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  importFilenameInput: {fileID: 757184706}
   fileButton: {fileID: 1119136489}
   editButton: {fileID: 798110304}
   viewButton: {fileID: 150277624}

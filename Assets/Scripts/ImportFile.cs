@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using System.IO;
+using TMPro;
 //using UnityEngine.UIElements.TextField;
 public class ImportFile : MonoBehaviour
 {
     private GameObject cancelButton;
     private GameObject importButton;
-    private Text importFilenameInput;
+    public TMP_InputField importFilenameInput;
 
     //Need to disable the rest of the UI elements when the import from file menu pop-up is displayed
     public Button fileButton;
@@ -28,9 +30,6 @@ public class ImportFile : MonoBehaviour
         //getting references to the cancel and import buttons to perform their corresponding actions
         importButton = transform.GetChild(2).gameObject;
         cancelButton = transform.GetChild(1).gameObject;
-
-        importFilenameInput = transform.GetChild(4).GetChild(0).GetChild(1).gameObject.GetComponent<Text>();
-
     }
 
     // Update is called once per frame
@@ -54,7 +53,23 @@ public class ImportFile : MonoBehaviour
             if(importFilenameInput.text == ""){
                 errorMessagePopUp.SetActive(true);
             }
-            Debug.Log(importFilenameInput);
+            else {
+                // Clear existing graph
+                Controller.singleton.graph.Clear();
+                Controller.singleton.ClearGraphObjs();
+
+                // TODO: File selector, file always saved on desktop for now
+                string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+                Debug.Log("Begin import at " + desktop + "/" + importFilenameInput.text + ".csv");
+                Controller.singleton.graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
+                this.gameObject.SetActive(false);
+                fileButton.enabled = true;
+                editButton.enabled = true;
+                viewButton.enabled = true;
+
+                // Recrate graph objects
+                Controller.singleton.CreateGraphObjs();
+            }
         }
         else if(EventSystem.current.currentSelectedGameObject == cancelButton){
             //when the user clicks on the cancel button, the pop-up should disappear and the disabled ui elements should be re-enabled

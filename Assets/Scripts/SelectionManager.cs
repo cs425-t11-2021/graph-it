@@ -83,7 +83,6 @@ public class SelectionManager : MonoBehaviour
         // Destroy the gameObjects for edges in selectedEdges
         foreach (EdgeObj edgeObj in this.selectedEdges)
         {
-            Debug.Log("Deleting" + edgeObj.GetID());
             // Update the graph ds
             Controller.singleton.graph.RemoveEdge(edgeObj.GetID());
 
