@@ -1,3 +1,5 @@
+//All code developed by Team 11
+
 //This script is for the general functionality of a menu dropdown 
 //When the program begins, the dropdown panels should not be shown or accessible
 //The dropdown appears when the user clicks on the menu button and remains until the user selects an option or clicks away
