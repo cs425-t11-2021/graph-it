@@ -51,6 +51,9 @@ public class VertexObj : MonoBehaviour
     }
 
     private void Start() {
+        this.rb.isKinematic = false;
+        this.rb.WakeUp();
+
         // At the start of the program, if the vertex has no connected edges, give it 
         // extra mass and drag to avoid being pushed away by the other vertices
         if (transform.childCount == 0) {
@@ -81,8 +84,37 @@ public class VertexObj : MonoBehaviour
             for (int i = 0; i < transform.childCount; i++) {
                 transform.GetChild(i).gameObject.SetActive(true);
             }
+            lifetime = Mathf.NegativeInfinity;
         }
         else lifetime += Time.deltaTime;
+    }
+
+    private void FixedUpdate()
+    {
+        if (lifetime > -1) return;
+
+        // Disable the joints and set the rigidbody to kinematic when graph physics is disabled
+        // TODO: Replace with more efficient code
+        if (Controller.singleton.enableGraphPhysics)
+        {
+            DistanceJoint2D[] joints = GetComponents<DistanceJoint2D>();
+            foreach (DistanceJoint2D joint in joints)
+            {
+                joint.enabled = true;
+            }
+            this.rb.isKinematic = false;
+            this.rb.WakeUp();
+        }
+        else
+        {
+            DistanceJoint2D[] joints = GetComponents<DistanceJoint2D>();
+            foreach (DistanceJoint2D joint in joints)
+            {
+                joint.enabled = false;
+            }
+            this.rb.isKinematic = true;
+            this.rb.velocity = Vector2.zero;
+        }
     }
 
     // When Cursor enters a vertex obj, increase its sprite object size by 10%

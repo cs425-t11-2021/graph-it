@@ -26,10 +26,14 @@ public class Controller : MonoBehaviour
     // TODO: Move the visual settings away from controller and into its own object
     [Header("Visual Settings")]
     public bool displayVertexLabels;
+    public bool enableGraphPhysics;
 
     // Main graph DS
     // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
     public Graph graph;
+
+    // Duration of time to enable graph physics at the start of the program
+    private float physicsTimer;
 
     private void Awake() {
         // Singleton pattern setup
@@ -52,10 +56,22 @@ public class Controller : MonoBehaviour
     }
 
     private void Update() {
-        // Debug.Log(graph.vertices.Count + " " + graph.adjacency.Count);
+        if (physicsTimer <= 0f)
+        {
+            enableGraphPhysics = false;
+            physicsTimer = Mathf.Infinity;
+        }
+        else
+        {
+            physicsTimer -= Time.deltaTime;
+        }
     }
 
     private void Start() {
+        // Enable graph physics at the start
+        enableGraphPhysics = true;
+        physicsTimer = 2f;
+
         CreateGraphObjs();
     }
 
