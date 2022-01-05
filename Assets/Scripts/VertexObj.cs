@@ -126,9 +126,16 @@ public class VertexObj : MonoBehaviour
         }
     }
 
+    // Reset the size of the object when the cursor exists
     private void OnMouseExit()
     {
         spriteObj.localScale = new Vector3(1f, 1f, 1f);
+    }
+
+    // Deselect the object when being dragged
+    private void OnMouseDrag()
+    {
+        SetSelected(false);
     }
 
     // TODO: CREATE A UNIVERSAL MOUSE INPUT MANAGEMENT SYSTEM
