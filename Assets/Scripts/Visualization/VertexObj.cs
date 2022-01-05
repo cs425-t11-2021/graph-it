@@ -22,6 +22,9 @@ public class VertexObj : MonoBehaviour
     // Reference to the spriteRenderer component of the Sprite child object
     private SpriteRenderer spriteRenderer;
 
+    // Keep track of whether or not the object was dragged
+    private Vector3 positionBeforeDrag;
+
     // Getter for id
     public int GetID()
     {
@@ -85,6 +88,11 @@ public class VertexObj : MonoBehaviour
                 transform.GetChild(i).gameObject.SetActive(true);
             }
             lifetime = Mathf.NegativeInfinity;
+
+            if (Grid.singleton.enableGrid)
+            {
+                this.transform.position = Grid.singleton.FindClosestGridPosition(this);
+            }
         }
         else lifetime += Time.deltaTime;
     }
@@ -140,6 +148,13 @@ public class VertexObj : MonoBehaviour
     private void OnMouseDown()
     {
         SetSelected(!selected);
+
+        if (Grid.singleton.enableGrid)
+        {
+            Grid.singleton.RemoveFromOccupied(this);
+        }
+
+        positionBeforeDrag = transform.position;
     }
 
     // Method for changing whether or not object is selected
@@ -164,10 +179,27 @@ public class VertexObj : MonoBehaviour
         spriteObj.localScale = new Vector3(1f, 1f, 1f);
     }
 
-    // Deselect the object when being dragged
-    private void OnMouseDrag()
+    // If snap to grid is enabled, find the cloest grid position when mouse up
+    private void OnMouseUp()
     {
-        SetSelected(false);
+        if (transform.position != positionBeforeDrag)
+        {
+            SetSelected(false);
+        }
+
+        if (Grid.singleton.enableGrid)
+        {
+            this.transform.position = Grid.singleton.FindClosestGridPosition(this);
+        }
+    }
+
+    // If vertex object is deleted, remove it from the grid
+    private void OnDestroy()
+    {
+        if (Grid.singleton.enableGrid)
+        {
+            Grid.singleton.RemoveFromOccupied(this);
+        }
     }
 
     // TODO: CREATE A UNIVERSAL MOUSE INPUT MANAGEMENT SYSTEM
