@@ -193,7 +193,18 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
 
     public void OnDragStart()
     {
-        
+        if (Grid.singleton.enabled)
+        {
+            Grid.singleton.DisplayGridLines();
+        }
+    }
+
+    public void OnDragFinish()
+    {
+        if (Grid.singleton.enabled)
+        {
+            Grid.singleton.HideGridLines();
+        }
     }
 
     // When user clicks a vertex obj without dragging it, select/deselect it using selection manager

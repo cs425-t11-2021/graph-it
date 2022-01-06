@@ -11,14 +11,24 @@ public class Grid : MonoBehaviour
 
     // Prefab for the marker debug object
     public GameObject p_marker;
+    // Prefab for the grid lines object
+    public GameObject p_gridLines;
 
     // Whether or not vertices should snap to grid
     public bool enableGrid = false;
     // Space between each vertex
     public float spacing = 0.5f;
+    // Number of horizontal and vertical gridlines to instantiate
+    public int gridLineCount = 20;
 
     // List of occupied grid points
     public List< (Vector2Int, VertexObj) > occupiedPoints;
+    // Array of horizontal and vertical girdline objects
+    private GameObject[] horizontalLines;
+    private GameObject[] verticalLines;
+
+    [Header("Debug Options")]
+    public bool displayGridMarkers = false;
 
     private void Awake()
     {
@@ -37,15 +47,80 @@ public class Grid : MonoBehaviour
         occupiedPoints = new List< (Vector2Int, VertexObj) >();
     }
 
-    // Debug: Generate markers for each of the grid point in 15 x 15
+    
     private void Start()
     {
-        for (int i = -10; i <= 10; i++)
+        // Debug: Generate markers for each of the grid point in 30 x 30
+        if (displayGridMarkers)
         {
-            for (int j = -10; j <= 10; j++)
+            for (int i = -15; i <= 15; i++)
             {
-                Instantiate(p_marker, new Vector3(i * spacing, j * spacing, 0), Quaternion.identity);
+                for (int j = -15; j <= 15; j++)
+                {
+                    Instantiate(p_marker, new Vector3(i * spacing, j * spacing, 0), Quaternion.identity);
+                }
             }
+        }
+
+        horizontalLines = new GameObject[gridLineCount];
+        verticalLines = new GameObject[gridLineCount];
+
+        for (int i = 0; i < gridLineCount; i++)
+        {
+            horizontalLines[i] = Instantiate(p_gridLines, this.transform);
+            horizontalLines[i].SetActive(false);
+            verticalLines[i] = Instantiate(p_gridLines, this.transform);
+            verticalLines[i].SetActive(false);
+        }
+
+        HideGridLines();
+    }
+
+    public void DisplayGridLines()
+    {
+        Vector2 lowerLeft = Camera.main.ViewportToWorldPoint(new Vector3(0f, 0f, Camera.main.nearClipPlane));
+        Vector2 upperRight = Camera.main.ViewportToWorldPoint(new Vector3(1f, 1f, Camera.main.nearClipPlane));
+
+        Vector2Int start = WorldToGrid(lowerLeft);
+        Debug.Log(start);
+        for (int i = 0; i < gridLineCount; i++)
+        {
+            float lineX = (start.x + i) * spacing;
+            if (lineX > upperRight.x)
+            {
+                break;
+            }
+            LineRenderer lr = verticalLines[i].GetComponent<LineRenderer>();
+            lr.SetPositions(new Vector3[]{new Vector3(lineX, lowerLeft.y, -1), new Vector3(lineX, upperRight.y, -1) });
+            lr.startWidth = Camera.main.orthographicSize / 160f;
+            lr.endWidth = Camera.main.orthographicSize / 160f;
+            verticalLines[i].SetActive(true);
+        }
+
+        for (int i = 0; i < gridLineCount; i++)
+        {
+            float lineY = (start.y + i) * spacing;
+            if (lineY > upperRight.y)
+            {
+                break;
+            }
+            LineRenderer lr = horizontalLines[i].GetComponent<LineRenderer>();
+            lr.SetPositions(new Vector3[] { new Vector3(lowerLeft.x, lineY, -1), new Vector3(upperRight.x, lineY, -1) });
+            lr.startWidth = Camera.main.orthographicSize / 160f;
+            lr.endWidth = Camera.main.orthographicSize / 160f;
+            horizontalLines[i].SetActive(true);
+        }
+    }
+
+    public void HideGridLines()
+    {
+        foreach (GameObject line in horizontalLines)
+        {
+            line.SetActive(false);
+        }
+        foreach (GameObject line in verticalLines)
+        {
+            line.SetActive(false);
         }
     }
 
@@ -100,5 +175,16 @@ public class Grid : MonoBehaviour
     public Vector2 GridToWorld(Vector2Int gridPosition)
     {
         return new Vector2(gridPosition.x * spacing, gridPosition.y * spacing);
+    }
+
+    // Get the bounds in world coordinates of the main active camera
+    private Bounds GetCameraWorldBounds()
+    {
+        float screenAspect = (float) Screen.width / (float) Screen.height;
+        float cameraHeight = Camera.main.orthographicSize * 2;
+        Bounds bounds = new Bounds(
+            Camera.main.transform.position,
+            new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
+        return bounds;
     }
 }

@@ -11,7 +11,7 @@ public class Tester : MonoBehaviour
     private Graph graph_ds;
 
     private void Start() {
-        CreateRandomGraph(10);
+        //CreateRandomGraph(10);
     }
 
     private void Update() {

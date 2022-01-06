@@ -5,7 +5,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-// Behavior for handling dragging graph objects, requires colliders to be attached to the objects
+// Behavior for handling dragging graph objects, requires colliders to be attached to the objects, calls OnDragStart and OnMouseDownNonDrag methods
+// on any attached components that implment IUsesDragEvents
 public class ObjDrag : MonoBehaviour
 {
     // The current distance between the curosr to the center of the object
@@ -65,6 +66,13 @@ public class ObjDrag : MonoBehaviour
             foreach (IUsesDragEvents handler in dragEventHandlers)
             {
                 handler.OnMouseDownNonDrag();
+            }
+        }
+        else
+        {
+            foreach (IUsesDragEvents handler in dragEventHandlers)
+            {
+                handler.OnDragFinish();
             }
         }
         dragDuration = 0f;
