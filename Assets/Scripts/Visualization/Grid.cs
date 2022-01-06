@@ -9,8 +9,6 @@ public class Grid : MonoBehaviour
     // Singleton
     public static Grid singleton;
 
-    // Prefab for the marker debug object
-    public GameObject p_marker;
     // Prefab for the grid lines object
     public GameObject p_gridLines;
 
@@ -26,9 +24,6 @@ public class Grid : MonoBehaviour
     // Array of horizontal and vertical girdline objects
     private GameObject[] horizontalLines;
     private GameObject[] verticalLines;
-
-    [Header("Debug Options")]
-    public bool displayGridMarkers = false;
 
     private void Awake()
     {
@@ -50,18 +45,6 @@ public class Grid : MonoBehaviour
     
     private void Start()
     {
-        // Debug: Generate markers for each of the grid point in 30 x 30
-        if (displayGridMarkers)
-        {
-            for (int i = -15; i <= 15; i++)
-            {
-                for (int j = -15; j <= 15; j++)
-                {
-                    Instantiate(p_marker, new Vector3(i * spacing, j * spacing, 0), Quaternion.identity);
-                }
-            }
-        }
-
         horizontalLines = new GameObject[gridLineCount];
         verticalLines = new GameObject[gridLineCount];
 
@@ -90,7 +73,7 @@ public class Grid : MonoBehaviour
                 break;
             }
             LineRenderer lr = verticalLines[i].GetComponent<LineRenderer>();
-            lr.SetPositions(new Vector3[]{new Vector3(lineX, lowerLeft.y, -1), new Vector3(lineX, upperRight.y, -1) });
+            lr.SetPositions(new Vector3[]{new Vector3(lineX, lowerLeft.y, 1), new Vector3(lineX, upperRight.y, 1) });
             lr.startWidth = Camera.main.orthographicSize / 160f;
             lr.endWidth = Camera.main.orthographicSize / 160f;
             verticalLines[i].SetActive(true);
@@ -104,7 +87,7 @@ public class Grid : MonoBehaviour
                 break;
             }
             LineRenderer lr = horizontalLines[i].GetComponent<LineRenderer>();
-            lr.SetPositions(new Vector3[] { new Vector3(lowerLeft.x, lineY, -1), new Vector3(upperRight.x, lineY, -1) });
+            lr.SetPositions(new Vector3[] { new Vector3(lowerLeft.x, lineY, 1), new Vector3(upperRight.x, lineY, 1) });
             lr.startWidth = Camera.main.orthographicSize / 160f;
             lr.endWidth = Camera.main.orthographicSize / 160f;
             horizontalLines[i].SetActive(true);
