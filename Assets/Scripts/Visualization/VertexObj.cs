@@ -193,7 +193,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
 
     public void OnDragStart()
     {
-        if (Grid.singleton.enabled)
+        if (Grid.singleton.enableGrid)
         {
             Grid.singleton.DisplayGridLines();
         }
@@ -201,7 +201,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
 
     public void OnDragFinish()
     {
-        if (Grid.singleton.enabled)
+        if (Grid.singleton.enableGrid)
         {
             Grid.singleton.HideGridLines();
         }

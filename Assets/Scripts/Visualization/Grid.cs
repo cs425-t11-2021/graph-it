@@ -82,7 +82,6 @@ public class Grid : MonoBehaviour
         Vector2 upperRight = Camera.main.ViewportToWorldPoint(new Vector3(1f, 1f, Camera.main.nearClipPlane));
 
         Vector2Int start = WorldToGrid(lowerLeft);
-        Debug.Log(start);
         for (int i = 0; i < gridLineCount; i++)
         {
             float lineX = (start.x + i) * spacing;
