@@ -21,6 +21,8 @@ public class VertexObj : MonoBehaviour
     private bool selected = false;
     // Reference to the spriteRenderer component of the Sprite child object
     private SpriteRenderer spriteRenderer;
+    // Reference to the animator component
+    private Animator animator;
 
     // Keep track of whether or not the object was dragged
     private Vector3 positionBeforeDrag;
@@ -35,7 +37,10 @@ public class VertexObj : MonoBehaviour
         // Vertex objects starts non active
         gameObject.SetActive(false);
 
+        // Setup component references
         rb = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
+
         spriteObj = transform.GetChild(0);
         spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
     }
@@ -125,8 +130,7 @@ public class VertexObj : MonoBehaviour
         }
     }
 
-    // When Cursor enters a vertex obj, increase its sprite object size by 10%
-    // TODO: Change this to be controlled by an animator later
+    // When Cursor enters a vertex obj, play hovering animation
     private void OnMouseOver()
     {
         // Check if cursor is over collider
@@ -134,12 +138,8 @@ public class VertexObj : MonoBehaviour
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex"));  //11f since camera is at z = -10
         if (hit && hit.collider.gameObject == gameObject)
         {
-            spriteObj.localScale = new Vector3(1.25f, 1.25f, 1f);
+            animator.SetBool("Hovering", true);
         }
-        //else
-        //{
-        //    spriteObj.localScale = new Vector3(1f, 1f, 1f);
-        //}
     }
 
     // When user clicks a vertex obj, select/deselect it using selection manager
@@ -157,26 +157,25 @@ public class VertexObj : MonoBehaviour
         positionBeforeDrag = transform.position;
     }
 
-    // Method for changing whether or not object is selected
+    // Method for changing whether or not object is selected, updates the selection manager and activates the corresponding animation
     public void SetSelected(bool selected)
     {
         this.selected = selected;
+        animator.SetBool("Selected", selected);
         if (!selected)
         {
             SelectionManager.singleton.DeselectVertex(this);
-            this.spriteRenderer.color = new Color32(0, 0, 0, 255);
         }
         else
         {
             SelectionManager.singleton.SelectVertex(this);
-            this.spriteRenderer.color = new Color32(0, 125, 255, 255);
         }
     }
 
     // Reset the size of the object when the cursor exists
     private void OnMouseExit()
     {
-        spriteObj.localScale = new Vector3(1f, 1f, 1f);
+        animator.SetBool("Hovering", false);
     }
 
     // If snap to grid is enabled, find the cloest grid position when mouse up
