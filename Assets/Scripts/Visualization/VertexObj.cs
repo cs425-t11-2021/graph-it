@@ -1,9 +1,13 @@
 //All code developed by Team 11
+
+// Supress class name conflict warning
+#pragma warning disable 0436
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VertexObj : MonoBehaviour
+public class VertexObj : MonoBehaviour, IUsesDragEvents
 {
     // ID of the associated vertex in the graph data structure, -1 is unintialized
     private int id = -1;
@@ -23,9 +27,6 @@ public class VertexObj : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     // Reference to the animator component
     private Animator animator;
-
-    // Keep track of whether or not the object was dragged
-    private Vector3 positionBeforeDrag;
 
     // Getter for id
     public int GetID()
@@ -142,19 +143,13 @@ public class VertexObj : MonoBehaviour
         }
     }
 
-    // When user clicks a vertex obj, select/deselect it using selection manager
-    // Change color to blue when selected
-    // TODO: Replace with Unity animator
+    
     private void OnMouseDown()
     {
-        SetSelected(!selected);
-
         if (Grid.singleton.enableGrid)
         {
             Grid.singleton.RemoveFromOccupied(this);
         }
-
-        positionBeforeDrag = transform.position;
     }
 
     // Method for changing whether or not object is selected, updates the selection manager and activates the corresponding animation
@@ -181,11 +176,6 @@ public class VertexObj : MonoBehaviour
     // If snap to grid is enabled, find the cloest grid position when mouse up
     private void OnMouseUp()
     {
-        if (transform.position != positionBeforeDrag)
-        {
-            SetSelected(false);
-        }
-
         if (Grid.singleton.enableGrid)
         {
             this.transform.position = Grid.singleton.FindClosestGridPosition(this);
@@ -199,6 +189,17 @@ public class VertexObj : MonoBehaviour
         {
             Grid.singleton.RemoveFromOccupied(this);
         }
+    }
+
+    public void OnDragStart()
+    {
+        
+    }
+
+    // When user clicks a vertex obj without dragging it, select/deselect it using selection manager
+    public void OnMouseDownNonDrag()
+    {
+        SetSelected(!selected);
     }
 
     // TODO: CREATE A UNIVERSAL MOUSE INPUT MANAGEMENT SYSTEM
