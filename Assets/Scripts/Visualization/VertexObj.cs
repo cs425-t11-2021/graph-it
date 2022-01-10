@@ -39,7 +39,6 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         // Setup component references
         rb = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
-
         spriteObj = transform.GetChild(0);
         spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
     }
@@ -78,15 +77,6 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         }
     }
 
-    
-    private void OnMouseDown()
-    {
-        if (Grid.singleton.GridEnabled)
-        {
-            Grid.singleton.RemoveFromOccupied(this);
-        }
-    }
-
     // Method for changing whether or not object is selected, updates the selection manager and activates the corresponding animation
     public void SetSelected(bool selected)
     {
@@ -108,15 +98,6 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         animator.SetBool("Hovering", false);
     }
 
-    // If snap to grid is enabled, find the cloest grid position when mouse up
-    private void OnMouseUp()
-    {
-        if (Grid.singleton.GridEnabled)
-        {
-            this.transform.position = Grid.singleton.FindClosestGridPosition(this);
-        }
-    }
-
     // If vertex object is deleted, remove it from the grid
     private void OnDestroy()
     {
@@ -126,18 +107,24 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         }
     }
 
+    // Method called when the vertex object is first picked up to be dragged
     public void OnDragStart()
     {
+        // If the grid is currently enabled, remove the vertex obejct from any grid points and display the gridlines
         if (Grid.singleton.GridEnabled)
         {
+            Grid.singleton.RemoveFromOccupied(this);
             Grid.singleton.DisplayGridLines();
         }
     }
 
+    // Method called after dragging is finished
     public void OnDragFinish()
     {
+        // If the grid is currently enabled, move the vertex object to the nearest grid point and hide the gridlines
         if (Grid.singleton.GridEnabled)
         {
+            this.transform.position = Grid.singleton.FindClosestGridPosition(this);
             Grid.singleton.HideGridLines();
         }
     }
