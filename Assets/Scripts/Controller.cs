@@ -32,16 +32,15 @@ public class Controller : MonoBehaviour
     // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
     public Graph graph;
 
-    // Duration of time to enable graph physics at the start of the program
+    // Timer used for tempoarily enabling graph physics
     private float physicsTimer;
-
     // Graph physics enabled
     private bool graphPhysicsEnabled = false;
 
     private void Awake() {
         // Singleton pattern setup
-        if (singleton == null) {
-            singleton = this;
+        if (Controller.singleton == null) {
+            Controller.singleton = this;
         }
         else {
             Debug.LogError("[Controller] Singleton pattern violation");
@@ -50,56 +49,61 @@ public class Controller : MonoBehaviour
         }
 
         // Initiate graph ds
-        graph = new Graph();
+        this.graph = new Graph();
         // Manually set edge length
-        edgeLength = 5;
+        this.edgeLength = 5;
 
         // Set the camera's event mask to clickableLayers
-        Camera.main.eventMask = clickableLayers;
+        Camera.main.eventMask = this.clickableLayers;
     }
 
     private void Update() {
-        if (graphPhysicsEnabled && physicsTimer != -1)
+        // If graph physics is currently enabled and the timer isn't set to -1 (indefinite duration), decrease the timer
+        if (this.graphPhysicsEnabled && this.physicsTimer != -1)
         {
-            if (physicsTimer <= 0f)
+            if (this.physicsTimer <= 0f)
             {
+                // Turn off graph physics once timer hits 0
                 SetGraphPhysics(false);
             }
             else
             {
-                physicsTimer -= Time.deltaTime;
+                this.physicsTimer -= Time.deltaTime;
             }
         }
     }
 
     // Utility method to help get the corresponding world position of the mouse cursor
+    // TODO: Set to static to move to separate utility class
     public Vector3 GetCursorWorldPosition() {
         return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
     }
 
     // Creates the vertex and edge unity objects according to the contents of the graph ds
-    // TODO: add comments
     public void CreateGraphObjs() {
         // Array to store the child index under GraphObj of each vertex
         // Index corresponds to the child index, value corresponds to vertex id
-        int[] vertexTransformPositions = new int[graph.vertices.Count];
+        int[] vertexTransformPositions = new int[this.graph.vertices.Count];
 
         // Currently avaiable child index of GraphObj
         int childIndex = 0;
         // Iterate through each vertex in the graph data structure and create a corresponding vertexObj
-        foreach (Vertex vertex in graph.vertices) {
+        foreach (Vertex vertex in this.graph.vertices) {
             // TODO: Change Testing code
             // Testing: Vertex objs spawns in random position
             Vector2 pos = UnityEngine.Random.insideUnitCircle.normalized * 3f;
             if (vertex.x_pos != null && vertex.y_pos != null) {
                 pos = new Vector2((float) vertex.x_pos, (float) vertex.y_pos);
             }
-            VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
-            vertexObj.transform.SetParent(graphObj);
+
+            // Instantiate a vertex object, set its parent to the graphObj, and store its id in the vertex transforms array, and increase the child index
+            VertexObj vertexObj = Instantiate(this.vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
+            vertexObj.transform.SetParent(this.graphObj);
             vertexTransformPositions[childIndex++] = vertex.id;
+            // Call the initiation function of the vertex object
             vertexObj.Initiate(vertex);
 
-            // If snap to grid is enabled, move the new vertex obj to a grid spot
+            // If snap to grid is enabled, move the new vertex obj to the nearest grid spot
             if (Grid.singleton.GridEnabled)
             {
                 vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
@@ -107,23 +111,25 @@ public class Controller : MonoBehaviour
         }
 
         // Iterate through each edge in the graph data structure and create a correspoinding edgeObj
-        foreach (KeyValuePair<(int, int), Edge> kvp in graph.adjacency)
+        foreach (KeyValuePair<(int, int), Edge> kvp in this.graph.adjacency)
         {
             EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
             // Find the child index of the from and to vertices and set the from vertex as the parent of edge object
             int fromVertexIndex = Array.IndexOf(vertexTransformPositions, kvp.Key.Item1);
             int toVertexIndex = Array.IndexOf(vertexTransformPositions, kvp.Key.Item2);
-            edgeObj.transform.SetParent(graphObj.GetChild(fromVertexIndex));
-            edgeObj.Initiate(kvp.Value, graphObj.GetChild(toVertexIndex).gameObject);
+            edgeObj.transform.SetParent(this.graphObj.GetChild(fromVertexIndex));
+            // Call the initiation function of the edge object
+            edgeObj.Initiate(kvp.Value, this.graphObj.GetChild(toVertexIndex).gameObject);
 
             // Add a DistanceJoint2D which connects the two vertices
-            DistanceJoint2D joint = graphObj.GetChild(fromVertexIndex).gameObject.AddComponent<DistanceJoint2D>();
+            DistanceJoint2D joint = this.graphObj.GetChild(fromVertexIndex).gameObject.AddComponent<DistanceJoint2D>();
+            // Configure the properties of the joint
             joint.autoConfigureConnectedAnchor = false;
             joint.enableCollision = true;
-            joint.distance = edgeLength;
+            joint.distance = this.edgeLength;
             joint.maxDistanceOnly = true;
             joint.autoConfigureDistance = false;
-            joint.connectedBody = graphObj.GetChild(toVertexIndex).gameObject.GetComponent<Rigidbody2D>();
+            joint.connectedBody = this.graphObj.GetChild(toVertexIndex).gameObject.GetComponent<Rigidbody2D>();
             // Disable joint by default, the joint will only be enabled when graph physics is in use
             joint.enabled = false;
         }
@@ -140,17 +146,15 @@ public class Controller : MonoBehaviour
 
     // Remove all graph visualization objects from scene
     // Warning: Could lead to visualizaion not matching up with the graph ds if the ds is not also cleared.
-    // TODO: add comments
     public void ClearGraphObjs() {
         // Deselect All
         SelectionManager.singleton.DeSelectAll();
 
-        Debug.LogWarning("[Controller] Calling ClearGraphObjs could lead to the visual not matching up with the graph data structure if the graph data structure isn't also cleared.");
-
-        for (int i = graphObj.childCount - 1; i >= 0; i--) {
+        // Destroy (or pool) all vertex objects
+        for (int i = this.graphObj.childCount - 1; i >= 0; i--) {
             // TODO: Once object pooling is implmented, add deleted objs to pool rather than destroy them.
-            Destroy(graphObj.GetChild(i).gameObject);
-            graphObj.GetChild(i).SetParent(null);
+            Destroy(this.graphObj.GetChild(i).gameObject);
+            this.graphObj.GetChild(i).SetParent(null);
         }
 
         // If snap to grid is enabled, clear out the grid
@@ -163,53 +167,68 @@ public class Controller : MonoBehaviour
         GraphInfo.singleton.UpateGraphInfo();
     }
 
+    // Method to update graph objects to match the graph ds if new vertices or edges are added
     public void UpdateGraphObjs() {
-        // EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
-        // foreach (EdgeObj edgeObj in allEdgeObjs)
-        // {
-        //     if (primEdgeIDs.Contains(edgeObj.GetID()))
-        //         edgeObj.SetSelected(true);
-        // }
-
+        // Get a list of all the vertex objects in scene
         VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        // Get a list of the ids of current vertex objects
         List<int> existingVertexObjIDs = new List<int>();
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             existingVertexObjIDs.Add(vertexObj.GetID());
         }
-        foreach (Vertex vertex in graph.vertices) {
+        // If a vertex is in the ds but doens't have an associated vertex object, create it
+        foreach (Vertex vertex in this.graph.vertices) {
             if (!existingVertexObjIDs.Contains(vertex.id)) {
                 CreateVertexObj(vertex);
             }
         }
 
+        // Get a list of all the edge objects in scene
         EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        // Get a list of the ids of current edge objects
         List<int> existingEdgeObjIDs = new List<int>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             existingEdgeObjIDs.Add(edgeObj.GetID());
         }
-        foreach (KeyValuePair<(int, int), Edge> kvp in graph.adjacency) {
+        // If an edge is in the ds but doens't have an associated edge object, create it
+        foreach (KeyValuePair<(int, int), Edge> kvp in this.graph.adjacency) {
             if (!existingEdgeObjIDs.Contains(kvp.Value.id)) {
                 CreateEdgeObj(kvp.Value);
             }
         }
     }
 
+    // Create a new vertex object to correspond to a passed in graph vertex
     public void CreateVertexObj(Vertex vertex) {
+        // TODO: Change Testing code
+        // Testing: Vertex objs spawns in random position
         Vector2 pos = UnityEngine.Random.insideUnitCircle.normalized * 3f;
         if (vertex.x_pos != null && vertex.y_pos != null) {
-            pos = new Vector2((float) vertex.x_pos, (float) vertex.y_pos);
+            pos = new Vector2( (float) vertex.x_pos, (float) vertex.y_pos);
         }
-        VertexObj vertexObj = Instantiate(vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
-        vertexObj.transform.SetParent(graphObj);
+
+        // Instantiate a vertex object, set its parent to the graphObj, and call the initiation function
+        VertexObj vertexObj = Instantiate(this.vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
+        vertexObj.transform.SetParent(this.graphObj);
         vertexObj.Initiate(vertex);
+
+        // If snap to grid is enabled, move the new vertex obj to the nearest grid spot
+        if (Grid.singleton.GridEnabled)
+        {
+            vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
+        }
     }
 
+    // Create a new edge object to correspond to a passed in graph edge
     public void CreateEdgeObj(Edge edge) {
-        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        // Get a list of all the vertex objects in scene
+        VertexObj[] allVertexObjs = this.graphObj.GetComponentsInChildren<VertexObj>();
         VertexObj fromVertexObj = null;
         VertexObj toVertexObj = null;
+
+        // Find the vertex objects associated with the from and to vertices of the edge
         foreach (VertexObj vertexObj in allVertexObjs) {
             if (vertexObj.GetID() == edge.vert1.id) {
                 fromVertexObj = vertexObj;
@@ -219,12 +238,13 @@ public class Controller : MonoBehaviour
             }
         }
 
-        EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
-        // Find the child index of the from and to vertices and set the from vertex as the parent of edge object
+        // Instantiate an edge object
+        EdgeObj edgeObj = Instantiate(this.edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
+        // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
         edgeObj.transform.SetParent(fromVertexObj.transform);
         edgeObj.Initiate(edge, toVertexObj.gameObject);
 
-        // Add a DistanceJoint2D which connects the two vertices
+        // Add a DistanceJoint2D which connects the two vertices, setup its properties
         DistanceJoint2D joint = fromVertexObj.gameObject.AddComponent<DistanceJoint2D>();
         joint.autoConfigureConnectedAnchor = false;
         joint.enableCollision = true;
@@ -232,6 +252,8 @@ public class Controller : MonoBehaviour
         joint.maxDistanceOnly = true;
         joint.autoConfigureDistance = false;
         joint.connectedBody = toVertexObj.gameObject.GetComponent<Rigidbody2D>();
+        // Disable joint by default, the joint will only be enabled when graph physics is in use
+        joint.enabled = false;
     }
 
     // Returns true if any UI elements are being interacted with
@@ -240,26 +262,31 @@ public class Controller : MonoBehaviour
         return EventSystem.current.currentSelectedGameObject != null;
     }
 
+    // Enables graph physics for a certain duartion
     public void UseGraphPhysics(float duration)
     {
-        if (!graphPhysicsEnabled)
+        if (!this.graphPhysicsEnabled)
         {
             SetGraphPhysics(true);
         }
-        physicsTimer = duration;
+        this.physicsTimer = duration;
     }
 
+    // Enable/disable the components associated with graph physics
     private void SetGraphPhysics(bool enabled)
     {
-        if (snapVerticesToGrid)
+        // Turns off the grid if physics is turned on
+        if (this.snapVerticesToGrid)
         {
             Grid.singleton.ClearGrid();
             Grid.singleton.GridEnabled = !enabled;
         }
 
+        // Find all vertex objects
         VertexObj[] vertexObjs = GameObject.FindObjectsOfType<VertexObj>();
         foreach (VertexObj vertexObj in vertexObjs)
         {
+            // Enable the joints connecting vertices when physics is on
             DistanceJoint2D[] joints = vertexObj.GetComponents<DistanceJoint2D>();
             foreach (DistanceJoint2D joint in joints)
             {
@@ -267,15 +294,15 @@ public class Controller : MonoBehaviour
             }
             Rigidbody2D vertexObjRB = vertexObj.GetComponent<Rigidbody2D>();
             vertexObjRB.velocity = Vector3.zero;
+            // Set vertex rigidbody to kinematic when physics is off
             vertexObjRB.isKinematic = !enabled;
 
-            if (!enabled && snapVerticesToGrid)
+            if (!enabled && this.snapVerticesToGrid)
             {
+                // Resnap vertices when physics turns off if snap to grid is enabled
                 vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
             }
         }
-        graphPhysicsEnabled = enabled;
-
+        this.graphPhysicsEnabled = enabled;
     }
-
 }
