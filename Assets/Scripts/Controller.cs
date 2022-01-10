@@ -26,7 +26,8 @@ public class Controller : MonoBehaviour
     // TODO: Move the visual settings away from controller and into its own object
     [Header("Visual Settings")]
     public bool displayVertexLabels;
-    public bool enableGraphPhysics;
+    public bool snapVerticesToGrid;
+    //public bool enableGraphPhysics;
 
     // Main graph DS
     // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
@@ -34,6 +35,9 @@ public class Controller : MonoBehaviour
 
     // Duration of time to enable graph physics at the start of the program
     private float physicsTimer;
+
+    // Graph physics enabled
+    private bool graphPhysicsEnabled = false;
 
     private void Awake() {
         // Singleton pattern setup
@@ -56,21 +60,23 @@ public class Controller : MonoBehaviour
     }
 
     private void Update() {
-        if (physicsTimer <= 0f)
+        if (graphPhysicsEnabled && physicsTimer != -1)
         {
-            enableGraphPhysics = false;
-            physicsTimer = Mathf.Infinity;
-        }
-        else
-        {
-            physicsTimer -= Time.deltaTime;
+            if (physicsTimer <= 0f)
+            {
+                SetGraphPhysics(false);
+            }
+            else
+            {
+                physicsTimer -= Time.deltaTime;
+            }
         }
     }
 
     private void Start() {
         // Enable graph physics at the start
-        enableGraphPhysics = true;
-        physicsTimer = 2f;
+        //enableGraphPhysics = true;
+        //physicsTimer = 2f;
 
         CreateGraphObjs();
     }
@@ -127,12 +133,18 @@ public class Controller : MonoBehaviour
             joint.maxDistanceOnly = true;
             joint.autoConfigureDistance = false;
             joint.connectedBody = graphObj.GetChild(toVertexIndex).gameObject.GetComponent<Rigidbody2D>();
+            // Disable joint by default, the joint will only be enabled when graph physics is in use
+            joint.enabled = false;
         }
 
         // Update the Grpah information UI
         GraphInfo.singleton.UpateGraphInfo();
 
+        // Make sure no objects are selected when they are first created
         SelectionManager.singleton.DeSelectAll();
+
+        // Enable graph physics for two seconds to spread out the graph
+        UseGraphPhysics(2);
     }
 
     // Remove all graph visualization objects from scene
@@ -236,4 +248,43 @@ public class Controller : MonoBehaviour
     {
         return EventSystem.current.currentSelectedGameObject != null;
     }
+
+    public void UseGraphPhysics(float duration)
+    {
+        if (!graphPhysicsEnabled)
+        {
+            SetGraphPhysics(true);
+        }
+        physicsTimer = duration;
+    }
+
+    private void SetGraphPhysics(bool enabled)
+    {
+        if (snapVerticesToGrid)
+        {
+            Grid.singleton.ClearGrid();
+            Grid.singleton.enableGrid = !enabled;
+        }
+
+        VertexObj[] vertexObjs = GameObject.FindObjectsOfType<VertexObj>();
+        foreach (VertexObj vertexObj in vertexObjs)
+        {
+            DistanceJoint2D[] joints = vertexObj.GetComponents<DistanceJoint2D>();
+            foreach (DistanceJoint2D joint in joints)
+            {
+                joint.enabled = enabled;
+            }
+            Rigidbody2D vertexObjRB = vertexObj.GetComponent<Rigidbody2D>();
+            vertexObjRB.velocity = Vector3.zero;
+            vertexObjRB.isKinematic = !enabled;
+
+            if (!enabled && snapVerticesToGrid)
+            {
+                vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
+            }
+        }
+        graphPhysicsEnabled = enabled;
+
+    }
+
 }

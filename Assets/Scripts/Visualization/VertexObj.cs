@@ -60,9 +60,6 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     }
 
     private void Start() {
-        this.rb.isKinematic = false;
-        this.rb.WakeUp();
-
         // At the start of the program, if the vertex has no connected edges, give it 
         // extra mass and drag to avoid being pushed away by the other vertices
         if (transform.childCount == 0) {
@@ -72,63 +69,38 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
 
         // At the creation of the vertex object, set its lifetime to 0
         // Turn off all its edges and their corresponding distance joints
-        lifetime = 0f;
-        DistanceJoint2D[] joints = GetComponents<DistanceJoint2D>();
-        foreach (DistanceJoint2D joint in joints) {
-            joint.enabled = false;
-        }
-        for (int i = 0; i < transform.childCount; i++) {
-            transform.GetChild(i).gameObject.SetActive(false);
-        }
+        //lifetime = 0f;
+        //DistanceJoint2D[] joints = this.GetComponents<DistanceJoint2D>();
+        //foreach (DistanceJoint2D joint in joints)
+        //{
+        //    joint.enabled = false;
+        //}
+        //this.rb.isKinematic = true;
+            //}
+            //for (int i = 0; i < transform.childCount; i++) {
+            //    transform.GetChild(i).gameObject.SetActive(false);
+            //}
     }
 
     private void Update() {      
         // Once a vertex object has existed for more than half a second, turn on its edges and distance joints
         // This is to allow time for the vertices' mutual repulsive force to more evenly spread themselves out before they are connected.
-        if (lifetime > 0.5f) {
-            DistanceJoint2D[] joints = GetComponents<DistanceJoint2D>();
-            foreach (DistanceJoint2D joint in joints) {
-                joint.enabled = true;
-            }
-            for (int i = 0; i < transform.childCount; i++) {
-                transform.GetChild(i).gameObject.SetActive(true);
-            }
-            lifetime = Mathf.NegativeInfinity;
+        //if (lifetime > 0.5f) {
+        //    DistanceJoint2D[] joints = GetComponents<DistanceJoint2D>();
+        //    foreach (DistanceJoint2D joint in joints) {
+        //        joint.enabled = true;
+        //    }
+        //    for (int i = 0; i < transform.childCount; i++) {
+        //        transform.GetChild(i).gameObject.SetActive(true);
+        //    }
+        //    lifetime = Mathf.NegativeInfinity;
 
-            if (Grid.singleton.enableGrid)
-            {
-                this.transform.position = Grid.singleton.FindClosestGridPosition(this);
-            }
-        }
-        else lifetime += Time.deltaTime;
-    }
-
-    private void FixedUpdate()
-    {
-        if (lifetime > -1) return;
-
-        // Disable the joints and set the rigidbody to kinematic when graph physics is disabled
-        // TODO: Replace with more efficient code
-        if (Controller.singleton.enableGraphPhysics)
-        {
-            DistanceJoint2D[] joints = GetComponents<DistanceJoint2D>();
-            foreach (DistanceJoint2D joint in joints)
-            {
-                joint.enabled = true;
-            }
-            this.rb.isKinematic = false;
-            this.rb.WakeUp();
-        }
-        else
-        {
-            DistanceJoint2D[] joints = GetComponents<DistanceJoint2D>();
-            foreach (DistanceJoint2D joint in joints)
-            {
-                joint.enabled = false;
-            }
-            this.rb.isKinematic = true;
-            this.rb.velocity = Vector2.zero;
-        }
+        //    if (Grid.singleton.enableGrid)
+        //    {
+        //        this.transform.position = Grid.singleton.FindClosestGridPosition(this);
+        //    }
+        //}
+        //else lifetime += Time.deltaTime;
     }
 
     // When Cursor enters a vertex obj, play hovering animation

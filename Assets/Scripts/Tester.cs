@@ -78,6 +78,12 @@ public class Tester : MonoBehaviour
             CreateBipartiteGraph();
             Controller.singleton.CreateGraphObjs();
         }
+
+        // Testing: Press P to enable graph physics for 5 seconds
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            Controller.singleton.UseGraphPhysics(2);
+        }
     }
 
     private void CreateRandomGraph(int num) {

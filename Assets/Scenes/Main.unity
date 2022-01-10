@@ -5619,7 +5619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   p_gridLines: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
-  enableGrid: 0
+  enableGrid: 1
   spacing: 0.5
   gridLineCount: 100
 --- !u!4 &1039602332
@@ -11124,7 +11124,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 416
   displayVertexLabels: 0
-  enableGraphPhysics: 1
+  snapVerticesToGrid: 1
 --- !u!114 &2144943524
 MonoBehaviour:
   m_ObjectHideFlags: 0
