@@ -17,11 +17,19 @@ public class LabelObj : MonoBehaviour
     private Vector3 previousPosition;
 
     // Reference to the text mesh object
-    TMP_Text textMesh;
+    TMP_InputField inputField;
 
     public void Initiate(string content)
     {
         this.content = content;
+
+        if (content != "")
+        {
+            inputField.text = content;
+        }
+
+        UpdatePosition();
+        MakeUneditable();
     }
 
     private void Awake()
@@ -29,20 +37,14 @@ public class LabelObj : MonoBehaviour
         RectTransform rectTransform = GetComponent<RectTransform>();
         this.rect = rectTransform.rect;
 
-        textMesh = GetComponent<TMP_Text>();
-        textMesh.text = content;
-
-        // TODO: REMOVE TEST CODE!!!
-        // TEST CODE: assign random labels for now
-        textMesh.text = string.Join("", Enumerable.Repeat(0, 10).Select(n => (char) UnityEngine.Random.Range(48, 123)));
-
-        textMesh.enabled = Controller.singleton.displayVertexLabels;
+        inputField = GetComponentInChildren<TMP_InputField>();
+        inputField.enabled = Controller.singleton.displayVertexLabels;
     }
 
     private void FixedUpdate()
     {
         if (!Controller.singleton.displayVertexLabels) {
-            textMesh.enabled = false;
+            inputField.enabled = false;
             previousPosition = Vector3.negativeInfinity;
             return;
         }
@@ -51,16 +53,22 @@ public class LabelObj : MonoBehaviour
         if (transform.position != previousPosition)
         {
             previousPosition = transform.position;
-            Nullable<Vector3> position = FindSuitablePosition();
-            if (position == null)
-            {
-                textMesh.enabled = false;
-            }
-            else
-            {
-                textMesh.enabled = true;
-                transform.localPosition = (Vector3) position;
-            }
+            UpdatePosition();
+        }
+    }
+
+    // Updates the position of the label, moving it if needed
+    public void UpdatePosition()
+    {
+        Nullable<Vector3> position = FindSuitablePosition();
+        if (position == null)
+        {
+            inputField.enabled = false;
+        }
+        else
+        {
+            inputField.enabled = true;
+            transform.localPosition = (Vector3) position;
         }
     }
 
@@ -73,7 +81,7 @@ public class LabelObj : MonoBehaviour
             {
                 Vector2 vertexPos = transform.parent.position;
                 Vector3 localPos = new Vector3(radius * Mathf.Cos(angle * Mathf.Deg2Rad), radius * Mathf.Sin(angle * Mathf.Deg2Rad), 1);
-                Collider2D col = Physics2D.OverlapArea(vertexPos + new Vector2(localPos.x - this.rect.width / 2, localPos.y + this.rect.height / 2), vertexPos + new Vector2(localPos.x + this.rect.width / 2, localPos.y - this.rect.height / 2), LayerMask.GetMask("Edge"));
+                Collider2D col = Physics2D.OverlapArea(vertexPos + new Vector2(localPos.x - this.rect.width / 200, localPos.y + this.rect.height / 200), vertexPos + new Vector2(localPos.x + this.rect.width / 200, localPos.y - this.rect.height / 200), LayerMask.GetMask("Edge", "Vertex"));
                 if (!col)
                 {
                     return localPos;
@@ -86,17 +94,31 @@ public class LabelObj : MonoBehaviour
     // Method called by another class to turn on or off the text label
     public void SetEnabled(bool enabled)
     {
-        textMesh.enabled = enabled;
+        inputField.enabled = enabled;
     }
 
-    private void OnDrawGizmos()
+    // Make the label editable
+    public void MakeEditable()
     {
-        Gizmos.color = Color.green;
-        DrawRect(this.rect);
-
+        inputField.gameObject.SetActive(true);
+        inputField.enabled = true;
+        inputField.interactable = true;
     }
-    void DrawRect(Rect rect)
+
+    // Make the label uneditable
+    public void MakeUneditable()
     {
-        Gizmos.DrawWireCube(new Vector3(transform.parent.position.x + rect.center.x, transform.parent.position.y + rect.center.y, 0.01f), new Vector3(rect.size.x, rect.size.y, 0.01f));
+        inputField.interactable = false;
+        if (string.IsNullOrEmpty(inputField.text))
+        {
+            inputField.gameObject.SetActive(false);
+        }
+        UpdatePosition();
+    }
+
+    // Update the content field with a new label
+    public void UpdateLabel(string newLabel)
+    {
+        this.content = newLabel;
     }
 }

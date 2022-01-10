@@ -33,11 +33,14 @@ public class SelectionManager : MonoBehaviour
     private void Update()
     {
         // Delete selection if backspace or delete key is pressed
-        if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
+        if (!Controller.singleton.IsUIactive())
         {
-            DeleteSelection();
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
+            {
+                DeleteSelection();
+            }
         }
-
+            
         // Deselect all when the user clicks out of the graph
         // DISABLED FOR NOW
         if (Input.GetMouseButtonDown(0))

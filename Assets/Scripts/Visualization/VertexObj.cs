@@ -25,6 +25,8 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     private SpriteRenderer spriteRenderer;
     // Reference to the animator component
     private Animator animator;
+    // Reference to the labelObj attached to the vertexObj
+    private LabelObj labelObj;
 
     // Getter for id
     public int GetID()
@@ -41,6 +43,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         animator = GetComponent<Animator>();
         spriteObj = transform.GetChild(0);
         spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
+        labelObj = GetComponentInChildren<LabelObj>();
     }
 
     // Method called by a controller class to setup properties of the vertex object
@@ -53,7 +56,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         gameObject.SetActive(true);
 
         // Initiate the label
-        transform.GetChild(2).GetComponent<LabelObj>().Initiate(label);
+        labelObj.Initiate(label);
     }
 
     private void Start() {
@@ -85,10 +88,12 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         if (!selected)
         {
             SelectionManager.singleton.DeselectVertex(this);
+            labelObj.MakeUneditable();
         }
         else
         {
             SelectionManager.singleton.SelectVertex(this);
+            labelObj.MakeEditable();
         }
     }
 

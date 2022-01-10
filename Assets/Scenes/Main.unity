@@ -11122,7 +11122,7 @@ MonoBehaviour:
   clickableLayers:
     serializedVersion: 2
     m_Bits: 416
-  displayVertexLabels: 0
+  displayVertexLabels: 1
   snapVerticesToGrid: 1
 --- !u!114 &2144943524
 MonoBehaviour:
