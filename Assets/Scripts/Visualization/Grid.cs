@@ -39,6 +39,7 @@ public class Grid : MonoBehaviour
             return;
         }
 
+        // Instantiate list of occupied points
         occupiedPoints = new List< (Vector2Int, VertexObj) >();
     }
 
@@ -159,14 +160,9 @@ public class Grid : MonoBehaviour
         return new Vector2(gridPosition.x * spacing, gridPosition.y * spacing);
     }
 
-    // Get the bounds in world coordinates of the main active camera
-    private Bounds GetCameraWorldBounds()
+    // Set all grid points as unoccupied
+    public void ClearGrid()
     {
-        float screenAspect = (float) Screen.width / (float) Screen.height;
-        float cameraHeight = Camera.main.orthographicSize * 2;
-        Bounds bounds = new Bounds(
-            Camera.main.transform.position,
-            new Vector3(cameraHeight * screenAspect, cameraHeight, 0));
-        return bounds;
+        occupiedPoints = new List<(Vector2Int, VertexObj)>();
     }
 }

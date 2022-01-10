@@ -101,6 +101,12 @@ public class Controller : MonoBehaviour
             vertexObj.transform.SetParent(graphObj);
             vertexTransformPositions[childIndex++] = vertex.id;
             vertexObj.Initiate(vertex);
+
+            // If snap to grid is enabled, move the new vertex obj to a grid spot
+            if (Grid.singleton.enableGrid)
+            {
+                vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
+            }
         }
 
         // Iterate through each edge in the graph data structure and create a correspoinding edgeObj
@@ -142,6 +148,12 @@ public class Controller : MonoBehaviour
             // TODO: Once object pooling is implmented, add deleted objs to pool rather than destroy them.
             Destroy(graphObj.GetChild(i).gameObject);
             graphObj.GetChild(i).SetParent(null);
+        }
+
+        // If snap to grid is enabled, clear out the grid
+        if (Grid.singleton.enableGrid)
+        {
+            Grid.singleton.ClearGrid();
         }
 
         // Update the Grpah information UI

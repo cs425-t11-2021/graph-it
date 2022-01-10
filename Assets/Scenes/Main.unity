@@ -5589,6 +5589,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 972687636}
   m_CullTransparentMesh: 1
+--- !u!1 &1039602330
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1039602332}
+  - component: {fileID: 1039602331}
+  m_Layer: 0
+  m_Name: GraphGrid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1039602331
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039602330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a9fb3ab818ed4831a62b5dc33ee078f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p_gridLines: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
+  enableGrid: 0
+  spacing: 0.5
+  gridLineCount: 100
+--- !u!4 &1039602332
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1039602330}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1064003695
 GameObject:
   m_ObjectHideFlags: 0
@@ -9204,7 +9251,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1670804266}
-  - component: {fileID: 1670804267}
   m_Layer: 0
   m_Name: GraphObj
   m_TagString: Untagged
@@ -9226,24 +9272,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1670804267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1670804265}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0a9fb3ab818ed4831a62b5dc33ee078f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  p_marker: {fileID: 6154172636577858534, guid: ba190c5459da94b4f9ec44b75f515280, type: 3}
-  p_gridLines: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
-  enableGrid: 0
-  spacing: 0.5
-  gridLineCount: 100
-  displayGridMarkers: 0
 --- !u!1 &1711527500
 GameObject:
   m_ObjectHideFlags: 0
