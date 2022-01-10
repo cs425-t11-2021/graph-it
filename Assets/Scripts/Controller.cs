@@ -100,7 +100,7 @@ public class Controller : MonoBehaviour
             vertexObj.Initiate(vertex);
 
             // If snap to grid is enabled, move the new vertex obj to a grid spot
-            if (Grid.singleton.enableGrid)
+            if (Grid.singleton.GridEnabled)
             {
                 vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
             }
@@ -154,7 +154,7 @@ public class Controller : MonoBehaviour
         }
 
         // If snap to grid is enabled, clear out the grid
-        if (Grid.singleton.enableGrid)
+        if (Grid.singleton.GridEnabled)
         {
             Grid.singleton.ClearGrid();
         }
@@ -254,7 +254,7 @@ public class Controller : MonoBehaviour
         if (snapVerticesToGrid)
         {
             Grid.singleton.ClearGrid();
-            Grid.singleton.enableGrid = !enabled;
+            Grid.singleton.GridEnabled = !enabled;
         }
 
         VertexObj[] vertexObjs = GameObject.FindObjectsOfType<VertexObj>();

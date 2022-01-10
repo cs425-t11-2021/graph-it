@@ -81,7 +81,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     
     private void OnMouseDown()
     {
-        if (Grid.singleton.enableGrid)
+        if (Grid.singleton.GridEnabled)
         {
             Grid.singleton.RemoveFromOccupied(this);
         }
@@ -111,7 +111,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     // If snap to grid is enabled, find the cloest grid position when mouse up
     private void OnMouseUp()
     {
-        if (Grid.singleton.enableGrid)
+        if (Grid.singleton.GridEnabled)
         {
             this.transform.position = Grid.singleton.FindClosestGridPosition(this);
         }
@@ -120,7 +120,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     // If vertex object is deleted, remove it from the grid
     private void OnDestroy()
     {
-        if (Grid.singleton.enableGrid)
+        if (Grid.singleton.GridEnabled)
         {
             Grid.singleton.RemoveFromOccupied(this);
         }
@@ -128,7 +128,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
 
     public void OnDragStart()
     {
-        if (Grid.singleton.enableGrid)
+        if (Grid.singleton.GridEnabled)
         {
             Grid.singleton.DisplayGridLines();
         }
@@ -136,7 +136,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
 
     public void OnDragFinish()
     {
-        if (Grid.singleton.enableGrid)
+        if (Grid.singleton.GridEnabled)
         {
             Grid.singleton.HideGridLines();
         }

@@ -12,8 +12,6 @@ public class Grid : MonoBehaviour
     // Prefab for the grid lines object
     public GameObject p_gridLines;
 
-    // Whether or not vertices should snap to grid
-    public bool enableGrid = false;
     // Space between each vertex
     public float spacing = 0.5f;
     // Number of horizontal and vertical gridlines to instantiate
@@ -24,6 +22,12 @@ public class Grid : MonoBehaviour
     // Array of horizontal and vertical girdline objects
     private GameObject[] horizontalLines;
     private GameObject[] verticalLines;
+
+    // Property for whether or not vertices should snap to grid
+    public bool GridEnabled
+    {
+        get; set;
+    }
 
     private void Awake()
     {
