@@ -17,8 +17,6 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     private Rigidbody2D rb;
     // Reference to the sprite child object of the vertex object
     private Transform spriteObj;
-    // Amount of time this object has been in scene
-    private float lifetime;
 
     // TODO: Remove once animations are implemented
     // Whether vertex is selected in the SelectionManager
@@ -66,41 +64,6 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
             rb.mass = 5 * rb.mass;
             rb.drag = 5 * rb.drag;
         }
-
-        // At the creation of the vertex object, set its lifetime to 0
-        // Turn off all its edges and their corresponding distance joints
-        //lifetime = 0f;
-        //DistanceJoint2D[] joints = this.GetComponents<DistanceJoint2D>();
-        //foreach (DistanceJoint2D joint in joints)
-        //{
-        //    joint.enabled = false;
-        //}
-        //this.rb.isKinematic = true;
-            //}
-            //for (int i = 0; i < transform.childCount; i++) {
-            //    transform.GetChild(i).gameObject.SetActive(false);
-            //}
-    }
-
-    private void Update() {      
-        // Once a vertex object has existed for more than half a second, turn on its edges and distance joints
-        // This is to allow time for the vertices' mutual repulsive force to more evenly spread themselves out before they are connected.
-        //if (lifetime > 0.5f) {
-        //    DistanceJoint2D[] joints = GetComponents<DistanceJoint2D>();
-        //    foreach (DistanceJoint2D joint in joints) {
-        //        joint.enabled = true;
-        //    }
-        //    for (int i = 0; i < transform.childCount; i++) {
-        //        transform.GetChild(i).gameObject.SetActive(true);
-        //    }
-        //    lifetime = Mathf.NegativeInfinity;
-
-        //    if (Grid.singleton.enableGrid)
-        //    {
-        //        this.transform.position = Grid.singleton.FindClosestGridPosition(this);
-        //    }
-        //}
-        //else lifetime += Time.deltaTime;
     }
 
     // When Cursor enters a vertex obj, play hovering animation

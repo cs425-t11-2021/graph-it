@@ -27,7 +27,6 @@ public class Controller : MonoBehaviour
     [Header("Visual Settings")]
     public bool displayVertexLabels;
     public bool snapVerticesToGrid;
-    //public bool enableGraphPhysics;
 
     // Main graph DS
     // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
@@ -71,14 +70,6 @@ public class Controller : MonoBehaviour
                 physicsTimer -= Time.deltaTime;
             }
         }
-    }
-
-    private void Start() {
-        // Enable graph physics at the start
-        //enableGraphPhysics = true;
-        //physicsTimer = 2f;
-
-        CreateGraphObjs();
     }
 
     // Utility method to help get the corresponding world position of the mouse cursor
