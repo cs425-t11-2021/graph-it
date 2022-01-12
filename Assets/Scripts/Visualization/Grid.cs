@@ -23,11 +23,7 @@ public class Grid : MonoBehaviour
     private GameObject[] horizontalLines;
     private GameObject[] verticalLines;
 
-    // Property for whether or not vertices should snap to grid
-    public bool GridEnabled
-    {
-        get; set;
-    }
+    public bool GridEnabled { get; set; }
 
     private void Awake()
     {
@@ -46,11 +42,18 @@ public class Grid : MonoBehaviour
         // Instantiate list of occupied points
         this.occupiedPoints = new List< (Vector2Int, VertexObj) >();
 
-        // Enable/disable the grid based on Controller settings
-        this.GridEnabled = Controller.singleton.snapVerticesToGrid;
+        // Subscribe OnToggleGridSnapping method to the corresponding event in Controller, then run it to get default settings
+        Controller.singleton.OnToggleGridSnapping += OnToggleGridSnapping;
+        OnToggleGridSnapping(Controller.singleton.SnapVerticesToGrid);
     }
 
-    
+    // Method called when the the setting for grid snapping is toggled from Controller
+    private void OnToggleGridSnapping(bool enabled)
+    {
+        GridEnabled = enabled;
+    }
+
+
     private void Start()
     {
         // Initialize the gridline object arrays

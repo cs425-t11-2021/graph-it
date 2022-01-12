@@ -30,15 +30,24 @@ public class Controller : MonoBehaviour
     private bool displayVertexLabels;
     public event Action<bool> OnToggleVertexLabels;
     public bool DisplayVertexLabels {
-        get => displayVertexLabels;
+        get => this.displayVertexLabels;
         set
         {
-            displayVertexLabels = value;
+            this.displayVertexLabels = value;
             OnToggleVertexLabels?.Invoke(value);
         }
     }
-
-    public bool snapVerticesToGrid;
+    
+    [SerializeField]
+    private bool snapVerticesToGrid;
+    public event Action<bool> OnToggleGridSnapping;
+    public bool SnapVerticesToGrid {
+        get => this.snapVerticesToGrid;
+        set {
+            this.snapVerticesToGrid = value;
+            OnToggleGridSnapping?.Invoke(value);
+        }
+    }
 
     // Main graph DS
     // TODO: SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
@@ -75,6 +84,7 @@ public class Controller : MonoBehaviour
     private void ImplementDefaultSettings()
     {
         DisplayVertexLabels = this.displayVertexLabels;
+        SnapVerticesToGrid = this.snapVerticesToGrid;
     }
 
     private void Update() {
@@ -296,7 +306,7 @@ public class Controller : MonoBehaviour
     private void SetGraphPhysics(bool enabled)
     {
         // Turns off the grid if physics is turned on
-        if (this.snapVerticesToGrid)
+        if (Controller.singleton.SnapVerticesToGrid)
         {
             Grid.singleton.ClearGrid();
             Grid.singleton.GridEnabled = !enabled;
@@ -317,7 +327,7 @@ public class Controller : MonoBehaviour
             // Set vertex rigidbody to kinematic when physics is off
             vertexObjRB.isKinematic = !enabled;
 
-            if (!enabled && this.snapVerticesToGrid)
+            if (!enabled && this.SnapVerticesToGrid)
             {
                 // Resnap vertices when physics turns off if snap to grid is enabled
                 vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
