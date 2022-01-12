@@ -19,6 +19,8 @@ public class LabelObj : MonoBehaviour
     // Reference to the text mesh object
     TMP_InputField inputField;
 
+    private bool displayEnabled;
+
     public void Initiate(string content)
     {
         this.content = content;
@@ -28,8 +30,7 @@ public class LabelObj : MonoBehaviour
             inputField.text = content;
         }
 
-        UpdatePosition();
-        MakeUneditable();
+        OnToggleVertexLabels(Controller.singleton.DisplayVertexLabels);
     }
 
     private void Awake()
@@ -38,18 +39,31 @@ public class LabelObj : MonoBehaviour
         this.rect = rectTransform.rect;
 
         inputField = GetComponentInChildren<TMP_InputField>();
-        inputField.enabled = Controller.singleton.displayVertexLabels;
+
+        Controller.singleton.OnToggleVertexLabels += OnToggleVertexLabels;
+    }
+
+    private void OnToggleVertexLabels(bool enabled)
+    {
+        this.displayEnabled = enabled;
+
+        if (enabled)
+        {
+            MakeUneditable();
+        }
+        else
+        {
+            inputField.gameObject.SetActive(false);
+        }
     }
 
     private void FixedUpdate()
     {
-        if (!Controller.singleton.displayVertexLabels) {
-            inputField.enabled = false;
-            previousPosition = Vector3.negativeInfinity;
+        if (!enabled) {
             return;
         }
 
-        // Only check to see if the label needs to move if the vertex moved
+        // Only check to see if the label needs to move if the vertex  moved
         if (transform.position != previousPosition)
         {
             previousPosition = transform.position;
@@ -63,11 +77,10 @@ public class LabelObj : MonoBehaviour
         Nullable<Vector3> position = FindSuitablePosition();
         if (position == null)
         {
-            inputField.enabled = false;
+            inputField.gameObject.SetActive(false);
         }
         else
         {
-            inputField.enabled = true;
             transform.localPosition = (Vector3) position;
         }
     }
@@ -91,29 +104,32 @@ public class LabelObj : MonoBehaviour
         return null;
     }
 
-    // Method called by another class to turn on or off the text label
-    public void SetEnabled(bool enabled)
-    {
-        inputField.enabled = enabled;
-    }
-
     // Make the label editable
     public void MakeEditable()
     {
-        inputField.gameObject.SetActive(true);
-        inputField.enabled = true;
-        inputField.interactable = true;
+        if (displayEnabled)
+        {
+            inputField.gameObject.SetActive(true);
+            inputField.interactable = true;
+        }
     }
 
     // Make the label uneditable
     public void MakeUneditable()
     {
-        inputField.interactable = false;
-        if (string.IsNullOrEmpty(inputField.text))
+        if (displayEnabled)
         {
-            inputField.gameObject.SetActive(false);
+            inputField.interactable = false;
+            if (string.IsNullOrEmpty(inputField.text))
+            {
+                inputField.gameObject.SetActive(false);
+            }
+            else
+            {
+                inputField.gameObject.SetActive(true);
+            }
+            UpdatePosition();
         }
-        UpdatePosition();
     }
 
     // Update the content field with a new label

@@ -39,6 +39,11 @@ public class SelectionManager : MonoBehaviour
             {
                 DeleteSelection();
             }
+
+            if (Input.GetKeyDown(KeyCode.Equals) && selectedVertices.Count == 2 && selectedEdges.Count == 0)
+            {
+                AddEdge();
+            }
         }
             
         // Deselect all when the user clicks out of the graph

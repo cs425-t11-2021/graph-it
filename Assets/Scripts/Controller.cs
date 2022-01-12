@@ -24,12 +24,24 @@ public class Controller : MonoBehaviour
     public LayerMask clickableLayers;
 
     // TODO: Move the visual settings away from controller and into its own object
-    [Header("Visual Settings")]
-    public bool displayVertexLabels;
+    [Header("Default Visual Settings")]
+
+    [SerializeField]
+    private bool displayVertexLabels;
+    public event Action<bool> OnToggleVertexLabels;
+    public bool DisplayVertexLabels {
+        get => displayVertexLabels;
+        set
+        {
+            displayVertexLabels = value;
+            OnToggleVertexLabels?.Invoke(value);
+        }
+    }
+
     public bool snapVerticesToGrid;
 
     // Main graph DS
-    // SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
+    // TODO: SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
     public Graph graph;
 
     // Timer used for tempoarily enabling graph physics
@@ -55,6 +67,14 @@ public class Controller : MonoBehaviour
 
         // Set the camera's event mask to clickableLayers
         Camera.main.eventMask = this.clickableLayers;
+
+        // Implment the default settings
+        ImplementDefaultSettings();
+    }
+
+    private void ImplementDefaultSettings()
+    {
+        DisplayVertexLabels = this.displayVertexLabels;
     }
 
     private void Update() {
