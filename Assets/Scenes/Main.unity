@@ -11123,7 +11123,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 416
   displayVertexLabels: 1
-  snapVerticesToGrid: 0
+  snapVerticesToGrid: 1
+  alwaysShowGridlines: 1
 --- !u!114 &2144943524
 MonoBehaviour:
   m_ObjectHideFlags: 0

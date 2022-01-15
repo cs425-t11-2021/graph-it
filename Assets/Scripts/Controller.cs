@@ -34,7 +34,7 @@ public class Controller : MonoBehaviour
         set
         {
             this.displayVertexLabels = value;
-            OnToggleVertexLabels?.Invoke(value);
+            this.OnToggleVertexLabels?.Invoke(value);
         }
     }
     
@@ -45,13 +45,32 @@ public class Controller : MonoBehaviour
         get => this.snapVerticesToGrid;
         set {
             this.snapVerticesToGrid = value;
-            OnToggleGridSnapping?.Invoke(value);
+            this.OnToggleGridSnapping?.Invoke(value);
+        }
+    }
+
+    [SerializeField]
+    private bool alwaysShowGridlines;
+    public event Action<bool> OnToggleAlwaysShowGridlines;
+    public bool AlwaysShowGridlines
+    {
+        get => this.alwaysShowGridlines;
+        set
+        {
+            if (this.snapVerticesToGrid)
+            {
+                this.alwaysShowGridlines = value;
+                this.OnToggleGridSnapping?.Invoke(value);
+            }
+            else
+            {
+                this.alwaysShowGridlines = false;
+            }
         }
     }
 
     // Main graph DS
-    // TODO: SET TO PUBLIC FOR TESTING PURPUSES, CHANGE LATER
-    public Graph graph;
+    public Graph Graph { get; set; }
 
     // Timer used for tempoarily enabling graph physics
     private float physicsTimer;
@@ -70,7 +89,7 @@ public class Controller : MonoBehaviour
         }
 
         // Initiate graph ds
-        this.graph = new Graph();
+        this.Graph = new Graph();
         // Manually set edge length
         this.edgeLength = 5;
 
@@ -85,6 +104,7 @@ public class Controller : MonoBehaviour
     {
         DisplayVertexLabels = this.displayVertexLabels;
         SnapVerticesToGrid = this.snapVerticesToGrid;
+        AlwaysShowGridlines = this.alwaysShowGridlines;
     }
 
     private void Update() {
@@ -113,12 +133,12 @@ public class Controller : MonoBehaviour
     public void CreateGraphObjs() {
         // Array to store the child index under GraphObj of each vertex
         // Index corresponds to the child index, value corresponds to vertex id
-        int[] vertexTransformPositions = new int[this.graph.vertices.Count];
+        int[] vertexTransformPositions = new int[this.Graph.vertices.Count];
 
         // Currently avaiable child index of GraphObj
         int childIndex = 0;
         // Iterate through each vertex in the graph data structure and create a corresponding vertexObj
-        foreach (Vertex vertex in this.graph.vertices) {
+        foreach (Vertex vertex in this.Graph.vertices) {
             // TODO: Change Testing code
             // Testing: Vertex objs spawns in random position
             Vector2 pos = UnityEngine.Random.insideUnitCircle.normalized * 3f;
@@ -141,7 +161,7 @@ public class Controller : MonoBehaviour
         }
 
         // Iterate through each edge in the graph data structure and create a correspoinding edgeObj
-        foreach (KeyValuePair<(int, int), Edge> kvp in this.graph.adjacency)
+        foreach (KeyValuePair<(int, int), Edge> kvp in this.Graph.adjacency)
         {
             EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
             // Find the child index of the from and to vertices and set the from vertex as the parent of edge object
@@ -208,7 +228,7 @@ public class Controller : MonoBehaviour
             existingVertexObjIDs.Add(vertexObj.GetID());
         }
         // If a vertex is in the ds but doens't have an associated vertex object, create it
-        foreach (Vertex vertex in this.graph.vertices) {
+        foreach (Vertex vertex in this.Graph.vertices) {
             if (!existingVertexObjIDs.Contains(vertex.id)) {
                 CreateVertexObj(vertex);
             }
@@ -223,7 +243,7 @@ public class Controller : MonoBehaviour
             existingEdgeObjIDs.Add(edgeObj.GetID());
         }
         // If an edge is in the ds but doens't have an associated edge object, create it
-        foreach (KeyValuePair<(int, int), Edge> kvp in this.graph.adjacency) {
+        foreach (KeyValuePair<(int, int), Edge> kvp in this.Graph.adjacency) {
             if (!existingEdgeObjIDs.Contains(kvp.Value.id)) {
                 CreateEdgeObj(kvp.Value);
             }

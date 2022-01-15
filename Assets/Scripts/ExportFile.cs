@@ -61,7 +61,7 @@ public class ExportFile : MonoBehaviour
             {
                 // TODO: File selector, file always saved on desktop for now
                 string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
-                Controller.singleton.graph.Export(desktop + "/" + exportFilenameInput.text + ".csv");
+                Controller.singleton.Graph.Export(desktop + "/" + exportFilenameInput.text + ".csv");
                 this.gameObject.SetActive(false);
                 fileButton.enabled = true;
                 editButton.enabled = true;

@@ -94,7 +94,7 @@ public class SelectionManager : MonoBehaviour
         foreach (EdgeObj edgeObj in this.selectedEdges)
         {
             // Update the graph ds
-            Controller.singleton.graph.RemoveEdge(edgeObj.GetID());
+            Controller.singleton.Graph.RemoveEdge(edgeObj.GetID());
 
             Destroy(edgeObj.gameObject);
         }
@@ -114,7 +114,7 @@ public class SelectionManager : MonoBehaviour
             }
 
             // Update the graph ds
-            Controller.singleton.graph.RemoveVertex(vertexObj.GetID());
+            Controller.singleton.Graph.RemoveVertex(vertexObj.GetID());
 
             Destroy(vertexObj.gameObject);
         }
@@ -177,7 +177,7 @@ public class SelectionManager : MonoBehaviour
             throw new System.Exception( "Cannot start Prim's algorithm." );
         }
 
-        List<Edge> primEdges = Controller.singleton.graph.Prim(Controller.singleton.graph[selectedVertices[0].GetID()]);
+        List<Edge> primEdges = Controller.singleton.Graph.Prim(Controller.singleton.Graph[selectedVertices[0].GetID()]);
         List<int> primEdgeIDs = new List<int>();
         List<int> primVertexIDs = new List<int>();
         foreach (Edge e in primEdges) {
@@ -206,7 +206,7 @@ public class SelectionManager : MonoBehaviour
         VertexObj vertexObj1 = selectedVertices[0];
         VertexObj vertexObj2 = selectedVertices[1];
 
-        Controller.singleton.graph.AddEdge(Controller.singleton.graph[vertexObj1.GetID()], Controller.singleton.graph[vertexObj2.GetID()]);
+        Controller.singleton.Graph.AddEdge(Controller.singleton.Graph[vertexObj1.GetID()], Controller.singleton.Graph[vertexObj2.GetID()]);
         Controller.singleton.UpdateGraphObjs();
         DeSelectAll();
     }

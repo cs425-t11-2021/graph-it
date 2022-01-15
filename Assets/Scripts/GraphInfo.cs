@@ -43,12 +43,12 @@ public class GraphInfo : MonoBehaviour
     }
 
     public void UpateGraphInfo() {
-        if (Controller.singleton.graph.vertices.Count > 6) {
+        if (Controller.singleton.Graph.vertices.Count > 6) {
             chromatic_text.text = "Chromatic Number: TMV";
             bipartite_text.text = "Bipartite: TMV";
         }
         else {
-            int chromatic_num = Controller.singleton.graph.GetChromaticNumber();
+            int chromatic_num = Controller.singleton.Graph.GetChromaticNumber();
             chromatic_text.text = "Chromatic Number: " + chromatic_num;
             bipartite_text.text = "Bipartite: " + (chromatic_num == 2 ? "Yes" : "No");
         }

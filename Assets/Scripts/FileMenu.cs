@@ -44,7 +44,7 @@ public class FileMenu : MonoBehaviour
         else if (EventSystem.current.currentSelectedGameObject == newGraphButton)
         {
             Controller.singleton.ClearGraphObjs();
-            Controller.singleton.graph.Clear();
+            Controller.singleton.Graph.Clear();
         }
     }
 }

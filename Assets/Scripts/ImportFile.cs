@@ -64,7 +64,7 @@ public class ImportFile : MonoBehaviour
                 // TODO: File selector, file always saved on desktop for now
                 string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
                 Debug.Log("Begin import at " + desktop + "/" + importFilenameInput.text + ".csv");
-                Controller.singleton.graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
+                Controller.singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
                 this.gameObject.SetActive(false);
                 fileButton.enabled = true;
                 editButton.enabled = true;

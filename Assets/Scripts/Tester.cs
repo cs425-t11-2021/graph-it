@@ -23,7 +23,7 @@ public class Tester : MonoBehaviour
             Debug.Log("[Tester] Deleting current graph.");
 
             Controller.singleton.ClearGraphObjs();
-            Controller.singleton.graph = new Graph();
+            Controller.singleton.Graph = new Graph();
         }
 
         // Testing: Press R to regenerate random graph
@@ -88,9 +88,9 @@ public class Tester : MonoBehaviour
 
     private void CreateRandomGraph(int num) {
         Controller.singleton.ClearGraphObjs();
-        Controller.singleton.graph = new Graph();
+        Controller.singleton.Graph = new Graph();
 
-        graph_ds = Controller.singleton.graph;
+        graph_ds = Controller.singleton.Graph;
 
         // Add 10 vertices to the graph
         for (int i = 0; i < num; i++) {
@@ -114,9 +114,9 @@ public class Tester : MonoBehaviour
 
     private void CreateCircularGraph() {
         Controller.singleton.ClearGraphObjs();
-        Controller.singleton.graph = new Graph();
+        Controller.singleton.Graph = new Graph();
 
-        graph_ds = Controller.singleton.graph;
+        graph_ds = Controller.singleton.Graph;
 
         int size = Random.Range(3, 20);
 
@@ -134,9 +134,9 @@ public class Tester : MonoBehaviour
 
     private void CreateCompleteGraph() {
         Controller.singleton.ClearGraphObjs();
-        Controller.singleton.graph = new Graph();
+        Controller.singleton.Graph = new Graph();
 
-        graph_ds = Controller.singleton.graph;
+        graph_ds = Controller.singleton.Graph;
 
         int size = Random.Range(3, 10);
 
@@ -157,9 +157,9 @@ public class Tester : MonoBehaviour
 
     private void CreateBipartiteGraph() {
         Controller.singleton.ClearGraphObjs();
-        Controller.singleton.graph = new Graph();
+        Controller.singleton.Graph = new Graph();
 
-        graph_ds = Controller.singleton.graph;
+        graph_ds = Controller.singleton.Graph;
 
         int u_count = Random.Range(3, 6);
         int v_count = Random.Range(3, 6);

@@ -64,7 +64,7 @@ public class DoubleClick : MonoBehaviour
 				isDoubleClick = false;
 
 				Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-				Controller.singleton.graph.AddVertex(mousePos.x, mousePos.y);
+				Controller.singleton.Graph.AddVertex(mousePos.x, mousePos.y);
                 Controller.singleton.UpdateGraphObjs();
                 SelectionManager.singleton.DeSelectAll();
 			}
