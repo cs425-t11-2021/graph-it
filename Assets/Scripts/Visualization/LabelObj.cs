@@ -4,7 +4,6 @@ using System;
 using System.Linq;
 using TMPro;
 
-
 public class LabelObj : MonoBehaviour
 {
     //TODO: ADD COMMENTS

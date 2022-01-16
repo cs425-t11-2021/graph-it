@@ -90,7 +90,7 @@ public class Grid : MonoBehaviour
             }
             LineRenderer lr = this.verticalLines[i].GetComponent<LineRenderer>();
             // Make the lines render from top of the camera to bottom of the camera
-            lr.SetPositions(new Vector3[]{new Vector3(lineX, lowerLeft.y, 1), new Vector3(lineX, upperRight.y, 1) });
+            lr.SetPositions(new Vector3[] {new Vector3(lineX, lowerLeft.y, 1), new Vector3(lineX, upperRight.y, 1) });
             // Set the line width to be a ratio of the current camera size to ensure the gridline width is constant across camera sizes
             lr.startWidth = Camera.main.orthographicSize / 160f;
             lr.endWidth = Camera.main.orthographicSize / 160f;
