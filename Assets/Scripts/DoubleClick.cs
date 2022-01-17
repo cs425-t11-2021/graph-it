@@ -67,6 +67,7 @@ public class DoubleClick : MonoBehaviour
 				Controller.singleton.Graph.AddVertex(mousePos.x, mousePos.y);
                 Controller.singleton.UpdateGraphObjs();
                 SelectionManager.singleton.DeSelectAll();
+				GraphInfo.singleton.UpateGraphInfo();
 			}
 			else
 			{
