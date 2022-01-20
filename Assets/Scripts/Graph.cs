@@ -154,26 +154,27 @@ public class Graph
         get => this.adjacency[ ( vert1, vert2 ) ];
     }
 
-    public void AddVertex( double? x_pos=null, double? y_pos=null )
+    public Vertex AddVertex( double? x_pos=null, double? y_pos=null )
     {
-        this.AddVertex( new Vertex( x_pos : x_pos, y_pos : y_pos ) );
+        return this.AddVertex( new Vertex( x_pos : x_pos, y_pos : y_pos ) );
     }
 
-    public void AddVertex( Vertex vert )
+    public Vertex AddVertex( Vertex vert )
     {
         this.vertices.Add( vert );
+        return vert;
     }
 
     // adds undirected edge
-    public void AddEdge( Vertex vert1, Vertex vert2 )
+    public Edge AddEdge( Vertex vert1, Vertex vert2 )
     {
         if ( vert1 < vert2 )
-            this.AddEdge( new Edge( vert1, vert2 ) );
+            return this.AddEdge( new Edge( vert1, vert2 ) );
         else
-            this.AddEdge( new Edge( vert2, vert1 ) );
+            return this.AddEdge( new Edge( vert2, vert1 ) );
     }
 
-    public void AddEdge( Edge edge )
+    public Edge AddEdge( Edge edge )
     {
         if ( !this.vertices.Contains( edge.vert1 ) || !this.vertices.Contains( edge.vert2 ) )
         {
@@ -187,6 +188,7 @@ public class Graph
         }
         else
             this.adjacency[ ( edge.vert1, edge.vert2 ) ] = edge;
+        return edge;
     }
 
     public void RemoveVertex( Vertex vect )
