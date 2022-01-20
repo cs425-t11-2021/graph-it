@@ -94,7 +94,7 @@ public class SelectionManager : MonoBehaviour
         foreach (EdgeObj edgeObj in this.selectedEdges)
         {
             // Update the graph ds
-            Controller.singleton.Graph.RemoveEdge(edgeObj.GetID());
+            Controller.singleton.Graph.RemoveEdge(edgeObj.Edge);
 
             Destroy(edgeObj.gameObject);
         }
@@ -114,7 +114,7 @@ public class SelectionManager : MonoBehaviour
             }
 
             // Update the graph ds
-            Controller.singleton.Graph.RemoveVertex(vertexObj.GetID());
+            Controller.singleton.Graph.RemoveVertex(vertexObj.Vertex);
 
             Destroy(vertexObj.gameObject);
         }
@@ -177,26 +177,24 @@ public class SelectionManager : MonoBehaviour
             throw new System.Exception( "Cannot start Prim's algorithm." );
         }
 
-        List<Edge> primEdges = Controller.singleton.Graph.Prim(Controller.singleton.Graph[selectedVertices[0].GetID()]);
-        List<int> primEdgeIDs = new List<int>();
-        List<int> primVertexIDs = new List<int>();
+        List<Edge> primEdges = Controller.singleton.Graph.Prim(selectedVertices[0].Vertex);
+        List<Vertex> primVertices = new List<Vertex>();
         foreach (Edge e in primEdges) {
-            primEdgeIDs.Add(e.id);
-            primVertexIDs.Add(e.vert1.id);
-            primVertexIDs.Add(e.vert2.id);
+            primVertices.Add(e.vert1);
+            primVertices.Add(e.vert2);
         }
 
         EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
-            if (primEdgeIDs.Contains(edgeObj.GetID()))
+            if (primEdges.Contains(edgeObj.Edge))
                 edgeObj.SetSelected(true);
         }
 
         VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
         foreach (VertexObj vertexObj in allVertexObjs)
         {
-            if (primVertexIDs.Contains(vertexObj.GetID()))
+            if (primVertices.Contains(vertexObj.Vertex))
                 vertexObj.SetSelected(true);
         }
     }
@@ -206,7 +204,7 @@ public class SelectionManager : MonoBehaviour
         VertexObj vertexObj1 = selectedVertices[0];
         VertexObj vertexObj2 = selectedVertices[1];
 
-        Controller.singleton.Graph.AddEdge(Controller.singleton.Graph[vertexObj1.GetID()], Controller.singleton.Graph[vertexObj2.GetID()]);
+        Controller.singleton.Graph.AddEdge(vertexObj1.Vertex, vertexObj2.Vertex);
         Controller.singleton.UpdateGraphObjs();
         DeSelectAll();
     }

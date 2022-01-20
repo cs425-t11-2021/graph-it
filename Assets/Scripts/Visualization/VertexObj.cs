@@ -9,11 +9,10 @@ using UnityEngine;
 
 public class VertexObj : MonoBehaviour, IUsesDragEvents
 {
-    // ID of the associated vertex in the graph data structure, -1 is unintialized
-    private int id = -1;
-    // Label of the vertex
-    private string label;
-    // Reference to the rigidbody compoonent of the vertex object
+    // Property reference of the vertex associated with the vertex object
+    public Vertex Vertex { get; private set; }
+
+    // // Reference to the rigidbody compoonent of the vertex object
     private Rigidbody2D rb;
     // Reference to the sprite child object of the vertex object
     private Transform spriteObj;
@@ -28,11 +27,11 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     // Reference to the labelObj attached to the vertexObj
     private LabelObj labelObj;
 
-    // Getter for id
-    public int GetID()
-    {
-        return id;
-    }
+    // // Getter for id
+    // public int GetID()
+    // {
+    //     return id;
+    // }
 
     private void Awake() {
         // Vertex objects starts non active
@@ -49,14 +48,13 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     // Method called by a controller class to setup properties of the vertex object
     // Updated to use Vertex struct
     public void Initiate(Vertex vertex) {
-        id = vertex.id;
-        label = vertex.label;
+        this.Vertex = vertex;
 
         // Activate the vertex object once it has been initiated
         gameObject.SetActive(true);
 
         // Initiate the label
-        labelObj.Initiate(label);
+        labelObj.Initiate(vertex.label);
     }
 
     private void Start() {
