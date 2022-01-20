@@ -121,13 +121,12 @@ public class SelectionManager : MonoBehaviour
         this.selectedVertices = new List<VertexObj>();
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpateGraphInfo();
+        GraphInfo.singleton.UpdateGraphInfo();
     }
 
     // Method called to remove all selections
     public void DeSelectAll()
     {
-        Debug.Log("Deselecting All Components");
         for (int i = this.selectedEdges.Count - 1; i >= 0; i--)
         {
             this.selectedEdges[i].SetSelected(false);
@@ -207,5 +206,7 @@ public class SelectionManager : MonoBehaviour
         Controller.singleton.Graph.AddEdge(vertexObj1.Vertex, vertexObj2.Vertex);
         Controller.singleton.UpdateGraphObjs();
         DeSelectAll();
+
+        GraphInfo.singleton.UpdateGraphInfo();
     }
 }

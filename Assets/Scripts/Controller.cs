@@ -185,7 +185,7 @@ public class Controller : MonoBehaviour
         }
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpateGraphInfo();
+        GraphInfo.singleton.UpdateGraphInfo();
 
         // Make sure no objects are selected when they are first created
         SelectionManager.singleton.DeSelectAll();
@@ -214,7 +214,7 @@ public class Controller : MonoBehaviour
         }
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpateGraphInfo();
+        GraphInfo.singleton.UpdateGraphInfo();
     }
 
     // Method to update graph objects to match the graph ds if new vertices or edges are added

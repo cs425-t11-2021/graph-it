@@ -379,8 +379,8 @@ public class Graph
     // brute force method, exponential time complexity with respect to vertices
     public int GetChromaticNumber()
     {
-        if ( !( this.chromatic_num is null ) )
-            return ( int ) this.chromatic_num;
+        // if ( !( this.chromatic_num is null ) )
+        //     return ( int ) this.chromatic_num;
         int chi = this.vertices.Count;
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )

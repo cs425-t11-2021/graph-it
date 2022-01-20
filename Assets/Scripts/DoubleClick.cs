@@ -59,7 +59,6 @@ public class DoubleClick : MonoBehaviour
 		{
 			if (isDoubleClick)
 			{
-				Debug.Log("Double Click detected.");
 				timerForDoubleClick = 0.0f;
 				isDoubleClick = false;
 
@@ -67,7 +66,7 @@ public class DoubleClick : MonoBehaviour
 				Controller.singleton.Graph.AddVertex(mousePos.x, mousePos.y);
                 Controller.singleton.UpdateGraphObjs();
                 SelectionManager.singleton.DeSelectAll();
-				GraphInfo.singleton.UpateGraphInfo();
+				GraphInfo.singleton.UpdateGraphInfo();
 			}
 			else
 			{
