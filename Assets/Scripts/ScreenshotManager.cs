@@ -18,6 +18,8 @@ public class ScreenshotManager : MonoBehaviour
     private bool takeScreenshotNextFrame;
     // Filepath for the image
     private string filepath;
+    // Current screen bounds of graph objects
+    private Bounds screenBounds;
 
     private void Awake()
     {
@@ -37,15 +39,16 @@ public class ScreenshotManager : MonoBehaviour
     private void Update() {
         // Tempoary testing code to take a screenshot
         if (Input.GetKeyDown(KeyCode.Minus)) {
-            TakeScreenshot(Screen.width, Screen.height, System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/GraphImgs/test.png");
+            TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/GraphImgs/test.png");
         }
     }
 
     private void OnPostRender() {
         if (takeScreenshotNextFrame) {
             RenderTexture renderTex = this.cam.targetTexture;
-            Texture2D renderResult = new Texture2D(renderTex.width, renderTex.height, TextureFormat.ARGB32, false);
-            Rect rect = new Rect(0, 0, renderTex.width, renderTex.height);
+            Texture2D renderResult = new Texture2D((int) (this.screenBounds.size.x + 1), (int) (this.screenBounds.size.y + 1), TextureFormat.ARGB32, false);
+
+            Rect rect = new Rect(this.screenBounds.min.x, this.screenBounds.min.y, this.screenBounds.size.x, this.screenBounds.size.y);
             renderResult.ReadPixels(rect, 0, 0);
 
             byte[] byteArray = renderResult.EncodeToPNG();
@@ -59,9 +62,41 @@ public class ScreenshotManager : MonoBehaviour
         }
     }
 
-    private void TakeScreenshot(int width, int height, string filepath) {
+    private void TakeScreenshot(string filepath) {
+        this.screenBounds = GetBoundsOfGraphObjects();
         this.takeScreenshotNextFrame = true;
-        this.cam.targetTexture = RenderTexture.GetTemporary(width, height, 16);
+        this.cam.targetTexture = RenderTexture.GetTemporary(Screen.width, Screen.height, 16);
         this.filepath = filepath;
+    }
+
+    private Bounds GetBoundsOfGraphObjects() {
+        Bounds bounds = new Bounds(Vector2.zero, Vector2.zero);
+
+        Transform ObjContainer = Controller.singleton.graphObj;
+        float xMin = 0;
+        float xMax = 0;
+        float yMin = 0;
+        float yMax = 0;
+
+        for (int i = 0; i < ObjContainer.childCount; i++) {
+            Transform vertex = ObjContainer.GetChild(i);
+
+            if (vertex.position.x < xMin) {
+                xMin = vertex.position.x;
+            }
+            if (vertex.position.x > xMax) {
+                xMax = vertex.position.x;
+            }
+            if (vertex.position.y < yMin) {
+                yMin = vertex.position.y;
+            }
+            if (vertex.position.y > yMax) {
+                yMax = vertex.position.y;
+            }
+        }
+
+        bounds.SetMinMax(cam.WorldToScreenPoint(new Vector3(xMin - 1, yMin - 1, 0)), cam.WorldToScreenPoint(new Vector3(xMax + 1, yMax + 1, 0)));
+
+        return bounds;
     }
 }
