@@ -100,8 +100,8 @@ public class Edge
     public override string ToString()
     {
         if ( this.directed )
-            return String.Format( "vert1: {0}, vert2: {1}, label: {2}, weight: {3}, directed: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}",  this.vert1.GetId(), this.vert2.GetId(), this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style );
-        return String.Format( "vert1: {0}, vert2: {1}, label: {2}, weight: {3}, directed: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}, tail_style: {9}, head_style: {10}",  this.vert1.GetId(), this.vert2.GetId(), this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
+            return String.Format( "vert1: {0}, vert2: {1}, label: {2}, weight: {3}, directed: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}, tail_style: {9}, head_style: {10}",  this.vert1.GetId(), this.vert2.GetId(), this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
+        return String.Format( "vert1: {0}, vert2: {1}, label: {2}, weight: {3}, directed: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}",  this.vert1.GetId(), this.vert2.GetId(), this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style );
     }
 }
 
@@ -116,6 +116,7 @@ public class Graph
 
     private bool  directed = false;
 
+    // TODO: when graph is modified, set all parameters to null
     private int? chromatic_num;
 
 
@@ -195,17 +196,6 @@ public class Graph
     {
         this.vertices.Remove( vect );
 
-        // List< ( Vertex, Vertex ) > to_be_removed = new List< ( Vertex, Vertex ) >();
-        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
-        // {
-        //     if ( kvp.Value.IncidentOn( vert ) )
-        //         to_be_removed.Add( kvp.Key );
-        // }
-
-        // foreach ( ( Vertex, Vertex ) remove in to_be_removed )
-        //     this.adjacency.Remove( remove );
-
-        // TODO: double check this works
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
             this.adjacency.Remove( kvp.Key );
     }
@@ -367,7 +357,7 @@ public class Graph
     }
 
 
-    // algorithms ////////////////////////////////////////////////
+    // algorithms //////////////////////////////////////////////// TODO: place in their own files
 
     public bool IsBipartite()
     {
@@ -510,26 +500,27 @@ public class Graph
 
     private void DepthFirstSearch( Vertex vert, Action< Edge, Vertex > f )
     {
-        List< bool > visited = new List< bool >( this.vertices.Count );
+        Dictionary< Vertex > visited = new Dictionary< Vertex >();
         this.DepthFirstSearchHelper( vert, visited, f );
     }
 
-    private void DepthFirstSearchHelper( Vertex vert, List< bool > visited, Action< Edge, Vertex > f )
+    private void DepthFirstSearchHelper( Vertex vert, Dictionary< Vertex > visited, Action< Edge, Vertex > f )
     {
+        // if ( !visited[ vert ] )
         foreach ( Edge edge in this.GetIncidentEdges( vert ) )
         {
-            int vert1_i = this.vertices.IndexOf( edge.vert1 );
-            int vert2_i = this.vertices.IndexOf( edge.vert2 );
-            visited[ vert1_i ] = true;
-            visited[ vert2_i ] = true;
-            if ( visited[ vert1_i ] )
+            // int vert1_i = this.vertices.IndexOf( edge.vert1 );
+            // int vert2_i = this.vertices.IndexOf( edge.vert2 );
+            if ( !visited[ edge.vert1 ] )
             {
                 f( edge, edge.vert1 );
+                visited[ edge.vert1 ] = true;
                 this.DepthFirstSearchHelper( edge.vert1, visited, f );
             }
-            if ( visited[ vert2_i ] )
+            if ( !visited[ edge.vert2 ] )
             {
                 f( edge, edge.vert2 );
+                visited[ edge.vert2 ] = true;
                 this.DepthFirstSearchHelper( edge.vert2, visited, f );
             }
         }
