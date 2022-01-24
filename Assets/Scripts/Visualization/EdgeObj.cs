@@ -11,7 +11,11 @@ public class EdgeObj : MonoBehaviour
     //private int toID = -1;
 
     // ID of the associated edge in the graph data structure, -1 is unintialized
-    public int id = -1;
+    // public int id = -1;
+
+    // Property refernce of edge associated with the edge object
+    public Edge Edge { get; private set; }
+
     // Label of the edge
     private string label;
 
@@ -27,11 +31,11 @@ public class EdgeObj : MonoBehaviour
     // Reference to the spriteRenderer component of the object
     private SpriteRenderer spriteRenderer;
 
-    // Getter for id
-    public int GetID()
-    {
-        return id;
-    }
+    // // Getter for id
+    // public int GetID()
+    // {
+    //     return id;
+    // }
 
     private void Awake() {
         // Edge objects starts non active
@@ -46,8 +50,7 @@ public class EdgeObj : MonoBehaviour
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
     public void Initiate(Edge edge, GameObject target) {
-        this.id = edge.id;
-        this.label = edge.label;
+        this.Edge = edge;
 
         this.targetVertexObj = target;
         this.gameObject.SetActive(true);
@@ -65,7 +68,7 @@ public class EdgeObj : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        if (id != -1) {
+        if (Edge != null) {
             // Stretch the edge between the two vertices
             StretchBetweenPoints(this.transform.parent.position, targetVertexObj.transform.position);
         }
