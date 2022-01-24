@@ -132,8 +132,8 @@ public class Controller : MonoBehaviour
     // Creates the vertex and edge unity objects according to the contents of the graph ds
     public void CreateGraphObjs() {
         // Array to store the child index under GraphObj of each vertex
-        // Index corresponds to the child index, value corresponds to vertex id
-        int[] vertexTransformPositions = new int[this.Graph.vertices.Count];
+        // Index corresponds to the child index, value corresponds to vertex reference
+        Vertex[] vertexTransformPositions = new Vertex[this.Graph.vertices.Count];
 
         // Currently avaiable child index of GraphObj
         int childIndex = 0;
@@ -146,10 +146,10 @@ public class Controller : MonoBehaviour
                 pos = new Vector2((float) vertex.x_pos, (float) vertex.y_pos);
             }
 
-            // Instantiate a vertex object, set its parent to the graphObj, and store its id in the vertex transforms array, and increase the child index
+            // Instantiate a vertex object, set its parent to the graphObj, and store its reference in the vertex transforms array, and increase the child index
             VertexObj vertexObj = Instantiate(this.vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();
             vertexObj.transform.SetParent(this.graphObj);
-            vertexTransformPositions[childIndex++] = vertex.id;
+            vertexTransformPositions[childIndex++] = vertex;
             // Call the initiation function of the vertex object
             vertexObj.Initiate(vertex);
 
@@ -161,7 +161,7 @@ public class Controller : MonoBehaviour
         }
 
         // Iterate through each edge in the graph data structure and create a correspoinding edgeObj
-        foreach (KeyValuePair<(int, int), Edge> kvp in this.Graph.adjacency)
+        foreach (KeyValuePair<(Vertex, Vertex), Edge> kvp in this.Graph.adjacency)
         {
             EdgeObj edgeObj = Instantiate(edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
             // Find the child index of the from and to vertices and set the from vertex as the parent of edge object
@@ -185,7 +185,7 @@ public class Controller : MonoBehaviour
         }
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpateGraphInfo();
+        GraphInfo.singleton.UpdateGraphInfo();
 
         // Make sure no objects are selected when they are first created
         SelectionManager.singleton.DeSelectAll();
@@ -214,37 +214,37 @@ public class Controller : MonoBehaviour
         }
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpateGraphInfo();
+        GraphInfo.singleton.UpdateGraphInfo();
     }
 
     // Method to update graph objects to match the graph ds if new vertices or edges are added
     public void UpdateGraphObjs() {
         // Get a list of all the vertex objects in scene
         VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
-        // Get a list of the ids of current vertex objects
-        List<int> existingVertexObjIDs = new List<int>();
+        // Get a list of the references of current vertex objects
+        List<Vertex> existingVertexObjs = new List<Vertex>();
         foreach (VertexObj vertexObj in allVertexObjs)
         {
-            existingVertexObjIDs.Add(vertexObj.GetID());
+            existingVertexObjs.Add(vertexObj.Vertex);
         }
         // If a vertex is in the ds but doens't have an associated vertex object, create it
         foreach (Vertex vertex in this.Graph.vertices) {
-            if (!existingVertexObjIDs.Contains(vertex.id)) {
+            if (!existingVertexObjs.Contains(vertex)) {
                 CreateVertexObj(vertex);
             }
         }
 
         // Get a list of all the edge objects in scene
         EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
-        // Get a list of the ids of current edge objects
-        List<int> existingEdgeObjIDs = new List<int>();
+        // Get a list of the references of current edge objects
+        List<Edge> existingEdgeObjs = new List<Edge>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
-            existingEdgeObjIDs.Add(edgeObj.GetID());
+            existingEdgeObjs.Add(edgeObj.Edge);
         }
         // If an edge is in the ds but doens't have an associated edge object, create it
-        foreach (KeyValuePair<(int, int), Edge> kvp in this.Graph.adjacency) {
-            if (!existingEdgeObjIDs.Contains(kvp.Value.id)) {
+        foreach (KeyValuePair<(Vertex, Vertex), Edge> kvp in this.Graph.adjacency) {
+            if (!existingEdgeObjs.Contains(kvp.Value)) {
                 CreateEdgeObj(kvp.Value);
             }
         }
@@ -280,10 +280,10 @@ public class Controller : MonoBehaviour
 
         // Find the vertex objects associated with the from and to vertices of the edge
         foreach (VertexObj vertexObj in allVertexObjs) {
-            if (vertexObj.GetID() == edge.vert1.id) {
+            if (vertexObj.Vertex == edge.vert1) {
                 fromVertexObj = vertexObj;
             }
-            if (vertexObj.GetID() == edge.vert2.id) {
+            if (vertexObj.Vertex == edge.vert2) {
                 toVertexObj = vertexObj;
             }
         }

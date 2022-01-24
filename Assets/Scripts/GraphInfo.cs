@@ -42,7 +42,7 @@ public class GraphInfo : MonoBehaviour
         }
     }
 
-    public void UpateGraphInfo() {
+    public void UpdateGraphInfo() {
         if (Controller.singleton.Graph.vertices.Count > 6) {
             chromatic_text.text = "Chromatic Number: TMV";
             bipartite_text.text = "Bipartite: TMV";
