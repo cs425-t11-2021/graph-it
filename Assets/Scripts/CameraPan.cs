@@ -52,14 +52,13 @@ public class CameraPan : MonoBehaviour
         // Left mouse button held
         if (Input.GetMouseButton(0)) {
             // Do not pan camera if the cursor is over UI elements
-            if (EventSystem.current.IsPointerOverGameObject()) {
-                return;
-            }
+            if (EventSystem.current.IsPointerOverGameObject()) return;
 
             // Do not pan camera if mouse is currently over an object with a collider (eg. vertices and edges)
-            if (cursorOverCollider) {
-                return;
-            }
+            if (cursorOverCollider) return;
+
+            // Do not pan if in vertex creation mode
+            if (Toolbar.singleton.CreateVertexMode) return;
             
             // Calculate the direction the camera needs to move to move towards the mouse cursor
             Vector3 dir = lastPosition - camera.ScreenToWorldPoint(Input.mousePosition);

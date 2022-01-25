@@ -38,6 +38,9 @@ public class ObjDrag : MonoBehaviour
     // When the object is dragged, set its position to be cursor position with offset
     private void OnMouseDrag()
     {
+        // Disable dragging when in selection or vertex creation mode
+        if (Toolbar.singleton.SelectionMode || Toolbar.singleton.CreateVertexMode) return;
+
         this.transform.position = Controller.singleton.GetCursorWorldPosition() + cursorOffset;
 
         // Increase the drag duration timer while the object is being dragged

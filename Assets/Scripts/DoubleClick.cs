@@ -57,7 +57,7 @@ public class DoubleClick : MonoBehaviour
 
 		if (!PointerOverNode && !PointerOverEdge && Input.GetMouseButtonDown(0))
 		{
-			if (isDoubleClick)
+			if (isDoubleClick || Toolbar.singleton.CreateVertexMode)
 			{
 				timerForDoubleClick = 0.0f;
 				isDoubleClick = false;

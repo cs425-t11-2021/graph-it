@@ -215,6 +215,9 @@ public class Controller : MonoBehaviour
 
         // Update the Grpah information UI
         GraphInfo.singleton.UpdateGraphInfo();
+
+        // Reset toolbar toggles
+        Toolbar.singleton.ResetAll();
     }
 
     // Method to update graph objects to match the graph ds if new vertices or edges are added

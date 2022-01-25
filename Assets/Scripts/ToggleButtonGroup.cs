@@ -1,3 +1,5 @@
+// Modification of code found on https://answers.unity.com/questions/314926/make-a-button-behave-like-a-toggle.html 
+
 using System.Collections.Generic;
 using UnityEngine;
 

@@ -135,6 +135,12 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     // When user clicks a vertex obj without dragging it, select/deselect it using selection manager
     public void OnMouseDownNonDrag()
     {
+        // If add edge mode is enabled in the toolbar, add an edge instead of selecting the vertex
+        if (Toolbar.singleton.AddEdgeMode) {
+            SelectionManager.singleton.AddEdge(this);
+            return;
+        }
+
         SetSelected(!selected);
     }
 

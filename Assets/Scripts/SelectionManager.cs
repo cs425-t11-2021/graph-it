@@ -1,7 +1,9 @@
 //All code developed by Team 11
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
 {
@@ -15,6 +17,9 @@ public class SelectionManager : MonoBehaviour
 
     // Stored position of the cursor used to detect panning
     private Vector3 lastCursorPos;
+
+    // Event for when the selection is updated (select or deselect)
+    public event Action<int, int> OnSelectionChange;
 
     private void Awake()
     {
@@ -52,9 +57,9 @@ public class SelectionManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0)) {
             lastCursorPos = Input.mousePosition;
         }
-            
+        
         // Deselect all when the user clicks out of the graph
-        if (!Controller.singleton.IsUIactive() && !Toolbar.singleton.SelectionMode && Input.GetMouseButtonUp(0))
+        if (!Controller.singleton.IsUIactive() && !Toolbar.singleton.SelectionMode && Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject())
         {
             if (Input.mousePosition == lastCursorPos) {
                 // Check if cursor is over collider, if not, deselect all graph objects
@@ -75,6 +80,9 @@ public class SelectionManager : MonoBehaviour
             DeSelectAll();
         }
         this.selectedVertices.Add(vertexObj);
+
+        // Call selection changed event
+        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Add an to selectedEdges
@@ -84,17 +92,26 @@ public class SelectionManager : MonoBehaviour
             DeSelectAll();
         }
         this.selectedEdges.Add(edgeObj);
+
+        // Call selection changed event
+        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Remove a vertex from selectedVertices
     public bool DeselectVertex(VertexObj vertexObj)
     {
+        // Call selection changed event
+        this.OnSelectionChange(this.selectedVertices.Count - 1, this.selectedEdges.Count);
+
         return this.selectedVertices.Remove(vertexObj);
     }
 
     // Remove am edge from selectedEdges
     public bool DeselectEdge(EdgeObj edgeObj)
     {
+        // Call selection changed event
+        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count - 1);
+
         return this.selectedEdges.Remove(edgeObj);
     }
 
@@ -136,6 +153,9 @@ public class SelectionManager : MonoBehaviour
 
         // Update the Grpah information UI
         GraphInfo.singleton.UpdateGraphInfo();
+
+        // Call selection changed event
+        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Method called to remove all selections
@@ -151,6 +171,9 @@ public class SelectionManager : MonoBehaviour
             this.selectedVertices[i].SetSelected(false);
         }
         this.selectedVertices = new List<VertexObj>();
+
+        // Call selection changed event
+        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Method called to select all objects
@@ -170,6 +193,9 @@ public class SelectionManager : MonoBehaviour
             if (!selectedVertices.Contains(vertexObj))
                 vertexObj.SetSelected(true);
         }
+
+        // Call selection changed event
+        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Gets the number of vertices currently selected
@@ -212,15 +238,33 @@ public class SelectionManager : MonoBehaviour
         }
     }
 
-    // Add a new edge between two selected vertices
+    // Add a new edge between the first two selected vertices
     public void AddEdge() {
         VertexObj vertexObj1 = selectedVertices[0];
         VertexObj vertexObj2 = selectedVertices[1];
 
+        AddEdge(vertexObj1, vertexObj2);
+        DeSelectAll();
+    }
+
+    // Add a new edge between two vertices
+    public void AddEdge(VertexObj vertexObj1, VertexObj vertexObj2) {
+        // If the requested edge already exists, return
+        if (Controller.singleton.Graph.IsAdjacent(vertexObj1.Vertex, vertexObj2.Vertex))  {
+            return;
+        }
+
+        // If both vertices are the same, return
+        if (vertexObj1.Vertex == vertexObj2.Vertex) return;
+
         Controller.singleton.Graph.AddEdge(vertexObj1.Vertex, vertexObj2.Vertex);
         Controller.singleton.UpdateGraphObjs();
-        DeSelectAll();
 
         GraphInfo.singleton.UpdateGraphInfo();
+    }
+
+    // Add a new edge between the first vertexObj selected and a passed in vertexObj
+    public void AddEdge(VertexObj target) {
+        AddEdge(selectedVertices[0], target);
     }
 }
