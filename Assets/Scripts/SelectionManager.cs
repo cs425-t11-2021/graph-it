@@ -21,6 +21,10 @@ public class SelectionManager : MonoBehaviour
     // Event for when the selection is updated (select or deselect)
     public event Action<int, int> OnSelectionChange;
 
+    // Whether or not to select all components
+    // TODO: think of a better solution
+    private bool selectAll = false;
+
     private void Awake()
     {
         // Singleton pattern setup
@@ -59,15 +63,20 @@ public class SelectionManager : MonoBehaviour
         }
         
         // Deselect all when the user clicks out of the graph
-        if (!Controller.singleton.IsUIactive() && !Toolbar.singleton.SelectionMode && Input.GetMouseButtonUp(0) && !EventSystem.current.IsPointerOverGameObject())
-        {
-            if (Input.mousePosition == lastCursorPos) {
-                // Check if cursor is over collider, if not, deselect all graph objects
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
-                if (!hit)
+        if (Input.GetMouseButtonUp(0)) {
+            if (this.selectAll) this.selectAll = false;
+            else {
+                if (!Controller.singleton.IsUIactive() && !Toolbar.singleton.SelectionMode && !EventSystem.current.IsPointerOverGameObject())
                 {
-                    DeSelectAll();
+                    if (Input.mousePosition == lastCursorPos) {
+                        // Check if cursor is over collider, if not, deselect all graph objects
+                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
+                        if (!hit)
+                        {
+                            DeSelectAll();
+                        }
+                    }
                 }
             }
         }
@@ -76,7 +85,7 @@ public class SelectionManager : MonoBehaviour
     // Add a vertex to selectedVertices
     public void SelectVertex(VertexObj vertexObj)
     {
-        if (!Toolbar.singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
+        if (!this.selectAll && !Toolbar.singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
             DeSelectAll();
         }
         this.selectedVertices.Add(vertexObj);
@@ -88,7 +97,7 @@ public class SelectionManager : MonoBehaviour
     // Add an to selectedEdges
     public void SelectEdge(EdgeObj edgeObj)
     {
-        if (!Toolbar.singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
+        if (!this.selectAll && !Toolbar.singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
             DeSelectAll();
         }
         this.selectedEdges.Add(edgeObj);
@@ -179,7 +188,8 @@ public class SelectionManager : MonoBehaviour
     // Method called to select all objects
     public void SelectAll()
     {
-        Debug.Log("Selecting All Components");
+        this.selectAll = true;
+
         EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
