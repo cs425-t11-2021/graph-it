@@ -44,7 +44,7 @@ public class ScreenshotManager : MonoBehaviour
     }
 
     private void OnPostRender() {
-        if (takeScreenshotNextFrame) {
+        if (this.takeScreenshotNextFrame) {
             RenderTexture renderTex = this.cam.targetTexture;
             Texture2D renderResult = new Texture2D((int) (this.screenBounds.size.x + 1), (int) (this.screenBounds.size.y + 1), TextureFormat.ARGB32, false);
 

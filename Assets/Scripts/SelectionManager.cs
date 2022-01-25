@@ -13,6 +13,9 @@ public class SelectionManager : MonoBehaviour
     private List<VertexObj> selectedVertices;
     private List<EdgeObj> selectedEdges;
 
+    // Stored position of the cursor used to detect panning
+    private Vector3 lastCursorPos;
+
     private void Awake()
     {
         // Singleton pattern setup
@@ -45,17 +48,22 @@ public class SelectionManager : MonoBehaviour
                 AddEdge();
             }
         }
+
+        if (Input.GetMouseButtonDown(0)) {
+            lastCursorPos = Input.mousePosition;
+        }
             
         // Deselect all when the user clicks out of the graph
-        // DISABLED FOR NOW
-        if (Input.GetMouseButtonDown(0))
+        if (!Controller.singleton.IsUIactive() && !Toolbar.singleton.SelectionMode && Input.GetMouseButtonUp(0))
         {
-            // Check if cursor is over collider, if not, deselect all graph objects
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
-            if (!hit)
-            {
-                //DeSelectAll();
+            if (Input.mousePosition == lastCursorPos) {
+                // Check if cursor is over collider, if not, deselect all graph objects
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
+                if (!hit)
+                {
+                    DeSelectAll();
+                }
             }
         }
     }
@@ -63,12 +71,18 @@ public class SelectionManager : MonoBehaviour
     // Add a vertex to selectedVertices
     public void SelectVertex(VertexObj vertexObj)
     {
+        if (!Toolbar.singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
+            DeSelectAll();
+        }
         this.selectedVertices.Add(vertexObj);
     }
 
     // Add an to selectedEdges
     public void SelectEdge(EdgeObj edgeObj)
     {
+        if (!Toolbar.singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
+            DeSelectAll();
+        }
         this.selectedEdges.Add(edgeObj);
     }
 
