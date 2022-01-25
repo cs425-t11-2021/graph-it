@@ -117,7 +117,7 @@ public class Graph
     private bool  directed = false;
 
     // TODO: when graph is modified, set all parameters to null
-    private int? chromatic_num;
+    public int? chromatic_num;
 
 
     public Graph()
@@ -500,11 +500,11 @@ public class Graph
 
     private void DepthFirstSearch( Vertex vert, Action< Edge, Vertex > f )
     {
-        Dictionary< Vertex > visited = new Dictionary< Vertex >();
+        Dictionary< Vertex, bool > visited = new Dictionary< Vertex, bool >();
         this.DepthFirstSearchHelper( vert, visited, f );
     }
 
-    private void DepthFirstSearchHelper( Vertex vert, Dictionary< Vertex > visited, Action< Edge, Vertex > f )
+    private void DepthFirstSearchHelper( Vertex vert, Dictionary< Vertex, bool > visited, Action< Edge, Vertex > f )
     {
         // if ( !visited[ vert ] )
         foreach ( Edge edge in this.GetIncidentEdges( vert ) )

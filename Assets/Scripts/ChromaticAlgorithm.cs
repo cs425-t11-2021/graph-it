@@ -1,30 +1,44 @@
-
 using System;
+using System.Collections.Generic;
 using System.Threading;
 
 [System.Serializable]
-public class ChromaticAlgorithm
+public class ChromaticAlgorithm : IAlgorithm
 {
 	private Graph graph;
+    private Thread? curr_thread;
+
+    public int? chromatic_num;
 
 	public ChromaticAlgorithm( Graph graph )
 	{
 		this.graph = graph;
+        this.curr_thread = null;
+        this.chromatic_num = null;
+
 		this.Run();
 	}
 
-	public int Run()
+	public void Run()
 	{
-		// create new thread using GetChromaticNumber
-		// save and return result
+        // TODO: if curr_thread already exists, stop it from executing?
+
+		// create new thread using RunHelper
+        curr_thread = new Thread(new ThreadStart(RunHelper));
+        curr_thread.Start()
 	}
 
+    private void RunHelper()
+    {
+        // compute chromatic number
+        this.chromatic_num = GetChromaticNumber();
+
+        // TODO: trigger event saying the result is ready
+    }
 
 	public int GetChromaticNumber()
     {
-        if ( !( this.chromatic_num is null ) )
-            return ( int ) this.chromatic_num;
-        int chi = this.vertices.Count;
+        int chi = graph.vertices.Count;
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
         {
@@ -38,9 +52,9 @@ public class ChromaticAlgorithm
 
     private bool IsProperColoring( List< int > coloring )
     {
-        foreach ( Edge edge in this.adjacency.Values )
+        foreach ( Edge edge in graph.adjacency.Values )
         {
-            if ( coloring[ this.vertices.IndexOf( edge.vert1 ) ] == coloring[ this.vertices.IndexOf( edge.vert2 ) ] )
+            if ( coloring[ graph.vertices.IndexOf( edge.vert1 ) ] == coloring[ graph.vertices.IndexOf( edge.vert2 ) ] )
                 return false;
         }
         return true;
@@ -49,7 +63,7 @@ public class ChromaticAlgorithm
     private HashSet< List< int > > GetAllColorings()
     {
         HashSet< List< int > > colorings = new HashSet< List< int > >();
-        GetAllColoringsHelper( colorings, new List< int >(), this.vertices.Count, this.vertices.Count );
+        GetAllColoringsHelper( colorings, new List< int >(), graph.vertices.Count, graph.vertices.Count );
         return colorings;
     }
 
