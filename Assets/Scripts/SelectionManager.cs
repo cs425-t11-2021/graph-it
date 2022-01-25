@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
@@ -24,6 +25,9 @@ public class SelectionManager : MonoBehaviour
     // Whether or not to select all components
     // TODO: think of a better solution
     private bool selectAll = false;
+
+    [SerializeField]
+    private RectTransform selectionRect;
 
     private void Awake()
     {
@@ -59,27 +63,68 @@ public class SelectionManager : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0)) {
-            lastCursorPos = Input.mousePosition;
+            this.lastCursorPos = Input.mousePosition;
         }
-        
-        // Deselect all when the user clicks out of the graph
-        if (Input.GetMouseButtonUp(0)) {
-            if (this.selectAll) this.selectAll = false;
-            else {
-                if (!Controller.singleton.IsUIactive() && !Toolbar.singleton.SelectionMode && !EventSystem.current.IsPointerOverGameObject())
-                {
-                    if (Input.mousePosition == lastCursorPos) {
-                        // Check if cursor is over collider, if not, deselect all graph objects
-                        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
-                        if (!hit)
-                        {
-                            DeSelectAll();
+        else if (Toolbar.singleton.SelectionMode) {
+            if (Input.GetMouseButton(0)) {
+                selectionRect.gameObject.SetActive(true);
+                UpdateSelectionRect();
+            }
+            if (Input.GetMouseButtonUp(0)) {
+                Bounds bounds = UpdateSelectionRect();
+
+                VertexObj[] vertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+                foreach (VertexObj v in vertexObjs) {
+                    if (bounds.Contains(v.transform.position)) {
+                        v.SetSelected(true);
+                    }
+                }
+                EdgeObj[] edgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+                foreach (EdgeObj e in edgeObjs) {
+                    if (bounds.Contains(e.transform.position)) {
+                        e.SetSelected(true);
+                    }
+                }
+
+                selectionRect.gameObject.SetActive(false);
+            }
+        }
+        else {
+            // Deselect all when the user clicks out of the graph
+            if (Input.GetMouseButtonUp(0)) {
+                if (this.selectAll) this.selectAll = false;
+                else {
+                    if (!Controller.singleton.IsUIactive() && !EventSystem.current.IsPointerOverGameObject())
+                    {
+                        if (Input.mousePosition == this.lastCursorPos) {
+                            // Check if cursor is over collider, if not, deselect all graph objects
+                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
+                            if (!hit)
+                            {
+                                DeSelectAll();
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    private Bounds UpdateSelectionRect() {
+        Vector3 middle = (Input.mousePosition + lastCursorPos) / 2f;
+        Vector2 size = new Vector2(Mathf.Abs(Input.mousePosition.x - lastCursorPos.x), Mathf.Abs(Input.mousePosition.y - lastCursorPos.y));
+
+        this.selectionRect.position = middle;
+        this.selectionRect.sizeDelta = size;
+
+        Vector3[] worldCorners = new Vector3[4];
+        selectionRect.GetWorldCorners(worldCorners);
+
+        Bounds worldBounds = new Bounds();
+        worldBounds.SetMinMax(worldCorners[0], worldCorners[2]);
+
+        return worldBounds;
     }
 
     // Add a vertex to selectedVertices

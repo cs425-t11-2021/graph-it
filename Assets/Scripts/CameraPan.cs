@@ -32,6 +32,9 @@ public class CameraPan : MonoBehaviour
             return;
         }
 
+        // Disable panning in selection mode
+        if (Toolbar.singleton.SelectionMode) return;
+
         // Left mouse button clicked
         if (Input.GetMouseButtonDown(0)) {
             // At the start of the pan, store cursor position
