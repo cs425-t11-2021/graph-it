@@ -136,7 +136,7 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     public void OnMouseDownNonDrag()
     {
         // If add edge mode is enabled in the toolbar, add an edge instead of selecting the vertex
-        if (Toolbar.singleton.AddEdgeMode) {
+        if (Toolbar.singleton.EdgeCreationMode) {
             SelectionManager.singleton.AddEdge(this);
             return;
         }

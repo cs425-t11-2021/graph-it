@@ -97,7 +97,7 @@ public class EdgeObj : MonoBehaviour
     private void OnMouseDown()
     {
         // Disable edge selection if quick edge creation mode is enabled
-        if (Toolbar.singleton.AddEdgeMode) return;
+        if (Toolbar.singleton.EdgeCreationMode) return;
 
         SetSelected(!selected);
     }

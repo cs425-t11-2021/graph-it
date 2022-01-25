@@ -16,7 +16,7 @@ public class Toolbar : MonoBehaviour
         private set {
             if (value) {
                 this.createVertexModeButton.Checked = false;
-                this.addEdgeModeButton.Checked = false;
+                this.edgeCreationModeButton.Checked = false;
             }
             this.selectionMode = value;
         }
@@ -30,7 +30,7 @@ public class Toolbar : MonoBehaviour
         private set { 
             if (value) {
                 this.selectionModeButton.Checked = false;
-                this.addEdgeModeButton.Checked = false;
+                this.edgeCreationModeButton.Checked = false;
             }
             this.createVertexMode = value;
         }
@@ -40,18 +40,21 @@ public class Toolbar : MonoBehaviour
     private Button deleteButton;
 
     [SerializeField]
-    private ToggleButton addEdgeModeButton;
-    private bool addEdgeMode = false;
-    public bool AddEdgeMode {
-        get => this.addEdgeMode;
+    private ToggleButton edgeCreationModeButton;
+    private bool edgeCreationMode = false;
+    public bool EdgeCreationMode {
+        get => this.edgeCreationMode;
         private set {
             if (value) {
                 this.selectionModeButton.Checked = false;
                 this.createVertexModeButton.Checked = false;
             }
-            this.addEdgeMode = value;
+            this.edgeCreationMode = value;
         }
     }
+
+    [SerializeField]
+    private Button addEdgeButton;
 
     private void Awake() {
         // Singleton pattern setup
@@ -69,14 +72,15 @@ public class Toolbar : MonoBehaviour
 
         // Default configuration
         deleteButton.gameObject.SetActive(false);
-        addEdgeModeButton.gameObject.SetActive(false);
+        edgeCreationModeButton.gameObject.SetActive(false);
+        addEdgeButton.gameObject.SetActive(false);
     }
 
     // Turn off all toggles
     public void ResetAll() {
         this.SelectionMode = false;
         this.CreateVertexMode = false;
-        this.AddEdgeMode = false;
+        this.EdgeCreationMode = false;
     }
 
     // Enable or disable selection mode
@@ -93,13 +97,13 @@ public class Toolbar : MonoBehaviour
     private void OnSelectionChange(int selectedVertexCount, int selectedEdgeCount) {
         this.deleteButton.gameObject.SetActive(selectedVertexCount + selectedEdgeCount > 0);
         if (selectedVertexCount == 1 && selectedEdgeCount == 0) {
-            this.addEdgeModeButton.gameObject.SetActive(true);
+            this.edgeCreationModeButton.gameObject.SetActive(true);
         }
         else {
-            this.addEdgeModeButton.Checked = false;
-            this.addEdgeModeButton.gameObject.SetActive(false);
+            this.edgeCreationModeButton.Checked = false;
+            this.edgeCreationModeButton.gameObject.SetActive(false);
         }
-        
+        this.addEdgeButton.gameObject.SetActive(selectedVertexCount == 2 && selectedEdgeCount == 0);
     }
 
     // Function called by delete button
@@ -109,6 +113,11 @@ public class Toolbar : MonoBehaviour
 
     // Enable or disable edge addition mode
     public void ToggleAddEdgeMode() {
-        this.AddEdgeMode = !this.AddEdgeMode;
+        this.EdgeCreationMode = !this.EdgeCreationMode;
+    }
+
+    // Function called by Add Edge button
+    public void AddEdge() {
+        SelectionManager.singleton.AddEdge();
     }
 }
