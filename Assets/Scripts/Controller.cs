@@ -310,9 +310,9 @@ public class Controller : MonoBehaviour
     }
 
     // Returns true if any UI elements are being interacted with
-    public bool IsUIactive()
+    public bool UIActive()
     {
-        return EventSystem.current.currentSelectedGameObject != null;
+        return EventSystem.current.currentSelectedGameObject != null || EventSystem.current.IsPointerOverGameObject();
     }
 
     // Enables graph physics for a certain duartion

@@ -49,7 +49,7 @@ public class SelectionManager : MonoBehaviour
     private void Update()
     {
         // Delete selection if backspace or delete key is pressed
-        if (!Controller.singleton.IsUIactive())
+        if (!Controller.singleton.UIActive())
         {
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
             {
@@ -94,7 +94,7 @@ public class SelectionManager : MonoBehaviour
             if (Input.GetMouseButtonUp(0)) {
                 if (this.selectAll) this.selectAll = false;
                 else {
-                    if (!Controller.singleton.IsUIactive() && !EventSystem.current.IsPointerOverGameObject())
+                    if (!Controller.singleton.UIActive() && !EventSystem.current.IsPointerOverGameObject())
                     {
                         if (Input.mousePosition == this.lastCursorPos) {
                             // Check if cursor is over collider, if not, deselect all graph objects

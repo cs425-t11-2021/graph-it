@@ -93,9 +93,12 @@ public class Toolbar : MonoBehaviour
         this.CreateVertexMode = !this.CreateVertexMode;
     }
 
-    // Function to enable the delete button when a graph component is selected
+    // Function to enable certain toolbar buttons when a graph component is selected
     private void OnSelectionChange(int selectedVertexCount, int selectedEdgeCount) {
+        // Enable delete button if any components are selected
         this.deleteButton.gameObject.SetActive(selectedVertexCount + selectedEdgeCount > 0);
+
+        // Enable the Edge Creation Mode button when one vertex is selected
         if (selectedVertexCount == 1 && selectedEdgeCount == 0) {
             this.edgeCreationModeButton.gameObject.SetActive(true);
         }
@@ -103,6 +106,8 @@ public class Toolbar : MonoBehaviour
             this.edgeCreationModeButton.Checked = false;
             this.edgeCreationModeButton.gameObject.SetActive(false);
         }
+
+        // Enable the Add Edge button when two vertices are selected
         this.addEdgeButton.gameObject.SetActive(selectedVertexCount == 2 && selectedEdgeCount == 0);
     }
 

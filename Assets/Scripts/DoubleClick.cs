@@ -31,15 +31,13 @@ public class DoubleClick : MonoBehaviour
 
     private void Update()
 	{
-        // Check if cursor is over collider, if so, ignore panning until the mouse button is released
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge"));  //11f since camera is at z = -10
         if (hit) {
             return;
         }
 
-        // Do not pan camera if the cursor is over UI elements
-        if (EventSystem.current.IsPointerOverGameObject()) {
+        if (Controller.singleton.UIActive()) {
             return;
         }
 
@@ -47,7 +45,6 @@ public class DoubleClick : MonoBehaviour
 		{
 			timerForDoubleClick += Time.deltaTime;
 		}
-
 
 		if (timerForDoubleClick >= delay)
 		{
