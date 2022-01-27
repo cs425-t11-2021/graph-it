@@ -1,9 +1,7 @@
 //All code developed by Team 11
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class SelectionManager : MonoBehaviour
@@ -83,7 +81,8 @@ public class SelectionManager : MonoBehaviour
                 }
                 EdgeObj[] edgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
                 foreach (EdgeObj e in edgeObjs) {
-                    if (bounds.Contains(e.transform.position)) {
+                    if (bounds.Contains((Vector2) e.transform.position)) {
+                        Debug.Log(e);
                         e.SetSelected(true);
                     }
                 }
