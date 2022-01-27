@@ -10,18 +10,16 @@ public class ChromaticAlgorithm : IAlgorithm
 
     public int? chromatic_num;
 
-	public ChromaticAlgorithm( Graph graph )
+	public ChromaticAlgorithm( Graph graph ) // pass delegate method
 	{
 		this.graph = graph;
         this.curr_thread = null;
         this.chromatic_num = null;
-
-		this.Run();
 	}
 
 	public void Run()
 	{
-        // TODO: if curr_thread already exists, stop it from executing?
+        // TODO: if curr_thread already exists, abort it and let it restart
 
 		// create new thread using RunHelper
         curr_thread = new Thread(new ThreadStart(RunHelper));
@@ -30,10 +28,14 @@ public class ChromaticAlgorithm : IAlgorithm
 
     private void RunHelper()
     {
-        // compute chromatic number
-        this.chromatic_num = GetChromaticNumber();
+        try
+        {
+            // compute chromatic number
+            this.chromatic_num = GetChromaticNumber();
 
-        // TODO: trigger event saying the result is ready
+            // TODO: run delegate
+        }
+        catch ( ThreadAbortException e ) { } // thread has been aborted
     }
 
 	public int GetChromaticNumber()
