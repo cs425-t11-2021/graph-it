@@ -34,26 +34,26 @@ public class Tester : MonoBehaviour
             Controller.singleton.CreateGraphObjs();
         }
 
-        if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            CreateRandomGraph(3);
-            Controller.singleton.CreateGraphObjs();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha4)) {
-            CreateRandomGraph(4);
-            Controller.singleton.CreateGraphObjs();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha5)) {
-            CreateRandomGraph(5);
-            Controller.singleton.CreateGraphObjs();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha6)) {
-            CreateRandomGraph(6);
-            Controller.singleton.CreateGraphObjs();
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha7)) {
-            CreateRandomGraph(7);
-            Controller.singleton.CreateGraphObjs();
-        }
+        // if (Input.GetKeyDown(KeyCode.Alpha3)) {
+        //     CreateRandomGraph(3);
+        //     Controller.singleton.CreateGraphObjs();
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha4)) {
+        //     CreateRandomGraph(4);
+        //     Controller.singleton.CreateGraphObjs();
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha5)) {
+        //     CreateRandomGraph(5);
+        //     Controller.singleton.CreateGraphObjs();
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha6)) {
+        //     CreateRandomGraph(6);
+        //     Controller.singleton.CreateGraphObjs();
+        // }
+        // if (Input.GetKeyDown(KeyCode.Alpha7)) {
+        //     CreateRandomGraph(7);
+        //     Controller.singleton.CreateGraphObjs();
+        // }
 
         // Testing: Press S to generate random circular graph
         if (Input.GetKeyDown(KeyCode.S)) {

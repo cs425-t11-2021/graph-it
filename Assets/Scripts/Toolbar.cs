@@ -76,6 +76,39 @@ public class Toolbar : MonoBehaviour
         addEdgeButton.gameObject.SetActive(false);
     }
 
+    private void Update() {
+        // If a number key is pressed, trigger the corresponding button on the toolbar
+        for (int i = 1; i <= 9; i++) {
+            // Detect the press of a number key
+            if (Input.GetKeyDown(i.ToString())) {
+                // Get a list of buttons that are currently active on the toolbar
+                List<GameObject> activeTools = new List<GameObject>();
+                for (int j = 0; j < this.transform.childCount; j++) {
+                    Transform child = this.transform.GetChild(j);
+                    if (child.gameObject.activeInHierarchy) {
+                        activeTools.Add(child.gameObject);
+                    }
+                }
+
+                if (i > activeTools.Count) {
+                    return;
+                }
+
+                // Trigger either the toggleButton or button depending on which one is attached
+                ToggleButton toggleButton = activeTools[i - 1].GetComponent<ToggleButton>();
+                Button button = activeTools[i - 1].GetComponent<Button>();
+                if (toggleButton) {
+                    toggleButton.Checked = !toggleButton.Checked;
+                }
+                else if (button) {
+                    button.onClick.Invoke();
+                }
+
+                return;
+            }
+        }
+    }
+
     // Turn off all toggles
     public void ResetAll() {
         this.SelectionMode = false;

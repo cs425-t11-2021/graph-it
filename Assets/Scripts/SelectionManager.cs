@@ -82,7 +82,6 @@ public class SelectionManager : MonoBehaviour
                 EdgeObj[] edgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
                 foreach (EdgeObj e in edgeObjs) {
                     if (bounds.Contains((Vector2) e.transform.position)) {
-                        Debug.Log(e);
                         e.SetSelected(true);
                     }
                 }
