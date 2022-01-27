@@ -16,7 +16,7 @@ public class SelectionManager : MonoBehaviour
     private List<EdgeObj> selectedEdges;
 
     // Stored position of the cursor used to detect panning
-    private Vector3 lastCursorPos;
+    private Vector3 lastCursorWorldPos;
 
     // Event for when the selection is updated (select or deselect)
     public event Action<int, int> OnSelectionChange;
@@ -62,11 +62,14 @@ public class SelectionManager : MonoBehaviour
         }
 
         if (Input.GetMouseButtonDown(0)) {
-            this.lastCursorPos = Input.mousePosition;
-        }
-        else if (Toolbar.singleton.SelectionMode) {
-            if (Input.GetMouseButton(0)) {
+            this.lastCursorWorldPos = Controller.singleton.GetCursorWorldPosition();
+            if (Toolbar.singleton.SelectionMode) {
                 selectionRect.gameObject.SetActive(true);
+            }
+        }
+
+        if (Toolbar.singleton.SelectionMode) {
+            if (Input.GetMouseButton(0)) {
                 UpdateSelectionRect();
             }
             if (Input.GetMouseButtonUp(0)) {
@@ -93,9 +96,8 @@ public class SelectionManager : MonoBehaviour
             if (Input.GetMouseButtonUp(0)) {
                 if (this.selectAll) this.selectAll = false;
                 else {
-                    if (!Controller.singleton.UIActive() && !EventSystem.current.IsPointerOverGameObject())
-                    {
-                        if (Input.mousePosition == this.lastCursorPos) {
+                    if (!Controller.singleton.UIActive() && !EventSystem.current.IsPointerOverGameObject()) {
+                        if (Controller.singleton.GetCursorWorldPosition() == this.lastCursorWorldPos) {
                             // Check if cursor is over collider, if not, deselect all graph objects
                             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
@@ -111,18 +113,14 @@ public class SelectionManager : MonoBehaviour
     }
 
     private Bounds UpdateSelectionRect() {
-        Vector3 middle = (Input.mousePosition + lastCursorPos) / 2f;
-        Vector2 size = new Vector2(Mathf.Abs(Input.mousePosition.x - lastCursorPos.x), Mathf.Abs(Input.mousePosition.y - lastCursorPos.y));
+        Vector2 currentMouseWorldPos = Controller.singleton.GetCursorWorldPosition();
+        Vector2 middle = (Controller.singleton.GetCursorWorldPosition() + lastCursorWorldPos) / 2f;
+        Vector2 size = new Vector2(Mathf.Abs(currentMouseWorldPos.x - lastCursorWorldPos.x), Mathf.Abs(currentMouseWorldPos.y - lastCursorWorldPos.y));
 
         this.selectionRect.position = middle;
         this.selectionRect.sizeDelta = size;
 
-        Vector3[] worldCorners = new Vector3[4];
-        selectionRect.GetWorldCorners(worldCorners);
-
-        Bounds worldBounds = new Bounds();
-        worldBounds.SetMinMax(worldCorners[0], worldCorners[2]);
-
+        Bounds worldBounds = new Bounds(middle, size);
         return worldBounds;
     }
 
@@ -132,10 +130,13 @@ public class SelectionManager : MonoBehaviour
         if (!this.selectAll && !Toolbar.singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
             DeSelectAll();
         }
-        this.selectedVertices.Add(vertexObj);
 
-        // Call selection changed event
-        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+        if (!this.selectedVertices.Contains(vertexObj)) {
+            this.selectedVertices.Add(vertexObj);
+
+            // Call selection changed event
+            this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+        }
     }
 
     // Add an to selectedEdges
@@ -144,10 +145,13 @@ public class SelectionManager : MonoBehaviour
         if (!this.selectAll && !Toolbar.singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
             DeSelectAll();
         }
-        this.selectedEdges.Add(edgeObj);
+        
+        if (!this.selectedEdges.Contains(edgeObj)) {
+            this.selectedEdges.Add(edgeObj);
 
-        // Call selection changed event
-        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+            // Call selection changed event
+            this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+        }
     }
 
     // Remove a vertex from selectedVertices
