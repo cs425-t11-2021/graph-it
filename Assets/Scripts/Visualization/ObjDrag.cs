@@ -28,7 +28,7 @@ public class ObjDrag : MonoBehaviour
     // When the mouse is first pressed, store the cursor offset in relation to the transform position
     private void OnMouseDown()
     {
-        cursorOffset = this.transform.position - Controller.singleton.GetCursorWorldPosition();
+        // cursorOffset = this.transform.position - Controller.singleton.GetCursorWorldPosition();
 
         // When a click is detected, set clicked to true and store the current mouse position, and reset the drag duration timer
         dragDuration = 0f;
@@ -38,11 +38,6 @@ public class ObjDrag : MonoBehaviour
     // When the object is dragged, set its position to be cursor position with offset
     private void OnMouseDrag()
     {
-        // Disable dragging when in selection or vertex creation mode
-        if (Toolbar.singleton.SelectionMode || Toolbar.singleton.CreateVertexMode) return;
-
-        this.transform.position = Controller.singleton.GetCursorWorldPosition() + cursorOffset;
-
         // Increase the drag duration timer while the object is being dragged
         if (clicked)
         {

@@ -12,7 +12,6 @@ public class SelectionManager : MonoBehaviour
     public static SelectionManager singleton;
 
     // Lists to store the graph objects of currently selected vertices and edges
-    // TODO: Figure out a way of doing this without storing Unity objects
     private List<VertexObj> selectedVertices;
     private List<EdgeObj> selectedEdges;
 
@@ -321,5 +320,23 @@ public class SelectionManager : MonoBehaviour
     // Add a new edge between the first vertexObj selected and a passed in vertexObj
     public void AddEdge(VertexObj target) {
         AddEdge(selectedVertices[0], target);
+    }
+
+    public void DragSelectedVerticesStart() {
+        foreach (VertexObj v in this.selectedVertices) {
+            v.SetCursorDragOffset();
+        }
+    }
+
+    public void DragSelectedVertices() {
+        foreach (VertexObj v in this.selectedVertices) {
+            v.DragVertexWithMouse();
+        }
+    }
+
+    public void DragSelectedVerticesEnd() {
+        foreach (VertexObj v in this.selectedVertices) {
+            v.FinishDragging();
+        }
     }
 }
