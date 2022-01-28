@@ -31,12 +31,6 @@ public class EdgeObj : MonoBehaviour
     // Reference to the spriteRenderer component of the object
     private SpriteRenderer spriteRenderer;
 
-    // // Getter for id
-    // public int GetID()
-    // {
-    //     return id;
-    // }
-
     private void Awake() {
         // Edge objects starts non active
         this.gameObject.SetActive(false);

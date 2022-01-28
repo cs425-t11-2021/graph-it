@@ -52,11 +52,6 @@ public class SelectionManager : MonoBehaviour
             {
                 DeleteSelection();
             }
-
-            if (Input.GetKeyDown(KeyCode.Equals) && selectedVertices.Count == 2 && selectedEdges.Count == 0)
-            {
-                AddEdge();
-            }
         }
 
         if (Input.GetMouseButtonDown(0)) {
