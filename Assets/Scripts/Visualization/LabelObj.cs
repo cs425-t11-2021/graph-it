@@ -73,7 +73,7 @@ public class LabelObj : MonoBehaviour
     // Updates the position of the label, moving it if needed
     public void UpdatePosition()
     {
-        Nullable<Vector3> position = FindSuitablePosition();
+        Vector3? position = FindSuitablePosition();
         if (position == null)
         {
             inputField.gameObject.SetActive(false);
@@ -85,7 +85,7 @@ public class LabelObj : MonoBehaviour
     }
 
     // This code is slow as fuck, someone try to speed it up
-    Nullable<Vector3> FindSuitablePosition()
+    Vector3? FindSuitablePosition()
     {
         for (float radius = 0.3f; radius < 0.8f; radius += 0.1f)
         {

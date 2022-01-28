@@ -29,7 +29,7 @@ public class VertexObj : MonoBehaviour
     private LabelObj labelObj;
 
     // The current distance between the curosr to the center of the object
-    private Nullable<Vector3> cursorOffset;
+    private Vector3? cursorOffset;
     private bool clicked = false;
     private float dragDuration;
 
