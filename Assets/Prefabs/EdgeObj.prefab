@@ -98,6 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetVertexObj: {fileID: 0}
+  edgeWidthScaleFactor: 0.1
 --- !u!61 &1423538931803144875
 BoxCollider2D:
   m_ObjectHideFlags: 0

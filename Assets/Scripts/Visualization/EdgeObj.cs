@@ -31,13 +31,17 @@ public class EdgeObj : MonoBehaviour
     // Reference to the spriteRenderer component of the object
     private SpriteRenderer spriteRenderer;
 
+    [SerializeField]
+    // Width scale factor for edge thickness increse of 1
+    private float edgeWidthScaleFactor = 0.1f;
+
     private void Awake() {
         // Edge objects starts non active
         this.gameObject.SetActive(false);
         
         // Do not let the physics engine update the collider of the edge in real time
         // as it causes massive lag at the start while the graph is still settling in.
-        Physics2D.autoSyncTransforms = false;
+        // Physics2D.autoSyncTransforms = false;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -61,6 +65,21 @@ public class EdgeObj : MonoBehaviour
         this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
     }
 
+    private void Update() {
+        if (this.selected) {
+            // If selected and Plus is pressed, increase thickness
+            if (Input.GetKeyDown(KeyCode.Equals) && this.Edge.thickness < 5) {
+                this.Edge.thickness++;
+                this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+            }
+            // If selected and Minus is pressed, decrease thickness
+            else if (Input.GetKeyDown(KeyCode.Minus) && this.Edge.thickness > 0) {
+                this.Edge.thickness--;
+                this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+            }
+        }
+    }
+
     private void FixedUpdate() {
         if (Edge != null) {
             // Stretch the edge between the two vertices
@@ -68,20 +87,20 @@ public class EdgeObj : MonoBehaviour
         }
 
         // Only update the Physics 2D collider of the edge every 0.25s instead of real time to reduce physics lag
-        if (this.physicsTimer >= 0.25f) {
-            Physics2D.SyncTransforms();
-            this.physicsTimer = 0f;
-        }
-        else {
-            this.physicsTimer += Time.fixedDeltaTime;
-        }
+        // if (this.physicsTimer >= 0.25f) {
+        //     Physics2D.SyncTransforms();
+        //     this.physicsTimer = 0f;
+        // }
+        // else {
+        //     this.physicsTimer += Time.fixedDeltaTime;
+        // }
     }
 
-    // When Cursor enters a edge obj, increase its sprite object size by 10%
+    // When Cursor enters a edge obj, increase its sprite object size by 33%
     // TODO: Change this to be controlled by an animator later
     private void OnMouseOver()
     {
-        this.transform.localScale = new Vector3(this.transform.localScale.x, .33f, 1f);
+        this.transform.localScale = new Vector3(this.transform.localScale.x, (0.25f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, 1f);
 
     }
 
@@ -114,6 +133,7 @@ public class EdgeObj : MonoBehaviour
 
     private void OnMouseExit()
     {
-        this.transform.localScale = new Vector3(this.transform.localScale.x, .25f, 1f);
+        // When cursor exits, reset the thickness
+        this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
     }
 }
