@@ -38,7 +38,7 @@ public class ScreenshotManager : MonoBehaviour
 
     private void Update() {
         // Tempoary testing code to take a screenshot
-        if (Input.GetKeyDown(KeyCode.Minus)) {
+        if (Input.GetKeyDown(KeyCode.P)) {
             TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/GraphImgs/test.png");
         }
     }
