@@ -19,10 +19,10 @@ public class MenuButton : MonoBehaviour
     void Start()
     {
         //each menu option has a Panel child to activate and de-activate 
-        panelObj = transform.GetChild(1).gameObject;
+        //panelObj = transform.GetChild(1).gameObject;
 
         //want the dropdown to not be shown or accessible when program first starts
-        panelObj.gameObject.SetActive(false);
+        //panelObj.gameObject.SetActive(false);
 
         
     }
@@ -31,14 +31,14 @@ public class MenuButton : MonoBehaviour
     void Update()
     {
         //TODO inplement a listener instead for efficiency
-        if (EventSystem.current.currentSelectedGameObject == this.gameObject){
+        /*if (EventSystem.current.currentSelectedGameObject == this.gameObject){
             //if the file button is clicked, the dropdown should be displayed
             panelObj.gameObject.SetActive(true);
         }
         else{
             //otherwise, the user clicked elsewhere and the dropdown should disappear
             panelObj.gameObject.SetActive(false);
-        }
+        }*/
     }
 
     /*private void DisplayDropDown(){
