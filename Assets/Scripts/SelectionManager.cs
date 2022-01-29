@@ -32,11 +32,11 @@ public class SelectionManager : MonoBehaviour
         if (singleton == null) {
             singleton = this;
         }
-        else {
-            Debug.LogError("[SelectionManager] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
+        // else {
+        //     Debug.LogError("[SelectionManager] Singleton pattern violation");
+        //     Destroy(this);
+        //     return;
+        // }
 
         // Initialize data structures
         this.selectedVertices = new List<VertexObj>();

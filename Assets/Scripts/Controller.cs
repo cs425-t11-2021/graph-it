@@ -82,11 +82,11 @@ public class Controller : MonoBehaviour
         if (Controller.singleton == null) {
             Controller.singleton = this;
         }
-        else {
-            Debug.LogError("[Controller] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
+        // else {
+        //     Debug.LogError("[Controller] Singleton pattern violation");
+        //     Destroy(this);
+        //     return;
+        // }
 
         // Initiate graph ds
         this.Graph = new Graph();
