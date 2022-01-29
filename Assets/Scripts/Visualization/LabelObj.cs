@@ -16,7 +16,7 @@ public class LabelObj : MonoBehaviour
     private Vector3 previousPosition;
 
     // Reference to the text mesh object
-    TMP_InputField inputField;
+    // TMP_InputField inputField;
 
     private bool displayEnabled;
 
@@ -24,10 +24,10 @@ public class LabelObj : MonoBehaviour
     {
         this.content = content;
 
-        if (content != "")
-        {
-            inputField.text = content;
-        }
+        // if (content != "")
+        // {
+        //     inputField.text = content;
+        // }
 
         OnToggleVertexLabels(Controller.singleton.DisplayVertexLabels);
     }
@@ -37,7 +37,7 @@ public class LabelObj : MonoBehaviour
         RectTransform rectTransform = GetComponent<RectTransform>();
         this.rect = rectTransform.rect;
 
-        inputField = GetComponentInChildren<TMP_InputField>();
+        // inputField = GetComponentInChildren<TMP_InputField>();
 
         Controller.singleton.OnToggleVertexLabels += OnToggleVertexLabels;
     }
@@ -52,7 +52,7 @@ public class LabelObj : MonoBehaviour
         }
         else
         {
-            inputField.gameObject.SetActive(false);
+            // inputField.gameObject.SetActive(false);
         }
     }
 
@@ -76,7 +76,7 @@ public class LabelObj : MonoBehaviour
         Vector3? position = FindSuitablePosition();
         if (position == null)
         {
-            inputField.gameObject.SetActive(false);
+            // inputField.gameObject.SetActive(false);
         }
         else
         {
@@ -108,27 +108,27 @@ public class LabelObj : MonoBehaviour
     {
         if (displayEnabled)
         {
-            inputField.gameObject.SetActive(true);
-            inputField.interactable = true;
+            // inputField.gameObject.SetActive(true);
+            // inputField.interactable = true;
         }
     }
 
     // Make the label uneditable
     public void MakeUneditable()
     {
-        if (displayEnabled)
-        {
-            inputField.interactable = false;
-            if (string.IsNullOrEmpty(inputField.text))
-            {
-                inputField.gameObject.SetActive(false);
-            }
-            else
-            {
-                inputField.gameObject.SetActive(true);
-            }
-            UpdatePosition();
-        }
+        // if (displayEnabled)
+        // {
+        //     inputField.interactable = false;
+        //     if (string.IsNullOrEmpty(inputField.text))
+        //     {
+        //         inputField.gameObject.SetActive(false);
+        //     }
+        //     else
+        //     {
+        //         inputField.gameObject.SetActive(true);
+        //     }
+        //     UpdatePosition();
+        // }
     }
 
     // Update the content field with a new label
