@@ -12,7 +12,7 @@ using UnityEngine.UI;
 
 public class MenuButton : MonoBehaviour
 {
-    private GameObject panelObj;
+    //private GameObject panelObj;
     
 
     // Start is called before the first frame update
@@ -41,7 +41,8 @@ public class MenuButton : MonoBehaviour
         }*/
     }
 
-    /*private void DisplayDropDown(){
+    //keep the below function commented out, it has errors
+   /* private void DisplayDropDown(){
         panelObj.gameObject.SetActive(true);
         if(EventSystem.current.currentSelectedGameObject == menuItem){
             //if the "ImportToFile" is clicked, show the import to file pop-up

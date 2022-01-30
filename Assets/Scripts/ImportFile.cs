@@ -26,7 +26,7 @@ public class ImportFile : MonoBehaviour
     void Start()
     {
         //when program first starts, user should not be able to access the import from file menu pop-up
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
 
         //getting references to the cancel and import buttons to perform their corresponding actions
         importButton = transform.GetChild(2).gameObject;
