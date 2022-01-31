@@ -16,6 +16,11 @@ public class EditMenu : MonoBehaviour
     private GameObject deselectAllButton;
     [SerializeField]
     private Button addEdgeButton;
+    [SerializeField]
+    private GameObject fileDropDown;
+    [SerializeField]
+    private GameObject viewDropDown;
+    
 
     private void Awake() {
         addEdgeButton.interactable = false;
@@ -33,9 +38,9 @@ public class EditMenu : MonoBehaviour
 
         //If the user clicks close the dropdown panel
         if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            //if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
+            if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed
                 dropDownMenu.SetActive(false);
-            //}
+            }
         }
         /*if (EventSystem.current.currentSelectedGameObject == selectAllButton)
         {
@@ -59,6 +64,8 @@ public class EditMenu : MonoBehaviour
         }
         else{
             dropDownMenu.SetActive(true);
+            fileDropDown.SetActive(false);
+            viewDropDown.SetActive(false);
         }
     }
     public void ToggleSelectAll(){

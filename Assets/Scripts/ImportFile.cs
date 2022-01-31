@@ -13,13 +13,21 @@ public class ImportFile : MonoBehaviour
     public TMP_InputField importFilenameInput;
 
     //Need to disable the rest of the UI elements when the import from file menu pop-up is displayed
-    public Button fileButton;
-    public Button editButton;
-    public Button viewButton;
-    public GameObject fileDropDown;
-    public GameObject errorMessagePopUp;
+    [SerializeField]
+    private Button fileButton;
+    [SerializeField]
+    private Button editButton;
+    [SerializeField]
+    private Button viewButton;
+    [SerializeField]
+    private GameObject fileDropDown;
+    [SerializeField]
+    private GameObject errorMessagePopUp;
+    [SerializeField]
+    private GameObject toolbar;
     //public InputField importFilenameInput; //maybe consider making private
-    public Button algorithmsPanelPrims;//need to figure out how to deactivate them all at once, maybe put them all on the same panel and deactivate
+    [SerializeField]
+    private Button algorithmsPanelPrims;//need to figure out how to deactivate them all at once, maybe put them all on the same panel and deactivate
                                             //or as a dropdown and disable that
 
     // Start is called before the first frame update
@@ -43,6 +51,7 @@ public class ImportFile : MonoBehaviour
             editButton.enabled = false;
             viewButton.enabled = false;
             algorithmsPanelPrims.enabled = false;
+            toolbar.gameObject.SetActive(false);
             fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
         }
 
@@ -80,6 +89,7 @@ public class ImportFile : MonoBehaviour
 
             //when the user clicks on the cancel button, the pop-up should disappear and the disabled ui elements should be re-enabled
             this.gameObject.SetActive(false);
+            toolbar.gameObject.SetActive(true);
             fileButton.enabled = true;
             editButton.enabled = true;
             viewButton.enabled = true;

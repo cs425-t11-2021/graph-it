@@ -973,6 +973,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showGrpahLabelsText: {fileID: 455186629}
   dropDownMenu: {fileID: 1938432809}
+  fileDropDown: {fileID: 798872253}
+  editDropDown: {fileID: 394208183}
 --- !u!1 &172606128
 GameObject:
   m_ObjectHideFlags: 0
@@ -4264,6 +4266,7 @@ MonoBehaviour:
   viewButton: {fileID: 150277624}
   fileDropDown: {fileID: 798872253}
   errorMessagePopUp: {fileID: 2075901294}
+  toolbar: {fileID: 1228080542}
   algorithmsPanelPrims: {fileID: 1072866586}
 --- !u!1 &652385414
 GameObject:
@@ -5457,6 +5460,8 @@ MonoBehaviour:
   selectAllButton: {fileID: 58407690}
   deselectAllButton: {fileID: 134002493}
   addEdgeButton: {fileID: 1126108517}
+  fileDropDown: {fileID: 798872253}
+  viewDropDown: {fileID: 1938432809}
 --- !u!1 &798872253
 GameObject:
   m_ObjectHideFlags: 0
@@ -7318,7 +7323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: -1
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -7327,9 +7332,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 0.7372549}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
-    m_SelectedColor: {r: 0.12941174, g: 0.56078434, b: 0.9372549, a: 0.48235294}
+    m_HighlightedColor: {r: 0.12941177, g: 0.85098046, b: 0.93725497, a: 0.65882355}
+    m_PressedColor: {r: 0.12941177, g: 0.85098046, b: 0.93725497, a: 0.58431375}
+    m_SelectedColor: {r: 0.95104957, g: 0.30922034, b: 0.9528302, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -7435,6 +7440,8 @@ MonoBehaviour:
   newGraphButton: {fileID: 1112343149}
   importFileMenu: {fileID: 646253996}
   exportFileMenu: {fileID: 1983837607}
+  editDropDown: {fileID: 394208183}
+  viewDropDown: {fileID: 1938432809}
 --- !u!114 &1119136495
 MonoBehaviour:
   m_ObjectHideFlags: 0

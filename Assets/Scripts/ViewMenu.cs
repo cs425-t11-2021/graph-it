@@ -11,7 +11,10 @@ public class ViewMenu : MonoBehaviour
     private TMP_Text showGrpahLabelsText;
     [SerializeField]
     private GameObject dropDownMenu;
-
+    [SerializeField]
+    private GameObject fileDropDown;
+    [SerializeField]
+    private GameObject editDropDown;
     private void Update()
     {
         // TODO: Avoid using EventSystem for UI updates
@@ -22,9 +25,9 @@ public class ViewMenu : MonoBehaviour
         }*/
         //If the user clicks close the dropdown panel
         if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            //if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
+            if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed
                 dropDownMenu.SetActive(false);
-            //} 
+            } 
         }
     }
 
@@ -50,6 +53,8 @@ public class ViewMenu : MonoBehaviour
         }
         else{
             dropDownMenu.SetActive(true);
+            fileDropDown.SetActive(false);
+            editDropDown.SetActive(false);
         }
     }
 
