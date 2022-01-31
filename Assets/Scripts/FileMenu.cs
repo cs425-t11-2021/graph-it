@@ -53,9 +53,9 @@ public class FileMenu : MonoBehaviour
             Controller.singleton.Graph.Clear();
         }*/
         if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
+            // if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
                 dropDownMenu.SetActive(false);
-            } 
+            // } 
         }
     }
 
