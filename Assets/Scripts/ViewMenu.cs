@@ -9,20 +9,29 @@ public class ViewMenu : MonoBehaviour
 {
     [SerializeField]
     private TMP_Text showGrpahLabelsText;
+    [SerializeField]
+    private GameObject dropDownMenu;
 
     private void Update()
     {
         // TODO: Avoid using EventSystem for UI updates
-        if (EventSystem.current.currentSelectedGameObject == showGrpahLabelsText.transform.parent.gameObject)
+       /* if (EventSystem.current.currentSelectedGameObject == showGrpahLabelsText.transform.parent.gameObject)
         {
             ToggleLabels();
             EventSystem.current.SetSelectedGameObject(null);
+        }*/
+        //If the user clicks close the dropdown panel
+        if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
+            //if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
+                dropDownMenu.SetActive(false);
+            //} 
         }
     }
 
     // Method called by the "Show Graph Labels" button in the view dropdown to toggle the display of vertex and edge labels
     public void ToggleLabels()
     {
+        CloseDropDown();
         if (Controller.singleton.DisplayVertexLabels)
         {
             Controller.singleton.DisplayVertexLabels = false;
@@ -33,5 +42,18 @@ public class ViewMenu : MonoBehaviour
             Controller.singleton.DisplayVertexLabels = true;
             showGrpahLabelsText.text = "Hide Graph Labels";
         }
+    }
+
+    public void ToggleDropDown(){
+        if(dropDownMenu.activeInHierarchy){
+            dropDownMenu.SetActive(false);
+        }
+        else{
+            dropDownMenu.SetActive(true);
+        }
+    }
+
+    public void CloseDropDown(){
+        dropDownMenu.SetActive(false);
     }
 }

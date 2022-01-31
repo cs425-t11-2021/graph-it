@@ -26,7 +26,7 @@ public class ExportFile : MonoBehaviour
     void Start()
     {
         //when program first starts, user should not be able to access the export from file menu pop-up
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
 
         //getting references to the cancel and export buttons to perform their corresponding actions
         exportButton = transform.GetChild(2).gameObject;
