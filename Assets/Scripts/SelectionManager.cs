@@ -274,6 +274,8 @@ public class SelectionManager : MonoBehaviour
             primVertices.Add(e.vert2);
         }
 
+        this.selectAll = true;
+
         EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
