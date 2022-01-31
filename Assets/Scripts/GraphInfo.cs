@@ -11,12 +11,16 @@ public class GraphInfo : MonoBehaviour
     public static GraphInfo singleton;
 
     [SerializeField]
-    private TMP_Text chromatic_text;
+    private TMP_Text chromaticText;
     [SerializeField]
-    private TMP_Text bipartite_text;
+    private TMP_Text bipartiteText;
+    [SerializeField]
+    private TMP_Text orderText;
+    [SerializeField]
+    private TMP_Text sizeText;
 
     [SerializeField]
-    private Button prim_button;
+    private Button primButton;
 
     private void Awake() {
         // Singleton pattern setup
@@ -29,28 +33,32 @@ public class GraphInfo : MonoBehaviour
             return;
         }
 
-        prim_button.interactable = false;
+        this.primButton.interactable = false;
+        UpdateGraphInfo();
     }
 
     private void FixedUpdate() {
         // Only allow the prim button to be pressed if there is exactly one vertex selected
         if (SelectionManager.singleton.SelectedVertexCount() == 1 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
-            prim_button.interactable = true;
+            this.primButton.interactable = true;
         }   
         else {
-            prim_button.interactable = false;
+            this.primButton.interactable = false;
         }
     }
 
     public void UpdateGraphInfo() {
         if (Controller.singleton.Graph.vertices.Count > 6) {
-            chromatic_text.text = "Chromatic Number: TMV";
-            bipartite_text.text = "Bipartite: TMV";
+            chromaticText.text = "";
+            bipartiteText.text = "";
         }
         else {
-            int chromatic_num = Controller.singleton.Graph.GetChromaticNumber();
-            chromatic_text.text = "Chromatic Number: " + chromatic_num;
-            bipartite_text.text = "Bipartite: " + (chromatic_num == 2 ? "Yes" : "No");
+            int chromaticNum = Controller.singleton.Graph.GetChromaticNumber();
+            this.chromaticText.text = "Chromatic Number: " + chromaticNum;
+            this.bipartiteText.text = "Bipartite: " + (chromaticNum == 2 ? "Yes" : "No");
         }
+
+        this.orderText.text = "Order: " + Controller.singleton.Graph.vertices.Count;
+        this.sizeText.text = "Size: " + Controller.singleton.Graph.adjacency.Count;
     }
 }
