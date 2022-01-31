@@ -53,9 +53,9 @@ public class FileMenu : MonoBehaviour
             Controller.singleton.Graph.Clear();
         }*/
         if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            //if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
+            if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
                 dropDownMenu.SetActive(false);
-            //} 
+            } 
         }
     }
 
@@ -71,19 +71,19 @@ public class FileMenu : MonoBehaviour
 
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
-        CloseDropDown();
         Controller.singleton.ClearGraphObjs();
         Controller.singleton.Graph.Clear();
+        CloseDropDown();
     }
 
     public void ImportFromFile(){
-        CloseDropDown();
         importFileMenu.gameObject.SetActive(true);
+        CloseDropDown();
     }
 
     public void ExportToFile(){
-        CloseDropDown();
         exportFileMenu.gameObject.SetActive(true);
+        CloseDropDown();
     }
 
     public void CloseDropDown(){
