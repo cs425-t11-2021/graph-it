@@ -22,9 +22,9 @@ public class ViewMenu : MonoBehaviour
         }*/
         //If the user clicks close the dropdown panel
         if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if(!(Controller.singleton.UIActive())){
+            //if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
                 dropDownMenu.SetActive(false);
-            }
+            //} 
         }
     }
 
