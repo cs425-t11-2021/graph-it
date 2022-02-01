@@ -805,7 +805,6 @@ GameObject:
   - component: {fileID: 150277623}
   - component: {fileID: 150277627}
   - component: {fileID: 150277628}
-  - component: {fileID: 150277629}
   m_Layer: 5
   m_Name: View
   m_TagString: Untagged
@@ -974,35 +973,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   showGrpahLabelsText: {fileID: 455186629}
   dropDownMenu: {fileID: 1938432809}
---- !u!114 &150277629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150277621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 10
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 150277628}
-          m_TargetAssemblyTypeName: ViewMenu, Assembly-CSharp
-          m_MethodName: CloseDropDown
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1 &172606128
 GameObject:
   m_ObjectHideFlags: 0
@@ -5306,7 +5276,6 @@ GameObject:
   - component: {fileID: 798110303}
   - component: {fileID: 798110307}
   - component: {fileID: 798110308}
-  - component: {fileID: 798110309}
   m_Layer: 5
   m_Name: Edit
   m_TagString: Untagged
@@ -5477,35 +5446,6 @@ MonoBehaviour:
   selectAllButton: {fileID: 58407690}
   deselectAllButton: {fileID: 134002493}
   addEdgeButton: {fileID: 1126108517}
---- !u!114 &798110309
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 798110301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 10
-    callback:
-      m_PersistentCalls:
-        m_Calls:
-        - m_Target: {fileID: 798110308}
-          m_TargetAssemblyTypeName: EditMenu, Assembly-CSharp
-          m_MethodName: CloseDropDown
-          m_Mode: 1
-          m_Arguments:
-            m_ObjectArgument: {fileID: 0}
-            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-            m_IntArgument: 0
-            m_FloatArgument: 0
-            m_StringArgument: 
-            m_BoolArgument: 0
-          m_CallState: 2
 --- !u!1 &798872253
 GameObject:
   m_ObjectHideFlags: 0
@@ -7326,7 +7266,6 @@ GameObject:
   - component: {fileID: 1119136492}
   - component: {fileID: 1119136495}
   - component: {fileID: 1119136494}
-  - component: {fileID: 1119136493}
   m_Layer: 5
   m_Name: File
   m_TagString: Untagged
@@ -7368,7 +7307,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 0
+    m_Mode: 3
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -7469,23 +7408,6 @@ MonoBehaviour:
   m_FlexibleWidth: 0
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &1119136493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1119136487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Delegates:
-  - eventID: 10
-    callback:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!114 &1119136494
 MonoBehaviour:
   m_ObjectHideFlags: 0

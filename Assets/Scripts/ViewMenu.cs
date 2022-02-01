@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
@@ -15,6 +16,12 @@ public class ViewMenu : MonoBehaviour
     //private GameObject fileDropDown;
     //[SerializeField]
     //private GameObject editDropDown;
+
+    private Button viewButton;
+    private void Awake() {
+        viewButton = this.gameObject.GetComponent<Button>();
+    }
+
     private void Update()
     {
         // TODO: Avoid using EventSystem for UI updates
@@ -55,9 +62,11 @@ public class ViewMenu : MonoBehaviour
 
     public void ToggleDropDown(){
         if(dropDownMenu.activeInHierarchy){
+            EventSystem.current.SetSelectedGameObject(null);
             dropDownMenu.SetActive(false);
         }
         else{
+            viewButton.Select();
             dropDownMenu.SetActive(true);
             //fileDropDown.SetActive(false);
            // editDropDown.SetActive(false);

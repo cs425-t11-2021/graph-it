@@ -20,10 +20,12 @@ public class EditMenu : MonoBehaviour
     //private GameObject fileDropDown;
    // [SerializeField]
     //private GameObject viewDropDown;
-    
+
+    private Button editButton;
 
     private void Awake() {
         addEdgeButton.interactable = false;
+        editButton = this.gameObject.GetComponent<Button>();
     }
 
     // Update is called once per frame
@@ -72,10 +74,12 @@ public class EditMenu : MonoBehaviour
 
     public void ToggleDropDown(){
         if(dropDownMenu.activeInHierarchy){
+            EventSystem.current.SetSelectedGameObject(null);
             dropDownMenu.SetActive(false);
         }
         else{
             dropDownMenu.SetActive(true);
+            editButton.Select();
             //fileDropDown.SetActive(false);
            // viewDropDown.SetActive(false);
         }
