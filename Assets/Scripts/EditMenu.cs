@@ -37,11 +37,11 @@ public class EditMenu : MonoBehaviour
         }
 
         //If the user clicks close the dropdown panel
-        if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed
-                dropDownMenu.SetActive(false);
-            }
-        }
+        // if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
+        //     if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed
+        //         dropDownMenu.SetActive(false);
+        //     }
+        // }
         /*if (EventSystem.current.currentSelectedGameObject == selectAllButton)
         {
             EventSystem.current.SetSelectedGameObject(null);
@@ -55,6 +55,18 @@ public class EditMenu : MonoBehaviour
         else if (EventSystem.current.currentSelectedGameObject == addEdgeButton.gameObject) {
             SelectionManager.singleton.AddEdge();
         }*/
+
+        if (!dropDownMenu.activeInHierarchy) return;
+        
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
+            if( !(Controller.singleton.UIActive())) { //does not close dropdown when another button is pressed
+                dropDownMenu.SetActive(false);
+            }
+            
+            if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
+                dropDownMenu.SetActive(false);
+            }
+        }
        
     }
 
@@ -71,7 +83,7 @@ public class EditMenu : MonoBehaviour
     public void ToggleSelectAll(){
         CloseDropDown();
         //not sure if something else is needed
-         SelectionManager.singleton.SelectAll();
+        SelectionManager.singleton.SelectAll();
     }
 
     public void ToggleDeselectAll(){

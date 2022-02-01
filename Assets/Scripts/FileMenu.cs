@@ -48,7 +48,7 @@ public class FileMenu : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
       /*  if (EventSystem.current.currentSelectedGameObject == importMenuItem)
         {
@@ -64,10 +64,16 @@ public class FileMenu : MonoBehaviour
             Controller.singleton.ClearGraphObjs();
             Controller.singleton.Graph.Clear();
         }*/
-        if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed
+        if (!dropDownMenu.activeInHierarchy) return;
+        
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
+            if( !(Controller.singleton.UIActive())) { //does not close dropdown when another button is pressed
                 dropDownMenu.SetActive(false);
-            } 
+            }
+            
+            if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
+                dropDownMenu.SetActive(false);
+            }
         }
     }
 
