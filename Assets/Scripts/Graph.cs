@@ -108,7 +108,7 @@ public class Edge // TODO: place in its own file
     {
         if ( this.directed )
             return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, weight: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}, tail_style: {9}, head_style: {10}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.weight, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
-        return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, weight: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.weight, this.style, this.color, this.thickness, this.label_style );
+        return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, weight: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.weight, this.style, this.color, this.thickness, this.label_style );    
     }
 }
 
