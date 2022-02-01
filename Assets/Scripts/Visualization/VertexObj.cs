@@ -57,6 +57,10 @@ public class VertexObj : MonoBehaviour
 
         // Initiate the label
         labelObj.Initiate(vertex.label);
+
+        // Update associated Vertex positions;
+        this.Vertex.x_pos = transform.position.x;
+        this.Vertex.y_pos = transform.position.y;
     }
 
     private void Start() {
@@ -208,6 +212,10 @@ public class VertexObj : MonoBehaviour
         }
 
         this.cursorOffset = null;
+
+        // Update associated Vertex positions;
+        this.Vertex.x_pos = transform.position.x;
+        this.Vertex.y_pos = transform.position.y;
     }
 
     // When user clicks a vertex obj without dragging it, select/deselect it using selection manager
