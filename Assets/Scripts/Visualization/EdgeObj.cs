@@ -35,6 +35,9 @@ public class EdgeObj : MonoBehaviour
     // Width scale factor for edge thickness increse of 1
     private float edgeWidthScaleFactor = 0.1f;
 
+    private Transform arrow;
+    private SpriteRenderer arrowSpriteRenderer;
+
     private void Awake() {
         // Edge objects starts non active
         this.gameObject.SetActive(false);
@@ -43,7 +46,9 @@ public class EdgeObj : MonoBehaviour
         // as it causes massive lag at the start while the graph is still settling in.
         // Physics2D.autoSyncTransforms = false;
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        this.spriteRenderer = GetComponent<SpriteRenderer>();
+        this.arrow = this.transform.GetChild(0);
+        this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -63,6 +68,15 @@ public class EdgeObj : MonoBehaviour
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        if (this.Edge.directed) {
+            this.arrow.localPosition = new Vector3(0.5f - (this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
+            this.arrow.localScale = new Vector3(1f / this.transform.lossyScale.x, 1f / (this.transform.lossyScale.y - this.Edge.thickness * edgeWidthScaleFactor), 1);
+            this.arrow.gameObject.SetActive(true);
+        }
+        else {
+            this.arrow.gameObject.SetActive(false);
+        }
     }
 
     private void Update() {
@@ -76,6 +90,10 @@ public class EdgeObj : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Minus) && this.Edge.thickness > 0) {
                 this.Edge.thickness--;
                 this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+            }
+            // If T is pressed, toggle directed and undirected edge
+            if (Input.GetKeyDown(KeyCode.T)) {
+                this.Edge.directed = !this.Edge.directed;
             }
         }
     }
@@ -123,11 +141,13 @@ public class EdgeObj : MonoBehaviour
         {
             SelectionManager.singleton.DeselectEdge(this);
             this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+            this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
         }
         else
         {
             SelectionManager.singleton.SelectEdge(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+            this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
         }
     }
 
