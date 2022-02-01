@@ -39,6 +39,8 @@ public class EdgeObj : MonoBehaviour
     private Transform arrow;
     private SpriteRenderer arrowSpriteRenderer;
     private int direction;
+    // Edge weights/labels
+    private EdgeLabel labelObj;
 
     private void Awake() {
         // Edge objects starts non active
@@ -51,6 +53,7 @@ public class EdgeObj : MonoBehaviour
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
+        this.labelObj = GetComponentInChildren<EdgeLabel>();
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -62,6 +65,8 @@ public class EdgeObj : MonoBehaviour
         // TODO: Make this better
         // Currently, direction = 1 means pointing from paretn to target vertex
         this.direction = 1;
+        
+        this.labelObj.Initiate(this.Edge.weight);
     }
 
     // Method to stretch the edge so it extends from one point to another 
@@ -167,18 +172,23 @@ public class EdgeObj : MonoBehaviour
             SelectionManager.singleton.DeselectEdge(this);
             this.spriteRenderer.color = new Color32(0, 0, 0, 255);
             this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
+            labelObj.MakeUneditable();
         }
         else
         {
             SelectionManager.singleton.SelectEdge(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
             this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
+            labelObj.MakeEditable();
         }
     }
-
     private void OnMouseExit()
     {
         // When cursor exits, reset the thickness
         this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+    }
+
+    public void UpdateWeight(double newWeight) {
+        this.Edge.weight = newWeight;
     }
 }

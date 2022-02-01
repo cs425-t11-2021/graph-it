@@ -81,6 +81,8 @@ public class Toolbar : MonoBehaviour
     }
 
     private void Update() {
+        if (Controller.singleton.UIActive()) return;
+        
         // If a number key is pressed, trigger the corresponding button on the toolbar
         for (int i = 1; i <= 9; i++) {
             // Detect the press of a number key
