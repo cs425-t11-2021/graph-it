@@ -22,6 +22,9 @@ public class GraphInfo : MonoBehaviour
     [SerializeField]
     private Button primButton;
 
+    [SerializeField]
+    private Button dijkstraButton;
+
     private void Awake() {
         // Singleton pattern setup
         if (singleton == null) {
@@ -44,6 +47,14 @@ public class GraphInfo : MonoBehaviour
         }   
         else {
             this.primButton.interactable = false;
+        }
+
+        // Only allow dijkstra if exactly two vertices are selected
+        if (SelectionManager.singleton.SelectedVertexCount() == 2 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
+            this.dijkstraButton.interactable = true;
+        }   
+        else {
+            this.dijkstraButton.interactable = false;
         }
     }
 
