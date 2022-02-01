@@ -23,7 +23,7 @@ public class ChromaticAlgorithm : IAlgorithm
 
 		// create new thread using RunHelper
         curr_thread = new Thread(new ThreadStart(RunHelper));
-        curr_thread.Start()
+        curr_thread.Start();
 	}
 
     private void RunHelper()
