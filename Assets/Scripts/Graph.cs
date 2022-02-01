@@ -21,7 +21,7 @@ public class Graph
     // parameters
     // when edges are modified outside of graph, we must update these. Possible solution: micromanage vertices and edges through graph, eg this.MakeDirected( edge )
     private bool directed = false; // true if any edge is directed
-    private bool weighted = false; // true when all edges are weighted
+    private bool weighted = false; // true when all edges are weighted, TODO: account for partially weighted
     private bool simple = true; // false if multiple edges. false if loops on vertices (unless directed)
 
     private int? chromatic_num;
@@ -543,7 +543,7 @@ public class Graph
     }
 
     // TODO: return edges instead of vertices
-    // requires weights
+    // no partial weights
     // returns minimum spanning tree when provided a source
     public List< Vertex > BellmanFord( Vertex src )
     {
