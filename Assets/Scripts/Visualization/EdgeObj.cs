@@ -36,6 +36,7 @@ public class EdgeObj : MonoBehaviour
     private float edgeWidthScaleFactor = 0.1f;
 
     private Transform arrow;
+    private SpriteRenderer arrowSpriteRenderer;
 
     private void Awake() {
         // Edge objects starts non active
@@ -45,8 +46,9 @@ public class EdgeObj : MonoBehaviour
         // as it causes massive lag at the start while the graph is still settling in.
         // Physics2D.autoSyncTransforms = false;
 
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.arrow = this.transform.GetChild(0);
+        this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -89,7 +91,7 @@ public class EdgeObj : MonoBehaviour
                 this.Edge.thickness--;
                 this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
             }
-
+            // If T is pressed, toggle directed and undirected edge
             if (Input.GetKeyDown(KeyCode.T)) {
                 this.Edge.directed = !this.Edge.directed;
             }
@@ -139,11 +141,13 @@ public class EdgeObj : MonoBehaviour
         {
             SelectionManager.singleton.DeselectEdge(this);
             this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+            this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
         }
         else
         {
             SelectionManager.singleton.SelectEdge(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+            this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
         }
     }
 
