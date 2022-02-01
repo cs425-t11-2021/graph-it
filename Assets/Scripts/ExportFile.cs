@@ -73,8 +73,7 @@ public class ExportFile : MonoBehaviour
                 fileButton.enabled = true;
                 editButton.enabled = true;
                 viewButton.enabled = true;
-                algorithmsPanelPrims.enabled = true;
-                
+                algorithmsPanelPrims.enabled = true;                
             }
         }
         else if(EventSystem.current.currentSelectedGameObject == cancelButton){
