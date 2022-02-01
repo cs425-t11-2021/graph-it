@@ -8,7 +8,9 @@ using System.IO;
 using TMPro;
 public class ImportFile : MonoBehaviour
 {
+    [SerializeField]
     private GameObject cancelButton;
+    [SerializeField]
     private GameObject importButton;
     public TMP_InputField importFilenameInput;
 
@@ -37,8 +39,8 @@ public class ImportFile : MonoBehaviour
         //this.gameObject.SetActive(false);
 
         //getting references to the cancel and import buttons to perform their corresponding actions
-        importButton = transform.GetChild(2).gameObject;
-        cancelButton = transform.GetChild(1).gameObject;
+        //importButton = transform.GetChild(2).gameObject;
+        //cancelButton = transform.GetChild(1).gameObject;
     }
 
     // Update is called once per frame
@@ -54,9 +56,10 @@ public class ImportFile : MonoBehaviour
             toolbar.gameObject.SetActive(false);
             fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
         }
+    }
 
         
-        if(EventSystem.current.currentSelectedGameObject == importButton){
+        /*if(EventSystem.current.currentSelectedGameObject == importButton){
             //TODO implement file import
             //needs to check if a filename is provide is valid (exists)
             //if no input is given, display an error
@@ -95,5 +98,45 @@ public class ImportFile : MonoBehaviour
             viewButton.enabled = true;
             algorithmsPanelPrims.enabled = true;
         }
+    }*/
+    public void ConfirmSelection(){
+        //TODO implement file import
+        //needs to check if a filename is provide is valid (exists)
+        //if no input is given, display an error
+        //InputField obeject.text gets the user input
+        if(importFilenameInput.text == ""){
+            errorMessagePopUp.SetActive(true);
+        }
+        else {
+            EventSystem.current.SetSelectedGameObject(null);
+
+            // Clear existing graph
+            Controller.singleton.ClearGraphObjs();
+
+            // TODO: File selector, file always saved on desktop for now
+            string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+            Debug.Log("Begin import at " + desktop + "/" + importFilenameInput.text + ".csv");
+            Controller.singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
+            this.gameObject.SetActive(false);
+            fileButton.enabled = true;
+            editButton.enabled = true;
+            viewButton.enabled = true;
+            algorithmsPanelPrims.enabled = true;
+
+            // Recrate graph objects
+            Controller.singleton.CreateGraphObjs();
+        }
+    }
+
+    public void Cancel(){
+        EventSystem.current.SetSelectedGameObject(null);
+
+        //when the user clicks on the cancel button, the pop-up should disappear and the disabled ui elements should be re-enabled
+        this.gameObject.SetActive(false);
+        toolbar.gameObject.SetActive(true);
+        fileButton.enabled = true;
+        editButton.enabled = true;
+        viewButton.enabled = true;
+        algorithmsPanelPrims.enabled = true;
     }
 }
