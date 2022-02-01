@@ -170,13 +170,11 @@ public class SelectionManager : MonoBehaviour
     {
         // Destroy the graph objects corresponding to the currently selected vertices and edges
         // TODO: object pooling
-        DeSelectAll();
         // Destroy the gameObjects for edges in selectedEdges
         foreach (EdgeObj edgeObj in this.selectedEdges)
         {
             // Update the graph ds
             Controller.singleton.Graph.RemoveEdge(edgeObj.Edge);
-
             Destroy(edgeObj.gameObject);
         }
         this.selectedEdges = new List<EdgeObj>();
