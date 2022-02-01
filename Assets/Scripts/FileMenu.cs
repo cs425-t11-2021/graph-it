@@ -21,10 +21,10 @@ public class FileMenu : MonoBehaviour
     private GameObject importFileMenu;
     [SerializeField]
     private GameObject exportFileMenu;
-    [SerializeField]
-    private GameObject editDropDown;
-    [SerializeField]
-    private GameObject viewDropDown;
+    //[SerializeField]
+    //private GameObject editDropDown;
+    //[SerializeField]
+    //private GameObject viewDropDown;
 
 
 
@@ -80,8 +80,8 @@ public class FileMenu : MonoBehaviour
         else{
             fileButton.Select();
             dropDownMenu.SetActive(true);
-            editDropDown.SetActive(false);
-            viewDropDown.SetActive(false);
+            //editDropDown.SetActive(false);
+            //viewDropDown.SetActive(false);
         }
     }
 

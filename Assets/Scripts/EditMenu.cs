@@ -16,10 +16,10 @@ public class EditMenu : MonoBehaviour
     private GameObject deselectAllButton;
     [SerializeField]
     private Button addEdgeButton;
-    [SerializeField]
-    private GameObject fileDropDown;
-    [SerializeField]
-    private GameObject viewDropDown;
+    //[SerializeField]
+    //private GameObject fileDropDown;
+   // [SerializeField]
+    //private GameObject viewDropDown;
     
 
     private void Awake() {
@@ -64,8 +64,8 @@ public class EditMenu : MonoBehaviour
         }
         else{
             dropDownMenu.SetActive(true);
-            fileDropDown.SetActive(false);
-            viewDropDown.SetActive(false);
+            //fileDropDown.SetActive(false);
+           // viewDropDown.SetActive(false);
         }
     }
     public void ToggleSelectAll(){

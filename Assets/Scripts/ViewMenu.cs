@@ -11,10 +11,10 @@ public class ViewMenu : MonoBehaviour
     private TMP_Text showGrpahLabelsText;
     [SerializeField]
     private GameObject dropDownMenu;
-    [SerializeField]
-    private GameObject fileDropDown;
-    [SerializeField]
-    private GameObject editDropDown;
+   // [SerializeField]
+    //private GameObject fileDropDown;
+    //[SerializeField]
+    //private GameObject editDropDown;
     private void Update()
     {
         // TODO: Avoid using EventSystem for UI updates
@@ -53,8 +53,8 @@ public class ViewMenu : MonoBehaviour
         }
         else{
             dropDownMenu.SetActive(true);
-            fileDropDown.SetActive(false);
-            editDropDown.SetActive(false);
+            //fileDropDown.SetActive(false);
+           // editDropDown.SetActive(false);
         }
     }
 
