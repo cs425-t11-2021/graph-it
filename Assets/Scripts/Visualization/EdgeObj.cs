@@ -35,6 +35,8 @@ public class EdgeObj : MonoBehaviour
     // Width scale factor for edge thickness increse of 1
     private float edgeWidthScaleFactor = 0.1f;
 
+    private Transform arrow;
+
     private void Awake() {
         // Edge objects starts non active
         this.gameObject.SetActive(false);
@@ -44,6 +46,7 @@ public class EdgeObj : MonoBehaviour
         // Physics2D.autoSyncTransforms = false;
 
         spriteRenderer = GetComponent<SpriteRenderer>();
+        this.arrow = this.transform.GetChild(0);
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -63,6 +66,15 @@ public class EdgeObj : MonoBehaviour
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+
+        if (this.Edge.directed) {
+            this.arrow.localPosition = new Vector3(0.5f - (.5f / this.transform.localScale.x), 0f, 0f);
+            this.arrow.localScale = new Vector3(1f / this.transform.lossyScale.x, 1f / this.transform.lossyScale.y, 1);
+            this.arrow.gameObject.SetActive(true);
+        }
+        else {
+            this.arrow.gameObject.SetActive(false);
+        }
     }
 
     private void Update() {
@@ -76,6 +88,10 @@ public class EdgeObj : MonoBehaviour
             else if (Input.GetKeyDown(KeyCode.Minus) && this.Edge.thickness > 0) {
                 this.Edge.thickness--;
                 this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+            }
+
+            if (Input.GetKeyDown(KeyCode.T)) {
+                this.Edge.directed = !this.Edge.directed;
             }
         }
     }
