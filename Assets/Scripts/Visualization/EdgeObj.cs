@@ -40,7 +40,7 @@ public class EdgeObj : MonoBehaviour
     private SpriteRenderer arrowSpriteRenderer;
     private int direction;
     // Edge weights/labels
-    private EdgeLabel labelObj;
+    // private EdgeLabel labelObj;
 
     private void Awake() {
         // Edge objects starts non active
@@ -53,7 +53,7 @@ public class EdgeObj : MonoBehaviour
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
-        this.labelObj = GetComponentInChildren<EdgeLabel>();
+        // this.labelObj = GetComponentInChildren<EdgeLabel>();
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -66,7 +66,7 @@ public class EdgeObj : MonoBehaviour
         // Currently, direction = 1 means pointing from paretn to target vertex
         this.direction = 1;
         
-        this.labelObj.Initiate(this.Edge.weight);
+        // this.labelObj.Initiate(this.Edge.weight);
     }
 
     // Method to stretch the edge so it extends from one point to another 
@@ -172,14 +172,14 @@ public class EdgeObj : MonoBehaviour
             SelectionManager.singleton.DeselectEdge(this);
             this.spriteRenderer.color = new Color32(0, 0, 0, 255);
             this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
-            labelObj.MakeUneditable();
+            // labelObj.MakeUneditable();
         }
         else
         {
             SelectionManager.singleton.SelectEdge(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
             this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
-            labelObj.MakeEditable();
+            // labelObj.MakeEditable();
         }
     }
     private void OnMouseExit()
