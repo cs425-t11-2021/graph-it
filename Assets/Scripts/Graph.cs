@@ -542,7 +542,7 @@ public class Graph
         return result;
     }
 
-    // TODO: return edges instead of vertices
+    // TODO: return edges and weights instead of vertices
     // no partial weights
     // returns minimum spanning tree when provided a source
     public List< Vertex > BellmanFord( Vertex src )

@@ -45,9 +45,9 @@ public class Edge
 
     public void ResetWeight() => this.weight = 1;
 
-    public bool? IsTail( Vertex vert ) => this.directed ? vert == this.vert1 : null;
+    public bool? IsTail( Vertex vert ) => this.directed ? vert == this.vert1 : ( bool? ) null;
 
-    public bool? IsHead( Vertex vert ) => this.directed ? vert == this.vert2 : null;
+    public bool? IsHead( Vertex vert ) => this.directed ? vert == this.vert2 : ( bool? ) null;
 
     public bool IncidentOn( Vertex vert ) => vert == this.vert1 || vert == this.vert2;
 
