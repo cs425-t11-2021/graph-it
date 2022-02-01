@@ -243,7 +243,7 @@ public class Graph
             Debug.Log( ( new System.Exception( "Cannot reverse undirected edge." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Cannot reverse undirected edge." );
         }
-        if ( !( edge in this[ edge.vert1, edge.vert2 ] ) )
+        if ( edge != this[ edge.vert1, edge.vert2 ] )
         {
             Debug.Log( ( new System.Exception( "The provided edge to reverse is not in the graph." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "The provided edge to reverse is not in the graph." );
@@ -335,9 +335,9 @@ public class Graph
         return new Edge(
             this.GetVertex( System.Convert.ToInt32( edge_data[ "vert1" ] ) ),
             this.GetVertex( System.Convert.ToInt32( edge_data[ "vert2" ] ) ),
+            System.Convert.ToBoolean( edge_data[ "directed" ] ),
             edge_data[ "label" ],
             System.Convert.ToDouble( edge_data[ "weight" ] ),
-            System.Convert.ToBoolean( edge_data[ "directed" ] ),
             System.Convert.ToUInt32( edge_data[ "style" ] ),
             System.Convert.ToUInt32( edge_data[ "color" ] ),
             System.Convert.ToUInt32( edge_data[ "thickness" ] ),
