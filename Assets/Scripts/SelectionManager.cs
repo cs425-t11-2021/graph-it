@@ -338,4 +338,10 @@ public class SelectionManager : MonoBehaviour
             v.FinishDragging();
         }
     }
+
+    public void ChangeSelectedEdgesType() {
+        foreach (EdgeObj e in selectedEdges) {
+            e.ToggleEdgeType();
+        }
+    }
 }

@@ -56,6 +56,9 @@ public class Toolbar : MonoBehaviour
     [SerializeField]
     private Button addEdgeButton;
 
+    [SerializeField]
+    private Button changeTypeButton;
+
     private void Awake() {
         // Singleton pattern setup
         if (singleton == null) {
@@ -74,6 +77,7 @@ public class Toolbar : MonoBehaviour
         deleteButton.gameObject.SetActive(false);
         edgeCreationModeButton.gameObject.SetActive(false);
         addEdgeButton.gameObject.SetActive(false);
+        changeTypeButton.gameObject.SetActive(false);
     }
 
     private void Update() {
@@ -142,6 +146,7 @@ public class Toolbar : MonoBehaviour
 
         // Enable the Add Edge button when two vertices are selected
         this.addEdgeButton.gameObject.SetActive(selectedVertexCount == 2 && selectedEdgeCount == 0);
+        this.changeTypeButton.gameObject.SetActive(selectedVertexCount == 0 && selectedEdgeCount > 0);
     }
 
     // Function called by delete button
@@ -157,5 +162,10 @@ public class Toolbar : MonoBehaviour
     // Function called by Add Edge button
     public void AddEdge() {
         SelectionManager.singleton.AddEdge();
+    }
+
+    // Function called by Change Type button
+    public void ChangeType() {
+        SelectionManager.singleton.ChangeSelectedEdgesType();
     }
 }

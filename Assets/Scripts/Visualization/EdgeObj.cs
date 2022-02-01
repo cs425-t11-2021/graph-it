@@ -35,8 +35,10 @@ public class EdgeObj : MonoBehaviour
     // Width scale factor for edge thickness increse of 1
     private float edgeWidthScaleFactor = 0.1f;
 
+    // Directed edge variables
     private Transform arrow;
     private SpriteRenderer arrowSpriteRenderer;
+    private int direction;
 
     private void Awake() {
         // Edge objects starts non active
@@ -57,6 +59,9 @@ public class EdgeObj : MonoBehaviour
 
         this.targetVertexObj = target;
         this.gameObject.SetActive(true);
+        // TODO: Make this better
+        // Currently, direction = 1 means pointing from paretn to target vertex
+        this.direction = 1;
     }
 
     // Method to stretch the edge so it extends from one point to another 
@@ -70,8 +75,9 @@ public class EdgeObj : MonoBehaviour
         this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         if (this.Edge.directed) {
-            this.arrow.localPosition = new Vector3(0.5f - (this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
+            this.arrow.localPosition = new Vector3((this.direction == 1 ? 0.5f : 0f) - (this.direction * this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
             this.arrow.localScale = new Vector3(1f / this.transform.lossyScale.x, 1f / (this.transform.lossyScale.y - this.Edge.thickness * edgeWidthScaleFactor), 1);
+            this.arrow.localRotation = Quaternion.AngleAxis(this.direction == 1? 0f : 180f, Vector3.forward);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -93,7 +99,26 @@ public class EdgeObj : MonoBehaviour
             }
             // If T is pressed, toggle directed and undirected edge
             if (Input.GetKeyDown(KeyCode.T)) {
-                this.Edge.directed = !this.Edge.directed;
+                ToggleEdgeType();
+            }
+        }
+    }
+
+    // Toggle between undirected, direction 1, and direction -1
+    public void ToggleEdgeType() {
+        if (!this.Edge.directed) {
+            this.Edge.directed = true;
+            this.direction = 1;
+        }
+        else {
+            if (this.direction == 1) {
+                this.Edge.Reverse();
+                this.direction = -1;
+            }
+            else {
+                this.Edge.Reverse();
+                this.direction = 1;
+                this.Edge.directed = false;
             }
         }
     }

@@ -2574,9 +2574,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'E
-
-'
+  m_text: E
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -6383,9 +6381,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'B
-
-'
+  m_text: T
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7848,7 +7844,7 @@ GameObject:
   - component: {fileID: 1136272509}
   - component: {fileID: 1136272508}
   m_Layer: 5
-  m_Name: tempButton2 (2)
+  m_Name: ChangeTypeButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7917,7 +7913,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1136272509}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1228080547}
+        m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
+        m_MethodName: ChangeType
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1136272509
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8582,6 +8590,7 @@ MonoBehaviour:
   deleteButton: {fileID: 1147743073}
   edgeCreationModeButton: {fileID: 606668070}
   addEdgeButton: {fileID: 1639705717}
+  changeTypeButton: {fileID: 1136272508}
 --- !u!114 &1228080548
 MonoBehaviour:
   m_ObjectHideFlags: 0
