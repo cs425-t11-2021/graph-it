@@ -11,7 +11,7 @@ using UnityEngine;
 
 
 [System.Serializable]
-public class Vertex
+public class Vertex // TODO: place in its own file
 {
     static private uint id_count;
 
@@ -60,12 +60,12 @@ public class Vertex
 
 
 [System.Serializable]
-public class Edge
+public class Edge // TODO: place in its own file
 {
     public Vertex vert1, vert2;
+    public bool directed;
     public string label;
     public double weight;
-    public bool directed;
 
     public uint style;
     public uint color;
@@ -76,13 +76,13 @@ public class Edge
     public uint? tail_style;
     public uint? head_style;
 
-    public Edge( Vertex vert1, Vertex vert2, string label="", double weight=1, bool directed=false, uint style=0, uint color=0, uint thickness=0, uint label_style=0, uint? tail_style=null, uint? head_style=null )
+    public Edge( Vertex vert1, Vertex vert2, bool directed=false, string label="", double weight=1, uint style=0, uint color=0, uint thickness=0, uint label_style=0, uint? tail_style=null, uint? head_style=null )
     {
         this.vert1 = vert1;
         this.vert2 = vert2;
+        this.directed = directed;
         this.label = label;
         this.weight = weight;
-        this.directed = directed;
         this.style = style;
         this.color = color;
         this.thickness = thickness;
@@ -91,17 +91,24 @@ public class Edge
         this.head_style = head_style;
     }
 
+    public void Reverse()
+    {
+        Vertex temp = vert2;
+        vert2 = vert1;
+        vert1 = temp;
+    }
+
     public void ResetWeight() => this.weight = 1;
 
     public bool IncidentOn( Vertex vert ) => vert == this.vert1 || vert == this.vert2;
 
-    public override int GetHashCode() => ( vert1, vert2, label, weight, directed, style, color, thickness ).GetHashCode();
+    public override int GetHashCode() => ( vert1, vert2, directed, label, weight, style, color, thickness ).GetHashCode();
 
     public override string ToString()
     {
         if ( this.directed )
-            return String.Format( "vert1: {0}, vert2: {1}, label: {2}, weight: {3}, directed: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}",  this.vert1.GetId(), this.vert2.GetId(), this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style );
-        return String.Format( "vert1: {0}, vert2: {1}, label: {2}, weight: {3}, directed: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}, tail_style: {9}, head_style: {10}",  this.vert1.GetId(), this.vert2.GetId(), this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
+            return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, weight: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}, tail_style: {9}, head_style: {10}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.weight, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
+        return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, weight: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.weight, this.style, this.color, this.thickness, this.label_style );
     }
 }
 
@@ -165,10 +172,9 @@ public class Graph
         return vert;
     }
 
-    // adds undirected edge
-    public Edge AddEdge( Vertex vert1, Vertex vert2 )
+    public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false )
     {
-        if ( vert1 < vert2 )
+        if ( directed || vert1 < vert2 )
             return this.AddEdge( new Edge( vert1, vert2 ) );
         else
             return this.AddEdge( new Edge( vert2, vert1 ) );
@@ -178,13 +184,13 @@ public class Graph
     {
         if ( !this.vertices.Contains( edge.vert1 ) || !this.vertices.Contains( edge.vert2 ) )
         {
-            Debug.Log( ( new System.Exception( "One or more vertices have not been added to the graph." ) ).ToString() ); // for testing purposes
-            throw new System.Exception( "One or more vertices have not been added to the graph." );
+            Debug.Log( ( new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." );
         }
-        else if ( edge.vert1 > edge.vert2 )
+        if ( edge.vert1 > edge.vert2 && !edge.directed )
         {
-            Debug.Log( ( new System.Exception( "Invalid edge added to graph." ) ).ToString() ); // for testing purposes
-            throw new System.Exception( "Invalid edge added to graph." );
+            Debug.Log( ( new System.Exception( "Edge must be directed." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Edge must be directed." );
         }
         else
             this.adjacency[ ( edge.vert1, edge.vert2 ) ] = edge;
@@ -216,10 +222,9 @@ public class Graph
             this.RemoveVertex( vect );
     }
 
-    // removes undirected edge
     public void RemoveEdge( Edge edge )
     {
-        if ( edge.vert1 < edge.vert2 )
+        if ( edge.directed || edge.vert1 < edge.vert2 )
             this.adjacency.Remove( ( edge.vert1, edge.vert2 ) );
         else
             this.adjacency.Remove( ( edge.vert2, edge.vert1 ) );
@@ -229,6 +234,25 @@ public class Graph
     {
         foreach ( Edge edge in edges )
             this.RemoveEdge( edge );
+    }
+
+    public Edge ReverseEdge( Edge edge )
+    {
+        if ( !edge.directed )
+        {
+            Debug.Log( ( new System.Exception( "Cannot reverse undirected edge." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Cannot reverse undirected edge." );
+        }
+        if ( !( edge in this[ edge.vert1, edge.vert2 ] ) )
+        {
+            Debug.Log( ( new System.Exception( "The provided edge to reverse is not in the graph." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "The provided edge to reverse is not in the graph." );
+        }
+
+        this.RemoveEdge( edge );
+        edge.Reverse();
+        this.AddEdge( edge );
+        return edge;
     }
 
     public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.adjacency.ContainsKey( ( vert1, vert2 ) ) || this.adjacency.ContainsKey( ( vert2, vert1 ) );
