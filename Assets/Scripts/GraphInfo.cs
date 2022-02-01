@@ -53,4 +53,8 @@ public class GraphInfo : MonoBehaviour
             bipartite_text.text = "Bipartite: " + (chromatic_num == 2 ? "Yes" : "No");
         }
     }
+
+    public void updateChromaticNumber(int chromatic_number) {
+        chromatic_text.text = "Chromatic Number: " + chromatic_number;
+    }
 }

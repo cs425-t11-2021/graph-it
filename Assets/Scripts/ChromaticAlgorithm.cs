@@ -6,20 +6,26 @@ using System.Threading;
 public class ChromaticAlgorithm : IAlgorithm
 {
 	private Graph graph;
-    private Thread? curr_thread;
+    private Thread curr_thread;
 
-    public int? chromatic_num;
+    public int chromatic_number;
 
-	public ChromaticAlgorithm( Graph graph ) // pass delegate method
+    public delegate void UpdateUI(int chromatic_number);
+    UpdateUI updateUI;
+
+	public ChromaticAlgorithm( Graph graph, UpdateUI del) // pass delegate method
 	{
 		this.graph = graph;
-        this.curr_thread = null;
-        this.chromatic_num = null;
+
+        this.updateUI = del;
 	}
 
 	public void Run()
 	{
         // TODO: if curr_thread already exists, abort it and let it restart
+        if (curr_thread.IsAlive) {
+            curr_thread.Abort();
+        }
 
 		// create new thread using RunHelper
         curr_thread = new Thread(new ThreadStart(RunHelper));
@@ -31,9 +37,10 @@ public class ChromaticAlgorithm : IAlgorithm
         try
         {
             // compute chromatic number
-            this.chromatic_num = GetChromaticNumber();
+            this.chromatic_number = GetChromaticNumber();
 
-            // TODO: run delegate
+            // run delegate
+            updateUI(this.chromatic_number);
         }
         catch ( ThreadAbortException e ) { } // thread has been aborted
     }
@@ -48,7 +55,6 @@ public class ChromaticAlgorithm : IAlgorithm
             if ( num_colors < chi && this.IsProperColoring( coloring ) )
                 chi = num_colors;
         }
-        this.chromatic_num = chi;
         return chi;
     }
 
