@@ -19,11 +19,7 @@ public class EdgeLabel : MonoBehaviour
     public void Initiate(double weight)
     {
         this.weight = weight;
-
-        if (weight != 9)
-        {
-            inputField.text = weight.ToString();
-        }
+        inputField.text = weight.ToString();
 
         OnToggleVertexLabels(Controller.singleton.DisplayVertexLabels);
     }
@@ -108,8 +104,10 @@ public class EdgeLabel : MonoBehaviour
     // Update the content field with a new label
     public void UpdateLabel(string newLabel)
     {
-        if (double.TryParse(newLabel, out this.weight)) {
+        if (double.TryParse(inputField.text, out double newWeight)) {
+            this.weight = newWeight;
             this.transform.parent.GetComponent<EdgeObj>().UpdateWeight(this.weight);
+            inputField.text = this.weight.ToString();
         }
         else {
             inputField.text = this.weight.ToString();
