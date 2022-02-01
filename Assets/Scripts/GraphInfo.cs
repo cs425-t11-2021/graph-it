@@ -18,6 +18,8 @@ public class GraphInfo : MonoBehaviour
     [SerializeField]
     private Button prim_button;
 
+    private ChromaticAlgorithm chromaticAlgorithm;
+
     private void Awake() {
         // Singleton pattern setup
         if (singleton == null) {
@@ -30,6 +32,8 @@ public class GraphInfo : MonoBehaviour
         }
 
         prim_button.interactable = false;
+
+        chromaticAlgorithm = new ChromaticAlgorithm( Controller.singleton.Graph );
     }
 
     private void FixedUpdate() {
@@ -43,18 +47,15 @@ public class GraphInfo : MonoBehaviour
     }
 
     public void UpateGraphInfo() {
-        if (Controller.singleton.Graph.vertices.Count > 6) {
-            chromatic_text.text = "Chromatic Number: TMV";
-            bipartite_text.text = "Bipartite: TMV";
-        }
-        else {
-            int chromatic_num = Controller.singleton.Graph.GetChromaticNumber();
-            chromatic_text.text = "Chromatic Number: " + chromatic_num;
-            bipartite_text.text = "Bipartite: " + (chromatic_num == 2 ? "Yes" : "No");
-        }
+        this.chromaticAlgorithm.Run();
     }
 
     public void updateChromaticNumber(int chromatic_number) {
         chromatic_text.text = "Chromatic Number: " + chromatic_number;
+    
+    }
+
+    public void test(int a) {
+        Debug.Log(a);
     }
 }
