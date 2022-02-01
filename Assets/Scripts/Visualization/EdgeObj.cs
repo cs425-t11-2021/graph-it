@@ -82,7 +82,7 @@ public class EdgeObj : MonoBehaviour
         if (this.Edge.directed) {
             this.arrow.localPosition = new Vector3((this.direction == 1 ? 0.5f : 0f) - (this.direction * this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
             this.arrow.localScale = new Vector3(1f / this.transform.lossyScale.x, 1f / (this.transform.lossyScale.y - this.Edge.thickness * edgeWidthScaleFactor), 1);
-            this.arrow.localRotation = Quaternion.AngleAxis(this.direction == 1? 0f : 180f, Vector3.forward);
+            this.arrow.localRotation = Quaternion.AngleAxis(this.direction == 1 ? 0f : 180f, Vector3.forward);
             this.arrow.gameObject.SetActive(true);
         }
         else {
