@@ -56,6 +56,14 @@ public class ImportFile : MonoBehaviour
             toolbar.gameObject.SetActive(false);
             fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
         }
+        else {
+            fileButton.enabled = true;
+            editButton.enabled = true;
+            viewButton.enabled = true;
+            algorithmsPanelPrims.enabled = true;
+            toolbar.gameObject.SetActive(true);
+            fileDropDown.gameObject.SetActive(true);
+        }
     }
 
         

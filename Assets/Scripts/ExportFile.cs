@@ -45,6 +45,13 @@ public class ExportFile : MonoBehaviour
             algorithmsPanelPrims.enabled = false;
             fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
         }
+        else {
+            fileButton.enabled = true;
+            editButton.enabled = true;
+            viewButton.enabled = true;
+            algorithmsPanelPrims.enabled = true;
+            fileDropDown.gameObject.SetActive(true); //the file menu dropdown should also no longer be accessable
+        }
 
         
         if(EventSystem.current.currentSelectedGameObject == exportButton){

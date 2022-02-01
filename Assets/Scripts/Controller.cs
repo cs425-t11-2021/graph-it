@@ -191,7 +191,7 @@ public class Controller : MonoBehaviour
         SelectionManager.singleton.DeSelectAll();
 
         // Enable graph physics for two seconds to spread out the graph
-        UseGraphPhysics(2);
+        // UseGraphPhysics(2);
     }
 
     // Remove all graph visualization objects from scene
