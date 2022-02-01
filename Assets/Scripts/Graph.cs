@@ -542,7 +542,7 @@ public class Graph
         Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
         foreach ( Vertex vert in this.vertices )
             dist[ vert ] = Double.PositiveInfinity;
-        dist[ scr ] = 0;
+        dist[ src ] = 0;
 
         // relax edges
         for ( int i = 0; i < this.vertices.Count - 1; i++ )
@@ -567,7 +567,7 @@ public class Graph
             }
         }
 
-        return prev;
+        return prev.Values.ToList();
     }
 
 
