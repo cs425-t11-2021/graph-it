@@ -17,10 +17,22 @@ public class FileMenu : MonoBehaviour
    // private GameObject exportMenuItem;
 
    // private Button fileButton;
-   [SerializeField]
-    public GameObject importFileMenu;
     [SerializeField]
-    public GameObject exportFileMenu;
+    private GameObject importFileMenu;
+    [SerializeField]
+    private GameObject exportFileMenu;
+    //[SerializeField]
+    //private GameObject editDropDown;
+    //[SerializeField]
+    //private GameObject viewDropDown;
+
+
+
+    private Button fileButton;
+
+    private void Awake() {
+        fileButton = this.gameObject.GetComponent<Button>();
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -52,20 +64,30 @@ public class FileMenu : MonoBehaviour
             Controller.singleton.ClearGraphObjs();
             Controller.singleton.Graph.Clear();
         }*/
-        if(Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            // if(!(Controller.singleton.UIActive())){ //does not close dropdown when another button is pressed, hence why this is commented out
+        if (!dropDownMenu.activeInHierarchy) return;
+        
+        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
+            if( !(Controller.singleton.UIActive())) { //does not close dropdown when another button is pressed
                 dropDownMenu.SetActive(false);
-            // } 
+            }
+            
+            if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
+                dropDownMenu.SetActive(false);
+            }
         }
     }
 
     //if the user clicks on the "File" button, the dropdown will appear, otherwise the dropdown remains hidden
       public void ToggleDropDown(){
         if(dropDownMenu.activeInHierarchy){
+            EventSystem.current.SetSelectedGameObject(null);
             dropDownMenu.SetActive(false);
         }
         else{
+            fileButton.Select();
             dropDownMenu.SetActive(true);
+            //editDropDown.SetActive(false);
+            //viewDropDown.SetActive(false);
         }
     }
 
