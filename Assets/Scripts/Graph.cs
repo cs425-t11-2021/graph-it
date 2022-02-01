@@ -18,13 +18,16 @@ public class Graph
     // Adjacency dict is read-only from outside of class
     public Dictionary< ( Vertex, Vertex ), Edge > adjacency { get; private set; } // currently supporting only single edges between vertices
 
+    // parameters
+    // when edges are modified outside of graph, we must update these. Possible solution: micromanage vertices and edges through graph, eg this.MakeDirected( edge )
     private bool directed = false; // true if any edge is directed
     private bool weighted = false; // true when all edges are weighted
+    private bool simple = true; // false if multiple edges. false if loops on vertices (unless directed)
 
     private int? chromatic_num;
 
 
-    public Graph()
+    public Graph() // pass default parameters
     {
         this.vertices = new List< Vertex >();
         this.adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
@@ -54,10 +57,9 @@ public class Graph
         throw new System.Exception( "Vertex could not be found." );
     }
 
-    // TODO: account for undirected edges
     public Edge this[ Vertex vert1, Vertex vert2 ]
     {
-        get => this.adjacency[ ( vert1, vert2 ) ];
+        get => vert1 > vert2 ? this.adjacency[ ( vert2, vert1 ) ] : this.adjacency[ ( vert1, vert2 ) ];
     }
 
     private List< Edge > GetDirectedEdges()
@@ -367,6 +369,12 @@ public class Graph
 
     public List< Edge > Prim( Vertex vert )
     {
+        if ( this.directed )
+        {
+            Debug.Log( ( new System.Exception( "Prim's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
+        }
+
         List< Edge > mst = new List< Edge >();
         HashSet< Vertex > mst_vertices = new HashSet< Vertex >() { vert };
         int mst_vertices_prev_count = -1;
@@ -397,17 +405,20 @@ public class Graph
         List< Edge > incident_edges = new List< Edge >();
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
         {
-            foreach ( Vertex vert in verts )
-            {
-                if ( kvp.Value.IncidentOn( vert ) )
-                    incident_edges.Add( kvp.Value );
-            }
+            if ( verts.Contains( kvp.Value.vert1 ) || kvp.Value.directed && verts.Contains( kvp.Value.vert2 ) )
+                incident_edges.Add( kvp.Value );
         }
         return incident_edges;
     }
 
     public List< Edge > Kruskal()
     {
+        if ( this.directed )
+        {
+            Debug.Log( ( new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
+        }
+
         List< Edge > mst = new List< Edge >();
         List< Edge > edges = new List< Edge >( this.adjacency.Values.OrderBy( edge => edge.weight ) );
         HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
@@ -475,7 +486,7 @@ public class Graph
         }
     }
 
-    // TODO: keep matrix of distances, update each time an edge is added?
+    // TODO: keep matrix of distances, update each time an edge is added
     public List< Vertex > Dijkstra( Vertex src, Vertex dest )
     {
         HashSet< Vertex > not_visited = new HashSet< Vertex >( this.vertices );
