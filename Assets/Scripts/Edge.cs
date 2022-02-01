@@ -45,6 +45,10 @@ public class Edge
 
     public void ResetWeight() => this.weight = 1;
 
+    public bool? IsTail( Vertex vert ) => this.directed ? vert == this.vert1 : null;
+
+    public bool? IsHead( Vertex vert ) => this.directed ? vert == this.vert2 : null;
+
     public bool IncidentOn( Vertex vert ) => vert == this.vert1 || vert == this.vert2;
 
     public override int GetHashCode() => ( vert1, vert2, directed, label, weight, style, color, thickness ).GetHashCode();
