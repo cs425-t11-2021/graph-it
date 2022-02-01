@@ -108,6 +108,11 @@ public class FileMenu : MonoBehaviour
         CloseDropDown();
     }
 
+    public void SaveAsImage() {
+        ScreenshotManager.singleton.SaveScrenshotToDesktop();
+        CloseDropDown();
+    }
+
     public void CloseDropDown(){
         dropDownMenu.SetActive(false);
     }

@@ -38,15 +38,15 @@ public class ScreenshotManager : MonoBehaviour
 
     private void Update() {
         // Tempoary testing code to take a screenshot
-        if (Input.GetKeyDown(KeyCode.Minus)) {
-            TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/GraphImgs/test.png");
-        }
+        // if (Input.GetKeyDown(KeyCode.Minus)) {
+        //     TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/GraphImgs/test.png");
+        // }
     }
 
     private void OnPostRender() {
         if (this.takeScreenshotNextFrame) {
             RenderTexture renderTex = this.cam.targetTexture;
-            Texture2D renderResult = new Texture2D((int) (this.screenBounds.size.x + 1), (int) (this.screenBounds.size.y + 1), TextureFormat.ARGB32, false);
+            Texture2D renderResult = new Texture2D((int) (this.screenBounds.size.x + 0.5f), (int) (this.screenBounds.size.y + 0.5f), TextureFormat.ARGB32, false);
 
             Rect rect = new Rect(this.screenBounds.min.x, this.screenBounds.min.y, this.screenBounds.size.x, this.screenBounds.size.y);
             renderResult.ReadPixels(rect, 0, 0);
@@ -60,6 +60,10 @@ public class ScreenshotManager : MonoBehaviour
             this.takeScreenshotNextFrame = false;
             this.filepath = null;
         }
+    }
+
+    public void SaveScrenshotToDesktop() {
+        TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/graph_img.png");
     }
 
     private void TakeScreenshot(string filepath) {
