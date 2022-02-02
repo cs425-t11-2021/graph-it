@@ -29,6 +29,8 @@ public class GraphInfo : MonoBehaviour
     private ChromaticAlgorithm chromaticAlgorithm;
 
     private void Awake() {
+        this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.singleton.Graph, UpdateChromaticInfo);
+
         // Singleton pattern setup
         if (singleton == null) {
             singleton = this;
@@ -41,6 +43,8 @@ public class GraphInfo : MonoBehaviour
 
         this.primButton.interactable = false;
         UpdateGraphInfo();
+        
+        
     }
 
     private void FixedUpdate() {
@@ -62,17 +66,25 @@ public class GraphInfo : MonoBehaviour
     }
 
     public void UpdateGraphInfo() {
-        if (Controller.singleton.Graph.vertices.Count > 6) {
-            chromaticText.text = "";
-            bipartiteText.text = "";
-        }
-        else {
-            int chromaticNum = Controller.singleton.Graph.GetChromaticNumber();
-            this.chromaticText.text = "Chromatic Number: " + chromaticNum;
-            this.bipartiteText.text = "Bipartite: " + (chromaticNum == 2 ? "Yes" : "No");
-        }
+        // if (Controller.singleton.Graph.vertices.Count > 6) {
+        //     chromaticText.text = "";
+        //     bipartiteText.text = "";
+        // }
+        // else {
+        //     int chromaticNum = Controller.singleton.Graph.GetChromaticNumber();
+        //     this.chromaticText.text = "Chromatic Number: " + chromaticNum;
+        //     this.bipartiteText.text = "Bipartite: " + (chromaticNum == 2 ? "Yes" : "No");
+        // }
 
         this.orderText.text = "Order: " + Controller.singleton.Graph.vertices.Count;
         this.sizeText.text = "Size: " + Controller.singleton.Graph.adjacency.Count;
+
+        // Run multithreaded chromatic
+        chromaticAlgorithm.RunThread();
+    }
+
+    public void UpdateChromaticInfo() {
+        this.chromaticText.text = "Chromatic Number: " + chromaticAlgorithm.chromatic_number;
+        this.bipartiteText.text = "Bipartite: " + (chromaticAlgorithm.chromatic_number == 2 ? "Yes" : "No");
     }
 }
