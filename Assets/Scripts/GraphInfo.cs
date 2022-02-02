@@ -1,4 +1,5 @@
 //All code developed by Team 11
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -24,6 +25,8 @@ public class GraphInfo : MonoBehaviour
 
     [SerializeField]
     private Button dijkstraButton;
+
+    private ChromaticAlgorithm chromaticAlgorithm;
 
     private void Awake() {
         // Singleton pattern setup
