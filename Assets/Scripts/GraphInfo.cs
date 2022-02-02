@@ -79,6 +79,8 @@ public class GraphInfo : MonoBehaviour
         this.orderText.text = "Order: " + Controller.singleton.Graph.vertices.Count;
         this.sizeText.text = "Size: " + Controller.singleton.Graph.adjacency.Count;
 
+        this.chromaticText.text = "Chromatic Number: Calculating";
+        this.bipartiteText.text = "Bipartite: Calculating";
         // Run multithreaded chromatic
         chromaticAlgorithm.RunThread();
     }
