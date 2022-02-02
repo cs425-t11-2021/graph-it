@@ -1,4 +1,5 @@
 //All code developed by Team 11
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class GraphInfo : MonoBehaviour
 
         prim_button.interactable = false;
 
-        chromaticAlgorithm = new ChromaticAlgorithm( Controller.singleton.Graph );
+        chromaticAlgorithm = new ChromaticAlgorithm( Controller.singleton.Graph, new Action(updateChromaticNumber) );
     }
 
     private void FixedUpdate() {
@@ -47,15 +48,10 @@ public class GraphInfo : MonoBehaviour
     }
 
     public void UpateGraphInfo() {
-        this.chromaticAlgorithm.Run();
+        this.chromaticAlgorithm.RunThread();
     }
 
-    public void updateChromaticNumber(int chromatic_number) {
-        chromatic_text.text = "Chromatic Number: " + chromatic_number;
-    
-    }
-
-    public void test(int a) {
-        Debug.Log(a);
+    public void updateChromaticNumber() {
+        chromatic_text.text = "Chromatic Number: " + this.chromaticAlgorithm.chromatic_number;
     }
 }

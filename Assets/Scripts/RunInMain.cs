@@ -8,7 +8,7 @@ public class RunInMain : MonoBehaviour
     public static RunInMain singleton;
 
 
-    public Queue<(Action<int>, int)> queuedTasks;
+    public Queue<Action> queuedTasks;
 
     private void Awake() {
         if (singleton == null) {
@@ -20,14 +20,14 @@ public class RunInMain : MonoBehaviour
             return;
         }
 
-        queuedTasks = new Queue<(Action<int>, int)>();
+        queuedTasks = new Queue<Action>();
     }
 
     private void Update() {
         if (queuedTasks.Count > 0) {
             Debug.Log("Running queued task");
             var task = queuedTasks.Dequeue();
-            task.Item1(task.Item2);
+            task();
         }
     }
 
