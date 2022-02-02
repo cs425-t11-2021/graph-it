@@ -123,7 +123,7 @@ public class ImportFile : MonoBehaviour
             viewButton.enabled = true;
             algorithmsPanelPrims.enabled = true;
             toolbar.gameObject.SetActive(true);
-            fileDropDown.gameObject.SetActive(true);
+            //fileDropDown.gameObject.SetActive(true);
 
             // Recrate graph objects
             Controller.singleton.CreateGraphObjs();
@@ -141,6 +141,6 @@ public class ImportFile : MonoBehaviour
         viewButton.enabled = true;
         algorithmsPanelPrims.enabled = true;
         toolbar.gameObject.SetActive(true);
-        fileDropDown.gameObject.SetActive(true);
+        //fileDropDown.gameObject.SetActive(true);
     }
 }

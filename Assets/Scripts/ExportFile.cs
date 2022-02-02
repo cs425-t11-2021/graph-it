@@ -115,6 +115,7 @@ public class ExportFile : MonoBehaviour
             fileButton.enabled = true;
             editButton.enabled = true;
             viewButton.enabled = true;
+            toolbar.gameObject.SetActive(true);
             algorithmsPanelPrims.enabled = true;                
         }
     }
@@ -126,6 +127,7 @@ public class ExportFile : MonoBehaviour
         fileButton.enabled = true;
         editButton.enabled = true;
         viewButton.enabled = true;
+        toolbar.gameObject.SetActive(true);
         algorithmsPanelPrims.enabled = true;
     }
 }
