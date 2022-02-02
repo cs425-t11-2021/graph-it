@@ -3,11 +3,12 @@
 // Supress class name conflict warning
 #pragma warning disable 0436
 
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class VertexObj : MonoBehaviour, IUsesDragEvents
+public class VertexObj : MonoBehaviour
 {
     // Property reference of the vertex associated with the vertex object
     public Vertex Vertex { get; private set; }
@@ -27,11 +28,10 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
     // Reference to the labelObj attached to the vertexObj
     private LabelObj labelObj;
 
-    // // Getter for id
-    // public int GetID()
-    // {
-    //     return id;
-    // }
+    // The current distance between the curosr to the center of the object
+    private Vector3? cursorOffset;
+    private bool clicked = false;
+    private float dragDuration;
 
     private void Awake() {
         // Vertex objects starts non active
@@ -43,6 +43,8 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         spriteObj = transform.GetChild(0);
         spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
         labelObj = GetComponentInChildren<LabelObj>();
+
+        cursorOffset = null;
     }
 
     // Method called by a controller class to setup properties of the vertex object
@@ -55,6 +57,10 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
 
         // Initiate the label
         labelObj.Initiate(vertex.label);
+
+        // Update associated Vertex positions;
+        this.Vertex.x_pos = transform.position.x;
+        this.Vertex.y_pos = transform.position.y;
     }
 
     private void Start() {
@@ -110,9 +116,15 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         }
     }
 
-    // Method called when the vertex object is first picked up to be dragged
-    public void OnDragStart()
-    {
+    private void OnMouseDown() {
+         // When a click is detected, set clicked to true and store the current mouse position, and reset the drag duration timer
+        this.dragDuration = 0f;
+        this.clicked = true;
+    }
+
+    public void SetCursorDragOffset() {
+        this.cursorOffset = this.transform.position - Controller.singleton.GetCursorWorldPosition();
+
         // If the grid is currently enabled, remove the vertex obejct from any grid points and display the gridlines
         if (Grid.singleton.GridEnabled)
         {
@@ -121,20 +133,100 @@ public class VertexObj : MonoBehaviour, IUsesDragEvents
         }
     }
 
-    // Method called after dragging is finished
-    public void OnDragFinish()
+    // Method called when the vertex object is first picked up to be dragged
+    private void OnDragStart()
     {
+        if (!Toolbar.singleton.SelectionMode && !Toolbar.singleton.CreateVertexMode) {
+            if (this.selected) {
+                SelectionManager.singleton.DragSelectedVerticesStart();
+            }
+            else {
+                SetCursorDragOffset();
+            }
+        }
+    }
+
+    private void OnMouseDrag() {
+        // Increase the drag duration timer while the object is being dragged
+        if (clicked)
+        {
+            dragDuration += Time.deltaTime;
+
+            // If the object is held for more than 1/10 of a second, count as the start of a drag
+            if (dragDuration > .1f)
+            {
+                clicked = false;
+                OnDragStart();
+            }
+        }
+
+        if (this.cursorOffset != null) {
+            // Disable dragging when in selection or vertex creation mode
+            if (!Toolbar.singleton.SelectionMode && !Toolbar.singleton.CreateVertexMode) {
+                if (this.selected) {
+                    SelectionManager.singleton.DragSelectedVertices();
+                }
+                else {
+                    DragVertexWithMouse();
+                }
+            } 
+        }
+    }
+
+    private void OnMouseUp() {
+        clicked = false;
+        // If the object has been dragged for less than 1/10 of a second, count as a non-dragging click
+        if (dragDuration < .1f)
+        {
+            OnMouseDownNonDrag();
+        }
+        else
+        {
+            OnDragFinish();
+        }
+        dragDuration = 0f;
+    }
+
+    public void DragVertexWithMouse() {
+        if (this.cursorOffset != null)
+            this.transform.position = Controller.singleton.GetCursorWorldPosition() + (Vector3) this.cursorOffset;
+    }
+
+    // Method called after dragging is finished
+    private void OnDragFinish()
+    {
+        if (this.selected) {
+            SelectionManager.singleton.DragSelectedVerticesEnd();
+        }
+        else {
+            FinishDragging();
+        }
+    }
+
+    public void FinishDragging() {
         // If the grid is currently enabled, move the vertex object to the nearest grid point and hide the gridlines
         if (Grid.singleton.GridEnabled)
         {
             this.transform.position = Grid.singleton.FindClosestGridPosition(this);
             Grid.singleton.HideGridLines();
         }
+
+        this.cursorOffset = null;
+
+        // Update associated Vertex positions;
+        this.Vertex.x_pos = transform.position.x;
+        this.Vertex.y_pos = transform.position.y;
     }
 
     // When user clicks a vertex obj without dragging it, select/deselect it using selection manager
-    public void OnMouseDownNonDrag()
+    private void OnMouseDownNonDrag()
     {
+        // If add edge mode is enabled in the toolbar, add an edge instead of selecting the vertex
+        if (Toolbar.singleton.EdgeCreationMode) {
+            SelectionManager.singleton.AddEdge(this);
+            return;
+        }
+
         SetSelected(!selected);
     }
 

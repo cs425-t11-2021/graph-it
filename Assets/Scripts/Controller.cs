@@ -185,13 +185,13 @@ public class Controller : MonoBehaviour
         }
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpateGraphInfo();
+        GraphInfo.singleton.UpdateGraphInfo();
 
         // Make sure no objects are selected when they are first created
         SelectionManager.singleton.DeSelectAll();
 
         // Enable graph physics for two seconds to spread out the graph
-        UseGraphPhysics(2);
+        // UseGraphPhysics(2);
     }
 
     // Remove all graph visualization objects from scene
@@ -214,7 +214,10 @@ public class Controller : MonoBehaviour
         }
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpateGraphInfo();
+        GraphInfo.singleton.UpdateGraphInfo();
+
+        // Reset toolbar toggles
+        Toolbar.singleton.ResetAll();
     }
 
     // Method to update graph objects to match the graph ds if new vertices or edges are added
@@ -307,9 +310,9 @@ public class Controller : MonoBehaviour
     }
 
     // Returns true if any UI elements are being interacted with
-    public bool IsUIactive()
+    public bool UIActive()
     {
-        return EventSystem.current.currentSelectedGameObject != null;
+        return EventSystem.current.currentSelectedGameObject != null || EventSystem.current.IsPointerOverGameObject();
     }
 
     // Enables graph physics for a certain duartion
