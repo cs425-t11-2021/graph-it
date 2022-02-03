@@ -68,13 +68,20 @@ public class Edge
     private void SetLabel( string label )
     {
         label = label.Replace( " ", "" ).Replace( "+", "" ).ToLower();
-        if ( this.weighted = value.Equals( "inf" ) || value.Equals( "infinity" ) )
+        if ( label.Equals( "inf" ) || label.Equals( "infinity" ) )
+        {
+            this.weighted = true;
             this.weight = Double.PositiveInfinity;
-        else if ( this.weighted = value.Equals( "-inf" ) || value.Equals( "-infinity" ) )
+        }
+        else if ( label.Equals( "-inf" ) || label.Equals( "-infinity" ) )
+        {
+            this.weighted = true;
             this.weight = Double.NegativeInfinity;
-        else if ( this.weighted = Double.TryParse( value, out this.weight ) );
+        }
+        else if ( Double.TryParse( label, out this.weight ) )
+            this.weighted = true;
         else
             this.weight = 1;
-        this._label = value;
+        this._label = label;
     }
 }

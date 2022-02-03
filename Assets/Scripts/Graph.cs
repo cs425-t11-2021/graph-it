@@ -38,7 +38,7 @@ public class Graph
     public bool fully_weighted // true when all edges are weighted
     {
         get => this.IsFullyWeighted();
-        set => this._properly_weighted = value;
+        set => this._fully_weighted = value;
     }
 
     private bool _simple;
@@ -47,6 +47,8 @@ public class Graph
         get => this.IsSimple();
         set => this._simple = value;
     }
+
+    private int? chromatic_num;
 
 
     public Graph() // pass default settings parameters
@@ -222,13 +224,14 @@ public class Graph
         {
             foreach ( Vertex vert in this.vertices )
             {
-                if ( this[ vert, vert ].Count > 0 )
-                    return false;
+                // if ( this[ vert, vert ].Count > 0 )
+                   // return false;
             }
         }
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
         {
-            // TODO: if multiple edges, return false
+            // if ( kvp.Value.Count > 0 )
+                // return false;
         }
         return true;
     }
