@@ -9,8 +9,14 @@ public class Edge
 {
     public Vertex vert1, vert2;
     public bool directed;
-    public string label;
+    public bool weighted;
     public double weight;
+    private string _label;
+    public string label
+    {
+        get => this._label;
+        set => this.SetLabel( value );
+    }
 
     public uint style;
     public uint color;
@@ -21,13 +27,12 @@ public class Edge
     public uint? tail_style;
     public uint? head_style;
 
-    public Edge( Vertex vert1, Vertex vert2, bool directed=false, string label="", double weight=1, uint style=0, uint color=0, uint thickness=0, uint label_style=0, uint? tail_style=null, uint? head_style=null )
+    public Edge( Vertex vert1, Vertex vert2, bool directed=false, string label="", uint style=0, uint color=0, uint thickness=0, uint label_style=0, uint? tail_style=null, uint? head_style=null )
     {
         this.vert1 = vert1;
         this.vert2 = vert2;
         this.directed = directed;
         this.label = label;
-        this.weight = weight;
         this.style = style;
         this.color = color;
         this.thickness = thickness;
@@ -56,7 +61,20 @@ public class Edge
     public override string ToString()
     {
         if ( this.directed )
-            return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, weight: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}, tail_style: {9}, head_style: {10}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.weight, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
-        return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, weight: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.weight, this.style, this.color, this.thickness, this.label_style );
+            return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, style: {4}, color: {5}, thickness: {6}, label_style: {7}, tail_style: {8}, head_style: {9}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
+        return String.Format( "vert1: {0}, vert2: {1}, directed: {2}, label: {3}, style: {4}, color: {5}, thickness: {6}, label_style: {7}",  this.vert1.GetId(), this.vert2.GetId(), this.directed, this.label, this.style, this.color, this.thickness, this.label_style );
+    }
+
+    private void SetLabel( string label )
+    {
+        label = label.Replace( " ", "" ).Replace( "+", "" ).ToLower();
+        if ( this.weighted = value.Equals( "inf" ) || value.Equals( "infinity" ) )
+            this.weight = Double.PositiveInfinity;
+        else if ( this.weighted = value.Equals( "-inf" ) || value.Equals( "-infinity" ) )
+            this.weight = Double.NegativeInfinity;
+        else if ( this.weighted = Double.TryParse( value, out this.weight ) );
+        else
+            this.weight = 1;
+        this._label = value;
     }
 }

@@ -20,14 +20,36 @@ public class Graph
 
     // parameters
     // when edges are modified outside of graph, we must update these. Possible solution: micromanage vertices and edges through graph, eg this.MakeDirected( edge )
-    private bool directed = false; // true if any edge is directed
-    private bool weighted = false; // true when all edges are weighted, TODO: account for partially weighted
-    private bool simple = true; // false if multiple edges. false if loops on vertices (unless directed)
+    private bool _directed;
+    public bool directed // true if any edge is directed
+    {
+        get => this.IsDirected();
+        set => this._directed = value;
+    }
 
-    private int? chromatic_num;
+    private bool _weighted;
+    public bool weighted // true if any edge is weighted
+    {
+        get => this.IsWeighted();
+        set => this._weighted = value;
+    }
+
+    private bool _fully_weighted;
+    public bool fully_weighted // true when all edges are weighted
+    {
+        get => this.IsFullyWeighted();
+        set => this._properly_weighted = value;
+    }
+
+    private bool _simple;
+    public bool simple // false if multiple edges. false if loops on vertices (unless directed)
+    {
+        get => this.IsSimple();
+        set => this._simple = value;
+    }
 
 
-    public Graph() // pass default parameters
+    public Graph() // pass default settings parameters
     {
         this.vertices = new List< Vertex >();
         this.adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
@@ -118,18 +140,6 @@ public class Graph
     public void RemoveVertex( Vertex vect )
     {
         this.vertices.Remove( vect );
-
-        // List< ( Vertex, Vertex ) > to_be_removed = new List< ( Vertex, Vertex ) >();
-        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
-        // {
-        //     if ( kvp.Value.IncidentOn( vert ) )
-        //         to_be_removed.Add( kvp.Key );
-        // }
-
-        // foreach ( ( Vertex, Vertex ) remove in to_be_removed )
-        //     this.adjacency.Remove( remove );
-
-        // TODO: double check this works
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
             this.adjacency.Remove( kvp.Key );
     }
@@ -175,6 +185,53 @@ public class Graph
 
     public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.adjacency.ContainsKey( ( vert1, vert2 ) ) || this.adjacency.ContainsKey( ( vert2, vert1 ) );
 
+    private bool IsDirected()
+    {
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        {
+            if ( kvp.Value.directed )
+                return true;
+        }
+        return false;
+    }
+
+    private bool IsWeighted()
+    {
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        {
+            if ( kvp.Value.weighted )
+                return true;
+        }
+        return false;
+    }
+
+    private bool IsFullyWeighted()
+    {
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        {
+            if ( !kvp.Value.weighted )
+                return false;
+        }
+        return true;
+    }
+
+    private bool IsSimple()
+    {
+        if ( !this.directed )
+        {
+            foreach ( Vertex vert in this.vertices )
+            {
+                if ( this[ vert, vert ].Count > 0 )
+                    return false;
+            }
+        }
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        {
+            // TODO: if multiple edges, return false
+        }
+        return true;
+    }
+
 
     // file io methods ////////////////////////////////////////////////
 
@@ -182,7 +239,6 @@ public class Graph
     // currently not importing directed info
     public void Import( string path )
     {
-        // this.Clear();
         try
         {
             if ( !File.Exists( path ) )
@@ -255,7 +311,6 @@ public class Graph
             this.GetVertex( System.Convert.ToInt32( edge_data[ "vert2" ] ) ),
             System.Convert.ToBoolean( edge_data[ "directed" ] ),
             edge_data[ "label" ],
-            System.Convert.ToDouble( edge_data[ "weight" ] ),
             System.Convert.ToUInt32( edge_data[ "style" ] ),
             System.Convert.ToUInt32( edge_data[ "color" ] ),
             System.Convert.ToUInt32( edge_data[ "thickness" ] ),
@@ -321,8 +376,6 @@ public class Graph
     // brute force method, exponential time complexity with respect to vertices
     public int GetChromaticNumber()
     {
-        // if ( !( this.chromatic_num is null ) )
-        //     return ( int ) this.chromatic_num;
         int chi = this.vertices.Count;
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
@@ -486,7 +539,6 @@ public class Graph
         }
     }
 
-    // TODO: keep matrix of distances, update each time an edge is added
     public List< Vertex > Dijkstra( Vertex src, Vertex dest )
     {
         HashSet< Vertex > not_visited = new HashSet< Vertex >( this.vertices );
@@ -542,15 +594,21 @@ public class Graph
         return result;
     }
 
-    // TODO: return edges and weights instead of vertices
+    // TODO: return weights
     // no partial weights
     // returns minimum spanning tree when provided a source
-    public List< Vertex > BellmanFord( Vertex src )
+    public List< Edge > BellmanFord( Vertex src )
     {
+        if ( this.weighted && !this.fully_weighted )
+        {
+            Debug.Log( ( new System.Exception( "Graph is not fully weighted." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Graph is not fully weighted." );
+        }
+
         // initialize data
         List< Edge > edges = this.adjacency.Values.ToList();
         Dictionary< Vertex, double > dist = new Dictionary< Vertex, double >();
-        Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
+        Dictionary< Vertex, Edge > prev = new Dictionary< Vertex, Edge >();
         foreach ( Vertex vert in this.vertices )
             dist[ vert ] = Double.PositiveInfinity;
         dist[ src ] = 0;
@@ -563,7 +621,7 @@ public class Graph
                 if ( dist[ edge.vert1 ] + edge.weight < dist[ edge.vert2 ] )
                 {
                     dist[ edge.vert2 ] = dist[ edge.vert1 ] + edge.weight;
-                    prev[ edge.vert2 ] = edge.vert1;
+                    prev[ edge.vert2 ] = edge;
                 }
             }
         }
