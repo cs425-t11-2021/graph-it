@@ -3,47 +3,18 @@ using System.Collections.Generic;
 using System.Threading;
 
 [System.Serializable]
-public class ChromaticAlgorithm : IAlgorithm
+public class ChromaticAlgorithm : Algorithm
 {
 	private Graph graph;
-    private Thread curr_thread;
 
     public int chromatic_number;
 
-	public ChromaticAlgorithm( Graph graph) // pass delegate method
+	public ChromaticAlgorithm(Graph graph, Action onThreadExit) : base(onThreadExit)
 	{
 		this.graph = graph;
-
-        this.curr_thread = null;
 	}
 
-	public void Run()
-	{
-        // TODO: if curr_thread already exists, abort it and let it restart
-        if (curr_thread != null && curr_thread.IsAlive) {
-            curr_thread.Abort();
-        }
-
-		// create new thread using RunHelper
-        this.curr_thread = new Thread(new ThreadStart(RunHelper));
-        curr_thread.Start();
-	}
-
-    private void RunHelper()
-    {
-        RunInMain.singleton.queuedTasks.Enqueue((GraphInfo.singleton.test, 0));
-        try
-        {
-            // compute chromatic number
-            this.chromatic_number = GetChromaticNumber();
-
-            // run delegate
-            RunInMain.singleton.queuedTasks.Enqueue((GraphInfo.singleton.updateChromaticNumber, this.chromatic_number));
-        }
-        catch ( ThreadAbortException e ) { } // thread has been aborted
-    }
-
-	public int GetChromaticNumber()
+	public override void Run()
     {
         int chi = graph.vertices.Count;
         HashSet< List< int > > colorings = this.GetAllColorings();
@@ -53,7 +24,8 @@ public class ChromaticAlgorithm : IAlgorithm
             if ( num_colors < chi && this.IsProperColoring( coloring ) )
                 chi = num_colors;
         }
-        return chi;
+        
+        this.chromatic_number = chi;
     }
 
     private bool IsProperColoring( List< int > coloring )

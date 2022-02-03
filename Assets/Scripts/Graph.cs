@@ -171,7 +171,8 @@ public class Graph
             Debug.Log( ( new System.Exception( "Cannot reverse undirected edge." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Cannot reverse undirected edge." );
         }
-        if (  edge != this[ edge.vert1, edge.vert2 ] )
+      
+        if ( edge != this[ edge.vert1, edge.vert2 ] )
         {
             Debug.Log( ( new System.Exception( "The provided edge to reverse is not in the graph." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "The provided edge to reverse is not in the graph." );

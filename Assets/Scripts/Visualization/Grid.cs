@@ -71,14 +71,17 @@ public class Grid : MonoBehaviour
     }
 
     // Method for displaying (activating) the gridline objects at the correct locations
-    public void DisplayGridLines()
+    public async void DisplayGridLines()
     {
         // Get the world coordinates of the bottom left and top right corners of the camera
         Vector2 lowerLeft = Camera.main.ViewportToWorldPoint(new Vector3(0f, 0f, Camera.main.nearClipPlane));
         Vector2 upperRight = Camera.main.ViewportToWorldPoint(new Vector3(1f, 1f, Camera.main.nearClipPlane));
 
+        // Size in world coordinates of the camera
+        Vector2 size = new Vector2(upperRight.x - lowerLeft.x, upperRight.y - lowerLeft.y);
+
         // Find the grid point associated with the lower left corner
-        Vector2Int start = WorldToGrid(lowerLeft);
+        Vector2Int start = WorldToGrid(lowerLeft - size / 2);
         // Activate vertical lines separated by the grid spacing until the right edge of the camera has been exceeded
         for (int i = 0; i < this.gridLineCount; i++)
         {
@@ -101,7 +104,7 @@ public class Grid : MonoBehaviour
         for (int i = 0; i < this.gridLineCount; i++)
         {
             float lineY = (start.y + i) * this.spacing;
-            if (lineY > upperRight.y)
+            if (lineY > upperRight.y * 2)
             {
                 // The top edge of the camera has been exceeded
                 break;

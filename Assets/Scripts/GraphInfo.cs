@@ -1,4 +1,5 @@
 //All code developed by Team 11
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,12 +12,19 @@ public class GraphInfo : MonoBehaviour
     public static GraphInfo singleton;
 
     [SerializeField]
-    private TMP_Text chromatic_text;
+    private TMP_Text chromaticText;
     [SerializeField]
-    private TMP_Text bipartite_text;
+    private TMP_Text bipartiteText;
+    [SerializeField]
+    private TMP_Text orderText;
+    [SerializeField]
+    private TMP_Text sizeText;
 
     [SerializeField]
-    private Button prim_button;
+    private Button primButton;
+
+    [SerializeField]
+    private Button dijkstraButton;
 
     private ChromaticAlgorithm chromaticAlgorithm;
 
@@ -31,31 +39,40 @@ public class GraphInfo : MonoBehaviour
             return;
         }
 
-        prim_button.interactable = false;
-
-        chromaticAlgorithm = new ChromaticAlgorithm( Controller.singleton.Graph );
+        this.primButton.interactable = false;
+        UpdateGraphInfo();
     }
 
     private void FixedUpdate() {
         // Only allow the prim button to be pressed if there is exactly one vertex selected
         if (SelectionManager.singleton.SelectedVertexCount() == 1 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
-            prim_button.interactable = true;
+            this.primButton.interactable = true;
         }   
         else {
-            prim_button.interactable = false;
+            this.primButton.interactable = false;
+        }
+
+        // Only allow dijkstra if exactly two vertices are selected
+        if (SelectionManager.singleton.SelectedVertexCount() == 2 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
+            this.dijkstraButton.interactable = true;
+        }   
+        else {
+            this.dijkstraButton.interactable = false;
         }
     }
 
-    public void UpateGraphInfo() {
-        this.chromaticAlgorithm.Run();
-    }
+    public void UpdateGraphInfo() {
+        if (Controller.singleton.Graph.vertices.Count > 6) {
+            chromaticText.text = "";
+            bipartiteText.text = "";
+        }
+        else {
+            int chromaticNum = Controller.singleton.Graph.GetChromaticNumber();
+            this.chromaticText.text = "Chromatic Number: " + chromaticNum;
+            this.bipartiteText.text = "Bipartite: " + (chromaticNum == 2 ? "Yes" : "No");
+        }
 
-    public void updateChromaticNumber(int chromatic_number) {
-        chromatic_text.text = "Chromatic Number: " + chromatic_number;
-    
-    }
-
-    public void test(int a) {
-        Debug.Log(a);
+        this.orderText.text = "Order: " + Controller.singleton.Graph.vertices.Count;
+        this.sizeText.text = "Size: " + Controller.singleton.Graph.adjacency.Count;
     }
 }

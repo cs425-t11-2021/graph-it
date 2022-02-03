@@ -7,14 +7,15 @@ using UnityEngine.EventSystems;
 public class CameraPan : MonoBehaviour
 {
     // Camera panning speed (default 100f)
-    public float panSpeed = 100f;
+    [SerializeField]
+    private float panSpeed = 100f;
 
     // Reference to the Camera component attached to this object
     private Camera camera;
     // Previous position of the camera used for panning
     private Vector3 lastPosition;
     // Whether or not cursor is over a collider
-    private bool cursorOverCollider = false;
+    private bool doNotPan = false;
     // The space that the camera is allowed to pan in
     private Bounds cameraPanBounds;
 
@@ -26,22 +27,34 @@ public class CameraPan : MonoBehaviour
     }
 
     private void Update() {
+        // Disable panning when cursor over UI
+        if (Controller.singleton.UIActive()) {
+            this.doNotPan = true;
+            return;
+        }
+
         // Disable panning if no graph
-        if (Controller.singleton.graphObj.childCount == 0)
-        {
+        if (Controller.singleton.graphObj.childCount == 0) {
+            this.doNotPan = true;
+            return;
+        }
+
+        // Do not pan if in vertex creation mode and selection mode
+        if (Toolbar.singleton.CreateVertexMode || Toolbar.singleton.SelectionMode) {
+            this.doNotPan = true;
             return;
         }
 
         // Left mouse button clicked
         if (Input.GetMouseButtonDown(0)) {
             // At the start of the pan, store cursor position
-            lastPosition = camera.ScreenToWorldPoint(Input.mousePosition);
+            lastPosition = Controller.singleton.GetCursorWorldPosition();
 
             // Check if cursor is over collider, if so, ignore panning until the mouse button is released
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge"));  //11f since camera is at z = -10
             if (hit) {
-                cursorOverCollider = true;
+                doNotPan = true;
                 return;
             }
 
@@ -51,18 +64,10 @@ public class CameraPan : MonoBehaviour
 
         // Left mouse button held
         if (Input.GetMouseButton(0)) {
-            // Do not pan camera if the cursor is over UI elements
-            if (EventSystem.current.IsPointerOverGameObject()) {
-                return;
-            }
-
-            // Do not pan camera if mouse is currently over an object with a collider (eg. vertices and edges)
-            if (cursorOverCollider) {
-                return;
-            }
+            if (this.doNotPan) return;
             
             // Calculate the direction the camera needs to move to move towards the mouse cursor
-            Vector3 dir = lastPosition - camera.ScreenToWorldPoint(Input.mousePosition);
+            Vector3 dir = lastPosition - Controller.singleton.GetCursorWorldPosition();
             // Translate the camera's position towards the direction, scaled by pan speed
             Vector3 targetPosition = Vector3.MoveTowards(transform.position, transform.position + dir, panSpeed * Time.deltaTime);
             // Only move the camera if the target position is still in camera pan bounds
@@ -72,12 +77,12 @@ public class CameraPan : MonoBehaviour
             }
             
             // Update last position of camera
-            lastPosition = camera.ScreenToWorldPoint(Input.mousePosition);
+            lastPosition = Controller.singleton.GetCursorWorldPosition();
         }
 
         // Left mouse button released
         if (Input.GetMouseButtonUp(0)) {
-            if (cursorOverCollider) cursorOverCollider = false;
+            if (doNotPan) doNotPan = false;
         }
 
     }
@@ -111,8 +116,12 @@ public class CameraPan : MonoBehaviour
             }
         }
 
+        // Size of camera in world coordinates
+        float height = Camera.main.orthographicSize * 2f;
+        float width = height * Camera.main.aspect;
+
         // Set camera pan bounds
-        cameraPanBounds.SetMinMax(new Vector3(xMin - 3, yMin - 3, 0), new Vector3(xMax + 3, yMax + 3, 0));
+        cameraPanBounds.SetMinMax(new Vector3(xMin - width / 3, yMin - height / 3, 0), new Vector3(xMax + width / 3, yMax + height / 3, 0));
 
     }
 }

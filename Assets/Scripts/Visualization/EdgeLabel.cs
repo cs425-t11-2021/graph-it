@@ -1,15 +1,11 @@
-//All code developed by Team 11
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using System;
-using System.Linq;
 using TMPro;
 
-public class LabelObj : MonoBehaviour
+public class EdgeLabel : MonoBehaviour
 {
-    //TODO: ADD COMMENTS
-
-    public string content;
-
+    public double weight;
     // UI Rect of the label object
     private Rect rect;
     // Store previous global position of the labelObj
@@ -20,20 +16,15 @@ public class LabelObj : MonoBehaviour
 
     private bool displayEnabled;
 
-    public void Initiate(string content)
+    public void Initiate(double weight)
     {
-        this.content = content;
-
-        if (content != "")
-        {
-            inputField.text = content;
-        }
+        this.weight = weight;
+        inputField.text = weight.ToString();
 
         OnToggleVertexLabels(Controller.singleton.DisplayVertexLabels);
     }
 
-    private void Awake()
-    {
+    private void Awake() {
         RectTransform rectTransform = GetComponent<RectTransform>();
         this.rect = rectTransform.rect;
 
@@ -56,51 +47,30 @@ public class LabelObj : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         if (!enabled) {
             return;
         }
 
-        // Only check to see if the label needs to move if the vertex  moved
+        // Only check to see if the label needs to move if the edge moved
         if (transform.position != previousPosition)
         {
             previousPosition = transform.position;
-            UpdatePosition();
+            transform.localPosition = FindSuitablePosition();
         }
+        transform.localScale = new Vector3(0.01f / transform.parent.lossyScale.x, 0.01f / transform.parent.lossyScale.y, 1);
     }
 
-    // Updates the position of the label, moving it if needed
-    public void UpdatePosition()
+    Vector3 FindSuitablePosition()
     {
-        Vector3? position = FindSuitablePosition();
-        if (position == null)
+        Vector2 vertexPos = transform.parent.position;
+        Vector3 localPos = new Vector3(0.25f, 0.6f, 0);
+        Collider2D col = Physics2D.OverlapArea(vertexPos + new Vector2(localPos.x - this.rect.width / 200, localPos.y + this.rect.height / 200), vertexPos + new Vector2(localPos.x + this.rect.width / 200, localPos.y - this.rect.height / 200), LayerMask.GetMask("Edge", "Vertex"));
+        if (!col)
         {
-            inputField.gameObject.SetActive(false);
+            return localPos;
         }
-        else
-        {
-            transform.localPosition = (Vector3) position;
-        }
-    }
-
-    // This code is slow as fuck, someone try to speed it up
-    Vector3? FindSuitablePosition()
-    {
-        for (float radius = 0.3f; radius < 0.8f; radius += 0.1f)
-        {
-            for (float angle = 0f; angle <= 360f; angle += 30f)
-            {
-                Vector2 vertexPos = transform.parent.position;
-                Vector3 localPos = new Vector3(radius * Mathf.Cos(angle * Mathf.Deg2Rad), radius * Mathf.Sin(angle * Mathf.Deg2Rad), 1);
-                Collider2D col = Physics2D.OverlapArea(vertexPos + new Vector2(localPos.x - this.rect.width / 200, localPos.y + this.rect.height / 200), vertexPos + new Vector2(localPos.x + this.rect.width / 200, localPos.y - this.rect.height / 200), LayerMask.GetMask("Edge", "Vertex"));
-                if (!col)
-                {
-                    return localPos;
-                }
-            }
-        }
-        return null;
+        return new Vector3(0.25f, -0.6f, 0);
     }
 
     // Make the label editable
@@ -127,13 +97,21 @@ public class LabelObj : MonoBehaviour
             {
                 inputField.gameObject.SetActive(true);
             }
-            UpdatePosition();
+            transform.localPosition = FindSuitablePosition();
         }
     }
 
     // Update the content field with a new label
     public void UpdateLabel(string newLabel)
     {
-        this.content = newLabel;
+        if (double.TryParse(inputField.text, out double newWeight)) {
+            this.weight = newWeight;
+            this.transform.parent.GetComponent<EdgeObj>().UpdateWeight(this.weight);
+            inputField.text = this.weight.ToString();
+        }
+        else {
+            inputField.text = this.weight.ToString();
+        }
+        
     }
 }
