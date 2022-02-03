@@ -3,12 +3,14 @@ using System.Threading;
 
 public abstract class Algorithm
 {
+    protected Graph graph;
 	private Thread currThread;
 	private Action onThreadExit;
 
 
-	public Algorithm(Action onThreadExit) {
-		this.currThread = null;
+	public Algorithm(Graph graph, Action onThreadExit) {
+		this.graph = graph;
+        this.currThread = null;
 		this.onThreadExit = onThreadExit;
 	}
 

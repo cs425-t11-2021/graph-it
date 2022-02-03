@@ -19,33 +19,32 @@ public class Graph
     public Dictionary< ( Vertex, Vertex ), Edge > adjacency { get; private set; } // currently supporting only single edges between vertices
 
     // parameters
-    // when edges are modified outside of graph, we must update these. Possible solution: micromanage vertices and edges through graph, eg this.MakeDirected( edge )
     private bool _directed;
     public bool directed // true if any edge is directed
     {
         get => this.IsDirected();
-        set => this._directed = value;
+        private set => this._directed = value;
     }
 
     private bool _weighted;
     public bool weighted // true if any edge is weighted
     {
         get => this.IsWeighted();
-        set => this._weighted = value;
+        private set => this._weighted = value;
     }
 
     private bool _fully_weighted;
     public bool fully_weighted // true when all edges are weighted
     {
         get => this.IsFullyWeighted();
-        set => this._fully_weighted = value;
+        private set => this._fully_weighted = value;
     }
 
     private bool _simple;
     public bool simple // false if multiple edges. false if loops on vertices (unless directed)
     {
         get => this.IsSimple();
-        set => this._simple = value;
+        private set => this._simple = value;
     }
 
     private int? chromatic_num;
