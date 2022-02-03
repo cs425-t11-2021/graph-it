@@ -53,24 +53,34 @@ public class EdgeLabel : MonoBehaviour
         }
 
         // Only check to see if the label needs to move if the edge moved
-        if (transform.position != previousPosition)
-        {
-            previousPosition = transform.position;
-            transform.localPosition = FindSuitablePosition();
-        }
-        transform.localScale = new Vector3(0.01f / transform.parent.lossyScale.x, 0.01f / transform.parent.lossyScale.y, 1);
+        // if (transform.position != previousPosition)
+        // {
+        //     previousPosition = transform.position;
+        //     transform.localPosition = FindSuitablePosition();
+        // }
+        transform.position = FindSuitablePosition();
+        transform.localScale = new Vector3(0.01f, 0.01f, 1);
     }
 
     Vector3 FindSuitablePosition()
     {
-        Vector2 vertexPos = transform.parent.position;
-        Vector3 localPos = new Vector3(0.25f, 0.6f, 0);
-        Collider2D col = Physics2D.OverlapArea(vertexPos + new Vector2(localPos.x - this.rect.width / 200, localPos.y + this.rect.height / 200), vertexPos + new Vector2(localPos.x + this.rect.width / 200, localPos.y - this.rect.height / 200), LayerMask.GetMask("Edge", "Vertex"));
-        if (!col)
-        {
-            return localPos;
+        Vector3 toPos = this.transform.parent.GetComponentInChildren<EdgeObj>().targetVertexObj.transform.position;
+        Vector3 fromPos = this.transform.parent.parent.position;
+
+        Vector3 center = (toPos + fromPos) / 2f;
+        // Vector3 pos = center + new Vector3(0f, 0.4f, 0f);
+        // Collider2D col = Physics2D.OverlapArea(new Vector2(pos.x - this.rect.width / 2, pos.y + this.rect.height / 2), new Vector2(pos.x + this.rect.width / 2, pos.y - this.rect.height / 2), LayerMask.GetMask("Edge", "Vertex"));
+        // if (!col)
+        // {
+        //     return pos;
+        // }
+        float angle = Mathf.Atan2(toPos.y - fromPos.y, toPos.x - fromPos.x) * Mathf.Rad2Deg;
+        // Debug.Log(angle);
+        // return center + new Vector3(0f, -0.4f, 0f);
+        if (Mathf.Abs(angle) > 45f && Mathf.Abs(angle) < 135f) {
+            return center + new Vector3(0.4f, 0f, 0f);
         }
-        return new Vector3(0.25f, -0.6f, 0);
+        return center + new Vector3(0f, 0.4f, 0f);
     }
 
     // Make the label editable
@@ -106,7 +116,7 @@ public class EdgeLabel : MonoBehaviour
     {
         if (double.TryParse(inputField.text, out double newWeight)) {
             this.weight = newWeight;
-            this.transform.parent.GetComponent<EdgeObj>().UpdateWeight(this.weight);
+            this.transform.parent.GetComponentInChildren<EdgeObj>().UpdateWeight(this.weight);
             inputField.text = this.weight.ToString();
         }
         else {

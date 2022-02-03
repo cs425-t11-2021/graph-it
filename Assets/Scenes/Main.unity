@@ -14301,7 +14301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vertexObjPrefab: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
-  edgeObjPrefab: {fileID: 709617791594073476, guid: f45080ed2c08c40deba533ea5f31daac, type: 3}
+  edgeObjPrefab: {fileID: 4532031476796509688, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
   graphObj: {fileID: 1670804266}
   clickableLayers:
     serializedVersion: 2
@@ -14360,3 +14360,64 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e68742db1c86b0a6ab21cd5fb1c5de7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &7501435685252964446
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1189142307556000827, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532031476796509688, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_Name
+      value: EdgeObjContainer
+      objectReference: {fileID: 0}
+    - target: {fileID: 4532031476796509688, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}

@@ -53,7 +53,7 @@ public class EdgeObj : MonoBehaviour
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
-        this.labelObj = GetComponentInChildren<EdgeLabel>();
+        this.labelObj = this.transform.parent.GetComponentInChildren<EdgeLabel>();
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -72,7 +72,7 @@ public class EdgeObj : MonoBehaviour
     // Method to stretch the edge so it extends from one point to another 
     private void StretchBetweenPoints(Vector2 point1, Vector2 point2)
     {
-        this.transform.position = new Vector3(point1.x, point1.y, 1);
+        this.transform.parent.localPosition = new Vector3(0, 0, 1);
         Vector2 dir = point2 - point1;
         this.transform.localScale = new Vector3(dir.magnitude * 2, transform.localScale.y, 1);
 
