@@ -21,15 +21,12 @@ public class DoubleClick : MonoBehaviour
 	public static DoubleClick singleton;
     private void Awake()
     {
-		// if (singleton != null)
-        // {
-		// 	Destroy(this);
-		// 	return;
-        // }
-		// singleton = this;
-		if (DoubleClick.singleton == null) {
-            DoubleClick.singleton = this;
+		if (singleton != null)
+        {
+			Destroy(this);
+			return;
         }
+		singleton = this;
     }
 
     private void Update()
