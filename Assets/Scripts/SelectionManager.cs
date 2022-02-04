@@ -175,7 +175,7 @@ public class SelectionManager : MonoBehaviour
         {
             // Update the graph ds
             Controller.singleton.Graph.RemoveEdge(edgeObj.Edge);
-            Destroy(edgeObj.gameObject);
+            Destroy(edgeObj.parent.gameObject);
         }
         this.selectedEdges = new List<EdgeObj>();
 
