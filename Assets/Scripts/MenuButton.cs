@@ -12,17 +12,17 @@ using UnityEngine.UI;
 
 public class MenuButton : MonoBehaviour
 {
-    private GameObject panelObj;
+    //private GameObject panelObj;
     
 
     // Start is called before the first frame update
     void Start()
     {
         //each menu option has a Panel child to activate and de-activate 
-        panelObj = transform.GetChild(1).gameObject;
+        //panelObj = transform.GetChild(1).gameObject;
 
         //want the dropdown to not be shown or accessible when program first starts
-        panelObj.gameObject.SetActive(false);
+        //panelObj.gameObject.SetActive(false);
 
         
     }
@@ -31,17 +31,18 @@ public class MenuButton : MonoBehaviour
     void Update()
     {
         //TODO inplement a listener instead for efficiency
-        if (EventSystem.current.currentSelectedGameObject == this.gameObject){
+        /*if (EventSystem.current.currentSelectedGameObject == this.gameObject){
             //if the file button is clicked, the dropdown should be displayed
             panelObj.gameObject.SetActive(true);
         }
         else{
             //otherwise, the user clicked elsewhere and the dropdown should disappear
             panelObj.gameObject.SetActive(false);
-        }
+        }*/
     }
 
-    /*private void DisplayDropDown(){
+    //keep the below function commented out, it has errors
+   /* private void DisplayDropDown(){
         panelObj.gameObject.SetActive(true);
         if(EventSystem.current.currentSelectedGameObject == menuItem){
             //if the "ImportToFile" is clicked, show the import to file pop-up

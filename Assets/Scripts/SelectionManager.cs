@@ -170,14 +170,12 @@ public class SelectionManager : MonoBehaviour
     {
         // Destroy the graph objects corresponding to the currently selected vertices and edges
         // TODO: object pooling
-
         // Destroy the gameObjects for edges in selectedEdges
         foreach (EdgeObj edgeObj in this.selectedEdges)
         {
             // Update the graph ds
             Controller.singleton.Graph.RemoveEdge(edgeObj.Edge);
-
-            Destroy(edgeObj.gameObject);
+            Destroy(edgeObj.transform.parent.gameObject);
         }
         this.selectedEdges = new List<EdgeObj>();
 
@@ -274,6 +272,8 @@ public class SelectionManager : MonoBehaviour
             primVertices.Add(e.vert2);
         }
 
+        this.selectAll = true;
+
         EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
@@ -285,6 +285,62 @@ public class SelectionManager : MonoBehaviour
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (primVertices.Contains(vertexObj.Vertex))
+                vertexObj.SetSelected(true);
+        }
+    }
+    public void RunKruskal() {
+        List<Edge> kruskalEdges = Controller.singleton.Graph.Kruskal();
+        List<Vertex> kruskalVertices = new List<Vertex>();
+        foreach (Edge e in kruskalEdges) {
+            kruskalVertices.Add(e.vert1);
+            kruskalVertices.Add(e.vert2);
+        }
+
+        this.selectAll = true;
+
+        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        foreach (EdgeObj edgeObj in allEdgeObjs)
+        {
+            if (kruskalEdges.Contains(edgeObj.Edge))
+                edgeObj.SetSelected(true);
+        }
+
+        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        foreach (VertexObj vertexObj in allVertexObjs)
+        {
+            if (kruskalVertices.Contains(vertexObj.Vertex))
+                vertexObj.SetSelected(true);
+        }
+    }
+
+    public void RunDijkstra() {
+        if (selectedVertices.Count != 2) {
+            Debug.Log( ( new System.Exception( "Cannot start Dijkstra's algorithm." ) ).ToString() );
+            throw new System.Exception( "Cannot start Dijkstra's algorithm." );
+        }
+
+        List<Edge> dijkstraEdges = new List<Edge>();
+        Debug.Log(selectedVertices[0].Vertex);
+        Debug.Log(selectedVertices[1].Vertex);
+        List<Vertex> dijkstraVertices = Controller.singleton.Graph.Dijkstra(selectedVertices[0].Vertex, selectedVertices[1].Vertex);
+        // foreach (Edge e in dijkstraEdges) {
+        //     dijkstraVertices.Add(e.vert1);
+        //     dijkstraVertices.Add(e.vert2);
+        // }
+
+        this.selectAll = true;
+
+        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        foreach (EdgeObj edgeObj in allEdgeObjs)
+        {
+            if (dijkstraEdges.Contains(edgeObj.Edge))
+                edgeObj.SetSelected(true);
+        }
+
+        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        foreach (VertexObj vertexObj in allVertexObjs)
+        {
+            if (dijkstraVertices.Contains(vertexObj.Vertex))
                 vertexObj.SetSelected(true);
         }
     }
@@ -334,6 +390,12 @@ public class SelectionManager : MonoBehaviour
     public void DragSelectedVerticesEnd() {
         foreach (VertexObj v in this.selectedVertices) {
             v.FinishDragging();
+        }
+    }
+
+    public void ChangeSelectedEdgesType() {
+        foreach (EdgeObj e in selectedEdges) {
+            e.ToggleEdgeType();
         }
     }
 }

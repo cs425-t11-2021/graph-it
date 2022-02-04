@@ -26,7 +26,7 @@ public class ExportFile : MonoBehaviour
     void Start()
     {
         //when program first starts, user should not be able to access the export from file menu pop-up
-        this.gameObject.SetActive(false);
+        //this.gameObject.SetActive(false);
 
         //getting references to the cancel and export buttons to perform their corresponding actions
         exportButton = transform.GetChild(2).gameObject;
@@ -44,6 +44,13 @@ public class ExportFile : MonoBehaviour
             viewButton.enabled = false;
             algorithmsPanelPrims.enabled = false;
             fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
+        }
+        else {
+            fileButton.enabled = true;
+            editButton.enabled = true;
+            viewButton.enabled = true;
+            algorithmsPanelPrims.enabled = true;
+            fileDropDown.gameObject.SetActive(true); //the file menu dropdown should also no longer be accessable
         }
 
         
@@ -66,8 +73,7 @@ public class ExportFile : MonoBehaviour
                 fileButton.enabled = true;
                 editButton.enabled = true;
                 viewButton.enabled = true;
-                algorithmsPanelPrims.enabled = true;
-                
+                algorithmsPanelPrims.enabled = true;                
             }
         }
         else if(EventSystem.current.currentSelectedGameObject == cancelButton){

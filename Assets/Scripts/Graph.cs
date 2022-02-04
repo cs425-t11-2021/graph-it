@@ -1,5 +1,5 @@
 
-//All code developed by Team 11
+// All code developed by Team 11
 
 using System;
 using System.IO;
@@ -11,115 +11,23 @@ using UnityEngine;
 
 
 [System.Serializable]
-public class Vertex
-{
-    static private uint id_count;
-
-    private uint id;
-    public string label;
-    public double? x_pos, y_pos;
-
-    public uint style;
-    public uint color;
-    public uint label_style;
-
-    // default value position is null
-    public Vertex( string label="", double? x_pos=null, double? y_pos=null, uint style=0, uint color=0, uint label_style=0 )
-    {
-        this.id = Vertex.id_count++;
-        this.label = label;
-        this.x_pos = x_pos;
-        this.y_pos = y_pos;
-        this.style = style;
-        this.color = color;
-        this.label_style = label_style;
-    }
-
-    public uint GetId() => this.id; // temp
-
-    public override bool Equals( object obj ) => obj is Vertex other && this.Equals( other );
-
-    public bool Equals( Vertex vert ) => this.id == vert.id;
-
-    public override int GetHashCode() => ( label, x_pos, y_pos, style, color, label_style ).GetHashCode();
-
-    public static bool operator ==( Vertex lhs, Vertex rhs ) => lhs.Equals( rhs );
-
-    public static bool operator !=( Vertex lhs, Vertex rhs) => !( lhs == rhs );
-
-    public static bool operator <( Vertex lhs, Vertex rhs ) => lhs.id < rhs.id;
-
-    // public static bool operator <=( Vertex lhs, Vertex rhs ) => lhs < rhs || lhs == rhs;
-
-    public static bool operator >( Vertex lhs, Vertex rhs ) => lhs.id > rhs.id;
-
-    // public static bool operator >=( Vertex lhs, Vertex rhs ) => !( lhs < rhs );
-
-    public override string ToString() => String.Format( "id: {0}, label: {1}, x_pos: {2}, y_pos: {3}, style: {4}, color: {5}, label_style: {6}", this.id, this.label, this.x_pos, this.y_pos, this.style, this.color, this.label_style );
-}
-
-
-[System.Serializable]
-public class Edge
-{
-    public Vertex vert1, vert2;
-    public string label;
-    public double weight;
-    public bool directed;
-
-    public uint style;
-    public uint color;
-    public uint thickness;
-    public uint label_style;
-
-    // when undirected, following should be ignored
-    public uint? tail_style;
-    public uint? head_style;
-
-    public Edge( Vertex vert1, Vertex vert2, string label="", double weight=1, bool directed=false, uint style=0, uint color=0, uint thickness=0, uint label_style=0, uint? tail_style=null, uint? head_style=null )
-    {
-        this.vert1 = vert1;
-        this.vert2 = vert2;
-        this.label = label;
-        this.weight = weight;
-        this.directed = directed;
-        this.style = style;
-        this.color = color;
-        this.thickness = thickness;
-        this.label_style = label_style;
-        this.tail_style = tail_style;
-        this.head_style = head_style;
-    }
-
-    public void ResetWeight() => this.weight = 1;
-
-    public bool IncidentOn( Vertex vert ) => vert == this.vert1 || vert == this.vert2;
-
-    public override int GetHashCode() => ( vert1, vert2, label, weight, directed, style, color, thickness ).GetHashCode();
-
-    public override string ToString()
-    {
-        if ( this.directed )
-            return String.Format( "vert1: {0}, vert2: {1}, label: {2}, weight: {3}, directed: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}",  this.vert1.GetId(), this.vert2.GetId(), this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style );
-        return String.Format( "vert1: {0}, vert2: {1}, label: {2}, weight: {3}, directed: {4}, style: {5}, color: {6}, thickness: {7}, label_style: {8}, tail_style: {9}, head_style: {10}",  this.vert1.GetId(), this.vert2.GetId(), this.label, this.weight, this.directed, this.style, this.color, this.thickness, this.label_style, this.tail_style, this.head_style );
-    }
-}
-
-
-[System.Serializable]
 public class Graph
 {
     // Vertices list is read-only from outside of class
     public List< Vertex > vertices { get; private set; }
-    // Incidence dict is read-only from outside of class
-    public Dictionary< ( Vertex, Vertex ), Edge > adjacency { get; private set; }
+    // Adjacency dict is read-only from outside of class
+    public Dictionary< ( Vertex, Vertex ), Edge > adjacency { get; private set; } // currently supporting only single edges between vertices
 
-    private bool  directed = false;
+    // parameters
+    // when edges are modified outside of graph, we must update these. Possible solution: micromanage vertices and edges through graph, eg this.MakeDirected( edge )
+    private bool directed = false; // true if any edge is directed
+    private bool weighted = false; // true when all edges are weighted, TODO: account for partially weighted
+    private bool simple = true; // false if multiple edges. false if loops on vertices (unless directed)
 
     private int? chromatic_num;
 
 
-    public Graph()
+    public Graph() // pass default parameters
     {
         this.vertices = new List< Vertex >();
         this.adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
@@ -151,7 +59,23 @@ public class Graph
 
     public Edge this[ Vertex vert1, Vertex vert2 ]
     {
-        get => this.adjacency[ ( vert1, vert2 ) ];
+        get => vert1 > vert2 ? this.adjacency[ ( vert2, vert1 ) ] : this.adjacency[ ( vert1, vert2 ) ];
+    }
+
+    private List< Edge > GetDirectedEdges()
+    {
+        List< Edge > edges = this.adjacency.Values.ToList();
+        foreach ( Edge edge in edges )
+        {
+            if ( !edge.directed )
+            {
+                edge.Reverse();
+                edges.Add( edge );
+                edge.Reverse();
+            }
+        }
+
+        return edges;
     }
 
     public Vertex AddVertex( double? x_pos=null, double? y_pos=null )
@@ -165,11 +89,10 @@ public class Graph
         return vert;
     }
 
-    // adds undirected edge
-    public Edge AddEdge( Vertex vert1, Vertex vert2 )
+    public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false )
     {
-        if ( vert1 < vert2 )
-            return this.AddEdge( new Edge( vert1, vert2 ) );
+        if ( directed || vert1 < vert2 )
+            return this.AddEdge( new Edge( vert1, vert2, directed ) );
         else
             return this.AddEdge( new Edge( vert2, vert1 ) );
     }
@@ -178,16 +101,17 @@ public class Graph
     {
         if ( !this.vertices.Contains( edge.vert1 ) || !this.vertices.Contains( edge.vert2 ) )
         {
-            Debug.Log( ( new System.Exception( "One or more vertices have not been added to the graph." ) ).ToString() ); // for testing purposes
-            throw new System.Exception( "One or more vertices have not been added to the graph." );
+            Debug.Log( ( new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." );
         }
-        else if ( edge.vert1 > edge.vert2 )
+        if ( edge.vert1 > edge.vert2 && !edge.directed )
         {
-            Debug.Log( ( new System.Exception( "Invalid edge added to graph." ) ).ToString() ); // for testing purposes
-            throw new System.Exception( "Invalid edge added to graph." );
+            Debug.Log( ( new System.Exception( "Edge must be directed." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Edge must be directed." );
         }
         else
             this.adjacency[ ( edge.vert1, edge.vert2 ) ] = edge;
+        this.directed = this.directed || edge.directed;
         return edge;
     }
 
@@ -216,10 +140,9 @@ public class Graph
             this.RemoveVertex( vect );
     }
 
-    // removes undirected edge
     public void RemoveEdge( Edge edge )
     {
-        if ( edge.vert1 < edge.vert2 )
+        if ( edge.directed || edge.vert1 < edge.vert2 )
             this.adjacency.Remove( ( edge.vert1, edge.vert2 ) );
         else
             this.adjacency.Remove( ( edge.vert2, edge.vert1 ) );
@@ -229,6 +152,26 @@ public class Graph
     {
         foreach ( Edge edge in edges )
             this.RemoveEdge( edge );
+    }
+
+    public Edge ReverseEdge( Edge edge )
+    {
+        if ( !edge.directed )
+        {
+            Debug.Log( ( new System.Exception( "Cannot reverse undirected edge." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Cannot reverse undirected edge." );
+        }
+      
+        if ( edge != this[ edge.vert1, edge.vert2 ] )
+        {
+            Debug.Log( ( new System.Exception( "The provided edge to reverse is not in the graph." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "The provided edge to reverse is not in the graph." );
+        }
+
+        this.RemoveEdge( edge );
+        edge.Reverse();
+        this.AddEdge( edge );
+        return edge;
     }
 
     public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.adjacency.ContainsKey( ( vert1, vert2 ) ) || this.adjacency.ContainsKey( ( vert2, vert1 ) );
@@ -311,9 +254,9 @@ public class Graph
         return new Edge(
             this.GetVertex( System.Convert.ToInt32( edge_data[ "vert1" ] ) ),
             this.GetVertex( System.Convert.ToInt32( edge_data[ "vert2" ] ) ),
+            System.Convert.ToBoolean( edge_data[ "directed" ] ),
             edge_data[ "label" ],
             System.Convert.ToDouble( edge_data[ "weight" ] ),
-            System.Convert.ToBoolean( edge_data[ "directed" ] ),
             System.Convert.ToUInt32( edge_data[ "style" ] ),
             System.Convert.ToUInt32( edge_data[ "color" ] ),
             System.Convert.ToUInt32( edge_data[ "thickness" ] ),
@@ -427,6 +370,12 @@ public class Graph
 
     public List< Edge > Prim( Vertex vert )
     {
+        if ( this.directed )
+        {
+            Debug.Log( ( new System.Exception( "Prim's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
+        }
+
         List< Edge > mst = new List< Edge >();
         HashSet< Vertex > mst_vertices = new HashSet< Vertex >() { vert };
         int mst_vertices_prev_count = -1;
@@ -457,17 +406,20 @@ public class Graph
         List< Edge > incident_edges = new List< Edge >();
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
         {
-            foreach ( Vertex vert in verts )
-            {
-                if ( kvp.Value.IncidentOn( vert ) )
-                    incident_edges.Add( kvp.Value );
-            }
+            if ( verts.Contains( kvp.Value.vert1 ) || kvp.Value.directed && verts.Contains( kvp.Value.vert2 ) )
+                incident_edges.Add( kvp.Value );
         }
         return incident_edges;
     }
 
     public List< Edge > Kruskal()
     {
+        if ( this.directed )
+        {
+            Debug.Log( ( new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
+            throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
+        }
+
         List< Edge > mst = new List< Edge >();
         List< Edge > edges = new List< Edge >( this.adjacency.Values.OrderBy( edge => edge.weight ) );
         HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
@@ -535,7 +487,7 @@ public class Graph
         }
     }
 
-    // TODO: keep matrix of distances, update each time an edge is added?
+    // TODO: keep matrix of distances, update each time an edge is added
     public List< Vertex > Dijkstra( Vertex src, Vertex dest )
     {
         HashSet< Vertex > not_visited = new HashSet< Vertex >( this.vertices );
@@ -589,6 +541,45 @@ public class Graph
         result.Reverse();
 
         return result;
+    }
+
+    // TODO: return edges and weights instead of vertices
+    // no partial weights
+    // returns minimum spanning tree when provided a source
+    public List< Vertex > BellmanFord( Vertex src )
+    {
+        // initialize data
+        List< Edge > edges = this.adjacency.Values.ToList();
+        Dictionary< Vertex, double > dist = new Dictionary< Vertex, double >();
+        Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
+        foreach ( Vertex vert in this.vertices )
+            dist[ vert ] = Double.PositiveInfinity;
+        dist[ src ] = 0;
+
+        // relax edges
+        for ( int i = 0; i < this.vertices.Count - 1; i++ )
+        {
+            foreach ( Edge edge in edges )
+            {
+                if ( dist[ edge.vert1 ] + edge.weight < dist[ edge.vert2 ] )
+                {
+                    dist[ edge.vert2 ] = dist[ edge.vert1 ] + edge.weight;
+                    prev[ edge.vert2 ] = edge.vert1;
+                }
+            }
+        }
+
+        // check for negative cycles
+        foreach ( Edge edge in edges )
+        {
+            if ( dist[ edge.vert1 ] + edge.weight < dist[ edge.vert2 ] )
+            {
+                Debug.Log( ( new System.Exception( "Negative weight cycle found." ) ).ToString() ); // for testing purposes
+                throw new System.Exception( "Negative weight cycle found." );
+            }
+        }
+
+        return prev.Values.ToList();
     }
 
 

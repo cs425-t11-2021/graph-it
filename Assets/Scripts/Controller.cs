@@ -191,7 +191,7 @@ public class Controller : MonoBehaviour
         SelectionManager.singleton.DeSelectAll();
 
         // Enable graph physics for two seconds to spread out the graph
-        UseGraphPhysics(2);
+        // UseGraphPhysics(2);
     }
 
     // Remove all graph visualization objects from scene
@@ -292,9 +292,9 @@ public class Controller : MonoBehaviour
         }
 
         // Instantiate an edge object
-        EdgeObj edgeObj = Instantiate(this.edgeObjPrefab, Vector2.zero, Quaternion.identity).GetComponent<EdgeObj>();
+        EdgeObj edgeObj = Instantiate(this.edgeObjPrefab, Vector2.zero, Quaternion.identity).transform.GetChild(0).GetComponent<EdgeObj>();
         // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
-        edgeObj.transform.SetParent(fromVertexObj.transform);
+        edgeObj.transform.parent.SetParent(fromVertexObj.transform);
         edgeObj.Initiate(edge, toVertexObj.gameObject);
 
         // Add a DistanceJoint2D which connects the two vertices, setup its properties

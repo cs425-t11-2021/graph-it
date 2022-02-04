@@ -37,6 +37,14 @@ public class ImportExportErrorMessage : MonoBehaviour
             importUserInput.enabled = false;
             exportUserInput.enabled = false;
         }
+        else {
+            importButton.enabled = true;
+            exportButton.enabled = true;
+            importCancelButton.enabled = true;
+            exportCancelButton.enabled = true;
+            importUserInput.enabled = true;
+            exportUserInput.enabled = true;
+        }
 
         if(EventSystem.current.currentSelectedGameObject == acknowledgeButton){
             this.gameObject.SetActive(false);
