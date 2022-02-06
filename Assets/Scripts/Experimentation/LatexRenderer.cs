@@ -7,7 +7,6 @@ using System;
 public class LatexRenderer : MonoBehaviour
 {
     private Texture latexTexture = null;
-    private string formula = "y=\\frac{a}{b}";
 
     public static LatexRenderer singleton;
 
