@@ -1,5 +1,6 @@
 //All code developed by Team 11
 using UnityEngine;
+using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
@@ -19,6 +20,13 @@ public class LabelObj : MonoBehaviour
     TMP_InputField inputField;
 
     private bool displayEnabled;
+
+    private RawImage image;
+    private Texture latexTexture;
+    private bool waitingForLatex = false;
+    private bool latexMode = false;
+    private string latexFormula = "";
+    
 
     public void Initiate(string content)
     {
@@ -40,6 +48,9 @@ public class LabelObj : MonoBehaviour
         inputField = GetComponentInChildren<TMP_InputField>();
 
         Controller.singleton.OnToggleVertexLabels += OnToggleVertexLabels;
+
+        image = this.gameObject.GetComponentInChildren<RawImage>();
+        image.enabled = false;
     }
 
     private void OnToggleVertexLabels(bool enabled)
@@ -53,6 +64,19 @@ public class LabelObj : MonoBehaviour
         else
         {
             inputField.gameObject.SetActive(false);
+        }
+    }
+
+    private void Update() {
+        if (waitingForLatex) {
+            if (this.latexTexture != null) {
+                waitingForLatex = false;
+                latexMode = true;
+                image.rectTransform.sizeDelta = new Vector2(this.latexTexture.width, this.latexTexture.height);
+                image.texture = this.latexTexture;
+                if (!inputField.interactable)
+                    image.enabled = true;
+            }
         }
     }
 
@@ -111,6 +135,11 @@ public class LabelObj : MonoBehaviour
             inputField.gameObject.SetActive(true);
             inputField.interactable = true;
         }
+
+        if (latexMode) {
+            image.enabled = false;
+            inputField.text = "$$" + this.latexFormula + "$$";
+        }
     }
 
     // Make the label uneditable
@@ -129,11 +158,43 @@ public class LabelObj : MonoBehaviour
             }
             UpdatePosition();
         }
+
+        if (waitingForLatex) {
+            inputField.text = " ";
+        }
+
+        if (latexMode) {
+            image.enabled = true;
+            inputField.text = " ";
+        }
     }
 
     // Update the content field with a new label
     public void UpdateLabel(string newLabel)
     {
-        this.content = newLabel;
+        if (newLabel.StartsWith("$$") && newLabel.EndsWith("$$")) {
+            if (latexMode) {
+                latexMode = false;
+                this.latexTexture = null;
+                image.texture = null;
+            }
+
+            string formula = newLabel.Substring(2, newLabel.Length - 4);
+            this.content = " ";
+            inputField.text = newLabel;
+            this.latexFormula = formula;
+
+            waitingForLatex = true;
+            StartCoroutine(LatexRenderer.singleton.GetLatexTexture(formula, result => this.latexTexture = result));
+        }
+        else {
+            latexMode = false;
+            waitingForLatex = false;
+
+            image.texture = null;
+            this.latexTexture = null;
+            image.enabled = false;
+            this.content = newLabel;
+        }
     }
 }
