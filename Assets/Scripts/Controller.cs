@@ -25,52 +25,6 @@ public class Controller : SingletonBehavior<Controller>
     [SerializeField]
     private LayerMask clickableLayers;
 
-    // TODO: Move the visual settings away from controller and into its own object
-    [Header("Default Visual Settings")]
-
-    [SerializeField]
-    private bool displayVertexLabels;
-    public event Action<bool> OnToggleVertexLabels;
-    public bool DisplayVertexLabels {
-        get => this.displayVertexLabels;
-        set
-        {
-            this.displayVertexLabels = value;
-            this.OnToggleVertexLabels?.Invoke(value);
-        }
-    }
-    
-    [SerializeField]
-    private bool snapVerticesToGrid;
-    public event Action<bool> OnToggleGridSnapping;
-    public bool SnapVerticesToGrid {
-        get => this.snapVerticesToGrid;
-        set {
-            this.snapVerticesToGrid = value;
-            this.OnToggleGridSnapping?.Invoke(value);
-        }
-    }
-
-    [SerializeField]
-    private bool alwaysShowGridlines;
-    public event Action<bool> OnToggleAlwaysShowGridlines;
-    public bool AlwaysShowGridlines
-    {
-        get => this.alwaysShowGridlines;
-        set
-        {
-            if (this.snapVerticesToGrid)
-            {
-                this.alwaysShowGridlines = value;
-                this.OnToggleGridSnapping?.Invoke(value);
-            }
-            else
-            {
-                this.alwaysShowGridlines = false;
-            }
-        }
-    }
-
     // Main graph DS
     public Graph Graph { get; private set; }
 
@@ -87,16 +41,6 @@ public class Controller : SingletonBehavior<Controller>
 
         // Set the camera's event mask to clickableLayers
         Camera.main.eventMask = this.clickableLayers;
-
-        // Implment the default settings
-        ImplementDefaultSettings();
-    }
-
-    private void ImplementDefaultSettings()
-    {
-        DisplayVertexLabels = this.displayVertexLabels;
-        SnapVerticesToGrid = this.snapVerticesToGrid;
-        AlwaysShowGridlines = this.alwaysShowGridlines;
     }
 
     private void Update() {
@@ -321,7 +265,7 @@ public class Controller : SingletonBehavior<Controller>
     private void SetGraphPhysics(bool enabled)
     {
         // Turns off the grid if physics is turned on
-        if (Controller.Singleton.SnapVerticesToGrid)
+        if (SettingsManager.Singleton.SnapVerticesToGrid)
         {
             Grid.singleton.ClearGrid();
             Grid.singleton.GridEnabled = !enabled;
@@ -342,7 +286,7 @@ public class Controller : SingletonBehavior<Controller>
             // Set vertex rigidbody to kinematic when physics is off
             vertexObjRB.isKinematic = !enabled;
 
-            if (!enabled && this.SnapVerticesToGrid)
+            if (!enabled && SettingsManager.Singleton.SnapVerticesToGrid)
             {
                 // Resnap vertices when physics turns off if snap to grid is enabled
                 vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);

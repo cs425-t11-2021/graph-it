@@ -21,7 +21,7 @@ public class EdgeLabel : MonoBehaviour
         this.weight = weight;
         inputField.text = weight.ToString();
 
-        OnToggleVertexLabels(Controller.Singleton.DisplayVertexLabels);
+        OnToggleVertexLabels(SettingsManager.Singleton.DisplayVertexLabels);
     }
 
     private void Awake() {
@@ -30,7 +30,7 @@ public class EdgeLabel : MonoBehaviour
 
         inputField = GetComponentInChildren<TMP_InputField>();
 
-        Controller.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
+        SettingsManager.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
     }
 
     private void OnToggleVertexLabels(bool enabled)

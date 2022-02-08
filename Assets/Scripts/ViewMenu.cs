@@ -48,14 +48,14 @@ public class ViewMenu : MonoBehaviour
     public void ToggleLabels()
     {
         CloseDropDown();
-        if (Controller.Singleton.DisplayVertexLabels)
+        if (SettingsManager.Singleton.DisplayVertexLabels)
         {
-            Controller.Singleton.DisplayVertexLabels = false;
+            SettingsManager.Singleton.DisplayVertexLabels = false;
             this.showGrpahLabelsText.text = "Show Graph Labels";
         }
         else
         {
-            Controller.Singleton.DisplayVertexLabels = true;
+            SettingsManager.Singleton.DisplayVertexLabels = true;
             this.showGrpahLabelsText.text = "Hide Graph Labels";
         }
     }
