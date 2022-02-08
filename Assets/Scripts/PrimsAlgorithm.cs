@@ -58,4 +58,6 @@ public class PrimsAlgorithm : Algorithm
         }
         return incident_edges;
     }
+
+    public static int GetHashCode( Vertex vert ) => ( typeof ( PrimsAlgorithm ), vert ).GetHashCode();
 }
