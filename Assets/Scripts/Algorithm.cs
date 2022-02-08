@@ -34,7 +34,7 @@ public abstract class Algorithm
 			      this.Run();
             this.running = false;
             this.completed = true;
-			RunInMain.singleton.queuedTasks.Enqueue(this.onThreadExit);
+			RunInMain.Singleton.queuedTasks.Enqueue(this.onThreadExit);
 		} catch (ThreadAbortException e) { }
 	}
 
