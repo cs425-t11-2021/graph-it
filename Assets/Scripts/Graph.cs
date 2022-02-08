@@ -498,7 +498,9 @@ public class Graph
             dist[ v ] = double.PositiveInfinity;
 
         dist[ src ] = 0;
-        not_visited.Remove( src );
+
+        foreach ( Vertex v in this.vertices )
+            prev[ v ] = null;
 
         while ( not_visited.Count() > 0 )
         {
@@ -534,7 +536,7 @@ public class Graph
         {
             result.Add( curr );
             curr = prev[ curr ];
-            if ( curr == null )
+            if ( curr is null )
                 return new List<Vertex>();
         }
         result.Add( src );
