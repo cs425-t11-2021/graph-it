@@ -7,7 +7,7 @@ using System.Threading;
 public class ChromaticAlgorithm : Algorithm
 {
     private int chromaticNumber;
-    public int ChromaticNumber {get; private set;}
+    public int ChromaticNumber { get; private set; }
 
 	public ChromaticAlgorithm( Graph graph, Action onThreadExit ) : base( graph, onThreadExit ) { }
 

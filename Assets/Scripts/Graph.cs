@@ -185,7 +185,7 @@ public class Graph
         return edge;
     }
 
-    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.adjacency.ContainsKey( ( vert1, vert2 ) ) || this.adjacency.ContainsKey( ( vert2, vert1 ) );
+    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => !( this[ vert1, vert2 ] is null );
 
     private bool IsDirected()
     {
