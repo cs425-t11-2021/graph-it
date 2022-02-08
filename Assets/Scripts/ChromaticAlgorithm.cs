@@ -1,3 +1,4 @@
+
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -5,14 +6,9 @@ using System.Threading;
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
-	private Graph graph;
-
     public int chromatic_number;
 
-	public ChromaticAlgorithm(Graph graph, Action onThreadExit) : base(onThreadExit)
-	{
-		this.graph = graph;
-	}
+	public ChromaticAlgorithm( Graph graph, Action onThreadExit ) : base( graph, onThreadExit ) { }
 
 	public override void Run()
     {
@@ -59,4 +55,6 @@ public class ChromaticAlgorithm : Algorithm
             }
         }
     }
+
+    public static int GetHashCode() => typeof ( ChromaticAlgorithm ).GetHashCode();
 }
