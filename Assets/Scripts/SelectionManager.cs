@@ -68,13 +68,13 @@ public class SelectionManager : MonoBehaviour
             if (Input.GetMouseButtonUp(0)) {
                 Bounds bounds = UpdateSelectionRect();
 
-                VertexObj[] vertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+                VertexObj[] vertexObjs = Controller.singleton.GraphObj.GetComponentsInChildren<VertexObj>();
                 foreach (VertexObj v in vertexObjs) {
                     if (bounds.Contains(v.transform.position)) {
                         v.SetSelected(true);
                     }
                 }
-                EdgeObj[] edgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+                EdgeObj[] edgeObjs = Controller.singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
                 foreach (EdgeObj e in edgeObjs) {
                     if (bounds.Contains((Vector2) e.transform.position)) {
                         e.SetSelected(true);
@@ -183,10 +183,10 @@ public class SelectionManager : MonoBehaviour
         foreach (VertexObj vertexObj in this.selectedVertices)
         {
             // TODO: Find a faster way to do this without having to find all the edge objects in the scene
-            EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+            EdgeObj[] allEdgeObjs = Controller.singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
             foreach (EdgeObj edgeObj in allEdgeObjs)
             {
-                if (edgeObj.targetVertexObj == vertexObj.gameObject)
+                if (edgeObj.TargetVertexObj == vertexObj.gameObject)
                 {
                     Destroy(edgeObj.gameObject);
                 }
@@ -229,14 +229,14 @@ public class SelectionManager : MonoBehaviour
     {
         this.selectAll = true;
 
-        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        EdgeObj[] allEdgeObjs = Controller.singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             if (!selectedEdges.Contains(edgeObj))
                 edgeObj.SetSelected(true);
         }
 
-        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        VertexObj[] allVertexObjs = Controller.singleton.GraphObj.GetComponentsInChildren<VertexObj>();
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (!selectedVertices.Contains(vertexObj))
@@ -274,14 +274,14 @@ public class SelectionManager : MonoBehaviour
 
         this.selectAll = true;
 
-        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        EdgeObj[] allEdgeObjs = Controller.singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             if (primEdges.Contains(edgeObj.Edge))
                 edgeObj.SetSelected(true);
         }
 
-        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        VertexObj[] allVertexObjs = Controller.singleton.GraphObj.GetComponentsInChildren<VertexObj>();
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (primVertices.Contains(vertexObj.Vertex))
@@ -298,14 +298,14 @@ public class SelectionManager : MonoBehaviour
 
         this.selectAll = true;
 
-        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        EdgeObj[] allEdgeObjs = Controller.singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             if (kruskalEdges.Contains(edgeObj.Edge))
                 edgeObj.SetSelected(true);
         }
 
-        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        VertexObj[] allVertexObjs = Controller.singleton.GraphObj.GetComponentsInChildren<VertexObj>();
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (kruskalVertices.Contains(vertexObj.Vertex))
@@ -330,14 +330,14 @@ public class SelectionManager : MonoBehaviour
 
         this.selectAll = true;
 
-        EdgeObj[] allEdgeObjs = Controller.singleton.graphObj.GetComponentsInChildren<EdgeObj>();
+        EdgeObj[] allEdgeObjs = Controller.singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             if (dijkstraEdges.Contains(edgeObj.Edge))
                 edgeObj.SetSelected(true);
         }
 
-        VertexObj[] allVertexObjs = Controller.singleton.graphObj.GetComponentsInChildren<VertexObj>();
+        VertexObj[] allVertexObjs = Controller.singleton.GraphObj.GetComponentsInChildren<VertexObj>();
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (dijkstraVertices.Contains(vertexObj.Vertex))

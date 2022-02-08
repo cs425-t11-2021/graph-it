@@ -9,7 +9,7 @@ public class LabelObj : MonoBehaviour
 {
     //TODO: ADD COMMENTS
 
-    public string content;
+    private string content;
 
     // UI Rect of the label object
     private Rect rect;

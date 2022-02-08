@@ -11,8 +11,14 @@ public class LatexRenderer : MonoBehaviour
     public static LatexRenderer singleton;
 
     private void Awake() {
-        if (LatexRenderer.singleton == null) {
-            LatexRenderer.singleton = this;
+        // Singleton pattern setup
+        if (singleton == null) {
+            singleton = this;
+        }
+        else {
+            Debug.LogError("[LatexRenderer] Singleton pattern violation");
+            Destroy(this);
+            return;
         }
     }
 

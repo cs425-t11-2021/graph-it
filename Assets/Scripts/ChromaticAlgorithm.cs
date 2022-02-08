@@ -7,9 +7,10 @@ public class ChromaticAlgorithm : Algorithm
 {
 	private Graph graph;
 
-    public int chromatic_number;
+    private int chromatic_number;
+    public int ChromaticNumber { get => chromatic_number;}
 
-	public ChromaticAlgorithm(Graph graph, Action onThreadExit) : base(onThreadExit)
+    public ChromaticAlgorithm(Graph graph, Action onThreadExit) : base(onThreadExit)
 	{
 		this.graph = graph;
 	}

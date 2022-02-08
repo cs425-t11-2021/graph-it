@@ -31,7 +31,7 @@ public class FileMenu : MonoBehaviour
     private Button fileButton;
 
     private void Awake() {
-        fileButton = this.gameObject.GetComponent<Button>();
+        this.fileButton = this.gameObject.GetComponent<Button>();
     }
 
     // Start is called before the first frame update
@@ -64,28 +64,28 @@ public class FileMenu : MonoBehaviour
             Controller.singleton.ClearGraphObjs();
             Controller.singleton.Graph.Clear();
         }*/
-        if (!dropDownMenu.activeInHierarchy) return;
+        if (!this.dropDownMenu.activeInHierarchy) return;
         
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
             if( !(Controller.singleton.UIActive())) { //does not close dropdown when another button is pressed
-                dropDownMenu.SetActive(false);
+                this.dropDownMenu.SetActive(false);
             }
             
             if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
-                dropDownMenu.SetActive(false);
+                this.dropDownMenu.SetActive(false);
             }
         }
     }
 
     //if the user clicks on the "File" button, the dropdown will appear, otherwise the dropdown remains hidden
       public void ToggleDropDown(){
-        if(dropDownMenu.activeInHierarchy){
+        if(this.dropDownMenu.activeInHierarchy){
             EventSystem.current.SetSelectedGameObject(null);
-            dropDownMenu.SetActive(false);
+            this.dropDownMenu.SetActive(false);
         }
         else{
             fileButton.Select();
-            dropDownMenu.SetActive(true);
+            this.dropDownMenu.SetActive(true);
             //editDropDown.SetActive(false);
             //viewDropDown.SetActive(false);
         }
@@ -99,12 +99,12 @@ public class FileMenu : MonoBehaviour
     }
 
     public void ImportFromFile(){
-        importFileMenu.gameObject.SetActive(true);
+        this.importFileMenu.gameObject.SetActive(true);
         CloseDropDown();
     }
 
     public void ExportToFile(){
-        exportFileMenu.gameObject.SetActive(true);
+        this.exportFileMenu.gameObject.SetActive(true);
         CloseDropDown();
     }
 
@@ -114,6 +114,6 @@ public class FileMenu : MonoBehaviour
     }
 
     public void CloseDropDown(){
-        dropDownMenu.SetActive(false);
+        this.dropDownMenu.SetActive(false);
     }
 }

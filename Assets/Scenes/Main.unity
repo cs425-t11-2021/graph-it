@@ -6833,7 +6833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a9fb3ab818ed4831a62b5dc33ee078f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  p_gridLines: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
+  girdLinesPrefab: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
   spacing: 0.5
   gridLineCount: 100
 --- !u!4 &1039602332
@@ -14269,7 +14269,7 @@ GameObject:
   - component: {fileID: 2144943527}
   - component: {fileID: 2144943528}
   m_Layer: 0
-  m_Name: _Controller
+  m_Name: Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14347,8 +14347,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa794377446848e78b0bded3a3f0cd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PointerOverNode: 0
-  PointerOverEdge: 0
 --- !u!114 &2144943527
 MonoBehaviour:
   m_ObjectHideFlags: 0

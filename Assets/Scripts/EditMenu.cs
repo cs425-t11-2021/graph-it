@@ -24,18 +24,18 @@ public class EditMenu : MonoBehaviour
     private Button editButton;
 
     private void Awake() {
-        addEdgeButton.interactable = false;
-        editButton = this.gameObject.GetComponent<Button>();
+        this.addEdgeButton.interactable = false;
+        this.editButton = this.gameObject.GetComponent<Button>();
     }
 
     // Update is called once per frame
     void Update()
     {
         if (SelectionManager.singleton.SelectedVertexCount() == 2 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
-            addEdgeButton.interactable = true;
+            this.addEdgeButton.interactable = true;
         }
         else {
-            addEdgeButton.interactable = false;
+            this.addEdgeButton.interactable = false;
         }
 
         //If the user clicks close the dropdown panel
@@ -58,15 +58,15 @@ public class EditMenu : MonoBehaviour
             SelectionManager.singleton.AddEdge();
         }*/
 
-        if (!dropDownMenu.activeInHierarchy) return;
+        if (!this.dropDownMenu.activeInHierarchy) return;
         
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
             if( !(Controller.singleton.UIActive())) { //does not close dropdown when another button is pressed
-                dropDownMenu.SetActive(false);
+                this.dropDownMenu.SetActive(false);
             }
             
             if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
-                dropDownMenu.SetActive(false);
+                this.dropDownMenu.SetActive(false);
             }
         }
        
@@ -75,11 +75,11 @@ public class EditMenu : MonoBehaviour
     public void ToggleDropDown(){
         if(dropDownMenu.activeInHierarchy){
             EventSystem.current.SetSelectedGameObject(null);
-            dropDownMenu.SetActive(false);
+            this.dropDownMenu.SetActive(false);
         }
         else{
             dropDownMenu.SetActive(true);
-            editButton.Select();
+            this.editButton.Select();
             //fileDropDown.SetActive(false);
            // viewDropDown.SetActive(false);
         }
@@ -101,6 +101,6 @@ public class EditMenu : MonoBehaviour
     }
 
     public void CloseDropDown(){
-        dropDownMenu.SetActive(false);
+        this.dropDownMenu.SetActive(false);
     }
 }

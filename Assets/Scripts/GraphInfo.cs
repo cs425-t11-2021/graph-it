@@ -86,7 +86,7 @@ public class GraphInfo : MonoBehaviour
     }
 
     public void UpdateChromaticInfo() {
-        this.chromaticText.text = "Chromatic Number: " + chromaticAlgorithm.chromatic_number;
-        this.bipartiteText.text = "Bipartite: " + (chromaticAlgorithm.chromatic_number == 2 ? "Yes" : "No");
+        this.chromaticText.text = "Chromatic Number: " + chromaticAlgorithm.ChromaticNumber;
+        this.bipartiteText.text = "Bipartite: " + (chromaticAlgorithm.ChromaticNumber == 2 ? "Yes" : "No");
     }
 }

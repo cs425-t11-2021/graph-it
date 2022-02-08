@@ -11,8 +11,8 @@ public class RunInMain : MonoBehaviour
     public Queue<Action> queuedTasks;
 
     private void Awake() {
-        if (singleton == null) {
-            singleton = this;
+        if (RunInMain.singleton == null) {
+            RunInMain.singleton = this;
         }
         else {
             Debug.LogError("[RunInMain] Singleton pattern violation");
@@ -24,10 +24,9 @@ public class RunInMain : MonoBehaviour
     }
 
     private void Update() {
-        if (queuedTasks.Count > 0) {
+        if (this.queuedTasks.Count > 0) {
             Debug.Log("Running queued task");
-            var task = queuedTasks.Dequeue();
-            task();
+            this.queuedTasks.Dequeue()();
         }
     }
 

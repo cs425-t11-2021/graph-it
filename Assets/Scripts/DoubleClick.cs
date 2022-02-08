@@ -11,22 +11,27 @@ using UnityEngine.EventSystems;
 public class DoubleClick : MonoBehaviour
 {
 	private float timerForDoubleClick = 0.0f;
-	float delay = 0.3f;
-	bool isDoubleClick = false;
+	private float delay = 0.3f;
+	private bool isDoubleClick = false;
 
-	public bool PointerOverNode = false;
-	public bool PointerOverEdge = false;
+	private bool PointerOverNode = false;
+	private bool PointerOverEdge = false;
 
 	// Singleton Pattern
 	public static DoubleClick singleton;
     private void Awake()
     {
-		if (singleton != null)
+		// Singleton pattern setup
+        if (DoubleClick.singleton == null)
         {
-			Destroy(this);
-			return;
+            DoubleClick.singleton = this;
         }
-		singleton = this;
+        else
+        {
+            Debug.LogError("[DoubleClick] Singleton pattern violation");
+            Destroy(this);
+            return;
+        }
     }
 
     private void Update()

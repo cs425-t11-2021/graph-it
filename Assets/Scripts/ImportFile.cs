@@ -12,7 +12,8 @@ public class ImportFile : MonoBehaviour
     private GameObject cancelButton;
     [SerializeField]
     private GameObject importButton;
-    public TMP_InputField importFilenameInput;
+    [SerializeField]
+    private TMP_InputField importFilenameInput;
 
     //Need to disable the rest of the UI elements when the import from file menu pop-up is displayed
     [SerializeField]
@@ -49,12 +50,12 @@ public class ImportFile : MonoBehaviour
         //TODO need to disable (and later enable) the algorithms panel
         //if the import from file menu pop-up is displayed, the user should not be able to perform any additional functions outside of the pop-up
         if(this.gameObject.activeInHierarchy){
-            fileButton.enabled = false;
-            editButton.enabled = false;
-            viewButton.enabled = false;
-            algorithmsPanelPrims.enabled = false;
-            toolbar.gameObject.SetActive(false);
-            fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
+            this.fileButton.enabled = false;
+            this.editButton.enabled = false;
+            this.viewButton.enabled = false;
+            this.algorithmsPanelPrims.enabled = false;
+            this.toolbar.gameObject.SetActive(false);
+            this.fileDropDown.gameObject.SetActive(false); //the file menu dropdown should also no longer be accessable
         }
     }
 

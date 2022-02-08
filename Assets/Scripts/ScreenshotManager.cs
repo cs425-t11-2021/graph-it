@@ -76,7 +76,7 @@ public class ScreenshotManager : MonoBehaviour
     private Bounds GetBoundsOfGraphObjects() {
         Bounds bounds = new Bounds(Vector2.zero, Vector2.zero);
 
-        Transform ObjContainer = Controller.singleton.graphObj;
+        Transform ObjContainer = Controller.singleton.GraphObj;
         float xMin = 0;
         float xMax = 0;
         float yMin = 0;

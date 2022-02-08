@@ -11,7 +11,7 @@ public class CameraPan : MonoBehaviour
     private float panSpeed = 100f;
 
     // Reference to the Camera component attached to this object
-    private Camera camera;
+    private Camera cam;
     // Previous position of the camera used for panning
     private Vector3 lastPosition;
     // Whether or not cursor is over a collider
@@ -21,7 +21,7 @@ public class CameraPan : MonoBehaviour
 
     private void Awake() {
         // Get a reference to the Camera component of the current gameObject
-        camera = gameObject.GetComponent<Camera>();
+        cam = gameObject.GetComponent<Camera>();
 
         cameraPanBounds = new Bounds();
     }
@@ -34,7 +34,7 @@ public class CameraPan : MonoBehaviour
         }
 
         // Disable panning if no graph
-        if (Controller.singleton.graphObj.childCount == 0) {
+        if (Controller.singleton.GraphObj.childCount == 0) {
             this.doNotPan = true;
             return;
         }
@@ -90,7 +90,7 @@ public class CameraPan : MonoBehaviour
     // Set the bounds for camera panning to be slightly bigger than the space taken up by the graph objects
     private void UpdateBounds()
     {
-        Transform graphObj = Controller.singleton.graphObj;
+        Transform graphObj = Controller.singleton.GraphObj;
 
         float xMin = float.PositiveInfinity, yMin = float.PositiveInfinity;
         float xMax = float.NegativeInfinity, yMax = float.NegativeInfinity;
