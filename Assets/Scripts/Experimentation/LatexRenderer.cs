@@ -4,23 +4,11 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System;
 
-public class LatexRenderer : MonoBehaviour
+public class LatexRenderer : SingletonBehavior<LatexRenderer>
 {
     private Texture latexTexture = null;
 
     public static LatexRenderer singleton;
-
-    private void Awake() {
-        // Singleton pattern setup
-        if (singleton == null) {
-            singleton = this;
-        }
-        else {
-            Debug.LogError("[LatexRenderer] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
-    }
 
     private void Start() {
         // StartCoroutine(GetLatexTexture());

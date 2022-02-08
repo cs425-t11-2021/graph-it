@@ -112,12 +112,12 @@ public class ImportFile : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(null);
 
             // Clear existing graph
-            Controller.singleton.ClearGraphObjs();
+            Controller.Singleton.ClearGraphObjs();
 
             // TODO: File selector, file always saved on desktop for now
             string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
             Debug.Log("Begin import at " + desktop + "/" + importFilenameInput.text + ".csv");
-            Controller.singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
+            Controller.Singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
             this.gameObject.SetActive(false);
             fileButton.enabled = true;
             editButton.enabled = true;
@@ -127,7 +127,7 @@ public class ImportFile : MonoBehaviour
             fileDropDown.gameObject.SetActive(true);
 
             // Recrate graph objects
-            Controller.singleton.CreateGraphObjs();
+            Controller.Singleton.CreateGraphObjs();
         }
     }
 

@@ -28,19 +28,19 @@ public class CameraPan : MonoBehaviour
 
     private void Update() {
         // Disable panning when cursor over UI
-        if (Controller.singleton.UIActive()) {
+        if (Controller.Singleton.UIActive()) {
             this.doNotPan = true;
             return;
         }
 
         // Disable panning if no graph
-        if (Controller.singleton.GraphObj.childCount == 0) {
+        if (Controller.Singleton.GraphObj.childCount == 0) {
             this.doNotPan = true;
             return;
         }
 
         // Do not pan if in vertex creation mode and selection mode
-        if (Toolbar.singleton.CreateVertexMode || Toolbar.singleton.SelectionMode) {
+        if (Toolbar.Singleton.CreateVertexMode || Toolbar.Singleton.SelectionMode) {
             this.doNotPan = true;
             return;
         }
@@ -48,7 +48,7 @@ public class CameraPan : MonoBehaviour
         // Left mouse button clicked
         if (Input.GetMouseButtonDown(0)) {
             // At the start of the pan, store cursor position
-            lastPosition = Controller.singleton.GetCursorWorldPosition();
+            lastPosition = Controller.Singleton.GetCursorWorldPosition();
 
             // Check if cursor is over collider, if so, ignore panning until the mouse button is released
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -67,7 +67,7 @@ public class CameraPan : MonoBehaviour
             if (this.doNotPan) return;
             
             // Calculate the direction the camera needs to move to move towards the mouse cursor
-            Vector3 dir = lastPosition - Controller.singleton.GetCursorWorldPosition();
+            Vector3 dir = lastPosition - Controller.Singleton.GetCursorWorldPosition();
             // Translate the camera's position towards the direction, scaled by pan speed
             Vector3 targetPosition = Vector3.MoveTowards(transform.position, transform.position + dir, panSpeed * Time.deltaTime);
             // Only move the camera if the target position is still in camera pan bounds
@@ -77,7 +77,7 @@ public class CameraPan : MonoBehaviour
             }
             
             // Update last position of camera
-            lastPosition = Controller.singleton.GetCursorWorldPosition();
+            lastPosition = Controller.Singleton.GetCursorWorldPosition();
         }
 
         // Left mouse button released
@@ -90,7 +90,7 @@ public class CameraPan : MonoBehaviour
     // Set the bounds for camera panning to be slightly bigger than the space taken up by the graph objects
     private void UpdateBounds()
     {
-        Transform graphObj = Controller.singleton.GraphObj;
+        Transform graphObj = Controller.Singleton.GraphObj;
 
         float xMin = float.PositiveInfinity, yMin = float.PositiveInfinity;
         float xMax = float.NegativeInfinity, yMax = float.NegativeInfinity;

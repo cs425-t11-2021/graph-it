@@ -34,7 +34,7 @@ public class ViewMenu : MonoBehaviour
         if (!this.dropDownMenu.activeInHierarchy) return;
         
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if( !(Controller.singleton.UIActive())) { //does not close dropdown when another button is pressed
+            if( !(Controller.Singleton.UIActive())) { //does not close dropdown when another button is pressed
                 this.dropDownMenu.SetActive(false);
             }
             
@@ -48,14 +48,14 @@ public class ViewMenu : MonoBehaviour
     public void ToggleLabels()
     {
         CloseDropDown();
-        if (Controller.singleton.DisplayVertexLabels)
+        if (Controller.Singleton.DisplayVertexLabels)
         {
-            Controller.singleton.DisplayVertexLabels = false;
+            Controller.Singleton.DisplayVertexLabels = false;
             this.showGrpahLabelsText.text = "Show Graph Labels";
         }
         else
         {
-            Controller.singleton.DisplayVertexLabels = true;
+            Controller.Singleton.DisplayVertexLabels = true;
             this.showGrpahLabelsText.text = "Hide Graph Labels";
         }
     }

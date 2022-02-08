@@ -91,12 +91,12 @@ public class VertexObj : MonoBehaviour
         this.animator.SetBool("Selected", selected);
         if (!selected)
         {
-            SelectionManager.singleton.DeselectVertex(this);
+            SelectionManager.Singleton.DeselectVertex(this);
             this.labelObj.MakeUneditable();
         }
         else
         {
-            SelectionManager.singleton.SelectVertex(this);
+            SelectionManager.Singleton.SelectVertex(this);
             this.labelObj.MakeEditable();
         }
     }
@@ -123,7 +123,7 @@ public class VertexObj : MonoBehaviour
     }
 
     public void SetCursorDragOffset() {
-        this.cursorOffset = this.transform.position - Controller.singleton.GetCursorWorldPosition();
+        this.cursorOffset = this.transform.position - Controller.Singleton.GetCursorWorldPosition();
 
         // If the grid is currently enabled, remove the vertex obejct from any grid points and display the gridlines
         if (Grid.singleton.GridEnabled)
@@ -136,9 +136,9 @@ public class VertexObj : MonoBehaviour
     // Method called when the vertex object is first picked up to be dragged
     private void OnDragStart()
     {
-        if (!Toolbar.singleton.SelectionMode && !Toolbar.singleton.CreateVertexMode) {
+        if (!Toolbar.Singleton.SelectionMode && !Toolbar.Singleton.CreateVertexMode) {
             if (this.selected) {
-                SelectionManager.singleton.DragSelectedVerticesStart();
+                SelectionManager.Singleton.DragSelectedVerticesStart();
             }
             else {
                 SetCursorDragOffset();
@@ -162,9 +162,9 @@ public class VertexObj : MonoBehaviour
 
         if (this.cursorOffset != null) {
             // Disable dragging when in selection or vertex creation mode
-            if (!Toolbar.singleton.SelectionMode && !Toolbar.singleton.CreateVertexMode) {
+            if (!Toolbar.Singleton.SelectionMode && !Toolbar.Singleton.CreateVertexMode) {
                 if (this.selected) {
-                    SelectionManager.singleton.DragSelectedVertices();
+                    SelectionManager.Singleton.DragSelectedVertices();
                 }
                 else {
                     DragVertexWithMouse();
@@ -189,14 +189,14 @@ public class VertexObj : MonoBehaviour
 
     public void DragVertexWithMouse() {
         if (this.cursorOffset != null)
-            this.transform.position = Controller.singleton.GetCursorWorldPosition() + (Vector3) this.cursorOffset;
+            this.transform.position = Controller.Singleton.GetCursorWorldPosition() + (Vector3) this.cursorOffset;
     }
 
     // Method called after dragging is finished
     private void OnDragFinish()
     {
         if (this.selected) {
-            SelectionManager.singleton.DragSelectedVerticesEnd();
+            SelectionManager.Singleton.DragSelectedVerticesEnd();
         }
         else {
             FinishDragging();
@@ -222,8 +222,8 @@ public class VertexObj : MonoBehaviour
     private void OnMouseDownNonDrag()
     {
         // If add edge mode is enabled in the toolbar, add an edge instead of selecting the vertex
-        if (Toolbar.singleton.EdgeCreationMode) {
-            SelectionManager.singleton.AddEdge(this);
+        if (Toolbar.Singleton.EdgeCreationMode) {
+            SelectionManager.Singleton.AddEdge(this);
             return;
         }
 

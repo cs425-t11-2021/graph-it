@@ -5,11 +5,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class Controller : MonoBehaviour
+public class Controller : SingletonBehavior<Controller>
 {
-    // Singleton
-    public static Controller singleton;
-
     // Prefabs for the unity vertex and edge objects
     [SerializeField]
     private GameObject vertexObjPrefab;
@@ -83,16 +80,6 @@ public class Controller : MonoBehaviour
     private bool graphPhysicsEnabled = false;
 
     private void Awake() {
-        // Singleton pattern setup
-        if (Controller.singleton == null) {
-            Controller.singleton = this;
-        }
-        else {
-            Debug.LogError("[Controller] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
-
         // Initiate graph ds
         this.Graph = new Graph();
         // Manually set edge length
@@ -190,10 +177,10 @@ public class Controller : MonoBehaviour
         }
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpdateGraphInfo();
+        GraphInfo.Singleton.UpdateGraphInfo();
 
         // Make sure no objects are selected when they are first created
-        SelectionManager.singleton.DeSelectAll();
+        SelectionManager.Singleton.DeSelectAll();
 
         // Enable graph physics for two seconds to spread out the graph
         // UseGraphPhysics(2);
@@ -203,7 +190,7 @@ public class Controller : MonoBehaviour
     // Warning: Could lead to visualizaion not matching up with the graph ds if the ds is not also cleared.
     public void ClearGraphObjs() {
         // Deselect All
-        SelectionManager.singleton.DeSelectAll();
+        SelectionManager.Singleton.DeSelectAll();
 
         // Destroy (or pool) all vertex objects
         for (int i = this.GraphObj.childCount - 1; i >= 0; i--) {
@@ -219,16 +206,16 @@ public class Controller : MonoBehaviour
         }
 
         // Update the Grpah information UI
-        GraphInfo.singleton.UpdateGraphInfo();
+        GraphInfo.Singleton.UpdateGraphInfo();
 
         // Reset toolbar toggles
-        Toolbar.singleton.ResetAll();
+        Toolbar.Singleton.ResetAll();
     }
 
     // Method to update graph objects to match the graph ds if new vertices or edges are added
     public void UpdateGraphObjs() {
         // Get a list of all the vertex objects in scene
-        VertexObj[] allVertexObjs = Controller.singleton.GraphObj.GetComponentsInChildren<VertexObj>();
+        VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
         // Get a list of the references of current vertex objects
         List<Vertex> existingVertexObjs = new List<Vertex>();
         foreach (VertexObj vertexObj in allVertexObjs)
@@ -243,7 +230,7 @@ public class Controller : MonoBehaviour
         }
 
         // Get a list of all the edge objects in scene
-        EdgeObj[] allEdgeObjs = Controller.singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
+        EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         // Get a list of the references of current edge objects
         List<Edge> existingEdgeObjs = new List<Edge>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
@@ -334,7 +321,7 @@ public class Controller : MonoBehaviour
     private void SetGraphPhysics(bool enabled)
     {
         // Turns off the grid if physics is turned on
-        if (Controller.singleton.SnapVerticesToGrid)
+        if (Controller.Singleton.SnapVerticesToGrid)
         {
             Grid.singleton.ClearGrid();
             Grid.singleton.GridEnabled = !enabled;

@@ -26,7 +26,7 @@ public abstract class Algorithm
 	private void RunWrapper() {
 		try {
 			Run();
-			RunInMain.singleton.queuedTasks.Enqueue(this.onThreadExit);
+			RunInMain.Singleton.queuedTasks.Enqueue(this.onThreadExit);
 		} catch (ThreadAbortException e) {}
 	}
 }

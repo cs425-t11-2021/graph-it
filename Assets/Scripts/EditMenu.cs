@@ -31,7 +31,7 @@ public class EditMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (SelectionManager.singleton.SelectedVertexCount() == 2 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
+        if (SelectionManager.Singleton.SelectedVertexCount() == 2 && SelectionManager.Singleton.SelectedEdgeCount() == 0) {
             this.addEdgeButton.interactable = true;
         }
         else {
@@ -61,7 +61,7 @@ public class EditMenu : MonoBehaviour
         if (!this.dropDownMenu.activeInHierarchy) return;
         
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if( !(Controller.singleton.UIActive())) { //does not close dropdown when another button is pressed
+            if( !(Controller.Singleton.UIActive())) { //does not close dropdown when another button is pressed
                 this.dropDownMenu.SetActive(false);
             }
             
@@ -87,17 +87,17 @@ public class EditMenu : MonoBehaviour
     public void ToggleSelectAll(){
         CloseDropDown();
         //not sure if something else is needed
-        SelectionManager.singleton.SelectAll();
+        SelectionManager.Singleton.SelectAll();
     }
 
     public void ToggleDeselectAll(){
         CloseDropDown();
-        SelectionManager.singleton.DeSelectAll();
+        SelectionManager.Singleton.DeSelectAll();
     }
 
     public void AddEdgeButtonFromEditMenu(){
         CloseDropDown();
-        SelectionManager.singleton.AddEdge();
+        SelectionManager.Singleton.AddEdge();
     }
 
     public void CloseDropDown(){

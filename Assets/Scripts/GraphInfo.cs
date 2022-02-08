@@ -6,10 +6,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GraphInfo : MonoBehaviour
+public class GraphInfo : SingletonBehavior<GraphInfo>
 {
-    // Singleton
-    public static GraphInfo singleton;
 
     [SerializeField]
     private TMP_Text chromaticText;
@@ -29,17 +27,7 @@ public class GraphInfo : MonoBehaviour
     private ChromaticAlgorithm chromaticAlgorithm;
 
     private void Awake() {
-        this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.singleton.Graph, UpdateChromaticInfo);
-
-        // Singleton pattern setup
-        if (singleton == null) {
-            singleton = this;
-        }
-        else {
-            Debug.LogError("[GraphInfo] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
+        this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.Singleton.Graph, UpdateChromaticInfo);
 
         this.primButton.interactable = false;
         UpdateGraphInfo();
@@ -49,7 +37,7 @@ public class GraphInfo : MonoBehaviour
 
     private void FixedUpdate() {
         // Only allow the prim button to be pressed if there is exactly one vertex selected
-        if (SelectionManager.singleton.SelectedVertexCount() == 1 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
+        if (SelectionManager.Singleton.SelectedVertexCount() == 1 && SelectionManager.Singleton.SelectedEdgeCount() == 0) {
             this.primButton.interactable = true;
         }   
         else {
@@ -57,7 +45,7 @@ public class GraphInfo : MonoBehaviour
         }
 
         // Only allow dijkstra if exactly two vertices are selected
-        if (SelectionManager.singleton.SelectedVertexCount() == 2 && SelectionManager.singleton.SelectedEdgeCount() == 0) {
+        if (SelectionManager.Singleton.SelectedVertexCount() == 2 && SelectionManager.Singleton.SelectedEdgeCount() == 0) {
             this.dijkstraButton.interactable = true;
         }   
         else {
@@ -76,8 +64,8 @@ public class GraphInfo : MonoBehaviour
         //     this.bipartiteText.text = "Bipartite: " + (chromaticNum == 2 ? "Yes" : "No");
         // }
 
-        this.orderText.text = "Order: " + Controller.singleton.Graph.vertices.Count;
-        this.sizeText.text = "Size: " + Controller.singleton.Graph.adjacency.Count;
+        this.orderText.text = "Order: " + Controller.Singleton.Graph.vertices.Count;
+        this.sizeText.text = "Size: " + Controller.Singleton.Graph.adjacency.Count;
 
         this.chromaticText.text = "Chromatic Number: Calculating";
         this.bipartiteText.text = "Bipartite: Calculating";

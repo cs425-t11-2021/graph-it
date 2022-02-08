@@ -6,11 +6,8 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScreenshotManager : MonoBehaviour
+public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
 {
-     // Singleton
-    public static ScreenshotManager singleton;
-
     // Component references
     private Camera cam;
 
@@ -23,16 +20,6 @@ public class ScreenshotManager : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton pattern setup
-        if (singleton == null) {
-            singleton = this;
-        }
-        else {
-            Debug.LogError("[ScreenshotManager] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
-
         this.cam = GetComponent<Camera>();
     }
 
@@ -76,7 +63,7 @@ public class ScreenshotManager : MonoBehaviour
     private Bounds GetBoundsOfGraphObjects() {
         Bounds bounds = new Bounds(Vector2.zero, Vector2.zero);
 
-        Transform ObjContainer = Controller.singleton.GraphObj;
+        Transform ObjContainer = Controller.Singleton.GraphObj;
         float xMin = 0;
         float xMax = 0;
         float yMin = 0;

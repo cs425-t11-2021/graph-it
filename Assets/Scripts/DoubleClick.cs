@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DoubleClick : MonoBehaviour
+public class DoubleClick : SingletonBehavior<DoubleClick>
 {
 	private float timerForDoubleClick = 0.0f;
 	private float delay = 0.3f;
@@ -18,21 +18,7 @@ public class DoubleClick : MonoBehaviour
 	private bool PointerOverEdge = false;
 
 	// Singleton Pattern
-	public static DoubleClick singleton;
-    private void Awake()
-    {
-		// Singleton pattern setup
-        if (DoubleClick.singleton == null)
-        {
-            DoubleClick.singleton = this;
-        }
-        else
-        {
-            Debug.LogError("[DoubleClick] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
-    }
+	public static DoubleClick Singleton;
 
     private void Update()
 	{
@@ -42,7 +28,7 @@ public class DoubleClick : MonoBehaviour
             return;
         }
 
-        if (Controller.singleton.UIActive()) {
+        if (Controller.Singleton.UIActive()) {
             return;
         }
 
@@ -59,16 +45,16 @@ public class DoubleClick : MonoBehaviour
 
 		if (!PointerOverNode && !PointerOverEdge && Input.GetMouseButtonDown(0))
 		{
-			if (isDoubleClick || Toolbar.singleton.CreateVertexMode)
+			if (isDoubleClick || Toolbar.Singleton.CreateVertexMode)
 			{
 				timerForDoubleClick = 0.0f;
 				isDoubleClick = false;
 
 				Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-				Controller.singleton.Graph.AddVertex(mousePos.x, mousePos.y);
-                Controller.singleton.UpdateGraphObjs();
-                SelectionManager.singleton.DeSelectAll();
-				GraphInfo.singleton.UpdateGraphInfo();
+				Controller.Singleton.Graph.AddVertex(mousePos.x, mousePos.y);
+                Controller.Singleton.UpdateGraphObjs();
+                SelectionManager.Singleton.DeSelectAll();
+				GraphInfo.Singleton.UpdateGraphInfo();
 			}
 			else
 			{

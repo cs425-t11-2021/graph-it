@@ -45,8 +45,8 @@ public class Grid : MonoBehaviour
         this.occupiedPoints = new List< (Vector2Int, VertexObj) >();
 
         // Subscribe OnToggleGridSnapping method to the corresponding event in Controller, then run it to get default settings
-        Controller.singleton.OnToggleGridSnapping += OnToggleGridSnapping;
-        OnToggleGridSnapping(Controller.singleton.SnapVerticesToGrid);
+        Controller.Singleton.OnToggleGridSnapping += OnToggleGridSnapping;
+        OnToggleGridSnapping(Controller.Singleton.SnapVerticesToGrid);
     }
 
     // Method called when the the setting for grid snapping is toggled from Controller

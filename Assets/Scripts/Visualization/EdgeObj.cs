@@ -158,7 +158,7 @@ public class EdgeObj : MonoBehaviour
     private void OnMouseDown()
     {
         // Disable edge selection if quick edge creation mode is enabled
-        if (Toolbar.singleton.EdgeCreationMode) return;
+        if (Toolbar.Singleton.EdgeCreationMode) return;
 
         SetSelected(!selected);
     }
@@ -169,14 +169,14 @@ public class EdgeObj : MonoBehaviour
         this.selected = selected;
         if (!selected)
         {
-            SelectionManager.singleton.DeselectEdge(this);
+            SelectionManager.Singleton.DeselectEdge(this);
             this.spriteRenderer.color = new Color32(0, 0, 0, 255);
             this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
             labelObj.MakeUneditable();
         }
         else
         {
-            SelectionManager.singleton.SelectEdge(this);
+            SelectionManager.Singleton.SelectEdge(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
             this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
             labelObj.MakeEditable();
