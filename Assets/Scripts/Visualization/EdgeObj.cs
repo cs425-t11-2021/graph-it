@@ -23,7 +23,7 @@ public class EdgeObj : MonoBehaviour
     private float physicsTimer = 0f;
 
     // Reference to the game object of the target vertex
-    public GameObject targetVertexObj;
+    public GameObject TargetVertexObj {get; set;}
 
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
@@ -60,7 +60,7 @@ public class EdgeObj : MonoBehaviour
     public void Initiate(Edge edge, GameObject target) {
         this.Edge = edge;
 
-        this.targetVertexObj = target;
+        this.TargetVertexObj = target;
         this.gameObject.SetActive(true);
         // TODO: Make this better
         // Currently, direction = 1 means pointing from paretn to target vertex
@@ -131,7 +131,7 @@ public class EdgeObj : MonoBehaviour
     private void FixedUpdate() {
         if (Edge != null) {
             // Stretch the edge between the two vertices
-            StretchBetweenPoints(this.transform.parent.position, targetVertexObj.transform.position);
+            StretchBetweenPoints(this.transform.parent.position, TargetVertexObj.transform.position);
         }
 
         // Only update the Physics 2D collider of the edge every 0.25s instead of real time to reduce physics lag
@@ -158,7 +158,7 @@ public class EdgeObj : MonoBehaviour
     private void OnMouseDown()
     {
         // Disable edge selection if quick edge creation mode is enabled
-        if (Toolbar.singleton.EdgeCreationMode) return;
+        if (Toolbar.Singleton.EdgeCreationMode) return;
 
         SetSelected(!selected);
     }
@@ -169,14 +169,14 @@ public class EdgeObj : MonoBehaviour
         this.selected = selected;
         if (!selected)
         {
-            SelectionManager.singleton.DeselectEdge(this);
+            SelectionManager.Singleton.DeselectEdge(this);
             this.spriteRenderer.color = new Color32(0, 0, 0, 255);
             this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
             labelObj.MakeUneditable();
         }
         else
         {
-            SelectionManager.singleton.SelectEdge(this);
+            SelectionManager.Singleton.SelectEdge(this);
             this.spriteRenderer.color = new Color32(0, 125, 255, 255);
             this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
             labelObj.MakeEditable();

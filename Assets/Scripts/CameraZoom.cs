@@ -6,18 +6,21 @@ using UnityEngine;
 public class CameraZoom : MonoBehaviour
 {
     // The speed of zooming in and out (default at 100f)
-    public float zoomSpeed = 100f;
+    [SerializeField]
+    private float zoomSpeed = 100f;
     // Minimum zoom size
-    public float zoomMin = 2f;
+    [SerializeField]
+    private float zoomMin = 2f;
     // Maximum zoom size
-    public float zoomMax = 20f;
+    [SerializeField]
+    private float zoomMax = 20f;
 
     // Reference to the Camera component attached to this object
-    private Camera camera;
+    private Camera cam;
 
     private void Awake() {
         // Get a reference to the Camera component of the current gameObject
-        camera = gameObject.GetComponent<Camera>();
+        cam = gameObject.GetComponent<Camera>();
     }
 
     private void Update() {
@@ -25,15 +28,15 @@ public class CameraZoom : MonoBehaviour
         float mouseScrollWheel = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
         // Use percentage values when zooming in and our rather than absolute values for more consistent speed
         float newZoomLevel = mouseScrollWheel > 0
-            ? camera.orthographicSize * (1 - (0.1f * mouseScrollWheel))
-            : camera.orthographicSize * (1 - (0.11111f * mouseScrollWheel));
+            ? cam.orthographicSize * (1 - (0.1f * mouseScrollWheel))
+            : cam.orthographicSize * (1 - (0.11111f * mouseScrollWheel));
 
         // Get Mouse Position before zoom
-        Vector3 mousePosBefore = camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePosBefore = cam.ScreenToWorldPoint(Input.mousePosition);
         // Set the camera size to the zoom level, clamped between min zoom size and max zoom size
-        camera.orthographicSize = Mathf.Clamp(newZoomLevel, zoomMin, zoomMax);
+        cam.orthographicSize = Mathf.Clamp(newZoomLevel, zoomMin, zoomMax);
         // Get Mouse Position after zoom
-        Vector3 mousePosAfter = camera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 mousePosAfter = cam.ScreenToWorldPoint(Input.mousePosition);
 
         // Calculate difference between mouse positions before and after zooming
         Vector3 diff = mousePosBefore - mousePosAfter;

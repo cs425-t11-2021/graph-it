@@ -4,10 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class Toolbar : MonoBehaviour
+public class Toolbar : SingletonBehavior<Toolbar>
 {
-    public static Toolbar singleton;
-
     [SerializeField]
     private ToggleButton selectionModeButton;
     private bool selectionMode = false;
@@ -60,18 +58,8 @@ public class Toolbar : MonoBehaviour
     private Button changeTypeButton;
 
     private void Awake() {
-        // Singleton pattern setup
-        if (singleton == null) {
-            singleton = this;
-        }
-        else {
-            Debug.LogError("[Toolbar] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
-
         // Subscribe to OnSelectionChange event
-        SelectionManager.singleton.OnSelectionChange += OnSelectionChange;
+        SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
 
         // Default configuration
         deleteButton.gameObject.SetActive(false);
@@ -81,7 +69,7 @@ public class Toolbar : MonoBehaviour
     }
 
     private void Update() {
-        if (Controller.singleton.UIActive()) return;
+        if (Controller.Singleton.UIActive()) return;
         
         // If a number key is pressed, trigger the corresponding button on the toolbar
         for (int i = 1; i <= 9; i++) {
@@ -153,7 +141,7 @@ public class Toolbar : MonoBehaviour
 
     // Function called by delete button
     public void DeleteSelection() {
-        SelectionManager.singleton.DeleteSelection();
+        SelectionManager.Singleton.DeleteSelection();
     }
 
     // Enable or disable edge addition mode
@@ -163,11 +151,11 @@ public class Toolbar : MonoBehaviour
 
     // Function called by Add Edge button
     public void AddEdge() {
-        SelectionManager.singleton.AddEdge();
+        SelectionManager.Singleton.AddEdge();
     }
 
     // Function called by Change Type button
     public void ChangeType() {
-        SelectionManager.singleton.ChangeSelectedEdgesType();
+        SelectionManager.Singleton.ChangeSelectedEdgesType();
     }
 }

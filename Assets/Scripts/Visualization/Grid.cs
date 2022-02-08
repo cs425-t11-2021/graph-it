@@ -10,15 +10,17 @@ public class Grid : MonoBehaviour
     public static Grid singleton;
 
     // Prefab for the grid lines object
-    public GameObject p_gridLines;
+    public GameObject girdLinesPrefab;
 
     // Space between each vertex
-    public float spacing = 0.5f;
+    [SerializeField]
+    private float spacing = 0.5f;
     // Number of horizontal and vertical gridline objects to instantiate
-    public int gridLineCount = 20;
+    [SerializeField]
+    private int gridLineCount = 20;
 
     // List of occupied grid points
-    public List< (Vector2Int, VertexObj) > occupiedPoints;
+    private List< (Vector2Int, VertexObj) > occupiedPoints;
     // Array of instantiated horizontal and vertical girdline objects
     private GameObject[] horizontalLines;
     private GameObject[] verticalLines;
@@ -43,8 +45,8 @@ public class Grid : MonoBehaviour
         this.occupiedPoints = new List< (Vector2Int, VertexObj) >();
 
         // Subscribe OnToggleGridSnapping method to the corresponding event in Controller, then run it to get default settings
-        Controller.singleton.OnToggleGridSnapping += OnToggleGridSnapping;
-        OnToggleGridSnapping(Controller.singleton.SnapVerticesToGrid);
+        Controller.Singleton.OnToggleGridSnapping += OnToggleGridSnapping;
+        OnToggleGridSnapping(Controller.Singleton.SnapVerticesToGrid);
     }
 
     // Method called when the the setting for grid snapping is toggled from Controller
@@ -63,9 +65,9 @@ public class Grid : MonoBehaviour
         // Instantiate the horizontal and vertical gridlines, add them to the corresponding arrays, and disable them by default
         for (int i = 0; i < this.gridLineCount; i++)
         {
-            this.horizontalLines[i] = Instantiate(this.p_gridLines, this.transform);
+            this.horizontalLines[i] = Instantiate(this.girdLinesPrefab, this.transform);
             this.horizontalLines[i].SetActive(false);
-            this.verticalLines[i] = Instantiate(this.p_gridLines, this.transform);
+            this.verticalLines[i] = Instantiate(this.girdLinesPrefab, this.transform);
             this.verticalLines[i].SetActive(false);
         }
     }

@@ -31,7 +31,7 @@ public abstract class Algorithm
 	private void RunWrapper() {
 		try {
             this.running = true;
-			this.Run();
+			      this.Run();
             this.running = false;
             this.completed = true;
 			RunInMain.singleton.queuedTasks.Enqueue(this.onThreadExit);

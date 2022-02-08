@@ -17,17 +17,17 @@ public class OpenMenuItemUI : MonoBehaviour
     void Start()
     {
         //menu item has an assciated menu to display to the user
-        menuObj = transform.GetChild(1).gameObject;
+        this.menuObj = transform.GetChild(1).gameObject;
         //do not want the associated menu to be shown or accessible when program first starts
-        menuObj.gameObject.SetActive(false);
+        this.menuObj.gameObject.SetActive(false);
         
         //dropdown menu must be active for the import menu to appear
-        dropdownObj = this.transform.parent.gameObject;
-        dropdownObj.gameObject.SetActive(true);
+        this.dropdownObj = this.transform.parent.gameObject;
+        this.dropdownObj.gameObject.SetActive(true);
 
         //When the "Import from file" is clicked called the OpenPopUp function to display the menu pop-up
-        menuButton = this.GetComponent<Button>();
-        menuButton.onClick.AddListener(OpenPopUp);
+        this.menuButton = this.GetComponent<Button>();
+        this.menuButton.onClick.AddListener(OpenPopUp);
         
     }
 

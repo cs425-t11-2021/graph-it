@@ -9,14 +9,14 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Image))]
 public class ToggleButton : MonoBehaviour, IPointerClickHandler
 {
-    public ToggleEvent CheckedChanged = new ToggleEvent();
+    public ToggleEvent checkedChanged = new ToggleEvent();
 
-    Image _image;
-    Color _originalColor;
+    private Image image;
+    private Color originalColor;
 
-    bool _checked;
-    [SerializeField] Color _checkedColor;
-    [SerializeField] ToggleButtonGroup _group;
+    private bool @checked;
+    [SerializeField] private Color checkedColor;
+    [SerializeField] private ToggleButtonGroup group;
 
 
     [SerializeField]
@@ -24,31 +24,31 @@ public class ToggleButton : MonoBehaviour, IPointerClickHandler
     {
         get
         {
-            return _checked;
+            return this.@checked;
         }
         set
         {
-            if (_checked != value)
+            if (this.@checked != value)
             {
-                _checked = value;
+                this.@checked = value;
                 UpdateVisual();
-                CheckedChanged.Invoke(this);
+                this.checkedChanged.Invoke(this);
             }
         }
     }
 
     void Start()
     {
-        _image = GetComponent<Image>();
-        _originalColor = _image.color;
+        this.image = GetComponent<Image>();
+        this.originalColor = this.image.color;
 
-        if (_group != null)
-            _group.RegisterToggle(this);
+        if (this.group != null)
+            this.group.RegisterToggle(this);
     }
 
     private void UpdateVisual()
     {
-        _image.color = Checked ? _checkedColor : _originalColor;
+        this.image.color = Checked ? this.checkedColor : this.originalColor;
     }
 
     public void OnPointerClick(PointerEventData eventData)

@@ -35,16 +35,16 @@ public class VertexObj : MonoBehaviour
 
     private void Awake() {
         // Vertex objects starts non active
-        gameObject.SetActive(false);
+        this.gameObject.SetActive(false);
 
         // Setup component references
-        rb = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
-        spriteObj = transform.GetChild(0);
-        spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
-        labelObj = GetComponentInChildren<LabelObj>();
+        this.rb = GetComponent<Rigidbody2D>();
+        this.animator = GetComponent<Animator>();
+        this.spriteObj = transform.GetChild(0);
+        this.spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
+        this.labelObj = GetComponentInChildren<LabelObj>();
 
-        cursorOffset = null;
+        this.cursorOffset = null;
     }
 
     // Method called by a controller class to setup properties of the vertex object
@@ -53,10 +53,10 @@ public class VertexObj : MonoBehaviour
         this.Vertex = vertex;
 
         // Activate the vertex object once it has been initiated
-        gameObject.SetActive(true);
+        this.gameObject.SetActive(true);
 
         // Initiate the label
-        labelObj.Initiate(vertex.label);
+        this.labelObj.Initiate(vertex.label);
 
         // Update associated Vertex positions;
         this.Vertex.x_pos = transform.position.x;
@@ -67,8 +67,8 @@ public class VertexObj : MonoBehaviour
         // At the start of the program, if the vertex has no connected edges, give it 
         // extra mass and drag to avoid being pushed away by the other vertices
         if (transform.childCount == 0) {
-            rb.mass = 5 * rb.mass;
-            rb.drag = 5 * rb.drag;
+            this.rb.mass = 5 * this.rb.mass;
+            this.rb.drag = 5 * this.rb.drag;
         }
     }
 
@@ -80,7 +80,7 @@ public class VertexObj : MonoBehaviour
         RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex"));  //11f since camera is at z = -10
         if (hit && hit.collider.gameObject == gameObject)
         {
-            animator.SetBool("Hovering", true);
+            this.animator.SetBool("Hovering", true);
         }
     }
 
@@ -88,23 +88,23 @@ public class VertexObj : MonoBehaviour
     public void SetSelected(bool selected)
     {
         this.selected = selected;
-        animator.SetBool("Selected", selected);
+        this.animator.SetBool("Selected", selected);
         if (!selected)
         {
-            SelectionManager.singleton.DeselectVertex(this);
-            labelObj.MakeUneditable();
+            SelectionManager.Singleton.DeselectVertex(this);
+            this.labelObj.MakeUneditable();
         }
         else
         {
-            SelectionManager.singleton.SelectVertex(this);
-            labelObj.MakeEditable();
+            SelectionManager.Singleton.SelectVertex(this);
+            this.labelObj.MakeEditable();
         }
     }
 
     // Reset the size of the object when the cursor exists
     private void OnMouseExit()
     {
-        animator.SetBool("Hovering", false);
+        this.animator.SetBool("Hovering", false);
     }
 
     // If vertex object is deleted, remove it from the grid
@@ -123,7 +123,7 @@ public class VertexObj : MonoBehaviour
     }
 
     public void SetCursorDragOffset() {
-        this.cursorOffset = this.transform.position - Controller.singleton.GetCursorWorldPosition();
+        this.cursorOffset = this.transform.position - Controller.Singleton.GetCursorWorldPosition();
 
         // If the grid is currently enabled, remove the vertex obejct from any grid points and display the gridlines
         if (Grid.singleton.GridEnabled)
@@ -136,9 +136,9 @@ public class VertexObj : MonoBehaviour
     // Method called when the vertex object is first picked up to be dragged
     private void OnDragStart()
     {
-        if (!Toolbar.singleton.SelectionMode && !Toolbar.singleton.CreateVertexMode) {
+        if (!Toolbar.Singleton.SelectionMode && !Toolbar.Singleton.CreateVertexMode) {
             if (this.selected) {
-                SelectionManager.singleton.DragSelectedVerticesStart();
+                SelectionManager.Singleton.DragSelectedVerticesStart();
             }
             else {
                 SetCursorDragOffset();
@@ -150,21 +150,21 @@ public class VertexObj : MonoBehaviour
         // Increase the drag duration timer while the object is being dragged
         if (clicked)
         {
-            dragDuration += Time.deltaTime;
+            this.dragDuration += Time.deltaTime;
 
             // If the object is held for more than 1/10 of a second, count as the start of a drag
-            if (dragDuration > .1f)
+            if (this.dragDuration > .1f)
             {
-                clicked = false;
+                this.clicked = false;
                 OnDragStart();
             }
         }
 
         if (this.cursorOffset != null) {
             // Disable dragging when in selection or vertex creation mode
-            if (!Toolbar.singleton.SelectionMode && !Toolbar.singleton.CreateVertexMode) {
+            if (!Toolbar.Singleton.SelectionMode && !Toolbar.Singleton.CreateVertexMode) {
                 if (this.selected) {
-                    SelectionManager.singleton.DragSelectedVertices();
+                    SelectionManager.Singleton.DragSelectedVertices();
                 }
                 else {
                     DragVertexWithMouse();
@@ -174,9 +174,9 @@ public class VertexObj : MonoBehaviour
     }
 
     private void OnMouseUp() {
-        clicked = false;
+        this.clicked = false;
         // If the object has been dragged for less than 1/10 of a second, count as a non-dragging click
-        if (dragDuration < .1f)
+        if (this.dragDuration < .1f)
         {
             OnMouseDownNonDrag();
         }
@@ -184,19 +184,19 @@ public class VertexObj : MonoBehaviour
         {
             OnDragFinish();
         }
-        dragDuration = 0f;
+        this.dragDuration = 0f;
     }
 
     public void DragVertexWithMouse() {
         if (this.cursorOffset != null)
-            this.transform.position = Controller.singleton.GetCursorWorldPosition() + (Vector3) this.cursorOffset;
+            this.transform.position = Controller.Singleton.GetCursorWorldPosition() + (Vector3) this.cursorOffset;
     }
 
     // Method called after dragging is finished
     private void OnDragFinish()
     {
         if (this.selected) {
-            SelectionManager.singleton.DragSelectedVerticesEnd();
+            SelectionManager.Singleton.DragSelectedVerticesEnd();
         }
         else {
             FinishDragging();
@@ -222,8 +222,8 @@ public class VertexObj : MonoBehaviour
     private void OnMouseDownNonDrag()
     {
         // If add edge mode is enabled in the toolbar, add an edge instead of selecting the vertex
-        if (Toolbar.singleton.EdgeCreationMode) {
-            SelectionManager.singleton.AddEdge(this);
+        if (Toolbar.Singleton.EdgeCreationMode) {
+            SelectionManager.Singleton.AddEdge(this);
             return;
         }
 

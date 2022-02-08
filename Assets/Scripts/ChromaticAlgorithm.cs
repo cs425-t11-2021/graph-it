@@ -6,7 +6,7 @@ using System.Threading;
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
-    public int chromatic_number;
+  public int chromatic_number;
 
 	public ChromaticAlgorithm( Graph graph, Action onThreadExit ) : base( graph, onThreadExit ) { }
 

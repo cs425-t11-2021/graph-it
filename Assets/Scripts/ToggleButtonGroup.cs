@@ -5,19 +5,19 @@ using UnityEngine;
 
 public class ToggleButtonGroup : MonoBehaviour
 {
-    List<ToggleButton> _toggles = new List<ToggleButton>();
+    private List<ToggleButton> toggles = new List<ToggleButton>();
 
     public void RegisterToggle(ToggleButton toggle)
     {
-        _toggles.Add(toggle);
-        toggle.CheckedChanged.AddListener(HandleCheckedChanged);
+        this.toggles.Add(toggle);
+        toggle.checkedChanged.AddListener(HandleCheckedChanged);
     }
 
     void HandleCheckedChanged(ToggleButton toggle)
     {
         if (toggle.Checked)
         {
-            foreach (var item in _toggles)
+            foreach (var item in this.toggles)
             {
                 if (item.GetInstanceID() != toggle.GetInstanceID())
                 {

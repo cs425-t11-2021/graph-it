@@ -7,7 +7,8 @@ public class LatexLabelObj : MonoBehaviour
 {
     private RawImage image;
 
-    public string formula;
+    [SerializeField]
+    private string formula;
     private Texture latexTexture;
 
     private void Awake() {

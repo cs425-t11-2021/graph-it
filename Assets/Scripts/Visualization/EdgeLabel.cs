@@ -5,14 +5,14 @@ using TMPro;
 
 public class EdgeLabel : MonoBehaviour
 {
-    public double weight;
+    private double weight;
     // UI Rect of the label object
     private Rect rect;
     // Store previous global position of the labelObj
     private Vector3 previousPosition;
 
     // Reference to the text mesh object
-    TMP_InputField inputField;
+    private TMP_InputField inputField;
 
     private bool displayEnabled;
 
@@ -21,7 +21,7 @@ public class EdgeLabel : MonoBehaviour
         this.weight = weight;
         inputField.text = weight.ToString();
 
-        OnToggleVertexLabels(Controller.singleton.DisplayVertexLabels);
+        OnToggleVertexLabels(Controller.Singleton.DisplayVertexLabels);
     }
 
     private void Awake() {
@@ -30,7 +30,7 @@ public class EdgeLabel : MonoBehaviour
 
         inputField = GetComponentInChildren<TMP_InputField>();
 
-        Controller.singleton.OnToggleVertexLabels += OnToggleVertexLabels;
+        Controller.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
     }
 
     private void OnToggleVertexLabels(bool enabled)
@@ -64,7 +64,7 @@ public class EdgeLabel : MonoBehaviour
 
     Vector3 FindSuitablePosition()
     {
-        Vector3 toPos = this.transform.parent.GetComponentInChildren<EdgeObj>().targetVertexObj.transform.position;
+        Vector3 toPos = this.transform.parent.GetComponentInChildren<EdgeObj>().TargetVertexObj.transform.position;
         Vector3 fromPos = this.transform.parent.parent.position;
 
         Vector3 center = (toPos + fromPos) / 2f;

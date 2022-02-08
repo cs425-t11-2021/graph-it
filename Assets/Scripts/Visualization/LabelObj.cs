@@ -9,7 +9,7 @@ public class LabelObj : MonoBehaviour
 {
     //TODO: ADD COMMENTS
 
-    public string content;
+    private string content;
 
     // UI Rect of the label object
     private Rect rect;
@@ -37,7 +37,7 @@ public class LabelObj : MonoBehaviour
             inputField.text = content;
         }
 
-        OnToggleVertexLabels(Controller.singleton.DisplayVertexLabels);
+        OnToggleVertexLabels(Controller.Singleton.DisplayVertexLabels);
     }
 
     private void Awake()
@@ -47,7 +47,7 @@ public class LabelObj : MonoBehaviour
 
         inputField = GetComponentInChildren<TMP_InputField>();
 
-        Controller.singleton.OnToggleVertexLabels += OnToggleVertexLabels;
+        Controller.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
 
         image = this.gameObject.GetComponentInChildren<RawImage>();
         image.enabled = false;
