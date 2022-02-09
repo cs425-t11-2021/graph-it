@@ -14,20 +14,8 @@ public class DoubleClick : SingletonBehavior<DoubleClick>
 	private float delay = 0.3f;
 	private bool isDoubleClick = false;
 
-	private bool PointerOverNode = false;
-	private bool PointerOverEdge = false;
-
-	// Singleton Pattern
-	public static DoubleClick Singleton;
-
     private void Update()
 	{
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge"));  //11f since camera is at z = -10
-        if (hit) {
-            return;
-        }
-
         if (Controller.Singleton.UIActive()) {
             return;
         }
@@ -43,7 +31,7 @@ public class DoubleClick : SingletonBehavior<DoubleClick>
 			isDoubleClick = false;
 		}
 
-		if (!PointerOverNode && !PointerOverEdge && Input.GetMouseButtonDown(0))
+		if (!InputManager.Singleton.CursorOverGraphObj && Input.GetMouseButtonDown(0))
 		{
 			if (isDoubleClick || Toolbar.Singleton.CreateVertexMode)
 			{

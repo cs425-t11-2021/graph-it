@@ -6,6 +6,10 @@ using UnityEngine;
 // Script used for testing purposes, disable before build
 public class Tester : SingletonBehavior<Tester>
 {
-
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.P)) {
+            GraphPhysics.Singleton.UseGraphPhysics(3);
+        }
+    }
    
 }

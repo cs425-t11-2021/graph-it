@@ -64,7 +64,7 @@ public class EdgeLabel : MonoBehaviour
 
     Vector3 FindSuitablePosition()
     {
-        Vector3 toPos = this.transform.parent.GetComponentInChildren<EdgeObj>().TargetVertexObj.transform.position;
+        Vector3 toPos = this.transform.parent.GetComponentInChildren<EdgeObj>().ToVertexObj.transform.position;
         Vector3 fromPos = this.transform.parent.parent.position;
 
         Vector3 center = (toPos + fromPos) / 2f;

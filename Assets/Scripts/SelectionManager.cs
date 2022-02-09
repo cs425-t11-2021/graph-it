@@ -173,7 +173,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
             foreach (EdgeObj edgeObj in allEdgeObjs)
             {
-                if (edgeObj.TargetVertexObj == vertexObj.gameObject)
+                if (edgeObj.ToVertexObj == vertexObj.gameObject)
                 {
                     Destroy(edgeObj.gameObject);
                 }

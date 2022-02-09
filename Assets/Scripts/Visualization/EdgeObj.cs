@@ -22,8 +22,10 @@ public class EdgeObj : MonoBehaviour
     // Uses a custom timer to reduce the frequency of physics updates (to reduce lag)
     private float physicsTimer = 0f;
 
+    // Reference to the game object of the source vertex
+    public GameObject FromVertexObj {get; set;}
     // Reference to the game object of the target vertex
-    public GameObject TargetVertexObj {get; set;}
+    public GameObject ToVertexObj {get; set;}
 
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
@@ -57,10 +59,12 @@ public class EdgeObj : MonoBehaviour
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
-    public void Initiate(Edge edge, GameObject target) {
+    public void Initiate(Edge edge, GameObject from, GameObject to) {
         this.Edge = edge;
 
-        this.TargetVertexObj = target;
+        this.ToVertexObj = to;
+        this.FromVertexObj = from;
+        
         this.gameObject.SetActive(true);
         // TODO: Make this better
         // Currently, direction = 1 means pointing from paretn to target vertex
@@ -131,7 +135,7 @@ public class EdgeObj : MonoBehaviour
     private void FixedUpdate() {
         if (Edge != null) {
             // Stretch the edge between the two vertices
-            StretchBetweenPoints(this.transform.parent.position, TargetVertexObj.transform.position);
+            StretchBetweenPoints(this.transform.parent.position, ToVertexObj.transform.position);
         }
 
         // Only update the Physics 2D collider of the edge every 0.25s instead of real time to reduce physics lag

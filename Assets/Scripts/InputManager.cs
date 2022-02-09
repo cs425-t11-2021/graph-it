@@ -28,7 +28,14 @@ public class InputManager : SingletonBehavior<InputManager>
             }
             return false;
         }
-    }  
+    }
+
+    // Property to detect whether the cursor is over a graph object
+    public bool CursorOverGraphObj {
+        get {
+            return CursorOverEdge || CursorOverVertex;
+        }
+    }
 
     private void Update() {
         bool test = CursorOverEdge;
