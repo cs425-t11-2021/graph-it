@@ -44,9 +44,4 @@ public class InputManager : SingletonBehavior<InputManager>
             return Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(0);
         }
     }
-
-    private void Update() {
-        bool test = CursorOverEdge;
-        bool test2 = CursorOverVertex;
-    }
 }

@@ -329,7 +329,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 798110308}
         m_TargetAssemblyTypeName: EditMenu, Assembly-CSharp
-        m_MethodName: ToggleSelectAll
+        m_MethodName: SelectAll
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -596,7 +596,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 798110308}
         m_TargetAssemblyTypeName: EditMenu, Assembly-CSharp
-        m_MethodName: ToggleDeselectAll
+        m_MethodName: DeselectAll
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -932,7 +932,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showGrpahLabelsText: {fileID: 455186629}
-  dropDownMenu: {fileID: 1938432809}
 --- !u!1 &172606128
 GameObject:
   m_ObjectHideFlags: 0
@@ -5378,9 +5377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80d19f9aa879d47f3a1734f1e0c5ff8a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropDownMenu: {fileID: 394208183}
-  selectAllButton: {fileID: 58407690}
-  deselectAllButton: {fileID: 134002493}
   addEdgeButton: {fileID: 1126108517}
 --- !u!1 &798872253
 GameObject:

@@ -5,114 +5,34 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+// Class for hosting functions called by buttons of the File dropdown menu, inherits from MenuButton
 public class FileMenu : MenuButton
 {
-    [SerializeField]
-    private GameObject newGraphButton;
-    //[SerializeField]
-    //private GameObject importMenuItem;
-    //[SerializeField]
-   // private GameObject exportMenuItem;
-
-   // private Button fileButton;
+    // References to the import and export file dialogs
     [SerializeField]
     private GameObject importFileMenu;
     [SerializeField]
     private GameObject exportFileMenu;
-    //[SerializeField]
-    //private GameObject editDropDown;
-    //[SerializeField]
-    //private GameObject viewDropDown;
-
-
-
-    // private Button fileButton;
-
-    // private void Awake() {
-    //     this.fileButton = this.gameObject.GetComponent<Button>();
-    // }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        /*//getting the "ImportToFile" button object to check if clicked
-        importMenuItem = transform.GetChild(1).GetChild(2).gameObject;
-        //getting the "ExportToFile" button object to check if clicked
-        exportMenuItem = transform.GetChild(1).GetChild(3).gameObject;
-
-        //getting the "file" button to monitor if selected
-        //fileButton = this.GetComponent<Button>();
-        //fileButton.onClick.AddListener(DisplayDropDown);*/
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-      /*  if (EventSystem.current.currentSelectedGameObject == importMenuItem)
-        {
-            //if the "ImportToFile" is clicked, show the import to file pop-up
-            importFileButton.gameObject.SetActive(true);
-        }
-        else if (EventSystem.current.currentSelectedGameObject == exportMenuItem)
-        {
-            exportFileButton.gameObject.SetActive(true);
-        }
-        else if (EventSystem.current.currentSelectedGameObject == newGraphButton)
-        {
-            Controller.singleton.ClearGraphObjs();
-            Controller.singleton.Graph.Clear();
-        }*/
-        // if (!this.DropdownActive) return;
-        
-        // if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-        //     // if( !(Controller.Singleton.UIActive())) { //does not close dropdown when another button is pressed
-        //     //     this.DropdownActive = false;
-        //     // }
-            
-        //     if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
-        //         this.DropdownActive = false;
-        //     }
-        // }
-    }
-
-    // //if the user clicks on the "File" button, the dropdown will appear, otherwise the dropdown remains hidden
-    //   public void ToggleDropDown(){
-    //     if(this.dropDownMenu.activeInHierarchy){
-    //         EventSystem.current.SetSelectedGameObject(null);
-    //         this.dropDownMenu.SetActive(false);
-    //     }
-    //     else{
-    //         fileButton.Select();
-    //         this.dropDownMenu.SetActive(true);
-    //         //editDropDown.SetActive(false);
-    //         //viewDropDown.SetActive(false);
-    //     }
-    // }
 
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
         Controller.Singleton.ClearGraphObjs();
         Controller.Singleton.Graph.Clear();
-        // CloseDropDown();
     }
 
+    // Function called by the import from file button
     public void ImportFromFile(){
         this.importFileMenu.gameObject.SetActive(true);
-        // CloseDropDown();
     }
 
+    // Function called by the export to file button
     public void ExportToFile(){
         this.exportFileMenu.gameObject.SetActive(true);
-        // CloseDropDown();
     }
 
+    // Function called by the save as image button
     public void SaveAsImage() {
         ScreenshotManager.Singleton.SaveScrenshotToDesktop();
-        // CloseDropDown();
     }
-
-    // public void CloseDropDown(){
-    //     this.DropdownActive = false;
-    // }
 }

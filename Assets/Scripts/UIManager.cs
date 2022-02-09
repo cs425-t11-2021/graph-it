@@ -41,9 +41,6 @@ public class UIManager : SingletonBehavior<UIManager>
         }
     }
 
-    // Delagate for when a menu button dropdown is opened
-    // public Action<MenuButton> OnMenuButtonDropdownOpen;
-
     // Array of all menu bar buttons
     private MenuButton[] menuButtons;
 
@@ -51,6 +48,7 @@ public class UIManager : SingletonBehavior<UIManager>
     private GraphInfo graphInfo;
 
     private void Awake() {
+        // Get references
         this.menuButtons = this.menuBar.GetComponentsInChildren<MenuButton>();
         this.graphInfo = this.infoAndAlgorithmsPanel.GetComponentInChildren<GraphInfo>();
     }
@@ -71,6 +69,7 @@ public class UIManager : SingletonBehavior<UIManager>
                         if (gameObjectClicked && gameObjectClicked.transform.IsChildOf(mb.transform)) {
                             Logger.Log("Calling dropdown button on " + gameObjectClicked.name, this, LogType.DEBUG);
                             gameObjectClicked.GetComponent<Button>()?.onClick.Invoke();
+                            // Deselect buttons
                             EventSystem.current.SetSelectedGameObject(null);
                         }
                         mb.DropdownActive = false;

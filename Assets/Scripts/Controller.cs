@@ -36,10 +36,6 @@ public class Controller : SingletonBehavior<Controller>
         Camera.main.eventMask = this.clickableLayers;
     }
 
-    private void Update() {
-        
-    }
-
     // Utility method to help get the corresponding world position of the mouse cursor
     // TODO: Set to static to move to separate utility class
     public Vector3 GetCursorWorldPosition() {
