@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Monobehavior which manages the program settings such as visuals
 public class SettingsManager : SingletonBehavior<SettingsManager>
 {
-    // TODO: Move the visual settings away from controller and into its own object
     [Header("Default Visual Settings")]
 
+    // Whether or not vertex and edge labels should be displayed
+    // bool to store the setting
+    // event to be subscribed to by other classes that needs side effects when changes are updated
     [SerializeField]
     private bool displayVertexLabels;
     public event Action<bool> OnToggleVertexLabels;
@@ -21,6 +24,7 @@ public class SettingsManager : SingletonBehavior<SettingsManager>
         }
     }
     
+    // Whether or not vertices should snap to grid
     [SerializeField]
     private bool snapVerticesToGrid;
     public event Action<bool> OnToggleGridSnapping;
@@ -33,6 +37,7 @@ public class SettingsManager : SingletonBehavior<SettingsManager>
         }
     }
 
+    // Whether or not gridlines should always be displayed
     [SerializeField]
     private bool alwaysShowGridlines;
     public event Action<bool> OnToggleAlwaysShowGridlines;
@@ -54,6 +59,7 @@ public class SettingsManager : SingletonBehavior<SettingsManager>
         }
     }
 
+    // Method run at Awake to implement the default settings
     private void ImplementDefaultSettings()
     {
         DisplayVertexLabels = this.displayVertexLabels;
