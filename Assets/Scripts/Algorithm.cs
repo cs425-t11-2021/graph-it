@@ -8,7 +8,7 @@ public abstract class Algorithm
 	private Action onThreadExit;
     private bool running;
     private bool completed;
-    protected int hash;
+    private int hash;
 
 	public Algorithm(Graph graph, Action onThreadExit) {
 		this.graph = graph;
