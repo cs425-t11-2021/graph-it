@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class EditMenu : MonoBehaviour
+public class EditMenu : MenuButton
 {
     // Reference to child buttons assigned in Unity Inspector
     [SerializeField]
@@ -21,12 +21,12 @@ public class EditMenu : MonoBehaviour
    // [SerializeField]
     //private GameObject viewDropDown;
 
-    private Button editButton;
+    // private Button editButton;
 
-    private void Awake() {
-        this.addEdgeButton.interactable = false;
-        this.editButton = this.gameObject.GetComponent<Button>();
-    }
+    // private void Awake() {
+    //     this.addEdgeButton.interactable = false;
+    //     this.editButton = this.gameObject.GetComponent<Button>();
+    // }
 
     // Update is called once per frame
     void Update()
@@ -58,32 +58,32 @@ public class EditMenu : MonoBehaviour
             SelectionManager.singleton.AddEdge();
         }*/
 
-        if (!this.dropDownMenu.activeInHierarchy) return;
+        // if (!this.dropDownMenu.activeInHierarchy) return;
         
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if( !(Controller.Singleton.UIActive())) { //does not close dropdown when another button is pressed
-                this.dropDownMenu.SetActive(false);
-            }
+        // if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
+        //     if( !(Controller.Singleton.UIActive())) { //does not close dropdown when another button is pressed
+        //         this.dropDownMenu.SetActive(false);
+        //     }
             
-            if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
-                this.dropDownMenu.SetActive(false);
-            }
-        }
+        //     if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
+        //         this.dropDownMenu.SetActive(false);
+        //     }
+        // }
        
     }
 
-    public void ToggleDropDown(){
-        if(dropDownMenu.activeInHierarchy){
-            EventSystem.current.SetSelectedGameObject(null);
-            this.dropDownMenu.SetActive(false);
-        }
-        else{
-            dropDownMenu.SetActive(true);
-            this.editButton.Select();
-            //fileDropDown.SetActive(false);
-           // viewDropDown.SetActive(false);
-        }
-    }
+    // public void ToggleDropDown(){
+    //     if(dropDownMenu.activeInHierarchy){
+    //         EventSystem.current.SetSelectedGameObject(null);
+    //         this.dropDownMenu.SetActive(false);
+    //     }
+    //     else{
+    //         dropDownMenu.SetActive(true);
+    //         this.editButton.Select();
+    //         //fileDropDown.SetActive(false);
+    //        // viewDropDown.SetActive(false);
+    //     }
+    // }
     public void ToggleSelectAll(){
         CloseDropDown();
         //not sure if something else is needed

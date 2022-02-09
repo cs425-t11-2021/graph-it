@@ -16,7 +16,7 @@ public class DoubleClick : SingletonBehavior<DoubleClick>
 
     private void Update()
 	{
-        if (Controller.Singleton.UIActive()) {
+        if (UIManager.Singleton.CursorOnUI) {
             return;
         }
 

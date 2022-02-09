@@ -69,7 +69,7 @@ public class Toolbar : SingletonBehavior<Toolbar>
     }
 
     private void Update() {
-        if (Controller.Singleton.UIActive()) return;
+        if (UIManager.Singleton.CursorOnUI) return;
         
         // If a number key is pressed, trigger the corresponding button on the toolbar
         for (int i = 1; i <= 9; i++) {

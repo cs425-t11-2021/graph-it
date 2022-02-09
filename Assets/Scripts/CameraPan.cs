@@ -28,7 +28,7 @@ public class CameraPan : MonoBehaviour
 
     private void Update() {
         // Disable panning when cursor over UI
-        if (Controller.Singleton.UIActive()) {
+        if (UIManager.Singleton.CursorOnUI) {
             this.doNotPan = true;
             return;
         }

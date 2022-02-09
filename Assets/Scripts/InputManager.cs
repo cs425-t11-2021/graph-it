@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class InputManager : SingletonBehavior<InputManager>
 {
@@ -35,6 +36,37 @@ public class InputManager : SingletonBehavior<InputManager>
         get {
             return CursorOverEdge || CursorOverVertex;
         }
+    }
+
+    // Property to detect whether or not a mouse button was pressed
+    public bool MouseButtonPressedThisFrame {
+        get {
+            return Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(0);
+        }
+    }
+ 
+    // Returns the gameobject of the UI element the cursor is currently on, null if none
+    // Method modified from https://forum.unity.com/threads/how-to-detect-if-mouse-is-over-ui.1025533/
+    public GameObject GetUIElementCusorIsOn() {
+        List<RaycastResult> eventSystemRaysastResults = GetEventSystemRaycastResults();
+        
+        for (int index = 0; index < eventSystemRaysastResults.Count; index++)
+        {
+            RaycastResult curRaysastResult = eventSystemRaysastResults[index];
+            if (curRaysastResult.gameObject.layer == LayerMask.GetMask("UI"))
+                return curRaysastResult.gameObject;
+        }
+        return null;
+    }
+
+    // Gets all event system raycast results of current mouse or touch position.
+    private static List<RaycastResult> GetEventSystemRaycastResults()
+    {
+        PointerEventData eventData = new PointerEventData(EventSystem.current);
+        eventData.position = Input.mousePosition;
+        List<RaycastResult> raysastResults = new List<RaycastResult>();
+        EventSystem.current.RaycastAll(eventData, raysastResults);
+        return raysastResults;
     }
 
     private void Update() {

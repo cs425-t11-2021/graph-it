@@ -13,10 +13,12 @@ public class GraphPhysics : SingletonBehavior<GraphPhysics> {
         Controller.Singleton.OnVertexObjectCreation += OnVertexObjectCreation;
     }
 
+    // Function called when a new vertex object is created
     private void OnVertexObjectCreation(VertexObj vertexObj) {
         
     }
 
+    // Function called when a new edge object is created
     private void OnEdgeObjectCreation(EdgeObj edgeObj) {
         // Add a DistanceJoint2D which connects the two vertices
         DistanceJoint2D joint = edgeObj.FromVertexObj.gameObject.AddComponent<DistanceJoint2D>();
@@ -84,6 +86,7 @@ public class GraphPhysics : SingletonBehavior<GraphPhysics> {
     // Enables graph physics for a certain duartion
     public void UseGraphPhysics(float duration)
     {
+        Logger.Log(string.Format("Enabling graph physics for {0} seconds", duration), this, LogType.INFO);
         if (!this.graphPhysicsEnabled)
         {
             SetGraphPhysics(true);

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Controller : SingletonBehavior<Controller>
 {
@@ -206,12 +205,6 @@ public class Controller : SingletonBehavior<Controller>
         edgeObj.Initiate(edge, fromVertexObj.gameObject, toVertexObj.gameObject);
         // Send the OnEdgeObjectCreation event
         OnEdgeObjectCreation?.Invoke(edgeObj);
-    }
-
-    // Returns true if any UI elements are being interacted with
-    public bool UIActive()
-    {
-        return EventSystem.current.currentSelectedGameObject != null || EventSystem.current.IsPointerOverGameObject();
     }
     
 }

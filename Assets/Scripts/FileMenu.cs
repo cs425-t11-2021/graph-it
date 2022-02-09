@@ -5,10 +5,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class FileMenu : MonoBehaviour
+public class FileMenu : MenuButton
 {
-    [SerializeField]
-    private GameObject dropDownMenu;
     [SerializeField]
     private GameObject newGraphButton;
     //[SerializeField]
@@ -28,11 +26,11 @@ public class FileMenu : MonoBehaviour
 
 
 
-    private Button fileButton;
+    // private Button fileButton;
 
-    private void Awake() {
-        this.fileButton = this.gameObject.GetComponent<Button>();
-    }
+    // private void Awake() {
+    //     this.fileButton = this.gameObject.GetComponent<Button>();
+    // }
 
     // Start is called before the first frame update
     void Start()
@@ -64,32 +62,32 @@ public class FileMenu : MonoBehaviour
             Controller.singleton.ClearGraphObjs();
             Controller.singleton.Graph.Clear();
         }*/
-        if (!this.dropDownMenu.activeInHierarchy) return;
+        // if (!this.DropdownActive) return;
         
-        if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if( !(Controller.Singleton.UIActive())) { //does not close dropdown when another button is pressed
-                this.dropDownMenu.SetActive(false);
-            }
+        // if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
+        //     // if( !(Controller.Singleton.UIActive())) { //does not close dropdown when another button is pressed
+        //     //     this.DropdownActive = false;
+        //     // }
             
-            if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
-                this.dropDownMenu.SetActive(false);
-            }
-        }
+        //     if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
+        //         this.DropdownActive = false;
+        //     }
+        // }
     }
 
-    //if the user clicks on the "File" button, the dropdown will appear, otherwise the dropdown remains hidden
-      public void ToggleDropDown(){
-        if(this.dropDownMenu.activeInHierarchy){
-            EventSystem.current.SetSelectedGameObject(null);
-            this.dropDownMenu.SetActive(false);
-        }
-        else{
-            fileButton.Select();
-            this.dropDownMenu.SetActive(true);
-            //editDropDown.SetActive(false);
-            //viewDropDown.SetActive(false);
-        }
-    }
+    // //if the user clicks on the "File" button, the dropdown will appear, otherwise the dropdown remains hidden
+    //   public void ToggleDropDown(){
+    //     if(this.dropDownMenu.activeInHierarchy){
+    //         EventSystem.current.SetSelectedGameObject(null);
+    //         this.dropDownMenu.SetActive(false);
+    //     }
+    //     else{
+    //         fileButton.Select();
+    //         this.dropDownMenu.SetActive(true);
+    //         //editDropDown.SetActive(false);
+    //         //viewDropDown.SetActive(false);
+    //     }
+    // }
 
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
@@ -114,6 +112,6 @@ public class FileMenu : MonoBehaviour
     }
 
     public void CloseDropDown(){
-        this.dropDownMenu.SetActive(false);
+        this.DropdownActive = false;
     }
 }

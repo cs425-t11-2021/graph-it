@@ -803,7 +803,6 @@ GameObject:
   - component: {fileID: 150277625}
   - component: {fileID: 150277624}
   - component: {fileID: 150277623}
-  - component: {fileID: 150277627}
   - component: {fileID: 150277628}
   m_Layer: 5
   m_Name: View
@@ -947,18 +946,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 150277621}
   m_CullTransparentMesh: 1
---- !u!114 &150277627
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 150277621}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a34e3e421a81dfe4eb64be0ea28cf89b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &150277628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3609,6 +3596,7 @@ GameObject:
   - component: {fileID: 523876769}
   - component: {fileID: 523876768}
   - component: {fileID: 523876767}
+  - component: {fileID: 523876771}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -3702,6 +3690,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &523876771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 523876766}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9d877fcea8f0e4ac9935ab58e77a87bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuBar: {fileID: 1251704790}
+  infoAndAlgorithmsPanel: {fileID: 398669197}
+  importFileMenu: {fileID: 646253996}
+  exportFileMenu: {fileID: 1983837607}
+  importErrorDialog: {fileID: 2075901294}
+  toolbar: {fileID: 1228080542}
 --- !u!1 &553223908
 GameObject:
   m_ObjectHideFlags: 0
@@ -5275,7 +5281,6 @@ GameObject:
   - component: {fileID: 798110305}
   - component: {fileID: 798110304}
   - component: {fileID: 798110303}
-  - component: {fileID: 798110307}
   - component: {fileID: 798110308}
   m_Layer: 5
   m_Name: Edit
@@ -5419,18 +5424,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 798110301}
   m_CullTransparentMesh: 1
---- !u!114 &798110307
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 798110301}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a34e3e421a81dfe4eb64be0ea28cf89b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &798110308
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7397,7 +7390,6 @@ GameObject:
   - component: {fileID: 1119136490}
   - component: {fileID: 1119136489}
   - component: {fileID: 1119136492}
-  - component: {fileID: 1119136495}
   - component: {fileID: 1119136494}
   m_Layer: 5
   m_Name: File
@@ -7553,22 +7545,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c351e234dfc48f7b78bfbaeb070b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dropDownMenu: {fileID: 798872253}
   newGraphButton: {fileID: 1112343149}
   importFileMenu: {fileID: 646253996}
   exportFileMenu: {fileID: 1983837607}
---- !u!114 &1119136495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1119136487}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a34e3e421a81dfe4eb64be0ea28cf89b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1126108516
 GameObject:
   m_ObjectHideFlags: 0
