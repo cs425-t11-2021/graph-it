@@ -185,7 +185,7 @@ public class Graph
         return edge;
     }
 
-    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.adjacency.ContainsKey( ( vert1, vert2 ) ) || this.adjacency.ContainsKey( ( vert2, vert1 ) );
+    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => !( this[ vert1, vert2 ] is null );
 
     private bool IsDirected()
     {
@@ -553,9 +553,6 @@ public class Graph
 
         dist[ src ] = 0;
 
-        foreach ( Vertex v in this.vertices )
-            prev[ v ] = null;
-
         while ( not_visited.Count() > 0 )
         {
             // find u in not_visited such that dist[u] is minimal
@@ -571,9 +568,9 @@ public class Graph
             // update neighbors of u
             foreach ( Vertex v in not_visited )
             {
-                if ( this.adjacency.ContainsKey( ( u, v ) ) )
+                if ( this.IsAdjacent( u, v ) )
                 {
-                    double tmp = dist[ u ] + this.adjacency[ ( u, v ) ].weight;
+                    double tmp = dist[ u ] + this[ u, v ].weight;
                     if ( tmp < dist[ v ] )
                     {
                         dist[ v ] = tmp;
