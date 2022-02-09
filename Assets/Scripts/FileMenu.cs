@@ -91,27 +91,28 @@ public class FileMenu : MenuButton
 
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
+        Logger.Log("Creating a new graph.", this, LogType.DEBUG);
         Controller.Singleton.ClearGraphObjs();
         Controller.Singleton.Graph.Clear();
-        CloseDropDown();
+        // CloseDropDown();
     }
 
     public void ImportFromFile(){
         this.importFileMenu.gameObject.SetActive(true);
-        CloseDropDown();
+        // CloseDropDown();
     }
 
     public void ExportToFile(){
         this.exportFileMenu.gameObject.SetActive(true);
-        CloseDropDown();
+        // CloseDropDown();
     }
 
     public void SaveAsImage() {
         ScreenshotManager.Singleton.SaveScrenshotToDesktop();
-        CloseDropDown();
+        // CloseDropDown();
     }
 
-    public void CloseDropDown(){
-        this.DropdownActive = false;
-    }
+    // public void CloseDropDown(){
+    //     this.DropdownActive = false;
+    // }
 }

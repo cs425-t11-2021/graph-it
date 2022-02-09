@@ -26,13 +26,19 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     private ChromaticAlgorithm chromaticAlgorithm;
 
+    // Property for whether or not the algorithm buttons are enabled
+    public bool AlgorithmButtonsEnabled {
+        set {
+            primButton.enabled = value;
+            dijkstraButton.enabled = value;
+        }
+    }
+
     private void Awake() {
         this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.Singleton.Graph, UpdateChromaticInfo);
 
         this.primButton.interactable = false;
         UpdateGraphInfo();
-        
-        
     }
 
     private void FixedUpdate() {

@@ -47,7 +47,7 @@ public class ViewMenu : MenuButton
     // Method called by the "Show Graph Labels" button in the view dropdown to toggle the display of vertex and edge labels
     public void ToggleLabels()
     {
-        CloseDropDown();
+        // CloseDropDown();
         if (SettingsManager.Singleton.DisplayVertexLabels)
         {
             SettingsManager.Singleton.DisplayVertexLabels = false;
@@ -73,7 +73,7 @@ public class ViewMenu : MenuButton
     //     }
     // }
 
-    public void CloseDropDown(){
-        this.dropDownMenu.SetActive(false);
-    }
+    // public void CloseDropDown(){
+    //     this.dropDownMenu.SetActive(false);
+    // }
 }

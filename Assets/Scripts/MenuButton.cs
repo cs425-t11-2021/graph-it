@@ -11,23 +11,12 @@ using UnityEngine.UI;
 public abstract class MenuButton : MonoBehaviour
 {
     // Static event for when a menu button dropdown is opened
-    public static event Action<MenuButton> OnMenuButtonDropdownOpen;
+    // public static event Action<MenuButton> OnMenuButtonDropdownOpen;
 
-    // Refernce to the button component
-    private Button button;
+    // Refernce to the toggle button component
+    private ToggleButton toggleButton;
 
-    private void Awake() {
-        // On awake, subscribe a method to the on menu button dropdown open event that will close this dropdown of this button
-        // if it is not the caller of the event.
-        MenuButton.OnMenuButtonDropdownOpen += caller => {
-            if (caller != this) 
-                DropdownActive = false;
-        };
-
-        this.button = this.GetComponent<Button>();
-    }
-
-    // Whether or not the dropdown associated with this button is active
+    // Property for whether or not the dropdown associated with this button is active
     public bool DropdownActive {
         // Gets or sets the activeness of the gameObject of the dropdown (second child of button)
         get {
@@ -37,14 +26,32 @@ public abstract class MenuButton : MonoBehaviour
             // If opening the dropdown menu, invoke the on menu button dropdown open event, and select the button; if closing, deselect the button
             if (value) {
                 Logger.Log("Opening dropdown.", this, LogType.DEBUG);
-                MenuButton.OnMenuButtonDropdownOpen?.Invoke(this);
-                this.button.Select();
+                // MenuButton.OnMenuButtonDropdownOpen?.Invoke(this);
+                
             }
-            else if (EventSystem.current.currentSelectedGameObject == this.gameObject)
-                EventSystem.current.SetSelectedGameObject(null);
+            // else if (EventSystem.current.currentSelectedGameObject == this.gameObject)
+            //     EventSystem.current.SetSelectedGameObject(null);
             
+            this.toggleButton.UpdateStatus(value);
             this.transform.GetChild(1).gameObject.SetActive(value);
         }
+    }
+
+    // Property for whether or not the toggle button is enabled
+    public bool ToggleButtonEnabled {
+        get =>  this.toggleButton.enabled; set => this.toggleButton.enabled = value;
+    }
+
+    private void Awake() {
+        // On awake, subscribe a method to the on menu button dropdown open event that will close this dropdown of this button
+        // if it is not the caller of the event.
+        // MenuButton.OnMenuButtonDropdownOpen += caller => {
+        //     if (caller != this) 
+        //         DropdownActive = false;
+        // };
+        
+        this.toggleButton = this.GetComponent<ToggleButton>();
+        DropdownActive = false;
     }
 
     public void ToggleDropDown() {

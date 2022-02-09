@@ -37,7 +37,12 @@ public class ToggleButton : MonoBehaviour, IPointerClickHandler
         }
     }
 
-    void Start()
+    public void UpdateStatus(bool value) {
+        this.@checked = value;
+        UpdateVisual();
+    }
+
+    void Awake()
     {
         this.image = GetComponent<Image>();
         this.originalColor = this.image.color;

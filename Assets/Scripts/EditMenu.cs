@@ -85,22 +85,22 @@ public class EditMenu : MenuButton
     //     }
     // }
     public void ToggleSelectAll(){
-        CloseDropDown();
+        // CloseDropDown();
         //not sure if something else is needed
         SelectionManager.Singleton.SelectAll();
     }
 
     public void ToggleDeselectAll(){
-        CloseDropDown();
+        // CloseDropDown();
         SelectionManager.Singleton.DeSelectAll();
     }
 
     public void AddEdgeButtonFromEditMenu(){
-        CloseDropDown();
+        // CloseDropDown();
         SelectionManager.Singleton.AddEdge();
     }
 
-    public void CloseDropDown(){
-        this.dropDownMenu.SetActive(false);
-    }
+    // public void CloseDropDown(){
+    //     this.dropDownMenu.SetActive(false);
+    // }
 }

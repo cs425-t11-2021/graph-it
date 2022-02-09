@@ -105,9 +105,9 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
     // Turn off all toggles
     public void ResetAll() {
-        this.SelectionMode = false;
-        this.CreateVertexMode = false;
-        this.EdgeCreationMode = false;
+        this.selectionModeButton.Checked = false;
+        this.createVertexModeButton.Checked = false;
+        this.edgeCreationModeButton.Checked = false;
     }
 
     // Enable or disable selection mode

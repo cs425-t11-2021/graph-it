@@ -27,39 +27,63 @@ public class ImportExportErrorMessage : MonoBehaviour
     void Start()
     {
         //do not want to display pop up when program first starts
+        // this.gameObject.SetActive(false);
+        // this.acknowledgeButton = transform.GetChild(3).gameObject;
+    }
+
+    private void OnEnable() {
+        this.importButton.enabled = false;
+        this.exportButton.enabled = false;
+        this.importCancelButton.enabled = false;
+        this.exportCancelButton.enabled = false;
+        this.importUserInput.enabled = false;
+        this.exportUserInput.enabled = false;
+    }
+
+    private void OnDisable() {
+        this.importButton.enabled = true;
+        this.exportButton.enabled = true;
+        this.importCancelButton.enabled = true;
+        this.exportCancelButton.enabled = true;
+        this.importUserInput.enabled = true;
+        this.exportUserInput.enabled = true;
+    }
+
+    public void Ackowledge() {
+        // Ondisable does not get called automatically like OnEnable, thus we call it manually
+        OnDisable();
         this.gameObject.SetActive(false);
-        this.acknowledgeButton = transform.GetChild(3).gameObject;
     }
 
     // Update is called once per frame
     void Update()
     {   
         //if popup is displayed, disable all other actions in the import or export menu
-        if(this.gameObject.activeInHierarchy){
-            this.importButton.enabled = false;
-            this.exportButton.enabled = false;
-            this.importCancelButton.enabled = false;
-            this.exportCancelButton.enabled = false;
-            this.importUserInput.enabled = false;
-            this.exportUserInput.enabled = false;
-        }
-        else {
-            this.importButton.enabled = true;
-            this.exportButton.enabled = true;
-            this.importCancelButton.enabled = true;
-            this.exportCancelButton.enabled = true;
-            this.importUserInput.enabled = true;
-            this.exportUserInput.enabled = true;
-        }
+        // if(this.gameObject.activeInHierarchy){
+        //     this.importButton.enabled = false;
+        //     this.exportButton.enabled = false;
+        //     this.importCancelButton.enabled = false;
+        //     this.exportCancelButton.enabled = false;
+        //     this.importUserInput.enabled = false;
+        //     this.exportUserInput.enabled = false;
+        // }
+        // else {
+        //     this.importButton.enabled = true;
+        //     this.exportButton.enabled = true;
+        //     this.importCancelButton.enabled = true;
+        //     this.exportCancelButton.enabled = true;
+        //     this.importUserInput.enabled = true;
+        //     this.exportUserInput.enabled = true;
+        // }
 
-        if(EventSystem.current.currentSelectedGameObject == this.acknowledgeButton){
-            this.gameObject.SetActive(false);
-            this.importButton.enabled = true;
-            this.exportButton.enabled = true;
-            this.importCancelButton.enabled = true;
-            this.exportCancelButton.enabled = true;
-            this.importUserInput.enabled = true;
-            this.exportUserInput.enabled = true;
-        }
+        // if(EventSystem.current.currentSelectedGameObject == this.acknowledgeButton){
+        //     this.gameObject.SetActive(false);
+        //     this.importButton.enabled = true;
+        //     this.exportButton.enabled = true;
+        //     this.importCancelButton.enabled = true;
+        //     this.exportCancelButton.enabled = true;
+        //     this.importUserInput.enabled = true;
+        //     this.exportUserInput.enabled = true;
+        // }
     }
 }
