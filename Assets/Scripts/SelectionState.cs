@@ -58,7 +58,7 @@ public class SelectionState : ManipulationState
         EdgeObj[] edgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj e in edgeObjs) {
             if (bounds.Contains((Vector2) e.transform.position)) {
-                e.SetSelected(true);
+                SelectionManager.Singleton.SelectEdge(e);
             }
         }
 

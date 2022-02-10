@@ -116,21 +116,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         }
     }
 
-    // Add an to selectedEdges
-    public void SelectEdge(EdgeObj edgeObj)
-    {
-        if (!this.selectAll && ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
-            DeSelectAll();
-        }
-        
-        if (!this.selectedEdges.Contains(edgeObj)) {
-            this.selectedEdges.Add(edgeObj);
-
-            // Call selection changed event
-            this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
-        }
-    }
-
     // Remove a vertex from selectedVertices
     public void DeselectVertex(VertexObj vertexObj, bool callEvent = true)
     {
@@ -169,13 +154,38 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         Logger.Log(String.Format("{0} vertex: {1}.", select ? "Selecting" : "Deselecting", vertexObj.name), this, LogType.INFO);
     }
 
-    // Remove am edge from selectedEdges
-    public bool DeselectEdge(EdgeObj edgeObj)
+    public void SelectEdge(EdgeObj edgeObj, bool callEvent = true)
     {
-        // Call selection changed event
-        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count - 1);
+        if (!edgeObj.Selected) {
+            SetEdgeSelection(edgeObj, true, callEvent);
+        }
+    }
 
-        return this.selectedEdges.Remove(edgeObj);
+    public void ToggleEdgeSelection(EdgeObj edgeObj) {
+        SetEdgeSelection(edgeObj, !edgeObj.Selected, true);
+    }
+
+    public void DeselectEdge(EdgeObj edgeObj, bool callEvent = true)
+    {
+        if (edgeObj.Selected) {
+            SetEdgeSelection(edgeObj, false, callEvent);
+        }
+    }
+
+    private void SetEdgeSelection(EdgeObj edgeObj, bool select, bool callEvent) {
+        if (edgeObj.Selected) {
+            this.selectedEdges.Remove(edgeObj);
+        }
+        else {
+            this.selectedEdges.Add(edgeObj);
+        }
+        edgeObj.Selected = select;
+
+        if (callEvent)
+            // Call selection changed event
+            this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+
+        Logger.Log(String.Format("{0} edge: {1}.", select ? "Selecting" : "Deselecting", edgeObj.name), this, LogType.INFO);
     }
 
     // Method called to delete the currently selected vertices and edges, updates graph objects and graph database
@@ -224,7 +234,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     {
         for (int i = this.selectedEdges.Count - 1; i >= 0; i--)
         {
-            this.selectedEdges[i].SetSelected(false);
+            DeselectEdge(this.selectedEdges[i], false);
         }
         this.selectedEdges = new List<EdgeObj>();
         for (int i = this.selectedVertices.Count - 1; i >= 0; i--)
@@ -246,14 +256,14 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             if (!selectedEdges.Contains(edgeObj))
-                edgeObj.SetSelected(true);
+                SelectEdge(edgeObj, false);
         }
 
         VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (!selectedVertices.Contains(vertexObj))
-                SelectVertex(vertexObj);
+                SelectVertex(vertexObj, false);
         }
 
         // Call selection changed event
@@ -291,7 +301,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             if (primEdges.Contains(edgeObj.Edge))
-                edgeObj.SetSelected(true);
+                SelectEdge(edgeObj);
         }
 
         VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
@@ -315,7 +325,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             if (kruskalEdges.Contains(edgeObj.Edge))
-                edgeObj.SetSelected(true);
+                SelectEdge(edgeObj);
         }
 
         VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
@@ -347,7 +357,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
             if (dijkstraEdges.Contains(edgeObj.Edge))
-                edgeObj.SetSelected(true);
+                SelectEdge(edgeObj);
         }
 
         VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();

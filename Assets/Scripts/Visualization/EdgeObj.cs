@@ -30,6 +30,24 @@ public class EdgeObj : MonoBehaviour
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
     private bool selected = false;
+    public bool Selected {
+        get => this.selected;
+        set {
+            this.selected = value;
+            if (value) {
+                SelectionManager.Singleton.SelectEdge(this);
+                this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+                this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
+                labelObj.MakeEditable();
+            }
+            else {
+                SelectionManager.Singleton.DeselectEdge(this);
+                this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
+                labelObj.MakeUneditable();
+            }
+        }
+    }
     // Reference to the spriteRenderer component of the object
     private SpriteRenderer spriteRenderer;
 
@@ -95,7 +113,7 @@ public class EdgeObj : MonoBehaviour
     }
 
     private void Update() {
-        if (this.selected) {
+        if (this.Selected) {
             // If selected and Plus is pressed, increase thickness
             if (Input.GetKeyDown(KeyCode.Equals) && this.Edge.thickness < 5) {
                 this.Edge.thickness++;
@@ -107,9 +125,9 @@ public class EdgeObj : MonoBehaviour
                 this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
             }
             // If T is pressed, toggle directed and undirected edge
-            if (Input.GetKeyDown(KeyCode.T)) {
-                ToggleEdgeType();
-            }
+            // if (Input.GetKeyDown(KeyCode.T)) {
+            //     ToggleEdgeType();
+            // }
         }
     }
 
@@ -159,33 +177,33 @@ public class EdgeObj : MonoBehaviour
     // When user clicks a edge obj, select/deselect it using selection manager
     // Change color to blue when selected
     // TODO: Replace with Unity animator
-    private void OnMouseDown()
-    {
-        // Disable edge selection if quick edge creation mode is enabled
-        if (Toolbar.Singleton.EdgeCreationMode) return;
+    // private void OnMouseDown()
+    // {
+    //     // Disable edge selection if quick edge creation mode is enabled
+    //     if (Toolbar.Singleton.EdgeCreationMode) return;
 
-        SetSelected(!selected);
-    }
+    //     SetSelected(!Selected);
+    // }
 
     // Method for changing whether or not object is selected
-    public void SetSelected(bool selected)
-    {
-        this.selected = selected;
-        if (!selected)
-        {
-            SelectionManager.Singleton.DeselectEdge(this);
-            this.spriteRenderer.color = new Color32(0, 0, 0, 255);
-            this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
-            labelObj.MakeUneditable();
-        }
-        else
-        {
-            SelectionManager.Singleton.SelectEdge(this);
-            this.spriteRenderer.color = new Color32(0, 125, 255, 255);
-            this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
-            labelObj.MakeEditable();
-        }
-    }
+    // public void SetSelected(bool selected)
+    // {
+    //     this.Selected = selected;
+    //     if (!selected)
+    //     {
+    //         // SelectionManager.Singleton.DeselectEdge(this);
+    //         // this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+    //         // this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
+    //         // labelObj.MakeUneditable();
+    //     }
+    //     else
+    //     {
+    //         // SelectionManager.Singleton.SelectEdge(this);
+    //         // this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+    //         // this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
+    //         // labelObj.MakeEditable();
+    //     }
+    // }
     private void OnMouseExit()
     {
         // When cursor exits, reset the thickness

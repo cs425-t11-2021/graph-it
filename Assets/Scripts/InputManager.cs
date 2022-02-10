@@ -69,6 +69,18 @@ public class InputManager : SingletonBehavior<InputManager>
         }
     }
 
+    public GameObject CurrentHoveringEdge {
+        get {
+            Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, 0f, LayerMask.GetMask("Edge"));
+            if (hit.collider) {
+                Logger.Log("Cursor over edge.", this, LogType.DEBUG);
+                return hit.collider.gameObject;
+            }
+            return null;
+        }
+    }
+
     // Property to detect whether the cursor is over a graph object
     public bool CursorOverGraphObj {
         get {
