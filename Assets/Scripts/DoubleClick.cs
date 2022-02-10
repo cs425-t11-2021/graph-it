@@ -33,21 +33,21 @@ public class DoubleClick : SingletonBehavior<DoubleClick>
 
 		if (!InputManager.Singleton.CursorOverGraphObj && Input.GetMouseButtonDown(0))
 		{
-			if (isDoubleClick || Toolbar.Singleton.CreateVertexMode)
-			{
-				timerForDoubleClick = 0.0f;
-				isDoubleClick = false;
+			// if (isDoubleClick || Toolbar.Singleton.CreateVertexMode)
+			// {
+			// 	timerForDoubleClick = 0.0f;
+			// 	isDoubleClick = false;
 
-				Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-				Controller.Singleton.Graph.AddVertex(mousePos.x, mousePos.y);
-                Controller.Singleton.UpdateGraphObjs();
-                SelectionManager.Singleton.DeSelectAll();
-				GraphInfo.Singleton.UpdateGraphInfo();
-			}
-			else
-			{
-				isDoubleClick = true;
-			}
+			// // 	Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
+			// // 	Controller.Singleton.Graph.AddVertex(mousePos.x, mousePos.y);
+            // //     Controller.Singleton.UpdateGraphObjs();
+            // //     SelectionManager.Singleton.DeSelectAll();
+			// // 	GraphInfo.Singleton.UpdateGraphInfo();
+			// }
+			// else
+			// {
+			// 	isDoubleClick = true;
+			// }
 		}
 
 	}

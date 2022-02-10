@@ -20,8 +20,8 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     // TODO: think of a better solution
     private bool selectAll = false;
 
-    [SerializeField]
-    private RectTransform selectionRect;
+    // [SerializeField]
+    // private RectTransform selectionRect;
 
     private void Awake()
     {
@@ -43,32 +43,32 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
 
         if (Input.GetMouseButtonDown(0)) {
             this.lastCursorWorldPos = Controller.Singleton.GetCursorWorldPosition();
-            if (Toolbar.Singleton.SelectionMode) {
-                selectionRect.gameObject.SetActive(true);
+            if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.selectionState) {
+                // selectionRect.gameObject.SetActive(true);
             }
         }
 
-        if (Toolbar.Singleton.SelectionMode) {
-            if (Input.GetMouseButton(0)) {
-                UpdateSelectionRect();
-            }
+        if (ManipulationStateManager.Singleton?.ActiveState == ManipulationState.selectionState) {
+            // if (Input.GetMouseButton(0)) {
+            //     UpdateSelectionRect();
+            // }
             if (Input.GetMouseButtonUp(0)) {
-                Bounds bounds = UpdateSelectionRect();
+                // Bounds bounds = UpdateSelectionRect();
 
-                VertexObj[] vertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
-                foreach (VertexObj v in vertexObjs) {
-                    if (bounds.Contains(v.transform.position)) {
-                        v.SetSelected(true);
-                    }
-                }
-                EdgeObj[] edgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
-                foreach (EdgeObj e in edgeObjs) {
-                    if (bounds.Contains((Vector2) e.transform.position)) {
-                        e.SetSelected(true);
-                    }
-                }
+                // VertexObj[] vertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
+                // foreach (VertexObj v in vertexObjs) {
+                //     if (bounds.Contains(v.transform.position)) {
+                //         v.SetSelected(true);
+                //     }
+                // }
+                // EdgeObj[] edgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
+                // foreach (EdgeObj e in edgeObjs) {
+                //     if (bounds.Contains((Vector2) e.transform.position)) {
+                //         e.SetSelected(true);
+                //     }
+                // }
 
-                selectionRect.gameObject.SetActive(false);
+                // selectionRect.gameObject.SetActive(false);
             }
         }
         else {
@@ -92,22 +92,22 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         }
     }
 
-    private Bounds UpdateSelectionRect() {
-        Vector2 currentMouseWorldPos = Controller.Singleton.GetCursorWorldPosition();
-        Vector2 middle = (Controller.Singleton.GetCursorWorldPosition() + lastCursorWorldPos) / 2f;
-        Vector2 size = new Vector2(Mathf.Abs(currentMouseWorldPos.x - lastCursorWorldPos.x), Mathf.Abs(currentMouseWorldPos.y - lastCursorWorldPos.y));
+    // private Bounds UpdateSelectionRect() {
+    //     Vector2 currentMouseWorldPos = Controller.Singleton.GetCursorWorldPosition();
+    //     Vector2 middle = (Controller.Singleton.GetCursorWorldPosition() + lastCursorWorldPos) / 2f;
+    //     Vector2 size = new Vector2(Mathf.Abs(currentMouseWorldPos.x - lastCursorWorldPos.x), Mathf.Abs(currentMouseWorldPos.y - lastCursorWorldPos.y));
 
-        this.selectionRect.position = middle;
-        this.selectionRect.sizeDelta = size;
+    //     this.selectionRect.position = middle;
+    //     this.selectionRect.sizeDelta = size;
 
-        Bounds worldBounds = new Bounds(middle, size);
-        return worldBounds;
-    }
+    //     Bounds worldBounds = new Bounds(middle, size);
+    //     return worldBounds;
+    // }
 
     // Add a vertex to selectedVertices
     public void SelectVertex(VertexObj vertexObj)
     {
-        if (!this.selectAll && !Toolbar.Singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
+        if (!this.selectAll && ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
             DeSelectAll();
         }
 
@@ -122,7 +122,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     // Add an to selectedEdges
     public void SelectEdge(EdgeObj edgeObj)
     {
-        if (!this.selectAll && !Toolbar.Singleton.SelectionMode && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
+        if (!this.selectAll && ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
             DeSelectAll();
         }
         

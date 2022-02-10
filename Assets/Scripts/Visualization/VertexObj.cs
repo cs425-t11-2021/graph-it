@@ -136,7 +136,7 @@ public class VertexObj : MonoBehaviour
     // Method called when the vertex object is first picked up to be dragged
     private void OnDragStart()
     {
-        if (!Toolbar.Singleton.SelectionMode && !Toolbar.Singleton.CreateVertexMode) {
+        if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && ManipulationStateManager.Singleton.ActiveState == ManipulationState.vertexCreationState) {
             if (this.selected) {
                 SelectionManager.Singleton.DragSelectedVerticesStart();
             }
@@ -162,7 +162,7 @@ public class VertexObj : MonoBehaviour
 
         if (this.cursorOffset != null) {
             // Disable dragging when in selection or vertex creation mode
-            if (!Toolbar.Singleton.SelectionMode && !Toolbar.Singleton.CreateVertexMode) {
+            if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && ManipulationStateManager.Singleton.ActiveState == ManipulationState.vertexCreationState) {
                 if (this.selected) {
                     SelectionManager.Singleton.DragSelectedVertices();
                 }

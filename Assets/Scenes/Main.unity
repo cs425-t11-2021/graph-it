@@ -2223,6 +2223,7 @@ MonoBehaviour:
   orderText: {fileID: 1553925998}
   sizeText: {fileID: 324383124}
   primButton: {fileID: 1072866586}
+  kruskalButton: {fileID: 1937964947}
   dijkstraButton: {fileID: 1394906815}
 --- !u!1 &455186627
 GameObject:
@@ -3680,6 +3681,7 @@ MonoBehaviour:
   exportFileMenu: {fileID: 1983837607}
   importErrorDialog: {fileID: 2075901294}
   toolbar: {fileID: 1228080542}
+  selectionRect: {fileID: 1035785018}
 --- !u!1 &553223908
 GameObject:
   m_ObjectHideFlags: 0
@@ -4223,12 +4225,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98a3241799e088e49ae9c128faed2320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cancelButton: {fileID: 1127464280}
-  importButton: {fileID: 1730640667}
   importFilenameInput: {fileID: 757184706}
   errorMessagePopUp: {fileID: 2075901294}
-  toolbar: {fileID: 1228080542}
-  algorithmsPanelPrims: {fileID: 1072866586}
 --- !u!1 &652385414
 GameObject:
   m_ObjectHideFlags: 0
@@ -7468,7 +7466,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74c351e234dfc48f7b78bfbaeb070b7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newGraphButton: {fileID: 1112343149}
   importFileMenu: {fileID: 646253996}
   exportFileMenu: {fileID: 1983837607}
 --- !u!1 &1126108516
@@ -13474,8 +13471,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7618ff3886b89d0438806b35f54449bc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cancelButton: {fileID: 1183377615}
-  exportButton: {fileID: 1649507296}
   errorMessagePopUp: {fileID: 2075901294}
   exportFilenameInput: {fileID: 506519946}
 --- !u!1 &2016784608
@@ -14195,6 +14190,7 @@ GameObject:
   - component: {fileID: 2144943530}
   - component: {fileID: 2144943531}
   - component: {fileID: 2144943532}
+  - component: {fileID: 2144943533}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -14258,7 +14254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c60da87b7f5246c09bec55715ea5e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectionRect: {fileID: 1035785019}
 --- !u!114 &2144943526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14307,7 +14302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12301043cea9840819f36da364fc77cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loggingLevel: 3
+  loggingLevel: 2
 --- !u!114 &2144943530
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14335,6 +14330,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9bf5ebf30ef304fa1bdaf55a538b4d6b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  doubleClickTimeDelta: 0.2
 --- !u!114 &2144943532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14345,5 +14341,17 @@ MonoBehaviour:
   m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 213f2007ebda64d71bff0d36ef0715d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2144943533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144943521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6ec0de7c3718e45bd927ba59928b3e23, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

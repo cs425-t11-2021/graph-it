@@ -40,7 +40,7 @@ public class CameraPan : MonoBehaviour
         }
 
         // Do not pan if in vertex creation mode and selection mode
-        if (Toolbar.Singleton.CreateVertexMode || Toolbar.Singleton.SelectionMode) {
+        if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.vertexCreationState || ManipulationStateManager.Singleton.ActiveState == ManipulationState.selectionState) {
             this.doNotPan = true;
             return;
         }

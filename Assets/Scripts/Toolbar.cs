@@ -8,31 +8,31 @@ public class Toolbar : SingletonBehavior<Toolbar>
 {
     [SerializeField]
     private ToggleButton selectionModeButton;
-    private bool selectionMode = false;
-    public bool SelectionMode { 
-        get => this.selectionMode;
-        private set {
-            if (value) {
-                this.createVertexModeButton.Checked = false;
-                this.edgeCreationModeButton.Checked = false;
-            }
-            this.selectionMode = value;
-        }
-    }
+    // private bool selectionMode = false;
+    // public bool SelectionMode { 
+    //     get => this.selectionMode;
+    //     private set {
+    //         if (value) {
+    //             this.createVertexModeButton.Checked = false;
+    //             this.edgeCreationModeButton.Checked = false;
+    //         }
+    //         this.selectionMode = value;
+    //     }
+    // }
 
     [SerializeField]
     private ToggleButton createVertexModeButton;
-    private bool createVertexMode = false;
-    public bool CreateVertexMode { 
-        get => this.createVertexMode;
-        private set { 
-            if (value) {
-                this.selectionModeButton.Checked = false;
-                this.edgeCreationModeButton.Checked = false;
-            }
-            this.createVertexMode = value;
-        }
-    }
+    // private bool createVertexMode = false;
+    // public bool CreateVertexMode { 
+    //     get => this.createVertexMode;
+    //     private set { 
+    //         if (value) {
+    //             this.selectionModeButton.Checked = false;
+    //             this.edgeCreationModeButton.Checked = false;
+    //         }
+    //         this.createVertexMode = value;
+    //     }
+    // }
 
     [SerializeField]
     private Button deleteButton;
@@ -112,12 +112,26 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
     // Enable or disable selection mode
     public void ToggleSelectionMode() {
-        this.SelectionMode = !this.SelectionMode;
+        if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.selectionState;
+            this.createVertexModeButton.UpdateStatus(false);
+            this.edgeCreationModeButton.UpdateStatus(false);
+        }
+        else {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        }
     }
 
     // Enable or disable vertex creation mode
     public void ToggleCreateVertexMode() {
-        this.CreateVertexMode = !this.CreateVertexMode;
+        if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.vertexCreationState) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.vertexCreationState;
+            this.selectionModeButton.UpdateStatus(false);
+            this.edgeCreationModeButton.UpdateStatus(false);
+        }
+        else {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        }
     }
 
     // Function to enable certain toolbar buttons when a graph component is selected

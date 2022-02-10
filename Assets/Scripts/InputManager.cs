@@ -1,10 +1,20 @@
 using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class InputManager : SingletonBehavior<InputManager>
 {
+
+    public event Action OnMouseClick;
+    public event Action OnMouseDoubleClick;
+    public event Action OnMouseHold;
+    public event Action OnMouseRelease;
+
+    [SerializeField] private float doubleClickTimeDelta = 0.2f;
+    private float timeOfLastClick = 0f;
+
     // Property to detect whether the cursor is over a vertex using Raycast 2D
     public bool CursorOverVertex {
         get {
@@ -42,6 +52,29 @@ public class InputManager : SingletonBehavior<InputManager>
     public bool MouseButtonPressedThisFrame {
         get {
             return Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(0);
+        }
+    }
+
+    private void Update() {
+        if (Input.GetMouseButtonDown(0)) {
+            if (UIManager.Singleton.CursorOnUI) return;
+            
+            if (Time.time - timeOfLastClick < doubleClickTimeDelta) {
+                Logger.Log("Double click detected.", this, LogType.INFO);
+                OnMouseDoubleClick?.Invoke();
+            }
+            else {
+                Logger.Log("Click detected.", this, LogType.INFO);
+                OnMouseClick?.Invoke();
+            }
+
+            timeOfLastClick = Time.time;
+        }
+        else if (Input.GetMouseButton(0)) {
+            OnMouseHold?.Invoke();
+        }
+        else if (Input.GetMouseButtonUp(0)) {
+            OnMouseRelease?.Invoke();
         }
     }
 }
