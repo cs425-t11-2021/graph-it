@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class GraphViewState : ManipulationState
 {
+    private bool graphMovementInProgress = false;
+
     public override void OnStateEnter() {
         InputManager.Singleton.OnMouseDragStart += OnDragStart;
         InputManager.Singleton.OnMouseDragEnd += OnDragEnd;
@@ -36,9 +38,13 @@ public class GraphViewState : ManipulationState
 
     public void OnDragStart() {
         if (InputManager.Singleton.CurrentHoveringVertex) {
+            graphMovementInProgress = true;
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
             if (!vertex.selected)
                 vertex.SetSelected(true);
+        }
+        else {
+            return;
         }
 
         foreach (VertexObj selectedVertex in SelectionManager.Singleton.selectedVertices) {
@@ -53,6 +59,8 @@ public class GraphViewState : ManipulationState
     }
 
     public void OnDragEnd() {
+        if (!graphMovementInProgress) return;
+        
         foreach (VertexObj selectedVertex in SelectionManager.Singleton.selectedVertices) {
             selectedVertex.GetComponent<VertexMovement>().FollowCursor = false;
 

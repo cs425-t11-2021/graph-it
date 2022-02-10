@@ -13,11 +13,15 @@ public class SelectionState : ManipulationState
     {
         this.selectionRect = UIManager.Singleton.selectionRect.GetComponent<RectTransform>();
         this.selectionRect.gameObject.SetActive(false);
+
+        InputManager.Singleton.OnMouseClickInPlace += OnClickInPlace;
     }
 
     public override void OnStateExit()
     {
         this.selectionRect.gameObject.SetActive(false);
+
+        InputManager.Singleton.OnMouseClickInPlace -= OnClickInPlace;
     }
 
     public override void OnClick()
@@ -27,6 +31,13 @@ public class SelectionState : ManipulationState
         this.lastCursorWorldPos = Controller.Singleton.GetCursorWorldPosition();
         UpdateSelectionRect();
         this.selectionRect.gameObject.SetActive(true);
+    }
+
+    public void OnClickInPlace() {
+        if (InputManager.Singleton.CurrentHoveringVertex) {
+            VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
+            vertex.SetSelected(!vertex.selected);
+        }
     }
 
     public override void OnMouseHold()
