@@ -82,7 +82,7 @@ public class Graph
 
     public Edge this[ Vertex vert1, Vertex vert2 ]
     {
-        get => vert1 > vert2 ? this.adjacency[ ( vert2, vert1 ) ] : this.adjacency[ ( vert1, vert2 ) ];
+        get => vert1 > vert2 ? this.adjacency.GetValue( ( vert2, vert1 ) ) : this.adjacency.GetValue( ( vert1, vert2 ) );
     }
 
     private List< Edge > GetDirectedEdges()
