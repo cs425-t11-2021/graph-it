@@ -18,15 +18,15 @@ public class VertexObj : MonoBehaviour
     // Reference to the sprite child object of the vertex object
     private Transform spriteObj;
 
+    private bool selected;
     public bool Selected {
-        get => SelectionManager.Singleton.selectedVertices.Contains(this);
+        get => this.selected;
         set {
+            this.selected = value;
             if (value) {
-                SelectionManager.Singleton.SelectVertex(this);
-                this.labelObj.MakeEditable();
+                this.labelObj.MakeUneditable();               
             }
             else {
-                SelectionManager.Singleton.DeselectVertex(this);
                 this.labelObj.MakeUneditable();
             }
             this.animator.SetBool("Selected", value);

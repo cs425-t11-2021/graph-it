@@ -37,7 +37,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         {
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
             {
-                DeleteSelection();
+                // DeleteSelection();
             }
         }
 
@@ -83,7 +83,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
                             RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
                             if (!hit)
                             {
-                                DeSelectAll();
+                                // DeSelectAll();
                             }
                         }
                     }
@@ -105,17 +105,14 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     // }
 
     // Add a vertex to selectedVertices
-    public void SelectVertex(VertexObj vertexObj)
+    public void SelectVertex(VertexObj vertexObj, bool callEvent = true)
     {
-        if (!this.selectAll && ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
-            DeSelectAll();
-        }
+        // if (!this.selectAll && ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
+        //     DeSelectAll();
+        // }
 
-        if (!this.selectedVertices.Contains(vertexObj)) {
-            this.selectedVertices.Add(vertexObj);
-
-            // Call selection changed event
-            this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+        if (!vertexObj.Selected) {
+            SetVertexSelection(vertexObj, true, callEvent);
         }
     }
 
@@ -135,12 +132,41 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     }
 
     // Remove a vertex from selectedVertices
-    public bool DeselectVertex(VertexObj vertexObj)
+    public void DeselectVertex(VertexObj vertexObj, bool callEvent = true)
     {
-        // Call selection changed event
-        this.OnSelectionChange(this.selectedVertices.Count - 1, this.selectedEdges.Count);
+        if (vertexObj.Selected) {
+            SetVertexSelection(vertexObj, false, callEvent);
+        }
+    }
 
-        return this.selectedVertices.Remove(vertexObj);
+    // Select the vertex if it's currently unselected, deselect it otherwise
+    public void ToggleVertexSelection(VertexObj vertexObj) {
+        SetVertexSelection(vertexObj, !vertexObj.Selected, true);
+    }
+
+    public void SetVertexSelectionAll(List<VertexObj> vertices, bool select) {
+        foreach (VertexObj v in vertices) {
+            if (v.Selected != select) {
+                SetVertexSelection(v, select, false);
+            }
+        }
+        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+    }
+
+    private void SetVertexSelection(VertexObj vertexObj, bool select, bool callEvent) {
+        if (vertexObj.Selected) {
+            this.selectedVertices.Remove(vertexObj);
+        }
+        else {
+            this.selectedVertices.Add(vertexObj);
+        }
+        vertexObj.Selected = select;
+
+        if (callEvent)
+            // Call selection changed event
+            this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+
+        Logger.Log(String.Format("{0} vertex: {1}.", select ? "Selecting" : "Deselecting", vertexObj.name), this, LogType.INFO);
     }
 
     // Remove am edge from selectedEdges
@@ -203,9 +229,9 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         this.selectedEdges = new List<EdgeObj>();
         for (int i = this.selectedVertices.Count - 1; i >= 0; i--)
         {
-            this.selectedVertices[i].Selected = false;
+            DeselectVertex(this.selectedVertices[i], false);
         }
-        this.selectedVertices = new List<VertexObj>();
+        // this.selectedVertices = new List<VertexObj>();
 
         // Call selection changed event
         this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
@@ -227,7 +253,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (!selectedVertices.Contains(vertexObj))
-                vertexObj.Selected = true;
+                SelectVertex(vertexObj);
         }
 
         // Call selection changed event
@@ -272,7 +298,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (primVertices.Contains(vertexObj.Vertex))
-                vertexObj.Selected = true;
+                SelectVertex(vertexObj);
         }
     }
     public void RunKruskal() {
@@ -296,7 +322,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (kruskalVertices.Contains(vertexObj.Vertex))
-                vertexObj.Selected = true;
+                SelectVertex(vertexObj);
         }
     }
 
@@ -328,7 +354,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (dijkstraVertices.Contains(vertexObj.Vertex))
-                vertexObj.Selected = true;
+                SelectVertex(vertexObj);
         }
     }
 

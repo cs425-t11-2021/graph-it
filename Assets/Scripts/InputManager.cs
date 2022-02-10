@@ -16,6 +16,7 @@ public class InputManager : SingletonBehavior<InputManager>
     public event Action OnMouseDragStart;
     public event Action OnMouseDragEnd;
     public event Action OnMouseClickInPlace;
+    public event Action OnDeleteKeyPress;
 
     [SerializeField] private float doubleClickTimeDelta = 0.2f;
     private float timeOfLastClick = 0f;
@@ -46,6 +47,13 @@ public class InputManager : SingletonBehavior<InputManager>
                 return true;
             }
             return false;
+        }
+    }
+
+    // Property for whether or not the hold selection key is being held(shift by default)
+    public bool HoldSelectionKeyHeld {
+        get {
+            return Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         }
     }
 
@@ -115,12 +123,19 @@ public class InputManager : SingletonBehavior<InputManager>
                     OnMouseDragEnd?.Invoke();
                 }
                 else {
-                    Logger.Log("Click in place detected.", this, LogType.DEBUG);
-                    OnMouseClickInPlace?.Invoke();
+                    if (!UIManager.Singleton.CursorOnUI) {
+                        Logger.Log("Click in place detected.", this, LogType.DEBUG);
+                        OnMouseClickInPlace?.Invoke();
+                    }
                 }
             }
             this.dragging = false;
             this.doubleClickedThisFrame = false;
+        }
+
+        // Keyboard events detection and firing
+        if (!UIManager.Singleton.CursorOnUI) {
+            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete)) OnDeleteKeyPress?.Invoke();
         }
     }
 }

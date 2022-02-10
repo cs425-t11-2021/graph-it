@@ -10,12 +10,14 @@ public class GraphViewState : ManipulationState
         InputManager.Singleton.OnMouseDragStart += OnDragStart;
         InputManager.Singleton.OnMouseDragEnd += OnDragEnd;
         InputManager.Singleton.OnMouseClickInPlace += OnClickInPlace;
+        InputManager.Singleton.OnDeleteKeyPress += OnDeleteKeyPress;
     }
 
     public override void OnStateExit() {
         InputManager.Singleton.OnMouseDragStart -= OnDragStart;
         InputManager.Singleton.OnMouseDragEnd -= OnDragEnd;
         InputManager.Singleton.OnMouseClickInPlace -= OnClickInPlace;
+        InputManager.Singleton.OnDeleteKeyPress -= OnDeleteKeyPress;
     }
 
     public override void OnDoubleClick()
@@ -32,7 +34,17 @@ public class GraphViewState : ManipulationState
     public void OnClickInPlace() {
         if (InputManager.Singleton.CurrentHoveringVertex) {
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
-            vertex.Selected = !vertex.Selected;
+
+            if (!vertex.Selected && !InputManager.Singleton.HoldSelectionKeyHeld) {
+                SelectionManager.Singleton.DeSelectAll();
+            }
+
+            SelectionManager.Singleton.ToggleVertexSelection(vertex);
+        }
+        else {
+            if (!InputManager.Singleton.HoldSelectionKeyHeld) {
+                SelectionManager.Singleton.DeSelectAll();
+            }
         }
     }
 
@@ -40,8 +52,11 @@ public class GraphViewState : ManipulationState
         if (InputManager.Singleton.CurrentHoveringVertex) {
             graphMovementInProgress = true;
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
+
             if (!vertex.Selected)
-                vertex.Selected = true;
+                SelectionManager.Singleton.DeSelectAll();
+                
+            SelectionManager.Singleton.SelectVertex(vertex);
         }
         else {
             return;
@@ -75,5 +90,9 @@ public class GraphViewState : ManipulationState
         }
 
         graphMovementInProgress = false;
+    }
+
+    private void OnDeleteKeyPress() {
+        SelectionManager.Singleton.DeleteSelection();
     }
 }
