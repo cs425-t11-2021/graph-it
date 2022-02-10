@@ -77,20 +77,20 @@ public class InputManager : SingletonBehavior<InputManager>
 
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
-            if (UIManager.Singleton.CursorOnUI) return;
+            if (!UIManager.Singleton.CursorOnUI) {
+                if (Time.time - timeOfLastClick < doubleClickTimeDelta) {
+                    Logger.Log("Double click detected.", this, LogType.DEBUG);
+                    doubleClickedThisFrame = true;
+                    OnMouseDoubleClick?.Invoke();
+                }
+                else {
+                    Logger.Log("Click detected.", this, LogType.DEBUG);
+                    OnMouseClick?.Invoke();
 
-            if (Time.time - timeOfLastClick < doubleClickTimeDelta) {
-                Logger.Log("Double click detected.", this, LogType.DEBUG);
-                doubleClickedThisFrame = true;
-                OnMouseDoubleClick?.Invoke();
-            }
-            else {
-                Logger.Log("Click detected.", this, LogType.DEBUG);
-                OnMouseClick?.Invoke();
-
-                GameObject hoveringVertex = CurrentHoveringVertex;
-                if (hoveringVertex) {
-                    OnVertexClick?.Invoke(hoveringVertex);
+                    GameObject hoveringVertex = CurrentHoveringVertex;
+                    if (hoveringVertex) {
+                        OnVertexClick?.Invoke(hoveringVertex);
+                    }
                 }
             }
 
@@ -109,7 +109,6 @@ public class InputManager : SingletonBehavior<InputManager>
         else if (Input.GetMouseButtonUp(0)) {
             if (!doubleClickedThisFrame) {
                 OnMouseRelease?.Invoke();
-                this.dragging = false;
 
                 if (Input.mousePosition != this.mouseLastClickPosition) {
                     Logger.Log("Mouse drag finished.", this, LogType.DEBUG);
@@ -120,7 +119,8 @@ public class InputManager : SingletonBehavior<InputManager>
                     OnMouseClickInPlace?.Invoke();
                 }
             }
-            doubleClickedThisFrame = false;
+            this.dragging = false;
+            this.doubleClickedThisFrame = false;
         }
     }
 }

@@ -175,7 +175,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             {
                 if (edgeObj.ToVertexObj == vertexObj.gameObject)
                 {
-                    Destroy(edgeObj.gameObject);
+                    Destroy(edgeObj.transform.parent.gameObject);
                 }
             }
 
@@ -203,7 +203,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         this.selectedEdges = new List<EdgeObj>();
         for (int i = this.selectedVertices.Count - 1; i >= 0; i--)
         {
-            this.selectedVertices[i].SetSelected(false);
+            this.selectedVertices[i].Selected = false;
         }
         this.selectedVertices = new List<VertexObj>();
 
@@ -227,7 +227,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (!selectedVertices.Contains(vertexObj))
-                vertexObj.SetSelected(true);
+                vertexObj.Selected = true;
         }
 
         // Call selection changed event
@@ -272,7 +272,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (primVertices.Contains(vertexObj.Vertex))
-                vertexObj.SetSelected(true);
+                vertexObj.Selected = true;
         }
     }
     public void RunKruskal() {
@@ -296,7 +296,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (kruskalVertices.Contains(vertexObj.Vertex))
-                vertexObj.SetSelected(true);
+                vertexObj.Selected = true;
         }
     }
 
@@ -328,7 +328,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         foreach (VertexObj vertexObj in allVertexObjs)
         {
             if (dijkstraVertices.Contains(vertexObj.Vertex))
-                vertexObj.SetSelected(true);
+                vertexObj.Selected = true;
         }
     }
 

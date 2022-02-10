@@ -36,7 +36,7 @@ public class SelectionState : ManipulationState
     public void OnClickInPlace() {
         if (InputManager.Singleton.CurrentHoveringVertex) {
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
-            vertex.SetSelected(!vertex.selected);
+            vertex.Selected = !vertex.Selected;
         }
     }
 
@@ -53,7 +53,7 @@ public class SelectionState : ManipulationState
         VertexObj[] vertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
         foreach (VertexObj v in vertexObjs) {
             if (bounds.Contains(v.transform.position)) {
-                v.SetSelected(true);
+                v.Selected = true;
             }
         }
         EdgeObj[] edgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();

@@ -32,7 +32,7 @@ public class GraphViewState : ManipulationState
     public void OnClickInPlace() {
         if (InputManager.Singleton.CurrentHoveringVertex) {
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
-            vertex.SetSelected(!vertex.selected);
+            vertex.Selected = !vertex.Selected;
         }
     }
 
@@ -40,8 +40,8 @@ public class GraphViewState : ManipulationState
         if (InputManager.Singleton.CurrentHoveringVertex) {
             graphMovementInProgress = true;
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
-            if (!vertex.selected)
-                vertex.SetSelected(true);
+            if (!vertex.Selected)
+                vertex.Selected = true;
         }
         else {
             return;
@@ -60,7 +60,7 @@ public class GraphViewState : ManipulationState
 
     public void OnDragEnd() {
         if (!graphMovementInProgress) return;
-        
+
         foreach (VertexObj selectedVertex in SelectionManager.Singleton.selectedVertices) {
             selectedVertex.GetComponent<VertexMovement>().FollowCursor = false;
 
@@ -73,5 +73,7 @@ public class GraphViewState : ManipulationState
             selectedVertex.Vertex.x_pos = selectedVertex.transform.position.x;
             selectedVertex.Vertex.y_pos = selectedVertex.transform.position.y;
         }
+
+        graphMovementInProgress = false;
     }
 }
