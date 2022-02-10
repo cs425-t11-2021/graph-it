@@ -16,12 +16,14 @@ public abstract class ManipulationState
                 InputManager.Singleton.OnMouseDoubleClick += OnDoubleClick;
                 InputManager.Singleton.OnMouseHold += OnMouseHold;
                 InputManager.Singleton.OnMouseRelease += OnMouseRelease;
+                InputManager.Singleton.OnVertexClick += OnVertexClick;
             }
             else {
                 InputManager.Singleton.OnMouseClick -= OnClick;
                 InputManager.Singleton.OnMouseDoubleClick -= OnDoubleClick;
                 InputManager.Singleton.OnMouseHold -= OnMouseHold;
                 InputManager.Singleton.OnMouseRelease -= OnMouseRelease;
+                InputManager.Singleton.OnVertexClick -= OnVertexClick;
             }
         }
     }
@@ -32,6 +34,6 @@ public abstract class ManipulationState
     public virtual void OnDoubleClick() {}
     public virtual void OnMouseHold() {}
     public virtual void OnMouseRelease() {}
-    public virtual void OnVertexSelect(VertexObj selectedVertex) {}
-    public virtual void OnEdgeSelect(EdgeObj selectedEdge) {}
+    public virtual void OnVertexClick(GameObject clicked) {}
+    public virtual void OnEdgeClick(GameObject clicked) {}
 }

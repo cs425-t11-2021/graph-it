@@ -11,6 +11,8 @@ public class InputManager : SingletonBehavior<InputManager>
     public event Action OnMouseDoubleClick;
     public event Action OnMouseHold;
     public event Action OnMouseRelease;
+    public event Action<GameObject> OnVertexClick;
+    public event Action<GameObject> OnEdgeClick;
 
     [SerializeField] private float doubleClickTimeDelta = 0.2f;
     private float timeOfLastClick = 0f;
@@ -41,6 +43,18 @@ public class InputManager : SingletonBehavior<InputManager>
         }
     }
 
+    public GameObject CurrentHoveringVertex {
+        get {
+            Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, LayerMask.GetMask("Edge"));
+            if (hit.collider) {
+                Logger.Log("Cursor over vertex.", this, LogType.DEBUG);
+                return hit.collider.gameObject;
+            }
+            return null;
+        }
+    }
+
     // Property to detect whether the cursor is over a graph object
     public bool CursorOverGraphObj {
         get {
@@ -58,7 +72,7 @@ public class InputManager : SingletonBehavior<InputManager>
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
             if (UIManager.Singleton.CursorOnUI) return;
-            
+
             if (Time.time - timeOfLastClick < doubleClickTimeDelta) {
                 Logger.Log("Double click detected.", this, LogType.INFO);
                 OnMouseDoubleClick?.Invoke();
@@ -66,6 +80,11 @@ public class InputManager : SingletonBehavior<InputManager>
             else {
                 Logger.Log("Click detected.", this, LogType.INFO);
                 OnMouseClick?.Invoke();
+
+                GameObject hoveringVertex = CurrentHoveringVertex;
+                if (hoveringVertex) {
+                    OnVertexClick?.Invoke(hoveringVertex);
+                }
             }
 
             timeOfLastClick = Time.time;

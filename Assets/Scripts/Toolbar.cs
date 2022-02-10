@@ -160,7 +160,14 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
     // Enable or disable edge addition mode
     public void ToggleAddEdgeMode() {
-        this.EdgeCreationMode = !this.EdgeCreationMode;
+        if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.edgeCreationState) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.edgeCreationState;
+            this.selectionModeButton.UpdateStatus(false);
+            this.createVertexModeButton.UpdateStatus(false);
+        }
+        else {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        }
     }
 
     // Function called by Add Edge button
