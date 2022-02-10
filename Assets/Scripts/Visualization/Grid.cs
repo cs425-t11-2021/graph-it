@@ -73,7 +73,7 @@ public class Grid : MonoBehaviour
     }
 
     // Method for displaying (activating) the gridline objects at the correct locations
-    public async void DisplayGridLines()
+    public void DisplayGridLines()
     {
         // Get the world coordinates of the bottom left and top right corners of the camera
         Vector2 lowerLeft = Camera.main.ViewportToWorldPoint(new Vector3(0f, 0f, Camera.main.nearClipPlane));
