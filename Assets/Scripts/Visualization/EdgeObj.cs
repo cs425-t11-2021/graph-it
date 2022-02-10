@@ -129,6 +129,11 @@ public class EdgeObj : MonoBehaviour
             //     ToggleEdgeType();
             // }
         }
+
+        if (Edge != null) {
+            // Stretch the edge between the two vertices
+            StretchBetweenPoints(this.transform.parent.position, ToVertexObj.transform.position);
+        }
     }
 
     // Toggle between undirected, direction 1, and direction -1
@@ -151,10 +156,10 @@ public class EdgeObj : MonoBehaviour
     }
 
     private void FixedUpdate() {
-        if (Edge != null) {
-            // Stretch the edge between the two vertices
-            StretchBetweenPoints(this.transform.parent.position, ToVertexObj.transform.position);
-        }
+        // if (Edge != null) {
+        //     // Stretch the edge between the two vertices
+        //     StretchBetweenPoints(this.transform.parent.position, ToVertexObj.transform.position);
+        // }
 
         // Only update the Physics 2D collider of the edge every 0.25s instead of real time to reduce physics lag
         // if (this.physicsTimer >= 0.25f) {

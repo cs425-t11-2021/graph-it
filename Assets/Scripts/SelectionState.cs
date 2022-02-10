@@ -38,6 +38,10 @@ public class SelectionState : ManipulationState
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
             SelectionManager.Singleton.ToggleVertexSelection(vertex);
         }
+        else if (InputManager.Singleton.CurrentHoveringEdge) {
+            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponent<EdgeObj>();
+            SelectionManager.Singleton.ToggleEdgeSelection(edge);
+        }
     }
 
     public override void OnMouseHold()
