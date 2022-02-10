@@ -70,8 +70,6 @@ public class UIManager : SingletonBehavior<UIManager>
                         if (gameObjectClicked && gameObjectClicked.transform.IsChildOf(mb.transform)) {
                             Logger.Log("Calling dropdown button on " + gameObjectClicked.name, this, LogType.DEBUG);
                             gameObjectClicked.GetComponent<Button>()?.onClick.Invoke();
-                            // Deselect buttons
-                            EventSystem.current.SetSelectedGameObject(null);
                         }
                         mb.DropdownActive = false;
                     }

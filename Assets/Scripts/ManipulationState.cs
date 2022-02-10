@@ -8,6 +8,7 @@ public abstract class ManipulationState
     public static ManipulationState selectionState;
     public static ManipulationState vertexCreationState;
     public static ManipulationState edgeCreationState;
+    public static ManipulationState disabledState;
 
     public bool Active {
         set {

@@ -38,7 +38,7 @@ public abstract class MenuButton : MonoBehaviour
     private void Awake() {
         this.toggleButton = this.GetComponent<ToggleButton>();
         // Disable dropdowns by default
-        DropdownActive = false;
+        // DropdownActive = false;
     }
 
     // Function called by the menu buttons to enable/disable the dropdown
