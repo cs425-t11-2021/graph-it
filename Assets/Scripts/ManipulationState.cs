@@ -17,6 +17,8 @@ public abstract class ManipulationState
                 InputManager.Singleton.OnMouseHold += OnMouseHold;
                 InputManager.Singleton.OnMouseRelease += OnMouseRelease;
                 InputManager.Singleton.OnVertexClick += OnVertexClick;
+
+                OnStateEnter();
             }
             else {
                 InputManager.Singleton.OnMouseClick -= OnClick;
@@ -24,6 +26,8 @@ public abstract class ManipulationState
                 InputManager.Singleton.OnMouseHold -= OnMouseHold;
                 InputManager.Singleton.OnMouseRelease -= OnMouseRelease;
                 InputManager.Singleton.OnVertexClick -= OnVertexClick;
+
+                OnStateExit();
             }
         }
     }

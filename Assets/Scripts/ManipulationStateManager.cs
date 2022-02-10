@@ -8,11 +8,9 @@ public class ManipulationStateManager : SingletonBehavior<ManipulationStateManag
     public ManipulationState ActiveState {
         get => this.activeState;
         set {
-            this.activeState.OnStateExit();
             this.activeState.Active = false;
             Logger.Log("Entering " + value.ToString() + " state.", this, LogType.INFO);
             this.activeState = value;
-            this.activeState.OnStateEnter();
             this.activeState.Active = true;
         }
     }

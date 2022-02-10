@@ -7,7 +7,7 @@ using UnityEngine.EventSystems;
 public class SelectionManager : SingletonBehavior<SelectionManager>
 {
     // Lists to store the graph objects of currently selected vertices and edges
-    private List<VertexObj> selectedVertices;
+    public List<VertexObj> selectedVertices;
     private List<EdgeObj> selectedEdges;
 
     // Stored position of the cursor used to detect panning
@@ -362,23 +362,23 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         AddEdge(selectedVertices[0], target);
     }
 
-    public void DragSelectedVerticesStart() {
-        foreach (VertexObj v in this.selectedVertices) {
-            v.SetCursorDragOffset();
-        }
-    }
+    // public void DragSelectedVerticesStart() {
+    //     foreach (VertexObj v in this.selectedVertices) {
+    //         v.SetCursorDragOffset();
+    //     }
+    // }
 
-    public void DragSelectedVertices() {
-        foreach (VertexObj v in this.selectedVertices) {
-            v.DragVertexWithMouse();
-        }
-    }
+    // public void DragSelectedVertices() {
+    //     foreach (VertexObj v in this.selectedVertices) {
+    //         v.DragVertexWithMouse();
+    //     }
+    // }
 
-    public void DragSelectedVerticesEnd() {
-        foreach (VertexObj v in this.selectedVertices) {
-            v.FinishDragging();
-        }
-    }
+    // public void DragSelectedVerticesEnd() {
+    //     foreach (VertexObj v in this.selectedVertices) {
+    //         v.FinishDragging();
+    //     }
+    // }
 
     public void ChangeSelectedEdgesType() {
         foreach (EdgeObj e in selectedEdges) {

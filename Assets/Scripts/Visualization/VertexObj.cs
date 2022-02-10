@@ -20,7 +20,7 @@ public class VertexObj : MonoBehaviour
 
     // TODO: Remove once animations are implemented
     // Whether vertex is selected in the SelectionManager
-    private bool selected = false;
+    public bool selected = false;
     // Reference to the spriteRenderer component of the Sprite child object
     private SpriteRenderer spriteRenderer;
     // Reference to the animator component
@@ -126,24 +126,24 @@ public class VertexObj : MonoBehaviour
         this.cursorOffset = this.transform.position - Controller.Singleton.GetCursorWorldPosition();
 
         // If the grid is currently enabled, remove the vertex obejct from any grid points and display the gridlines
-        if (Grid.singleton.GridEnabled)
-        {
-            Grid.singleton.RemoveFromOccupied(this);
-            Grid.singleton.DisplayGridLines();
-        }
+        // if (Grid.singleton.GridEnabled)
+        // {
+        //     Grid.singleton.RemoveFromOccupied(this);
+        //     Grid.singleton.DisplayGridLines();
+        // }
     }
 
     // Method called when the vertex object is first picked up to be dragged
     private void OnDragStart()
     {
-        if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && ManipulationStateManager.Singleton.ActiveState == ManipulationState.vertexCreationState) {
-            if (this.selected) {
-                SelectionManager.Singleton.DragSelectedVerticesStart();
-            }
-            else {
-                SetCursorDragOffset();
-            }
-        }
+        // if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && ManipulationStateManager.Singleton.ActiveState == ManipulationState.vertexCreationState) {
+        //     if (this.selected) {
+        //         SelectionManager.Singleton.DragSelectedVerticesStart();
+        //     }
+        //     else {
+        //         SetCursorDragOffset();
+        //     }
+        // }
     }
 
     private void OnMouseDrag() {
@@ -156,78 +156,78 @@ public class VertexObj : MonoBehaviour
             if (this.dragDuration > .1f)
             {
                 this.clicked = false;
-                OnDragStart();
+                // OnDragStart();
             }
         }
 
         if (this.cursorOffset != null) {
             // Disable dragging when in selection or vertex creation mode
-            if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && ManipulationStateManager.Singleton.ActiveState == ManipulationState.vertexCreationState) {
-                if (this.selected) {
-                    SelectionManager.Singleton.DragSelectedVertices();
-                }
-                else {
-                    DragVertexWithMouse();
-                }
-            } 
+            // if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && ManipulationStateManager.Singleton.ActiveState == ManipulationState.vertexCreationState) {
+            //     if (this.selected) {
+            //         SelectionManager.Singleton.DragSelectedVertices();
+            //     }
+            //     else {
+            //         // DragVertexWithMouse();
+            //     }
+            // } 
         }
     }
 
     private void OnMouseUp() {
         this.clicked = false;
         // If the object has been dragged for less than 1/10 of a second, count as a non-dragging click
-        if (this.dragDuration < .1f)
-        {
-            OnMouseDownNonDrag();
-        }
-        else
-        {
-            OnDragFinish();
-        }
-        this.dragDuration = 0f;
+        // if (this.dragDuration < .1f)
+        // {
+        //     OnMouseDownNonDrag();
+        // }
+        // else
+        // {
+        //     OnDragFinish();
+        // }
+        // this.dragDuration = 0f;
     }
 
-    public void DragVertexWithMouse() {
-        if (this.cursorOffset != null)
-            this.transform.position = Controller.Singleton.GetCursorWorldPosition() + (Vector3) this.cursorOffset;
-    }
+    // public void DragVertexWithMouse() {
+    //     if (this.cursorOffset != null)
+    //         this.transform.position = Controller.Singleton.GetCursorWorldPosition() + (Vector3) this.cursorOffset;
+    // }
 
     // Method called after dragging is finished
     private void OnDragFinish()
     {
-        if (this.selected) {
-            SelectionManager.Singleton.DragSelectedVerticesEnd();
-        }
-        else {
-            FinishDragging();
-        }
+        // if (this.selected) {
+        //     SelectionManager.Singleton.DragSelectedVerticesEnd();
+        // }
+        // else {
+        //     FinishDragging();
+        // }
     }
 
     public void FinishDragging() {
         // If the grid is currently enabled, move the vertex object to the nearest grid point and hide the gridlines
-        if (Grid.singleton.GridEnabled)
-        {
-            this.transform.position = Grid.singleton.FindClosestGridPosition(this);
-            Grid.singleton.HideGridLines();
-        }
+        // if (Grid.singleton.GridEnabled)
+        // {
+        //     this.transform.position = Grid.singleton.FindClosestGridPosition(this);
+        //     Grid.singleton.HideGridLines();
+        // }
 
-        this.cursorOffset = null;
+        // this.cursorOffset = null;
 
         // Update associated Vertex positions;
-        this.Vertex.x_pos = transform.position.x;
-        this.Vertex.y_pos = transform.position.y;
+        // this.Vertex.x_pos = transform.position.x;
+        // this.Vertex.y_pos = transform.position.y;
     }
 
     // When user clicks a vertex obj without dragging it, select/deselect it using selection manager
     private void OnMouseDownNonDrag()
     {
         // If add edge mode is enabled in the toolbar, add an edge instead of selecting the vertex
-        if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.edgeCreationState) {
-            // SelectionManager.Singleton.AddEdge(this);
-            return;
-        }
+        // if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.edgeCreationState) {
+        //     // SelectionManager.Singleton.AddEdge(this);
+        //     return;
+        // }
 
-        SetSelected(!selected);
+        // SetSelected(!selected);
     }
 
     // TODO: CREATE A UNIVERSAL MOUSE INPUT MANAGEMENT SYSTEM

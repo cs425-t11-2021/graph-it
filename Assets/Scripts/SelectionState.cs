@@ -25,6 +25,7 @@ public class SelectionState : ManipulationState
         if (InputManager.Singleton.CursorOverGraphObj) return;
 
         this.lastCursorWorldPos = Controller.Singleton.GetCursorWorldPosition();
+        UpdateSelectionRect();
         this.selectionRect.gameObject.SetActive(true);
     }
 

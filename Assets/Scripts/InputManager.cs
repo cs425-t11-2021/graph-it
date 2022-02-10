@@ -13,15 +13,21 @@ public class InputManager : SingletonBehavior<InputManager>
     public event Action OnMouseRelease;
     public event Action<GameObject> OnVertexClick;
     public event Action<GameObject> OnEdgeClick;
+    public event Action OnMouseDragStart;
+    public event Action OnMouseDragEnd;
+    public event Action OnMouseClickInPlace;
 
     [SerializeField] private float doubleClickTimeDelta = 0.2f;
     private float timeOfLastClick = 0f;
+    private Vector3 mouseLastClickPosition;
+    private bool dragging = false;
+    private bool doubleClickedThisFrame = false;
 
     // Property to detect whether the cursor is over a vertex using Raycast 2D
     public bool CursorOverVertex {
         get {
             Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, LayerMask.GetMask("Edge"));
+            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, 0f, LayerMask.GetMask("Edge"));
             if (hit.collider) {
                 Logger.Log("Cursor over vertex.", this, LogType.DEBUG);
                 return true;
@@ -34,7 +40,7 @@ public class InputManager : SingletonBehavior<InputManager>
     public bool CursorOverEdge {
         get {
             Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, LayerMask.GetMask("Edge"));
+            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, 0f, LayerMask.GetMask("Edge"));
             if (hit.collider) {
                 Logger.Log("Cursor over edge.", this, LogType.DEBUG);
                 return true;
@@ -46,7 +52,7 @@ public class InputManager : SingletonBehavior<InputManager>
     public GameObject CurrentHoveringVertex {
         get {
             Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, LayerMask.GetMask("Edge"));
+            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, 0f, LayerMask.GetMask("Vertex"));
             if (hit.collider) {
                 Logger.Log("Cursor over vertex.", this, LogType.DEBUG);
                 return hit.collider.gameObject;
@@ -74,11 +80,12 @@ public class InputManager : SingletonBehavior<InputManager>
             if (UIManager.Singleton.CursorOnUI) return;
 
             if (Time.time - timeOfLastClick < doubleClickTimeDelta) {
-                Logger.Log("Double click detected.", this, LogType.INFO);
+                Logger.Log("Double click detected.", this, LogType.DEBUG);
+                doubleClickedThisFrame = true;
                 OnMouseDoubleClick?.Invoke();
             }
             else {
-                Logger.Log("Click detected.", this, LogType.INFO);
+                Logger.Log("Click detected.", this, LogType.DEBUG);
                 OnMouseClick?.Invoke();
 
                 GameObject hoveringVertex = CurrentHoveringVertex;
@@ -87,13 +94,33 @@ public class InputManager : SingletonBehavior<InputManager>
                 }
             }
 
-            timeOfLastClick = Time.time;
+            this.timeOfLastClick = Time.time;
+            this.mouseLastClickPosition = Input.mousePosition;
         }
         else if (Input.GetMouseButton(0)) {
             OnMouseHold?.Invoke();
+
+            if (!this.dragging && Input.mousePosition != this.mouseLastClickPosition) {
+                Logger.Log("Mouse drag started.", this, LogType.DEBUG);
+                this.dragging = true;
+                OnMouseDragStart?.Invoke();
+            }
         }
         else if (Input.GetMouseButtonUp(0)) {
-            OnMouseRelease?.Invoke();
+            if (!doubleClickedThisFrame) {
+                OnMouseRelease?.Invoke();
+                this.dragging = false;
+
+                if (Input.mousePosition != this.mouseLastClickPosition) {
+                    Logger.Log("Mouse drag finished.", this, LogType.DEBUG);
+                    OnMouseDragEnd?.Invoke();
+                }
+                else {
+                    Logger.Log("Click in place detected.", this, LogType.DEBUG);
+                    OnMouseClickInPlace?.Invoke();
+                }
+            }
+            doubleClickedThisFrame = false;
         }
     }
 }

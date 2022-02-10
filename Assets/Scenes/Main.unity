@@ -14254,6 +14254,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c60da87b7f5246c09bec55715ea5e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  selectedVertices: []
 --- !u!114 &2144943526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14302,7 +14303,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12301043cea9840819f36da364fc77cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loggingLevel: 2
+  loggingLevel: 3
 --- !u!114 &2144943530
 MonoBehaviour:
   m_ObjectHideFlags: 0
