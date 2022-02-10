@@ -24,32 +24,6 @@ public class InputManager : SingletonBehavior<InputManager>
     private bool dragging = false;
     private bool doubleClickedThisFrame = false;
 
-    // Property to detect whether the cursor is over a vertex using Raycast 2D
-    public bool CursorOverVertex {
-        get {
-            Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, 0f, LayerMask.GetMask("Edge"));
-            if (hit.collider) {
-                Logger.Log("Cursor over vertex.", this, LogType.DEBUG);
-                return true;
-            }
-            return false;
-        }
-    }
-
-    // Property to detect whether the cursor is over an edge using Raycast 2D
-    public bool CursorOverEdge {
-        get {
-            Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, 0f, LayerMask.GetMask("Edge"));
-            if (hit.collider) {
-                Logger.Log("Cursor over edge.", this, LogType.DEBUG);
-                return true;
-            }
-            return false;
-        }
-    }
-
     // Property for whether or not the hold selection key is being held(shift by default)
     public bool HoldSelectionKeyHeld {
         get {
@@ -57,6 +31,7 @@ public class InputManager : SingletonBehavior<InputManager>
         }
     }
 
+    // Property for getting the vertex object the cursor is currently hovering
     public GameObject CurrentHoveringVertex {
         get {
             Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -69,6 +44,7 @@ public class InputManager : SingletonBehavior<InputManager>
         }
     }
 
+    // Property for getting the edge object the cursor is currently hovering
     public GameObject CurrentHoveringEdge {
         get {
             Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -84,7 +60,7 @@ public class InputManager : SingletonBehavior<InputManager>
     // Property to detect whether the cursor is over a graph object
     public bool CursorOverGraphObj {
         get {
-            return CursorOverEdge || CursorOverVertex;
+            return CurrentHoveringVertex || CurrentHoveringEdge;
         }
     }
 

@@ -16,13 +16,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     // Event for when the selection is updated (select or deselect)
     public event Action<int, int> OnSelectionChange;
 
-    // Whether or not to select all components
-    // TODO: think of a better solution
-    private bool selectAll = false;
-
-    // [SerializeField]
-    // private RectTransform selectionRect;
-
     private void Awake()
     {
         // Initialize data structures
@@ -30,93 +23,15 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         this.selectedEdges = new List<EdgeObj>();
     }
 
-    private void Update()
-    {
-        // Delete selection if backspace or delete key is pressed
-        if (!UIManager.Singleton.CursorOnUI)
-        {
-            if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
-            {
-                // DeleteSelection();
-            }
-        }
-
-        if (Input.GetMouseButtonDown(0)) {
-            this.lastCursorWorldPos = Controller.Singleton.GetCursorWorldPosition();
-            if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.selectionState) {
-                // selectionRect.gameObject.SetActive(true);
-            }
-        }
-
-        if (ManipulationStateManager.Singleton?.ActiveState == ManipulationState.selectionState) {
-            // if (Input.GetMouseButton(0)) {
-            //     UpdateSelectionRect();
-            // }
-            if (Input.GetMouseButtonUp(0)) {
-                // Bounds bounds = UpdateSelectionRect();
-
-                // VertexObj[] vertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
-                // foreach (VertexObj v in vertexObjs) {
-                //     if (bounds.Contains(v.transform.position)) {
-                //         v.SetSelected(true);
-                //     }
-                // }
-                // EdgeObj[] edgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
-                // foreach (EdgeObj e in edgeObjs) {
-                //     if (bounds.Contains((Vector2) e.transform.position)) {
-                //         e.SetSelected(true);
-                //     }
-                // }
-
-                // selectionRect.gameObject.SetActive(false);
-            }
-        }
-        else {
-            // Deselect all when the user clicks out of the graph
-            if (Input.GetMouseButtonUp(0)) {
-                if (this.selectAll) this.selectAll = false;
-                else {
-                    if (!UIManager.Singleton.CursorOnUI && !EventSystem.current.IsPointerOverGameObject()) {
-                        if (Controller.Singleton.GetCursorWorldPosition() == this.lastCursorWorldPos) {
-                            // Check if cursor is over collider, if not, deselect all graph objects
-                            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                            RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex", "Edge", "UI"));  //11f since camera is at z = -10
-                            if (!hit)
-                            {
-                                // DeSelectAll();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // private Bounds UpdateSelectionRect() {
-    //     Vector2 currentMouseWorldPos = Controller.Singleton.GetCursorWorldPosition();
-    //     Vector2 middle = (Controller.Singleton.GetCursorWorldPosition() + lastCursorWorldPos) / 2f;
-    //     Vector2 size = new Vector2(Mathf.Abs(currentMouseWorldPos.x - lastCursorWorldPos.x), Mathf.Abs(currentMouseWorldPos.y - lastCursorWorldPos.y));
-
-    //     this.selectionRect.position = middle;
-    //     this.selectionRect.sizeDelta = size;
-
-    //     Bounds worldBounds = new Bounds(middle, size);
-    //     return worldBounds;
-    // }
-
-    // Add a vertex to selectedVertices
+    // Select a vertex if it's not selected
     public void SelectVertex(VertexObj vertexObj, bool callEvent = true)
     {
-        // if (!this.selectAll && ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState && !Input.GetKey(KeyCode.LeftShift) && !Input.GetKey(KeyCode.RightShift)) {
-        //     DeSelectAll();
-        // }
-
         if (!vertexObj.Selected) {
             SetVertexSelection(vertexObj, true, callEvent);
         }
     }
 
-    // Remove a vertex from selectedVertices
+    // Unselect a vertex if it is selected
     public void DeselectVertex(VertexObj vertexObj, bool callEvent = true)
     {
         if (vertexObj.Selected) {
@@ -129,16 +44,9 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         SetVertexSelection(vertexObj, !vertexObj.Selected, true);
     }
 
-    public void SetVertexSelectionAll(List<VertexObj> vertices, bool select) {
-        foreach (VertexObj v in vertices) {
-            if (v.Selected != select) {
-                SetVertexSelection(v, select, false);
-            }
-        }
-        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
-    }
-
+    // Add a vertex to the list of selected vertices or remove it
     private void SetVertexSelection(VertexObj vertexObj, bool select, bool callEvent) {
+        // Add or remove vertex object from selected list
         if (vertexObj.Selected) {
             this.selectedVertices.Remove(vertexObj);
         }
@@ -154,6 +62,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         Logger.Log(String.Format("{0} vertex: {1}.", select ? "Selecting" : "Deselecting", vertexObj.name), this, LogType.INFO);
     }
 
+    // Select and edge if it's unselected
     public void SelectEdge(EdgeObj edgeObj, bool callEvent = true)
     {
         if (!edgeObj.Selected) {
@@ -161,6 +70,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         }
     }
 
+    // Deselect and edge if it is selected
     public void ToggleEdgeSelection(EdgeObj edgeObj) {
         SetEdgeSelection(edgeObj, !edgeObj.Selected, true);
     }
@@ -172,7 +82,9 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         }
     }
 
+    // Set the selectedness of an edge object
     private void SetEdgeSelection(EdgeObj edgeObj, bool select, bool callEvent) {
+        // Add or remove vertex object from selected list
         if (edgeObj.Selected) {
             this.selectedEdges.Remove(edgeObj);
         }
@@ -192,7 +104,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     public void DeleteSelection()
     {
         // Destroy the graph objects corresponding to the currently selected vertices and edges
-        // TODO: object pooling
         // Destroy the gameObjects for edges in selectedEdges
         foreach (EdgeObj edgeObj in this.selectedEdges)
         {
@@ -250,8 +161,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     // Method called to select all objects
     public void SelectAll()
     {
-        this.selectAll = true;
-
         EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
@@ -295,8 +204,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             primVertices.Add(e.vert2);
         }
 
-        this.selectAll = true;
-
         EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
         {
@@ -318,8 +225,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             kruskalVertices.Add(e.vert1);
             kruskalVertices.Add(e.vert2);
         }
-
-        this.selectAll = true;
 
         EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
@@ -350,8 +255,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         //     dijkstraVertices.Add(e.vert1);
         //     dijkstraVertices.Add(e.vert2);
         // }
-
-        this.selectAll = true;
 
         EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
         foreach (EdgeObj edgeObj in allEdgeObjs)
@@ -398,24 +301,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         AddEdge(selectedVertices[0], target);
     }
 
-    // public void DragSelectedVerticesStart() {
-    //     foreach (VertexObj v in this.selectedVertices) {
-    //         v.SetCursorDragOffset();
-    //     }
-    // }
-
-    // public void DragSelectedVertices() {
-    //     foreach (VertexObj v in this.selectedVertices) {
-    //         v.DragVertexWithMouse();
-    //     }
-    // }
-
-    // public void DragSelectedVerticesEnd() {
-    //     foreach (VertexObj v in this.selectedVertices) {
-    //         v.FinishDragging();
-    //     }
-    // }
-
+    // Change the type of selected edges
     public void ChangeSelectedEdgesType() {
         foreach (EdgeObj e in selectedEdges) {
             e.ToggleEdgeType();

@@ -35,13 +35,11 @@ public class EdgeObj : MonoBehaviour
         set {
             this.selected = value;
             if (value) {
-                SelectionManager.Singleton.SelectEdge(this);
                 this.spriteRenderer.color = new Color32(0, 125, 255, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
                 labelObj.MakeEditable();
             }
             else {
-                SelectionManager.Singleton.DeselectEdge(this);
                 this.spriteRenderer.color = new Color32(0, 0, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
                 labelObj.MakeUneditable();
