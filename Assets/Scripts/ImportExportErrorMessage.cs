@@ -10,19 +10,25 @@ public class ImportExportErrorMessage : MonoBehaviour
     private GameObject acknowledgeButton;
 
     //need to prevent user from access other elements in the import or export menu
-    public Button importButton;
-    public Button exportButton;
-    public Button importCancelButton;
-    public Button exportCancelButton;
-    public TMP_InputField exportUserInput;
-    public TMP_InputField importUserInput;
+    [SerializeField]
+    private Button importButton;
+    [SerializeField]
+    private Button exportButton;
+    [SerializeField]
+    private Button importCancelButton;
+    [SerializeField]
+    private Button exportCancelButton;
+    [SerializeField]
+    private TMP_InputField exportUserInput;
+    [SerializeField]
+    private TMP_InputField importUserInput;
 
     // Start is called before the first frame update
     void Start()
     {
         //do not want to display pop up when program first starts
         this.gameObject.SetActive(false);
-        acknowledgeButton = transform.GetChild(3).gameObject;
+        this.acknowledgeButton = transform.GetChild(3).gameObject;
     }
 
     // Update is called once per frame
@@ -30,30 +36,30 @@ public class ImportExportErrorMessage : MonoBehaviour
     {   
         //if popup is displayed, disable all other actions in the import or export menu
         if(this.gameObject.activeInHierarchy){
-            importButton.enabled = false;
-            exportButton.enabled = false;
-            importCancelButton.enabled = false;
-            exportCancelButton.enabled = false;
-            importUserInput.enabled = false;
-            exportUserInput.enabled = false;
+            this.importButton.enabled = false;
+            this.exportButton.enabled = false;
+            this.importCancelButton.enabled = false;
+            this.exportCancelButton.enabled = false;
+            this.importUserInput.enabled = false;
+            this.exportUserInput.enabled = false;
         }
         else {
-            importButton.enabled = true;
-            exportButton.enabled = true;
-            importCancelButton.enabled = true;
-            exportCancelButton.enabled = true;
-            importUserInput.enabled = true;
-            exportUserInput.enabled = true;
+            this.importButton.enabled = true;
+            this.exportButton.enabled = true;
+            this.importCancelButton.enabled = true;
+            this.exportCancelButton.enabled = true;
+            this.importUserInput.enabled = true;
+            this.exportUserInput.enabled = true;
         }
 
-        if(EventSystem.current.currentSelectedGameObject == acknowledgeButton){
+        if(EventSystem.current.currentSelectedGameObject == this.acknowledgeButton){
             this.gameObject.SetActive(false);
-            importButton.enabled = true;
-            exportButton.enabled = true;
-            importCancelButton.enabled = true;
-            exportCancelButton.enabled = true;
-            importUserInput.enabled = true;
-            exportUserInput.enabled = true;
+            this.importButton.enabled = true;
+            this.exportButton.enabled = true;
+            this.importCancelButton.enabled = true;
+            this.exportCancelButton.enabled = true;
+            this.importUserInput.enabled = true;
+            this.exportUserInput.enabled = true;
         }
     }
 }

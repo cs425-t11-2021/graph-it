@@ -82,7 +82,7 @@ public class Graph
 
     public Edge this[ Vertex vert1, Vertex vert2 ]
     {
-        get => vert1 > vert2 ? this.adjacency[ ( vert2, vert1 ) ] : this.adjacency[ ( vert1, vert2 ) ];
+        get => vert1 > vert2 ? this.adjacency.GetValue( ( vert2, vert1 ) ) : this.adjacency.GetValue( ( vert1, vert2 ) );
     }
 
     private List< Edge > GetDirectedEdges()
@@ -185,7 +185,7 @@ public class Graph
         return edge;
     }
 
-    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.adjacency.ContainsKey( ( vert1, vert2 ) ) || this.adjacency.ContainsKey( ( vert2, vert1 ) );
+    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => !( this[ vert1, vert2 ] is null );
 
     private bool IsDirected()
     {
@@ -552,7 +552,6 @@ public class Graph
             dist[ v ] = double.PositiveInfinity;
 
         dist[ src ] = 0;
-        not_visited.Remove( src );
 
         while ( not_visited.Count() > 0 )
         {
@@ -569,9 +568,9 @@ public class Graph
             // update neighbors of u
             foreach ( Vertex v in not_visited )
             {
-                if ( this.adjacency.ContainsKey( ( u, v ) ) )
+                if ( this.IsAdjacent( u, v ) )
                 {
-                    double tmp = dist[ u ] + this.adjacency[ ( u, v ) ].weight;
+                    double tmp = dist[ u ] + this[ u, v ].weight;
                     if ( tmp < dist[ v ] )
                     {
                         dist[ v ] = tmp;
@@ -588,7 +587,7 @@ public class Graph
         {
             result.Add( curr );
             curr = prev[ curr ];
-            if ( curr == null )
+            if ( curr is null )
                 return new List<Vertex>();
         }
         result.Add( src );

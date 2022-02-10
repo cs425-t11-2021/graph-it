@@ -19,7 +19,7 @@ public class ViewMenu : MonoBehaviour
 
     private Button viewButton;
     private void Awake() {
-        viewButton = this.gameObject.GetComponent<Button>();
+        this.viewButton = this.gameObject.GetComponent<Button>();
     }
 
     private void Update()
@@ -31,15 +31,15 @@ public class ViewMenu : MonoBehaviour
             EventSystem.current.SetSelectedGameObject(null);
         }*/
         //If the user clicks close the dropdown panel
-        if (!dropDownMenu.activeInHierarchy) return;
+        if (!this.dropDownMenu.activeInHierarchy) return;
         
         if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1)){
-            if( !(Controller.singleton.UIActive())) { //does not close dropdown when another button is pressed
-                dropDownMenu.SetActive(false);
+            if( !(Controller.Singleton.UIActive())) { //does not close dropdown when another button is pressed
+                this.dropDownMenu.SetActive(false);
             }
             
             if (EventSystem.current.currentSelectedGameObject != null && !EventSystem.current.currentSelectedGameObject.transform.IsChildOf(this.transform)) {
-                dropDownMenu.SetActive(false);
+                this.dropDownMenu.SetActive(false);
             }
         }
     }
@@ -48,32 +48,32 @@ public class ViewMenu : MonoBehaviour
     public void ToggleLabels()
     {
         CloseDropDown();
-        if (Controller.singleton.DisplayVertexLabels)
+        if (Controller.Singleton.DisplayVertexLabels)
         {
-            Controller.singleton.DisplayVertexLabels = false;
-            showGrpahLabelsText.text = "Show Graph Labels";
+            Controller.Singleton.DisplayVertexLabels = false;
+            this.showGrpahLabelsText.text = "Show Graph Labels";
         }
         else
         {
-            Controller.singleton.DisplayVertexLabels = true;
-            showGrpahLabelsText.text = "Hide Graph Labels";
+            Controller.Singleton.DisplayVertexLabels = true;
+            this.showGrpahLabelsText.text = "Hide Graph Labels";
         }
     }
 
     public void ToggleDropDown(){
         if(dropDownMenu.activeInHierarchy){
             EventSystem.current.SetSelectedGameObject(null);
-            dropDownMenu.SetActive(false);
+            this.dropDownMenu.SetActive(false);
         }
         else{
-            viewButton.Select();
-            dropDownMenu.SetActive(true);
+            this.viewButton.Select();
+            this.dropDownMenu.SetActive(true);
             //fileDropDown.SetActive(false);
            // editDropDown.SetActive(false);
         }
     }
 
     public void CloseDropDown(){
-        dropDownMenu.SetActive(false);
+        this.dropDownMenu.SetActive(false);
     }
 }

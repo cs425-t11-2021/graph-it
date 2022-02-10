@@ -6,7 +6,8 @@ using System.Threading;
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
-    public int chromatic_number;
+    private int chromaticNumber;
+    public int ChromaticNumber { get; private set; }
 
 	public ChromaticAlgorithm( Graph graph, Action onThreadExit ) : base( graph, onThreadExit ) { }
 
@@ -21,7 +22,7 @@ public class ChromaticAlgorithm : Algorithm
                 chi = num_colors;
         }
         
-        this.chromatic_number = chi;
+        this.chromaticNumber = chi;
     }
 
     private bool IsProperColoring( List< int > coloring )

@@ -3011,7 +3011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CheckedChanged:
+  checkedChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1228080547}
@@ -3026,8 +3026,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _checkedColor: {r: 0, g: 0.6383686, b: 1, a: 1}
-  _group: {fileID: 0}
+  checkedColor: {r: 0, g: 0.54226303, b: 1, a: 1}
+  group: {fileID: 0}
 --- !u!1 &506519944
 GameObject:
   m_ObjectHideFlags: 0
@@ -3926,7 +3926,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CheckedChanged:
+  checkedChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1228080547}
@@ -3941,8 +3941,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _checkedColor: {r: 0, g: 0.6392157, b: 1, a: 1}
-  _group: {fileID: 0}
+  checkedColor: {r: 0, g: 0.5411765, b: 1, a: 1}
+  group: {fileID: 0}
 --- !u!114 &606668071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6815,7 +6815,7 @@ GameObject:
   - component: {fileID: 1039602332}
   - component: {fileID: 1039602331}
   m_Layer: 0
-  m_Name: GraphGrid
+  m_Name: Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6833,7 +6833,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a9fb3ab818ed4831a62b5dc33ee078f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  p_gridLines: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
+  girdLinesPrefab: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
   spacing: 0.5
   gridLineCount: 100
 --- !u!4 &1039602332
@@ -11386,7 +11386,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1670804266}
   m_Layer: 0
-  m_Name: GraphObj
+  m_Name: GraphContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11879,7 +11879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  CheckedChanged:
+  checkedChanged:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1228080547}
@@ -11894,8 +11894,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _checkedColor: {r: 0, g: 0.6392157, b: 1, a: 1}
-  _group: {fileID: 0}
+  checkedColor: {r: 0, g: 0.5411765, b: 1, a: 1}
+  group: {fileID: 0}
 --- !u!114 &1723796978
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14267,8 +14267,10 @@ GameObject:
   - component: {fileID: 2144943524}
   - component: {fileID: 2144943526}
   - component: {fileID: 2144943527}
+  - component: {fileID: 2144943528}
+  - component: {fileID: 2144943529}
   m_Layer: 0
-  m_Name: _Controller
+  m_Name: Controller
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -14301,7 +14303,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vertexObjPrefab: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
-  edgeObjPrefab: {fileID: 709617791594073476, guid: f45080ed2c08c40deba533ea5f31daac, type: 3}
+  edgeObjPrefab: {fileID: 4532031476796509688, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
   graphObj: {fileID: 1670804266}
   clickableLayers:
     serializedVersion: 2
@@ -14316,7 +14318,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2144943521}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9850f836b15844948ae334bf78b594e6, type: 3}
   m_Name: 
@@ -14346,8 +14348,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6fa794377446848e78b0bded3a3f0cd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PointerOverNode: 0
-  PointerOverEdge: 0
 --- !u!114 &2144943527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14360,3 +14360,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e68742db1c86b0a6ab21cd5fb1c5de7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2144943528
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144943521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4006af56c39244ee2bb5eeb7745be278, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2144943529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2144943521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12301043cea9840819f36da364fc77cd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  loggingLevel: 3

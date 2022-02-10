@@ -8,7 +8,7 @@ public abstract class Algorithm
 	private Action onThreadExit;
     private bool running;
     private bool completed;
-    private int hash;
+    protected int hash;
 
 	public Algorithm(Graph graph, Action onThreadExit) {
 		this.graph = graph;
@@ -31,10 +31,10 @@ public abstract class Algorithm
 	private void RunWrapper() {
 		try {
             this.running = true;
-			this.Run();
+			      this.Run();
             this.running = false;
             this.completed = true;
-			RunInMain.singleton.queuedTasks.Enqueue(this.onThreadExit);
+			RunInMain.Singleton.queuedTasks.Enqueue(this.onThreadExit);
 		} catch (ThreadAbortException e) { }
 	}
 
