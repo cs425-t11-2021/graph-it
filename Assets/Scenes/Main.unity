@@ -790,6 +790,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5eb089fa93f7e54a847f3da1fa3aa9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuObj: {fileID: 0}
+  menuButton: {fileID: 0}
+  dropdownObj: {fileID: 0}
 --- !u!1 &150277621
 GameObject:
   m_ObjectHideFlags: 0
@@ -4213,6 +4216,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5eb089fa93f7e54a847f3da1fa3aa9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  menuObj: {fileID: 0}
+  menuButton: {fileID: 0}
+  dropdownObj: {fileID: 0}
 --- !u!114 &646254003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6789,7 +6795,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1064003695
 GameObject:
@@ -11299,36 +11305,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1649507296}
   m_CullTransparentMesh: 1
---- !u!1 &1670804265
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1670804266}
-  m_Layer: 0
-  m_Name: GraphContainer
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1670804266
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1670804265}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1709803080
 GameObject:
   m_ObjectHideFlags: 0
@@ -14226,7 +14202,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vertexObjPrefab: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
   edgeObjPrefab: {fileID: 4532031476796509688, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
-  graphObj: {fileID: 1670804266}
+  graphObjContainerPrefab: {fileID: 6636080573536567373, guid: 15f2060c571ca455f89067d020354288, type: 3}
+  graphObj: {fileID: 0}
   clickableLayers:
     serializedVersion: 2
     m_Bits: 416
@@ -14254,7 +14231,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c60da87b7f5246c09bec55715ea5e3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  selectedVertices: []
 --- !u!114 &2144943526
 MonoBehaviour:
   m_ObjectHideFlags: 0

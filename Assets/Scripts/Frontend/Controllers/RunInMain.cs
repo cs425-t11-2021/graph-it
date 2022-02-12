@@ -13,7 +13,6 @@ public class RunInMain : SingletonBehavior<RunInMain>
 
     private void Update() {
         if (this.queuedTasks.Count > 0) {
-            Debug.Log("Running queued task");
             this.queuedTasks.Dequeue()();
         }
     }

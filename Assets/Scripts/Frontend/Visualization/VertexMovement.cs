@@ -10,14 +10,14 @@ public class VertexMovement : MonoBehaviour
         get => this.followCursor;
         set {
             Logger.Log(string.Format("Vertex {0}.", value ? "picked up" : "droped off."), this, LogType.DEBUG);
-            this.cursorOffset = this.transform.position - Controller.Singleton.GetCursorWorldPosition();
+            this.cursorOffset = this.transform.position - InputManager.Singleton.CursorWorldPosition;
             this.followCursor = value;
         }
     }
 
     private void Update() {
         if (this.followCursor) {
-            this.transform.position = Controller.Singleton.GetCursorWorldPosition() + this.cursorOffset;
+            this.transform.position = InputManager.Singleton.CursorWorldPosition + this.cursorOffset;
         }
     }
 }

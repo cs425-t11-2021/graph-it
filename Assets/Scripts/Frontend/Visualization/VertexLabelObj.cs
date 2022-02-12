@@ -5,7 +5,7 @@ using System;
 using System.Linq;
 using TMPro;
 
-public class LabelObj : MonoBehaviour
+public class VertexLabelObj : MonoBehaviour
 {
     //TODO: ADD COMMENTS
 

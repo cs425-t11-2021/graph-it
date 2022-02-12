@@ -58,7 +58,7 @@ public class EdgeObj : MonoBehaviour
     private SpriteRenderer arrowSpriteRenderer;
     private int direction;
     // Edge weights/labels
-    private EdgeLabel labelObj;
+    private EdgeLabelObj labelObj;
 
     private void Awake() {
         // Edge objects starts non active
@@ -71,7 +71,7 @@ public class EdgeObj : MonoBehaviour
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
-        this.labelObj = this.transform.parent.GetComponentInChildren<EdgeLabel>();
+        this.labelObj = this.transform.parent.GetComponentInChildren<EdgeLabelObj>();
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject

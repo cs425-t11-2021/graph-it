@@ -24,11 +24,8 @@ public class GraphViewState : ManipulationState
     {
         if (InputManager.Singleton.CursorOverGraphObj) return;
 
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-        Controller.Singleton.Graph.AddVertex(mousePos.x, mousePos.y);
-        Controller.Singleton.UpdateGraphObjs();
         SelectionManager.Singleton.DeSelectAll();
-        GraphInfo.Singleton.UpdateGraphInfo();
+        Controller.Singleton.AddVertex(InputManager.Singleton.CursorWorldPosition);
     }
 
     public void OnClickInPlace() {
@@ -74,13 +71,13 @@ public class GraphViewState : ManipulationState
             return;
         }
 
-        foreach (VertexObj selectedVertex in SelectionManager.Singleton.selectedVertices) {
+        foreach (VertexObj selectedVertex in SelectionManager.Singleton.SelectedVertices) {
             selectedVertex.GetComponent<VertexMovement>().FollowCursor = true;
 
-            if (Grid.singleton.GridEnabled)
+            if (Grid.Singleton.GridEnabled)
             {
-                Grid.singleton.RemoveFromOccupied(selectedVertex);
-                Grid.singleton.DisplayGridLines();
+                Grid.Singleton.RemoveFromOccupied(selectedVertex);
+                Grid.Singleton.DisplayGridLines();
             }
         }
     }
@@ -88,13 +85,13 @@ public class GraphViewState : ManipulationState
     public void OnDragEnd() {
         if (!graphMovementInProgress) return;
 
-        foreach (VertexObj selectedVertex in SelectionManager.Singleton.selectedVertices) {
+        foreach (VertexObj selectedVertex in SelectionManager.Singleton.SelectedVertices) {
             selectedVertex.GetComponent<VertexMovement>().FollowCursor = false;
 
-            if (Grid.singleton.GridEnabled)
+            if (Grid.Singleton.GridEnabled)
             {
-                selectedVertex.transform.position = Grid.singleton.FindClosestGridPosition(selectedVertex);
-                Grid.singleton.HideGridLines();
+                selectedVertex.transform.position = Grid.Singleton.FindClosestGridPosition(selectedVertex);
+                Grid.Singleton.HideGridLines();
             }
 
             selectedVertex.Vertex.x_pos = selectedVertex.transform.position.x;

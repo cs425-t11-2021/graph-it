@@ -71,6 +71,11 @@ public class InputManager : SingletonBehavior<InputManager>
         }
     }
 
+    // Utility method to help get the corresponding world position of the mouse cursor
+    public Vector3 CursorWorldPosition {
+        get => Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.transform.position.z));
+    }
+
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
             if (!UIManager.Singleton.CursorOnUI) {

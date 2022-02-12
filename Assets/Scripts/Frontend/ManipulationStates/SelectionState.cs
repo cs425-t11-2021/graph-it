@@ -28,7 +28,7 @@ public class SelectionState : ManipulationState
     {
         if (InputManager.Singleton.CursorOverGraphObj) return;
 
-        this.lastCursorWorldPos = Controller.Singleton.GetCursorWorldPosition();
+        this.lastCursorWorldPos = InputManager.Singleton.CursorWorldPosition;
         UpdateSelectionRect();
         this.selectionRect.gameObject.SetActive(true);
     }
@@ -54,13 +54,11 @@ public class SelectionState : ManipulationState
     public override void OnMouseRelease()
     {
         Bounds bounds = UpdateSelectionRect();
-        VertexObj[] vertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
-        foreach (VertexObj v in vertexObjs) {
+        foreach (VertexObj v in Controller.Singleton.VertexObjs) {
             if (bounds.Contains(v.transform.position))
                 SelectionManager.Singleton.SelectVertex(v);
         }
-        EdgeObj[] edgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
-        foreach (EdgeObj e in edgeObjs) {
+        foreach (EdgeObj e in Controller.Singleton.EdgeObjs) {
             if (bounds.Contains((Vector2) e.transform.position)) {
                 SelectionManager.Singleton.SelectEdge(e);
             }
@@ -70,8 +68,8 @@ public class SelectionState : ManipulationState
     }
 
     private Bounds UpdateSelectionRect() {
-        Vector2 currentMouseWorldPos = Controller.Singleton.GetCursorWorldPosition();
-        Vector2 middle = (Controller.Singleton.GetCursorWorldPosition() + lastCursorWorldPos) / 2f;
+        Vector2 currentMouseWorldPos = InputManager.Singleton.CursorWorldPosition;
+        Vector2 middle = (InputManager.Singleton.CursorWorldPosition + lastCursorWorldPos) / 2f;
         Vector2 size = new Vector2(Mathf.Abs(currentMouseWorldPos.x - lastCursorWorldPos.x), Mathf.Abs(currentMouseWorldPos.y - lastCursorWorldPos.y));
 
         this.selectionRect.position = middle;

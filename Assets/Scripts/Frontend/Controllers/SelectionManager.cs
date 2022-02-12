@@ -7,11 +7,12 @@ using UnityEngine.EventSystems;
 public class SelectionManager : SingletonBehavior<SelectionManager>
 {
     // Lists to store the graph objects of currently selected vertices and edges
-    public List<VertexObj> selectedVertices;
+    private List<VertexObj> selectedVertices;
     private List<EdgeObj> selectedEdges;
 
-    // Stored position of the cursor used to detect panning
-    private Vector3 lastCursorWorldPos;
+    // Readonly Properties for the above lists
+    public List<VertexObj> SelectedVertices { get => this.selectedVertices; }
+    public List<EdgeObj> SelectedEdges { get => this.selectedEdges; }
 
     // Event for when the selection is updated (select or deselect)
     public event Action<int, int> OnSelectionChange;
@@ -111,14 +112,13 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             Controller.Singleton.Graph.RemoveEdge(edgeObj.Edge);
             Destroy(edgeObj.transform.parent.gameObject);
         }
+
         this.selectedEdges = new List<EdgeObj>();
 
         // For each vertex to be deleted, find all edges connecting to the vertex, then destroy the vertex object
         foreach (VertexObj vertexObj in this.selectedVertices)
         {
-            // TODO: Find a faster way to do this without having to find all the edge objects in the scene
-            EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
-            foreach (EdgeObj edgeObj in allEdgeObjs)
+            foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
             {
                 if (edgeObj.ToVertexObj == vertexObj.gameObject)
                 {
@@ -161,17 +161,15 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     // Method called to select all objects
     public void SelectAll()
     {
-        EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
-        foreach (EdgeObj edgeObj in allEdgeObjs)
+        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
         {
-            if (!selectedEdges.Contains(edgeObj))
+            if (!edgeObj.Selected)
                 SelectEdge(edgeObj, false);
         }
 
-        VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
-        foreach (VertexObj vertexObj in allVertexObjs)
+        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
         {
-            if (!selectedVertices.Contains(vertexObj))
+            if (!vertexObj.Selected)
                 SelectVertex(vertexObj, false);
         }
 
@@ -204,15 +202,13 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             primVertices.Add(e.vert2);
         }
 
-        EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
-        foreach (EdgeObj edgeObj in allEdgeObjs)
+        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
         {
             if (primEdges.Contains(edgeObj.Edge))
                 SelectEdge(edgeObj);
         }
 
-        VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
-        foreach (VertexObj vertexObj in allVertexObjs)
+        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
         {
             if (primVertices.Contains(vertexObj.Vertex))
                 SelectVertex(vertexObj);
@@ -226,15 +222,13 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             kruskalVertices.Add(e.vert2);
         }
 
-        EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
-        foreach (EdgeObj edgeObj in allEdgeObjs)
+        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
         {
             if (kruskalEdges.Contains(edgeObj.Edge))
                 SelectEdge(edgeObj);
         }
 
-        VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
-        foreach (VertexObj vertexObj in allVertexObjs)
+        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
         {
             if (kruskalVertices.Contains(vertexObj.Vertex))
                 SelectVertex(vertexObj);
@@ -256,15 +250,13 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         //     dijkstraVertices.Add(e.vert2);
         // }
 
-        EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
-        foreach (EdgeObj edgeObj in allEdgeObjs)
+        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
         {
             if (dijkstraEdges.Contains(edgeObj.Edge))
                 SelectEdge(edgeObj);
         }
 
-        VertexObj[] allVertexObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<VertexObj>();
-        foreach (VertexObj vertexObj in allVertexObjs)
+        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
         {
             if (dijkstraVertices.Contains(vertexObj.Vertex))
                 SelectVertex(vertexObj);
@@ -272,39 +264,21 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     }
 
     // Add a new edge between the first two selected vertices
-    public void AddEdge() {
+    public void AddEdgeBetweenTwoSelectedVertices() {
         VertexObj vertexObj1 = selectedVertices[0];
         VertexObj vertexObj2 = selectedVertices[1];
 
-        AddEdge(vertexObj1, vertexObj2);
+        Controller.Singleton.AddEdge(vertexObj1.Vertex, vertexObj2.Vertex);
         DeSelectAll();
-    }
-
-    // Add a new edge between two vertices
-    public void AddEdge(VertexObj vertexObj1, VertexObj vertexObj2) {
-        // If the requested edge already exists, return
-        if (Controller.Singleton.Graph.IsAdjacent(vertexObj1.Vertex, vertexObj2.Vertex))  {
-            return;
-        }
-
-        // If both vertices are the same, return
-        if (vertexObj1.Vertex == vertexObj2.Vertex) return;
-
-        Controller.Singleton.Graph.AddEdge(vertexObj1.Vertex, vertexObj2.Vertex);
-        Controller.Singleton.UpdateGraphObjs();
-
-        GraphInfo.Singleton.UpdateGraphInfo();
     }
 
     // Add a new edge between the first vertexObj selected and a passed in vertexObj
     public void AddEdge(VertexObj target) {
-        AddEdge(selectedVertices[0], target);
+        Controller.Singleton.AddEdge(selectedVertices[0].Vertex, target.Vertex);
     }
 
     // Change the type of selected edges
     public void ChangeSelectedEdgesType() {
-        foreach (EdgeObj e in selectedEdges) {
-            e.ToggleEdgeType();
-        }
+        this.selectedEdges.ForEach(e => e.ToggleEdgeType());
     }
 }

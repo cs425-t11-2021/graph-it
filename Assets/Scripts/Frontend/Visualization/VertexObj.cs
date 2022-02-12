@@ -26,7 +26,7 @@ public class VertexObj : MonoBehaviour
             this.selected = value;
             // If the vertex object becomes selected, make its label editable
             if (value) {
-                this.labelObj.MakeUneditable();               
+                this.labelObj.MakeEditable();               
             }
             else {
                 this.labelObj.MakeUneditable();
@@ -41,7 +41,7 @@ public class VertexObj : MonoBehaviour
     // Reference to the animator component
     private Animator animator;
     // Reference to the labelObj attached to the vertexObj
-    private LabelObj labelObj;
+    private VertexLabelObj labelObj;
 
     private void Awake() {
         // Vertex objects starts non active
@@ -52,7 +52,7 @@ public class VertexObj : MonoBehaviour
         this.animator = GetComponent<Animator>();
         this.spriteObj = transform.GetChild(0);
         this.spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
-        this.labelObj = GetComponentInChildren<LabelObj>();
+        this.labelObj = GetComponentInChildren<VertexLabelObj>();
     }
 
     // Method called by a controller class to setup properties of the vertex object
@@ -72,13 +72,19 @@ public class VertexObj : MonoBehaviour
     }
 
     // When Cursor enters a vertex obj, play hovering animation
-    private void OnMouseOver()
-    {
-        // Check if cursor is over collider
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex"));  //11f since camera is at z = -10
-        if (hit && hit.collider.gameObject == gameObject)
-        {
+    // private void OnMouseOver()
+    // {
+    //     // Check if cursor is over collider
+    //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //     RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex"));  //11f since camera is at z = -10
+    //     if (hit && hit.collider.gameObject == gameObject)
+    //     {
+    //         this.animator.SetBool("Hovering", true);
+    //     }
+    // }
+
+    private void OnMouseOver() {
+        if (InputManager.Singleton.CurrentHoveringVertex && InputManager.Singleton.CurrentHoveringVertex == this.gameObject) {
             this.animator.SetBool("Hovering", true);
         }
     }
@@ -92,9 +98,9 @@ public class VertexObj : MonoBehaviour
     // If vertex object is deleted, remove it from the grid
     private void OnDestroy()
     {
-        if (Grid.singleton.GridEnabled)
+        if (Grid.Singleton.GridEnabled)
         {
-            Grid.singleton.RemoveFromOccupied(this);
+            Grid.Singleton.RemoveFromOccupied(this);
         }
     }
 }

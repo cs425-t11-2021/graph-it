@@ -17,10 +17,7 @@ public class VertexCreationState : ManipulationState
     {
         if (InputManager.Singleton.CursorOverGraphObj) return;
 
-        Vector3 mousePos = Camera.main.ScreenToWorldPoint(new Vector2(Input.mousePosition.x, Input.mousePosition.y));
-        Controller.Singleton.Graph.AddVertex(mousePos.x, mousePos.y);
-        Controller.Singleton.UpdateGraphObjs();
         SelectionManager.Singleton.DeSelectAll();
-        GraphInfo.Singleton.UpdateGraphInfo();
+        Controller.Singleton.AddVertex(InputManager.Singleton.CursorWorldPosition);
     }
 }

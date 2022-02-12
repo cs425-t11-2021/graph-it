@@ -17,8 +17,7 @@ public class FileMenu : MenuButton
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
-        Controller.Singleton.ClearGraphObjs();
-        Controller.Singleton.Graph.Clear();
+        Controller.Singleton.CreateGraphInstance();
     }
 
     // Function called by the import from file button

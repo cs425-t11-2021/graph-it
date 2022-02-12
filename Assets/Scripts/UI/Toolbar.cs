@@ -172,7 +172,7 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
     // Function called by Add Edge button
     public void AddEdge() {
-        SelectionManager.Singleton.AddEdge();
+        SelectionManager.Singleton.AddEdgeBetweenTwoSelectedVertices();
     }
 
     // Function called by Change Type button

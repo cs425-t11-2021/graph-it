@@ -4,20 +4,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class Grid : MonoBehaviour
+public class Grid : SingletonBehavior<Grid>
 {
-    // Singleton
-    public static Grid singleton;
-
     // Prefab for the grid lines object
     public GameObject girdLinesPrefab;
 
     // Space between each vertex
-    [SerializeField]
-    private float spacing = 0.5f;
+    [SerializeField] private float spacing = 0.5f;
     // Number of horizontal and vertical gridline objects to instantiate
-    [SerializeField]
-    private int gridLineCount = 20;
+    [SerializeField] private int gridLineCount = 20;
 
     // List of occupied grid points
     private List< (Vector2Int, VertexObj) > occupiedPoints;
@@ -29,18 +24,6 @@ public class Grid : MonoBehaviour
 
     private void Awake()
     {
-        // Singleton pattern setup
-        if (Grid.singleton == null)
-        {
-            Grid.singleton = this;
-        }
-        else
-        {
-            Debug.LogError("[Grid] Singleton pattern violation");
-            Destroy(this);
-            return;
-        }
-
         // Instantiate list of occupied points
         this.occupiedPoints = new List< (Vector2Int, VertexObj) >();
 
@@ -124,14 +107,8 @@ public class Grid : MonoBehaviour
     // Method for hiding (deactivating) the gridlines
     public void HideGridLines()
     {
-        foreach (GameObject line in this.horizontalLines)
-        {
-            line.SetActive(false);
-        }
-        foreach (GameObject line in this.verticalLines)
-        {
-            line.SetActive(false);
-        }
+        Array.ForEach(this.horizontalLines, line => line.SetActive(false));
+        Array.ForEach(this.verticalLines, line => line.SetActive(false));
     }
 
     // Find the best point in the grid of a given vertex object

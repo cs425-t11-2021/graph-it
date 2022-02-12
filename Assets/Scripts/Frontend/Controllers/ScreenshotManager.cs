@@ -63,7 +63,7 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
     private Bounds GetBoundsOfGraphObjects() {
         Bounds bounds = new Bounds(Vector2.zero, Vector2.zero);
 
-        Transform ObjContainer = Controller.Singleton.GraphObj;
+        Transform ObjContainer = Controller.Singleton.GraphObjContainer;
         float xMin = 0;
         float xMax = 0;
         float yMin = 0;

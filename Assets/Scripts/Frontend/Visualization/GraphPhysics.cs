@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 
 public class GraphPhysics : SingletonBehavior<GraphPhysics> {
     // Length of each edge (manually set for now, could implment an algorithm to determine the distance from graph size/shape or whatever)
@@ -55,20 +56,16 @@ public class GraphPhysics : SingletonBehavior<GraphPhysics> {
         // Turns off the grid if physics is turned on
         if (SettingsManager.Singleton.SnapVerticesToGrid)
         {
-            Grid.singleton.ClearGrid();
-            Grid.singleton.GridEnabled = !enabled;
+            Grid.Singleton.ClearGrid();
+            Grid.Singleton.GridEnabled = !enabled;
         }
 
-        // Find all vertex objects
-        VertexObj[] vertexObjs = GameObject.FindObjectsOfType<VertexObj>();
-        foreach (VertexObj vertexObj in vertexObjs)
+        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
         {
             // Enable the joints connecting vertices when physics is on
             DistanceJoint2D[] joints = vertexObj.GetComponents<DistanceJoint2D>();
-            foreach (DistanceJoint2D joint in joints)
-            {
-                joint.enabled = enabled;
-            }
+            Array.ForEach(joints, joint => joint.enabled = true);
+
             Rigidbody2D vertexObjRB = vertexObj.GetComponent<Rigidbody2D>();
             vertexObjRB.velocity = Vector3.zero;
             // Set vertex rigidbody to kinematic when physics is off
@@ -77,7 +74,7 @@ public class GraphPhysics : SingletonBehavior<GraphPhysics> {
             if (!enabled && SettingsManager.Singleton.SnapVerticesToGrid)
             {
                 // Resnap vertices when physics turns off if snap to grid is enabled
-                vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
+                vertexObj.transform.position = Grid.Singleton.FindClosestGridPosition(vertexObj);
             }
         }
         this.graphPhysicsEnabled = enabled;

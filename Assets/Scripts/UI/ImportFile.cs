@@ -44,15 +44,14 @@ public class ImportFile : MonoBehaviour
         }
         else {
             // Clear existing graph
-            Controller.Singleton.ClearGraphObjs();
+            Controller.Singleton.CreateGraphInstance();
 
             // TODO: File selector, file always saved on desktop for now
             string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
             Debug.Log("Begin import at " + desktop + "/" + importFilenameInput.text + ".csv");
             Controller.Singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
 
-            // Recrate graph objects
-            Controller.Singleton.CreateGraphObjs();
+            Controller.Singleton.CreateObjsFromGraph();
 
             // Ondisable does not get called automatically like OnEnable, thus we call it manually
             OnDisable();

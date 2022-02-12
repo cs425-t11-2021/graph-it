@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class EdgeLabel : MonoBehaviour
+public class EdgeLabelObj : MonoBehaviour
 {
     private double weight;
     // UI Rect of the label object
@@ -15,6 +15,8 @@ public class EdgeLabel : MonoBehaviour
     private TMP_InputField inputField;
 
     private bool displayEnabled;
+
+    [SerializeField] private EdgeObj edgeObject;
 
     public void Initiate(double weight)
     {
@@ -64,8 +66,8 @@ public class EdgeLabel : MonoBehaviour
 
     Vector3 FindSuitablePosition()
     {
-        Vector3 toPos = this.transform.parent.GetComponentInChildren<EdgeObj>().ToVertexObj.transform.position;
-        Vector3 fromPos = this.transform.parent.parent.position;
+        Vector3 toPos = this.edgeObject.ToVertexObj.transform.position;
+        Vector3 fromPos = this.edgeObject.FromVertexObj.transform.position;
 
         Vector3 center = (toPos + fromPos) / 2f;
         // Vector3 pos = center + new Vector3(0f, 0.4f, 0f);
