@@ -26,13 +26,19 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     private ChromaticAlgorithm chromaticAlgorithm;
 
+    // Property for whether or not the algorithm buttons are enabled
+    public bool AlgorithmButtonsEnabled {
+        set {
+            primButton.enabled = value;
+            dijkstraButton.enabled = value;
+        }
+    }
+
     private void Awake() {
         this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.Singleton.Graph, UpdateChromaticInfo);
 
         this.primButton.interactable = false;
         UpdateGraphInfo();
-        
-        
     }
 
     private void FixedUpdate() {
@@ -54,16 +60,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     public void UpdateGraphInfo() {
-        // if (Controller.singleton.Graph.vertices.Count > 6) {
-        //     chromaticText.text = "";
-        //     bipartiteText.text = "";
-        // }
-        // else {
-        //     int chromaticNum = Controller.singleton.Graph.GetChromaticNumber();
-        //     this.chromaticText.text = "Chromatic Number: " + chromaticNum;
-        //     this.bipartiteText.text = "Bipartite: " + (chromaticNum == 2 ? "Yes" : "No");
-        // }
-
         this.orderText.text = "Order: " + Controller.Singleton.Graph.vertices.Count;
         this.sizeText.text = "Size: " + Controller.Singleton.Graph.adjacency.Count;
 

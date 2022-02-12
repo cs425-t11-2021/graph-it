@@ -37,7 +37,7 @@ public class LabelObj : MonoBehaviour
             inputField.text = content;
         }
 
-        OnToggleVertexLabels(Controller.Singleton.DisplayVertexLabels);
+        OnToggleVertexLabels(SettingsManager.Singleton.DisplayVertexLabels);
     }
 
     private void Awake()
@@ -47,7 +47,7 @@ public class LabelObj : MonoBehaviour
 
         inputField = GetComponentInChildren<TMP_InputField>();
 
-        Controller.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
+        SettingsManager.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
 
         image = this.gameObject.GetComponentInChildren<RawImage>();
         image.enabled = false;

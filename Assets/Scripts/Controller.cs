@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 public class Controller : SingletonBehavior<Controller>
 {
@@ -12,9 +11,6 @@ public class Controller : SingletonBehavior<Controller>
     private GameObject vertexObjPrefab;
     [SerializeField]
     private GameObject edgeObjPrefab;
-
-    // Length of each edge (manually set for now, could implment an algorithm to determine the distance from graph size/shape or whatever)
-    private float edgeLength;
 
     // Property of refernece to the parent object for all the vertex and edge objects in the scene hiearchy
     [SerializeField]
@@ -25,94 +21,19 @@ public class Controller : SingletonBehavior<Controller>
     [SerializeField]
     private LayerMask clickableLayers;
 
-    // TODO: Move the visual settings away from controller and into its own object
-    [Header("Default Visual Settings")]
-
-    [SerializeField]
-    private bool displayVertexLabels;
-    public event Action<bool> OnToggleVertexLabels;
-    public bool DisplayVertexLabels {
-        get => this.displayVertexLabels;
-        set
-        {
-            this.displayVertexLabels = value;
-            this.OnToggleVertexLabels?.Invoke(value);
-        }
-    }
-    
-    [SerializeField]
-    private bool snapVerticesToGrid;
-    public event Action<bool> OnToggleGridSnapping;
-    public bool SnapVerticesToGrid {
-        get => this.snapVerticesToGrid;
-        set {
-            this.snapVerticesToGrid = value;
-            this.OnToggleGridSnapping?.Invoke(value);
-        }
-    }
-
-    [SerializeField]
-    private bool alwaysShowGridlines;
-    public event Action<bool> OnToggleAlwaysShowGridlines;
-    public bool AlwaysShowGridlines
-    {
-        get => this.alwaysShowGridlines;
-        set
-        {
-            if (this.snapVerticesToGrid)
-            {
-                this.alwaysShowGridlines = value;
-                this.OnToggleGridSnapping?.Invoke(value);
-            }
-            else
-            {
-                this.alwaysShowGridlines = false;
-            }
-        }
-    }
-
     // Main graph DS
     public Graph Graph { get; private set; }
 
-    // Timer used for tempoarily enabling graph physics
-    private float physicsTimer;
-    // Graph physics enabled
-    private bool graphPhysicsEnabled = false;
+    // Events called when new vertex and edge objects are created
+    public event Action<VertexObj> OnVertexObjectCreation;
+    public event Action<EdgeObj> OnEdgeObjectCreation;
 
     private void Awake() {
         // Initiate graph ds
         this.Graph = new Graph();
-        // Manually set edge length
-        this.edgeLength = 5;
 
         // Set the camera's event mask to clickableLayers
         Camera.main.eventMask = this.clickableLayers;
-
-        // Implment the default settings
-        ImplementDefaultSettings();
-    }
-
-    private void ImplementDefaultSettings()
-    {
-        DisplayVertexLabels = this.displayVertexLabels;
-        SnapVerticesToGrid = this.snapVerticesToGrid;
-        AlwaysShowGridlines = this.alwaysShowGridlines;
-    }
-
-    private void Update() {
-        // If graph physics is currently enabled and the timer isn't set to -1 (indefinite duration), decrease the timer
-        if (this.graphPhysicsEnabled && this.physicsTimer != -1)
-        {
-            if (this.physicsTimer <= 0f)
-            {
-                // Turn off graph physics once timer hits 0
-                SetGraphPhysics(false);
-            }
-            else
-            {
-                this.physicsTimer -= Time.deltaTime;
-            }
-        }
     }
 
     // Utility method to help get the corresponding world position of the mouse cursor
@@ -161,19 +82,9 @@ public class Controller : SingletonBehavior<Controller>
             int toVertexIndex = Array.IndexOf(vertexTransformPositions, kvp.Key.Item2);
             edgeObj.transform.SetParent(this.GraphObj.GetChild(fromVertexIndex));
             // Call the initiation function of the edge object
-            edgeObj.Initiate(kvp.Value, this.GraphObj.GetChild(toVertexIndex).gameObject);
-
-            // Add a DistanceJoint2D which connects the two vertices
-            DistanceJoint2D joint = this.GraphObj.GetChild(fromVertexIndex).gameObject.AddComponent<DistanceJoint2D>();
-            // Configure the properties of the joint
-            joint.autoConfigureConnectedAnchor = false;
-            joint.enableCollision = true;
-            joint.distance = this.edgeLength;
-            joint.maxDistanceOnly = true;
-            joint.autoConfigureDistance = false;
-            joint.connectedBody = this.GraphObj.GetChild(toVertexIndex).gameObject.GetComponent<Rigidbody2D>();
-            // Disable joint by default, the joint will only be enabled when graph physics is in use
-            joint.enabled = false;
+            edgeObj.Initiate(kvp.Value, this.GraphObj.GetChild(fromVertexIndex).gameObject, this.GraphObj.GetChild(toVertexIndex).gameObject);
+            // Send the OnEdgeObjectCreation event
+            OnEdgeObjectCreation?.Invoke(edgeObj);
         }
 
         // Update the Grpah information UI
@@ -287,67 +198,9 @@ public class Controller : SingletonBehavior<Controller>
         EdgeObj edgeObj = Instantiate(this.edgeObjPrefab, Vector2.zero, Quaternion.identity).transform.GetChild(0).GetComponent<EdgeObj>();
         // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
         edgeObj.transform.parent.SetParent(fromVertexObj.transform);
-        edgeObj.Initiate(edge, toVertexObj.gameObject);
-
-        // Add a DistanceJoint2D which connects the two vertices, setup its properties
-        DistanceJoint2D joint = fromVertexObj.gameObject.AddComponent<DistanceJoint2D>();
-        joint.autoConfigureConnectedAnchor = false;
-        joint.enableCollision = true;
-        joint.distance = edgeLength;
-        joint.maxDistanceOnly = true;
-        joint.autoConfigureDistance = false;
-        joint.connectedBody = toVertexObj.gameObject.GetComponent<Rigidbody2D>();
-        // Disable joint by default, the joint will only be enabled when graph physics is in use
-        joint.enabled = false;
+        edgeObj.Initiate(edge, fromVertexObj.gameObject, toVertexObj.gameObject);
+        // Send the OnEdgeObjectCreation event
+        OnEdgeObjectCreation?.Invoke(edgeObj);
     }
-
-    // Returns true if any UI elements are being interacted with
-    public bool UIActive()
-    {
-        return EventSystem.current.currentSelectedGameObject != null || EventSystem.current.IsPointerOverGameObject();
-    }
-
-    // Enables graph physics for a certain duartion
-    public void UseGraphPhysics(float duration)
-    {
-        if (!this.graphPhysicsEnabled)
-        {
-            SetGraphPhysics(true);
-        }
-        this.physicsTimer = duration;
-    }
-
-    // Enable/disable the components associated with graph physics
-    private void SetGraphPhysics(bool enabled)
-    {
-        // Turns off the grid if physics is turned on
-        if (Controller.Singleton.SnapVerticesToGrid)
-        {
-            Grid.singleton.ClearGrid();
-            Grid.singleton.GridEnabled = !enabled;
-        }
-
-        // Find all vertex objects
-        VertexObj[] vertexObjs = GameObject.FindObjectsOfType<VertexObj>();
-        foreach (VertexObj vertexObj in vertexObjs)
-        {
-            // Enable the joints connecting vertices when physics is on
-            DistanceJoint2D[] joints = vertexObj.GetComponents<DistanceJoint2D>();
-            foreach (DistanceJoint2D joint in joints)
-            {
-                joint.enabled = enabled;
-            }
-            Rigidbody2D vertexObjRB = vertexObj.GetComponent<Rigidbody2D>();
-            vertexObjRB.velocity = Vector3.zero;
-            // Set vertex rigidbody to kinematic when physics is off
-            vertexObjRB.isKinematic = !enabled;
-
-            if (!enabled && this.SnapVerticesToGrid)
-            {
-                // Resnap vertices when physics turns off if snap to grid is enabled
-                vertexObj.transform.position = Grid.singleton.FindClosestGridPosition(vertexObj);
-            }
-        }
-        this.graphPhysicsEnabled = enabled;
-    }
+    
 }

@@ -1,57 +1,48 @@
 //All code developed by Team 11
 
-//This script is for the general functionality of a menu dropdown 
-//When the program begins, the dropdown panels should not be shown or accessible
-//The dropdown appears when the user clicks on the menu button and remains until the user selects an option or clicks away
-
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class MenuButton : MonoBehaviour
+// Base class derived by all menu bar buttons
+public abstract class MenuButton : MonoBehaviour
 {
-    //private GameObject panelObj;
-    
+    // Refernce to the toggle button component
+    private ToggleButton toggleButton;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        //each menu option has a Panel child to activate and de-activate 
-        //panelObj = transform.GetChild(1).gameObject;
-
-        //want the dropdown to not be shown or accessible when program first starts
-        //panelObj.gameObject.SetActive(false);
-
-        
+    // Property for whether or not the dropdown associated with this button is active
+    public bool DropdownActive {
+        // Gets or sets the activeness of the gameObject of the dropdown (second child of button)
+        get {
+            return this.transform.GetChild(1).gameObject.activeInHierarchy;
+        }
+        set {
+            if (value) {
+                Logger.Log("Opening dropdown.", this, LogType.DEBUG);
+                
+            }
+            // Update the toggle button status and enable/disable the dropdown accordingly
+            this.toggleButton.UpdateStatus(value);
+            this.transform.GetChild(1).gameObject.SetActive(value);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        //TODO inplement a listener instead for efficiency
-        /*if (EventSystem.current.currentSelectedGameObject == this.gameObject){
-            //if the file button is clicked, the dropdown should be displayed
-            panelObj.gameObject.SetActive(true);
-        }
-        else{
-            //otherwise, the user clicked elsewhere and the dropdown should disappear
-            panelObj.gameObject.SetActive(false);
-        }*/
+    // Property for whether or not the toggle button is enabled
+    public bool ToggleButtonEnabled {
+        get =>  this.toggleButton.enabled; set => this.toggleButton.enabled = value;
     }
 
-    //keep the below function commented out, it has errors
-   /* private void DisplayDropDown(){
-        panelObj.gameObject.SetActive(true);
-        if(EventSystem.current.currentSelectedGameObject == menuItem){
-            //if the "ImportToFile" is clicked, show the import to file pop-up
-            importFileButton.gameObject.SetActive(true);
-        }
-        else{
-            //otherwise, the user clicked elsewhere and the dropdown should disappear
-            panelObj.gameObject.SetActive(false);
-        }
+    private void Awake() {
+        this.toggleButton = this.GetComponent<ToggleButton>();
+        // Disable dropdowns by default
+        DropdownActive = false;
+    }
 
-    }*/
+    // Function called by the menu buttons to enable/disable the dropdown
+    public void ToggleDropDown() {
+        DropdownActive = !DropdownActive;
+    }
 }

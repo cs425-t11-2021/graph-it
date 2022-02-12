@@ -1,0 +1,73 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+// Monobehavior which manages the program settings such as visuals
+public class SettingsManager : SingletonBehavior<SettingsManager>
+{
+    [Header("Default Visual Settings")]
+
+    // Whether or not vertex and edge labels should be displayed
+    // bool to store the setting
+    // event to be subscribed to by other classes that needs side effects when changes are updated
+    [SerializeField]
+    private bool displayVertexLabels;
+    public event Action<bool> OnToggleVertexLabels;
+    public bool DisplayVertexLabels {
+        get => this.displayVertexLabels;
+        set
+        {
+            this.displayVertexLabels = value;
+            this.OnToggleVertexLabels?.Invoke(value);
+            Logger.Log("Display vertex labels set to " + value, this, LogType.INFO);
+        }
+    }
+    
+    // Whether or not vertices should snap to grid
+    [SerializeField]
+    private bool snapVerticesToGrid;
+    public event Action<bool> OnToggleGridSnapping;
+    public bool SnapVerticesToGrid {
+        get => this.snapVerticesToGrid;
+        set {
+            this.snapVerticesToGrid = value;
+            this.OnToggleGridSnapping?.Invoke(value);
+            Logger.Log("Snap vertices to grid set to " + value, this, LogType.INFO);
+        }
+    }
+
+    // Whether or not gridlines should always be displayed
+    [SerializeField]
+    private bool alwaysShowGridlines;
+    public event Action<bool> OnToggleAlwaysShowGridlines;
+    public bool AlwaysShowGridlines
+    {
+        get => this.alwaysShowGridlines;
+        set
+        {
+            if (this.snapVerticesToGrid)
+            {
+                this.alwaysShowGridlines = value;
+                this.OnToggleGridSnapping?.Invoke(value);
+                Logger.Log("Always show gridlines set to " + value, this, LogType.INFO);
+            }
+            else
+            {
+                this.alwaysShowGridlines = false;
+            }
+        }
+    }
+
+    // Method run at Awake to implement the default settings
+    private void ImplementDefaultSettings()
+    {
+        DisplayVertexLabels = this.displayVertexLabels;
+        SnapVerticesToGrid = this.snapVerticesToGrid;
+        AlwaysShowGridlines = this.alwaysShowGridlines;
+    }
+
+    private void Awake() {
+        ImplementDefaultSettings();
+    }
+}

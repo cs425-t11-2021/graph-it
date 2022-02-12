@@ -69,7 +69,7 @@ public class Toolbar : SingletonBehavior<Toolbar>
     }
 
     private void Update() {
-        if (Controller.Singleton.UIActive()) return;
+        if (UIManager.Singleton.CursorOnUI) return;
         
         // If a number key is pressed, trigger the corresponding button on the toolbar
         for (int i = 1; i <= 9; i++) {
@@ -105,9 +105,9 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
     // Turn off all toggles
     public void ResetAll() {
-        this.SelectionMode = false;
-        this.CreateVertexMode = false;
-        this.EdgeCreationMode = false;
+        this.selectionModeButton.Checked = false;
+        this.createVertexModeButton.Checked = false;
+        this.edgeCreationModeButton.Checked = false;
     }
 
     // Enable or disable selection mode

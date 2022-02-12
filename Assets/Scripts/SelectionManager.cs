@@ -33,7 +33,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     private void Update()
     {
         // Delete selection if backspace or delete key is pressed
-        if (!Controller.Singleton.UIActive())
+        if (!UIManager.Singleton.CursorOnUI)
         {
             if (Input.GetKeyDown(KeyCode.Backspace) || Input.GetKeyDown(KeyCode.Delete))
             {
@@ -76,7 +76,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             if (Input.GetMouseButtonUp(0)) {
                 if (this.selectAll) this.selectAll = false;
                 else {
-                    if (!Controller.Singleton.UIActive() && !EventSystem.current.IsPointerOverGameObject()) {
+                    if (!UIManager.Singleton.CursorOnUI && !EventSystem.current.IsPointerOverGameObject()) {
                         if (Controller.Singleton.GetCursorWorldPosition() == this.lastCursorWorldPos) {
                             // Check if cursor is over collider, if not, deselect all graph objects
                             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -173,7 +173,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             EdgeObj[] allEdgeObjs = Controller.Singleton.GraphObj.GetComponentsInChildren<EdgeObj>();
             foreach (EdgeObj edgeObj in allEdgeObjs)
             {
-                if (edgeObj.TargetVertexObj == vertexObj.gameObject)
+                if (edgeObj.ToVertexObj == vertexObj.gameObject)
                 {
                     Destroy(edgeObj.gameObject);
                 }
