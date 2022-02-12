@@ -101,7 +101,7 @@ public class InputManager : SingletonBehavior<InputManager>
         else if (Input.GetMouseButton(0)) {
             OnMouseHold?.Invoke();
 
-            if (!this.dragging && Input.mousePosition != this.mouseLastClickPosition) {
+            if (!this.doubleClickedThisFrame && !this.dragging && Input.mousePosition != this.mouseLastClickPosition) {
                 Logger.Log("Mouse drag started.", this, LogType.DEBUG);
                 this.dragging = true;
                 OnMouseDragStart?.Invoke();
