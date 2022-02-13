@@ -60,7 +60,7 @@ public class PrimsAlgorithm : Algorithm
         return incident_edges;
     }
 
-    public static int GetHashCode( Vertex vert ) => ( typeof ( PrimsAlgorithm ), vert ).GetHashCode();
+    public static int GetHash( Vertex vert ) => ( typeof ( PrimsAlgorithm ), vert ).GetHashCode();
 
-    public override int GetHashCode() => PrimsAlgorithm.GetHashCode( this.vert );
+    public override int GetHashCode() => PrimsAlgorithm.GetHash( this.vert );
 }

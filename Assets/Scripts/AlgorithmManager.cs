@@ -55,21 +55,21 @@ public class AlgorithmManager
 
     public void EnsureChromaticRunning()
     {
-        int hash = ChromaticAlgorithm.GetHashCode();
+        int hash = ChromaticAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             new ChromaticAlgorithm( this.graph, this.chromaticUI, this.MarkRunning, this.MarkComplete ).RunThread();
     }
 
     public void EnsurePrimsRunning( Vertex vert )
     {
-        int hash = PrimsAlgorithm.GetHashCode( vert );
+        int hash = PrimsAlgorithm.GetHash( vert );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             new PrimsAlgorithm( this.graph, vert, this.chromaticUI, this.MarkRunning, this.MarkComplete ).RunThread();
     }
 
     public void EnsureKruskalsRunning()
     {
-        int hash = KruskalsAlgorithm.GetHashCode();
+        int hash = KruskalsAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             new KruskalsAlgorithm( this.graph, this.chromaticUI, this.MarkRunning, this.MarkComplete ).RunThread();
     }
@@ -78,7 +78,7 @@ public class AlgorithmManager
     // // can only be applied to algorithms without parameters
     // public void EnsureRunning( Type Algo, Action updateUI )
     // {
-    //     int hash = Algo.GetHashCode();
+    //     int hash = Algo.GetHash();
     //     if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
     //         Activator.CreateInstance( Algo, new Object[] { this.graph, updateUI, ( Action< Algorithm > ) this.MarkRunning, ( Action< Algorithm > ) this.MarkComplete } ).Run();
     // }
@@ -87,16 +87,12 @@ public class AlgorithmManager
     // // can only be applied to algorithms with one parameter
     // public void EnsureRunning( Type Algo, Action updateUI, Object param )
     // {
-    //     int hash = Algo.GetHashCode();
+    //     int hash = Algo.GetHash();
     //     if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
     //         Activator.CreateInstance( Algo, new Object[] { this.graph, param, updateUI, ( Action< Algorithm > ) this.MarkRunning, ( Action< Algorithm > ) this.MarkComplete } ).Run();
     // }
 
-    public int GetChromaticNumber() {
-        if ( this.complete.ContainsKey( ChromaticAlgorithm.GetHashCode() ) )
-            return -1;
-        return ( ( ChromaticAlgorithm ) this.complete[ ChromaticAlgorithm.GetHashCode() ] ).ChromaticNumber;
-    }
+    public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;
 
     public void MarkRunning( Algorithm algo )
     {
@@ -109,13 +105,13 @@ public class AlgorithmManager
         this.complete[ algo.GetHashCode() ] = algo;
     }
 
-    public bool IsRunning( Type Algo ) => this.IsRunning( Algo.GetHashCode() );
+    // public bool IsRunning( Type Algo ) => this.IsRunning( Algo.GetHash() );
 
     public bool IsRunning( Algorithm algo ) => this.IsRunning( algo.GetHashCode() );
 
     public bool IsRunning( int key ) => this.running.ContainsKey( key );
 
-    public bool IsComplete( Type Algo ) => this.IsComplete( Algo.GetHashCode() );
+    // public bool IsComplete( Type Algo ) => this.IsComplete( Algo.GetHash() );
 
     public bool IsComplete( Algorithm algo ) => this.IsComplete( algo.GetHashCode() );
 

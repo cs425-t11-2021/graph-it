@@ -48,5 +48,7 @@ public class KruskalsAlgorithm : Algorithm
         throw new System.Exception( "Vertex could not be found in collection of components." );
     }
 
-    public new static int GetHashCode() => typeof ( KruskalsAlgorithm ).GetHashCode();
+    public static int GetHash() => typeof ( KruskalsAlgorithm ).GetHashCode();
+
+    public override int GetHashCode() => KruskalsAlgorithm.GetHash();
 }

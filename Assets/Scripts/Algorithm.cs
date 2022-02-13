@@ -59,4 +59,6 @@ public abstract class Algorithm
             this.currThread.Abort();
         }
     }
+
+    public new abstract int GetHashCode();
 }

@@ -29,7 +29,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     private void Awake() {
         this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticInfo, ( Action ) this.UpdatePrimsInfo, ( Action ) this.UpdateKruskalsInfo );
-        // this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.Singleton.Graph, UpdateChromaticInfo, this.algorithmManager.MarkRunning, this.algorithmManager.MarkComplete );
 
         this.primButton.interactable = false;
         UpdateGraphInfo();
@@ -70,13 +69,17 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.chromaticText.text = "Chromatic Number: Calculating";
         this.bipartiteText.text = "Bipartite: Calculating";
         // Run multithreaded chromatic
-        // chromaticAlgorithm.RunThread();
         this.algorithmManager.RunChromatic();
     }
 
     public void UpdateChromaticInfo() {
         int? chromaticNumber = this.algorithmManager.GetChromaticNumber();
-        if ( !( chromaticNumber is null ) )
+        if ( chromaticNumber is null )
+        {
+            this.chromaticText.text = "Chromatic Number: Error";
+            this.bipartiteText.text = "Bipartite: Error"; // temp until BipartiteAlgorithm
+        }
+        else
         {
             this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
             this.bipartiteText.text = "Bipartite: " + ( chromaticNumber == 2 ? "Yes" : "No" ); // temp until BipartiteAlgorithm

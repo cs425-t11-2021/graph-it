@@ -56,5 +56,7 @@ public class ChromaticAlgorithm : Algorithm
         }
     }
 
-    public new static int GetHashCode() => typeof ( ChromaticAlgorithm ).GetHashCode();
+    public static int GetHash() => typeof ( ChromaticAlgorithm ).GetHashCode();
+
+    public override int GetHashCode() => ChromaticAlgorithm.GetHash();
 }
