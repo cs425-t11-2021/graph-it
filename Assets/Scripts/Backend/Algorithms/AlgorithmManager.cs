@@ -91,24 +91,6 @@ public class AlgorithmManager
             new KruskalsAlgorithm( this.graph, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
-    // // ensures algorithm Algo is currently running or completed
-    // // can only be applied to algorithms without parameters
-    // public void EnsureRunning( Type Algo, Action updateUI )
-    // {
-    //     int hash = Algo.GetHash();
-    //     if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-    //         Activator.CreateInstance( Algo, new Object[] { this.graph, updateUI, ( Action< Algorithm > ) this.MarkRunning, ( Action< Algorithm > ) this.MarkComplete } ).Run();
-    // }
-
-
-    // // can only be applied to algorithms with one parameter
-    // public void EnsureRunning( Type Algo, Action updateUI, Object param )
-    // {
-    //     int hash = Algo.GetHash();
-    //     if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-    //         Activator.CreateInstance( Algo, new Object[] { this.graph, param, updateUI, ( Action< Algorithm > ) this.MarkRunning, ( Action< Algorithm > ) this.MarkComplete } ).Run();
-    // }
-
     public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;
 
     public bool? GetBipartite() => ( ( BipartiteAlgorithm ) this.complete.GetValue( BipartiteAlgorithm.GetHash() ) )?.IsBipartite;
