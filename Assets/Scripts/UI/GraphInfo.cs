@@ -23,8 +23,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // Reference of the button of dijkstra
     [SerializeField] private Button dijkstraButton;
 
-    // Reference to the multithreaded chromatic algorithm
-    private ChromaticAlgorithm chromaticAlgorithm;
+    private AlgorithmManager algorithmManager;
 
     // Property for whether or not the algorithm buttons are enabled
     public bool AlgorithmButtonsEnabled {
@@ -36,7 +35,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     private void Awake() {
-        this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.Singleton.Graph, UpdateChromaticInfo);
+        this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticInfo, ( Action ) this.UpdatePrimsInfo, ( Action ) this.UpdateKruskalsInfo );
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
 
         this.primButton.interactable = false;
@@ -58,12 +57,25 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.chromaticText.text = "Chromatic Number: Calculating";
         this.bipartiteText.text = "Bipartite: Calculating";
         // Run multithreaded chromatic
-        chromaticAlgorithm.RunThread();
+        this.algorithmManager.RunChromatic();
     }
 
     public void UpdateChromaticInfo() {
         Logger.Log("Updated chromatic number and bipartite.", this, LogType.INFO);
-        this.chromaticText.text = "Chromatic Number: " + chromaticAlgorithm.ChromaticNumber;
-        this.bipartiteText.text = "Bipartite: " + (chromaticAlgorithm.ChromaticNumber == 2 ? "Yes" : "No");
+        int? chromaticNumber = this.algorithmManager.GetChromaticNumber();
+        if ( chromaticNumber is null )
+        {
+            this.chromaticText.text = "Chromatic Number: Error";
+            this.bipartiteText.text = "Bipartite: Error"; // temp until BipartiteAlgorithm
+        }
+        else
+        {
+            this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
+            this.bipartiteText.text = "Bipartite: " + ( chromaticNumber == 2 ? "Yes" : "No" ); // temp until BipartiteAlgorithm
+        }
     }
+
+    public void UpdatePrimsInfo() { } // temp for algorithm manager
+
+    public void UpdateKruskalsInfo() { } // temp for algorithm manager
 }
