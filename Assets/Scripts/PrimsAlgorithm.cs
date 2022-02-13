@@ -11,9 +11,10 @@ public class PrimsAlgorithm : Algorithm
 
     List< Edge > mst;
 
-    public PrimsAlgorithm( Graph graph, Vertex vert, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete ) : base( graph, updateUI, markRunning, markComplete )
+    public PrimsAlgorithm( Graph graph, Vertex vert, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
     {
-        // TODO: if vert not in graph, throw error
+        if ( !this.graph.vertices.Contains( vert ) )
+            throw new System.Exception( "Vertex for Prim's algorithm is not in graph." );
         this.vert = vert;
     }
 

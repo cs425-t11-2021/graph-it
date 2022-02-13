@@ -9,7 +9,7 @@ public class KruskalsAlgorithm : Algorithm
 {
     List< Edge > mst;
 
-    public KruskalsAlgorithm( Graph graph, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete ) : base( graph, updateUI, markRunning, markComplete ) { }
+    public KruskalsAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
 
     public override void Run()
     {

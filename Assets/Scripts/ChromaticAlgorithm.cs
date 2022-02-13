@@ -1,5 +1,6 @@
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -8,7 +9,7 @@ public class ChromaticAlgorithm : Algorithm
 {
     public int ChromaticNumber { get; private set; }
 
-    public ChromaticAlgorithm( Graph graph, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete ) : base( graph, updateUI, markRunning, markComplete ) { }
+    public ChromaticAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
 
     public override void Run()
     {
@@ -22,6 +23,8 @@ public class ChromaticAlgorithm : Algorithm
         }
 
         this.ChromaticNumber = chi;
+
+        BipartiteAlgorithm.SetChromaticNumber( this.graph, chi );
     }
 
     private bool IsProperColoring( List< int > coloring )

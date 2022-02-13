@@ -28,7 +28,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // private ChromaticAlgorithm chromaticAlgorithm;
 
     private void Awake() {
-        this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticInfo, ( Action ) this.UpdatePrimsInfo, ( Action ) this.UpdateKruskalsInfo );
+        this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating );
 
         this.primButton.interactable = false;
         UpdateGraphInfo();
@@ -66,27 +66,37 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.orderText.text = "Order: " + Controller.Singleton.Graph.vertices.Count;
         this.sizeText.text = "Size: " + Controller.Singleton.Graph.adjacency.Count;
 
-        this.chromaticText.text = "Chromatic Number: Calculating";
-        this.bipartiteText.text = "Bipartite: Calculating";
+        
         // Run multithreaded chromatic
-        this.algorithmManager.RunChromatic();
+        // this.algorithmManager.RunChromatic();
+        this.algorithmManager.RunBipartite();
     }
 
-    public void UpdateChromaticInfo() {
+    public void UpdateChromaticResult() {
         int? chromaticNumber = this.algorithmManager.GetChromaticNumber();
         if ( chromaticNumber is null )
-        {
             this.chromaticText.text = "Chromatic Number: Error";
-            this.bipartiteText.text = "Bipartite: Error"; // temp until BipartiteAlgorithm
-        }
         else
-        {
             this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
-            this.bipartiteText.text = "Bipartite: " + ( chromaticNumber == 2 ? "Yes" : "No" ); // temp until BipartiteAlgorithm
-        }
     }
 
-    public void UpdatePrimsInfo() { } // temp for algorithm manager
+    public void UpdateBipartiteResult() {
+        this.bipartiteText.text = "Bipartite: " + ( this.algorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
+    }
 
-    public void UpdateKruskalsInfo() { } // temp for algorithm manager
+    public void UpdatePrimsResult() { }
+
+    public void UpdateKruskalsResult() { }
+
+    public void UpdateChromaticCalculating() {
+        this.chromaticText.text = "Chromatic Number: Calculating";
+    }
+
+    public void UpdateBipartiteCalculating() {
+        this.bipartiteText.text = "Bipartite: Calculating";
+    }
+
+    public void UpdatePrimsCalculating() { }
+
+    public void UpdateKruskalsCalculating() { }
 }
