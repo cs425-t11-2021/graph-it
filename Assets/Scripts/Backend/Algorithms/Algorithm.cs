@@ -1,50 +1,64 @@
+
 using System;
 using System.Threading;
 
 public abstract class Algorithm
 {
     protected Graph graph;
-	private Thread currThread;
-	private Action onThreadExit;
-    private bool running;
-    private bool completed;
-    private int hash;
+    private Thread currThread;
+    private Action updateUI;
+    private Action< Algorithm > markRunning;
+    private Action< Algorithm > markComplete;
+    protected bool running;
+    protected bool complete;
 
-	public Algorithm(Graph graph, Action onThreadExit) {
-		this.graph = graph;
+    public Algorithm( Graph graph, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete )
+    {
+        this.graph = graph;
         this.currThread = null;
-		this.onThreadExit = onThreadExit;
+        this.updateUI = updateUI;
+        this.markRunning = markRunning;
+        this.markComplete = markComplete;
         this.running = false;
-        this.completed = false;
-        this.hash = this.GetHashCode();
-	}
+        this.complete = false;
+    }
 
-	public abstract void Run();
+    public abstract void Run();
 
-	public void RunThread() {
-		this.Kill();
+    public void RunThread()
+    {
+        this.Kill();
 
-		this.currThread = new Thread(new ThreadStart(this.RunWrapper));
-		this.currThread.Start();
-	}
+        this.currThread = new Thread( new ThreadStart( this.RunWrapper ) );
+        this.currThread.Start();
+    }
 
-	private void RunWrapper() {
-		try {
+    private void RunWrapper()
+    {
+        try
+        {
             this.running = true;
-			      this.Run();
+            this.markRunning( this );
+            // TODO: update ui to calculating
+            this.Run();
             this.running = false;
-            this.completed = true;
-			RunInMain.Singleton.queuedTasks.Enqueue(this.onThreadExit);
-		} catch (ThreadAbortException e) { }
-	}
+            this.complete = true;
+            this.markComplete( this );
+            RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+        }
+        catch ( ThreadAbortException e ) { }
+    }
 
-    public bool Kill() {
-        if (this.currThread != null && this.currThread.IsAlive)
+    public void Kill()
+    {
+        if ( this.currThread?.IsAlive ?? false )
         {
             this.running = false;
+            this.complete = false;
+            // TODO: unmark running
             this.currThread.Abort();
-            return true;
         }
-        return false;
     }
+
+    public new abstract int GetHashCode();
 }

@@ -7,11 +7,11 @@ using System.Threading;
 [System.Serializable]
 public class KruskalsAlgorithm : Algorithm
 {
-	List< Edge > mst;
+    List< Edge > mst;
 
-	public KruskalsAlgorithm( Graph graph, Action onThreadExit) : base( graph, onThreadExit ) { }
+    public KruskalsAlgorithm( Graph graph, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete ) : base( graph, updateUI, markRunning, markComplete ) { }
 
-	public override void Run()
+    public override void Run()
     {
         if ( this.graph.directed )
         {
@@ -48,5 +48,7 @@ public class KruskalsAlgorithm : Algorithm
         throw new System.Exception( "Vertex could not be found in collection of components." );
     }
 
-    public static int GetHashCode() => typeof ( KruskalsAlgorithm ).GetHashCode();
+    public static int GetHash() => typeof ( KruskalsAlgorithm ).GetHashCode();
+
+    public override int GetHashCode() => KruskalsAlgorithm.GetHash();
 }
