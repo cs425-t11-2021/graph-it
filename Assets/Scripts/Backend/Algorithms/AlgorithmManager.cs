@@ -11,10 +11,14 @@ public class AlgorithmManager
     private Action bipartiteUI;
     private Action primsUI;
     private Action kruskalsUI;
+    private Action depthFirstSearchUI;
+    private Action breadthFirstSearchUI;
     private Action chromaticCalc;
     private Action bipartiteCalc;
     private Action primsCalc;
     private Action kruskalsCalc;
+    private Action depthFirstSearchCalc;
+    private Action breadthFirstSearchCalc;
     private Dictionary< int, Algorithm > running; 
     public List< Algorithm > Running
     {
@@ -26,17 +30,21 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
 
-    public AlgorithmManager( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc )
+    public AlgorithmManager( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
     {
         this.graph = graph;
         this.chromaticUI = chromaticUI;
         this.bipartiteUI = bipartiteUI;
         this.primsUI = primsUI;
         this.kruskalsUI = kruskalsUI;
+        this.depthFirstSearchUI = depthFirstSearchUI;
+        this.breadthFirstSearchUI = breadthFirstSearchUI;
         this.chromaticCalc = chromaticCalc;
         this.bipartiteCalc = bipartiteCalc;
         this.primsCalc = primsCalc;
         this.kruskalsCalc = kruskalsCalc;
+        this.depthFirstSearchCalc = depthFirstSearchCalc;
+        this.breadthFirstSearchCalc = breadthFirstSearchCalc;
         this.running  = new Dictionary< int, Algorithm >();
         this.complete = new Dictionary< int, Algorithm >();
     }
@@ -55,14 +63,19 @@ public class AlgorithmManager
 
     public void RunBipartite()
     {
-        // EnsureChromaticRunning();
+        // BipartiteAlgorithm ba = new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning );
+        // foreach ( Vertex vert in this.graph.vertices )
+        // {
+        //     EnsureBreadthFirstSearchRunning( vert, ba.  ); 
+        // }
+        // ba.RunThread();
         new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
-    public void RunPrims()
+    public void RunPrims( Vertex vert ) // temp parameter
     {
         // TODO: retrieve vert from selection manager and check if only a single vertex is selected, maybe subscribe to OnSelectionChange
-        // new PrimsAlgorithm( this.graph, vert, this.primsUI, this.primsCalc, this.MarkRunning, this.MarkComplete ).Run();
+        // new PrimsAlgorithm( this.graph, vert, this.primsUI, this.primsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).Run();
     }
 
     public void RunKruskals()
@@ -70,11 +83,28 @@ public class AlgorithmManager
         new KruskalsAlgorithm( this.graph, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
+    public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
+    {
+        new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearcahCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
+    public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
+    {
+        new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.breadthFirstSearchUI, this.breadthFirstSearcahCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
     public void EnsureChromaticRunning()
     {
         int hash = ChromaticAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             new ChromaticAlgorithm( this.graph, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
+    public void EnsureBipartiteRunning()
+    {
+        int hash = BipartiteAlgorithm.GetHash();
+        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+            new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsurePrimsRunning( Vertex vert )
@@ -89,6 +119,20 @@ public class AlgorithmManager
         int hash = KruskalsAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             new KruskalsAlgorithm( this.graph, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
+    public void EnsureDepthFirstSearchRunning( Vertex vert, Action< Edge, Vertex > action )
+    {
+        int hash = DepthFirstSearchAlgorithm.GetHash();
+        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+            new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearcahCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
+    public void EnsureBreadthFirstSearchRunning( Vertex vert, Action< Edge, Vertex > action )
+    {
+        int hash = BreadthFirstSearchAlgorithm.GetHash();
+        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+            new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearcahCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;

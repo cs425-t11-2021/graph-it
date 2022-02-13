@@ -7,7 +7,7 @@ using System.Threading;
 [System.Serializable]
 public class KruskalsAlgorithm : Algorithm
 {
-    List< Edge > mst;
+    public List< Edge > Mst { get; private set; }
 
     public KruskalsAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
 
@@ -19,7 +19,7 @@ public class KruskalsAlgorithm : Algorithm
             throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
         }
 
-        this.mst = new List< Edge >();
+        this.Mst = new List< Edge >();
         List< Edge > edges = new List< Edge >( graph.adjacency.Values.OrderBy( edge => edge.weight ) );
         HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
         foreach ( Vertex vert in this.graph.vertices )
@@ -32,7 +32,7 @@ public class KruskalsAlgorithm : Algorithm
             {
                 forest.Remove( tree1 );
                 tree2.UnionWith( tree1 );
-                this.mst.Add( edge );
+                this.Mst.Add( edge );
             }
         }
     }

@@ -35,7 +35,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     private void Awake() {
-        this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating );
+        this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateDepthFirstSearchResult, ( Action ) this.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating, ( Action ) this.UpdateDepthFirstSearchCalculating, ( Action ) this.UpdateBreadthFirstSearchCalculating );
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
 
         this.primButton.interactable = false;
@@ -75,6 +75,10 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     public void UpdateKruskalsResult() { }
 
+    public void UpdateDepthFirstSearchResult() { }
+
+    public void UpdateBreadthFirstSearchResult() { }
+
     public void UpdateChromaticCalculating() {
         this.chromaticText.text = "Chromatic Number: Calculating";
     }
@@ -86,4 +90,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdatePrimsCalculating() { }
 
     public void UpdateKruskalsCalculating() { }
+
+    public void UpdateDepthFirstSearchCalculating() { }
+
+    public void UpdateBreadthFirstSearchCalculating() { }
 }

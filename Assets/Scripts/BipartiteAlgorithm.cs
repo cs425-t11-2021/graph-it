@@ -62,15 +62,16 @@ public class BipartiteAlgorithm : Algorithm
 
     private HashSet< Vertex > GetNeighborhood( Vertex vert )
     {
-        HashSet< Vertex > neighbors = new HashSet< Vertex >();
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.graph.adjacency )
-        {
-            if ( kvp.Key.Item1 == vert )
-                neighbors.Add( kvp.Key.Item2 );
-            else if ( kvp.Key.Item2 == vert )
-                neighbors.Add( kvp.Key.Item1 );
-        }
-        return neighbors;
+        // HashSet< Vertex > neighbors = new HashSet< Vertex >();
+        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.graph.adjacency )
+        // {
+        //     if ( kvp.Key.Item1 == vert )
+        //         neighbors.Add( kvp.Key.Item2 );
+        //     else if ( kvp.Key.Item2 == vert )
+        //         neighbors.Add( kvp.Key.Item1 );
+        // }
+
+        return this.graph.GetIncidentEdges().Select( edge => edge.vert1 == vert ? edge.vert2 : edge.vert1 );;
     }
 
     public static void SetChromaticNumber( Graph graph, int chromaticNumber )
