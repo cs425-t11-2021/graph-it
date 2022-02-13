@@ -9,14 +9,15 @@ public class PrimsAlgorithm : Algorithm
 {
     private Vertex vert;
 
-	List< Edge > mst;
+    List< Edge > mst;
 
-	public PrimsAlgorithm( Graph graph, Action onThreadExit, Vertex vert ) : base( graph, onThreadExit )
-	{
+    public PrimsAlgorithm( Graph graph, Vertex vert, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete ) : base( graph, updateUI, markRunning, markComplete )
+    {
+        // TODO: if vert not in graph, throw error
         this.vert = vert;
-	}
+    }
 
-	public override void Run()
+    public override void Run()
     {
         if ( this.graph.directed )
         {
@@ -60,4 +61,6 @@ public class PrimsAlgorithm : Algorithm
     }
 
     public static int GetHashCode( Vertex vert ) => ( typeof ( PrimsAlgorithm ), vert ).GetHashCode();
+
+    public override int GetHashCode() => PrimsAlgorithm.GetHashCode( this.vert );
 }

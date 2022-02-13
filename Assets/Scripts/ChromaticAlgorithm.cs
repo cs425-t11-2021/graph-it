@@ -6,14 +6,13 @@ using System.Threading;
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
-    private int chromaticNumber;
     public int ChromaticNumber { get; private set; }
 
-	public ChromaticAlgorithm( Graph graph, Action onThreadExit ) : base( graph, onThreadExit ) { }
+    public ChromaticAlgorithm( Graph graph, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete ) : base( graph, updateUI, markRunning, markComplete ) { }
 
-	public override void Run()
+    public override void Run()
     {
-        int chi = graph.vertices.Count;
+        int chi = this.graph.vertices.Count;
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
         {
@@ -21,8 +20,8 @@ public class ChromaticAlgorithm : Algorithm
             if ( num_colors < chi && this.IsProperColoring( coloring ) )
                 chi = num_colors;
         }
-        
-        this.chromaticNumber = chi;
+
+        this.ChromaticNumber = chi;
     }
 
     private bool IsProperColoring( List< int > coloring )
@@ -57,5 +56,5 @@ public class ChromaticAlgorithm : Algorithm
         }
     }
 
-    public static int GetHashCode() => typeof ( ChromaticAlgorithm ).GetHashCode();
+    public new static int GetHashCode() => typeof ( ChromaticAlgorithm ).GetHashCode();
 }

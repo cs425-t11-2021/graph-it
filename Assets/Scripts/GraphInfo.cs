@@ -24,15 +24,15 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     [SerializeField]
     private Button dijkstraButton;
 
-    private ChromaticAlgorithm chromaticAlgorithm;
+    private AlgorithmManager algorithmManager;
+    // private ChromaticAlgorithm chromaticAlgorithm;
 
     private void Awake() {
-        this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.Singleton.Graph, UpdateChromaticInfo);
+        this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticInfo, ( Action ) this.UpdatePrimsInfo, ( Action ) this.UpdateKruskalsInfo );
+        // this.chromaticAlgorithm = new ChromaticAlgorithm(Controller.Singleton.Graph, UpdateChromaticInfo, this.algorithmManager.MarkRunning, this.algorithmManager.MarkComplete );
 
         this.primButton.interactable = false;
         UpdateGraphInfo();
-        
-        
     }
 
     private void FixedUpdate() {
@@ -70,11 +70,20 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.chromaticText.text = "Chromatic Number: Calculating";
         this.bipartiteText.text = "Bipartite: Calculating";
         // Run multithreaded chromatic
-        chromaticAlgorithm.RunThread();
+        // chromaticAlgorithm.RunThread();
+        this.algorithmManager.RunChromatic();
     }
 
     public void UpdateChromaticInfo() {
-        this.chromaticText.text = "Chromatic Number: " + chromaticAlgorithm.ChromaticNumber;
-        this.bipartiteText.text = "Bipartite: " + (chromaticAlgorithm.ChromaticNumber == 2 ? "Yes" : "No");
+        int? chromaticNumber = this.algorithmManager.GetChromaticNumber();
+        if ( !( chromaticNumber is null ) )
+        {
+            this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
+            this.bipartiteText.text = "Bipartite: " + ( chromaticNumber == 2 ? "Yes" : "No" ); // temp until BipartiteAlgorithm
+        }
     }
+
+    public void UpdatePrimsInfo() { } // temp for algorithm manager
+
+    public void UpdateKruskalsInfo() { } // temp for algorithm manager
 }
