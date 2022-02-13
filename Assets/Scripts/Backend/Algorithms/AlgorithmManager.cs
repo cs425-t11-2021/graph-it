@@ -52,7 +52,7 @@ public class AlgorithmManager
     public void RunAll()
     {
         this.RunChromatic();
-        this.RunPrims();
+        // this.RunPrims();
         this.RunKruskals();
     }
 
@@ -85,12 +85,12 @@ public class AlgorithmManager
 
     public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
     {
-        new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearcahCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
     {
-        new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.breadthFirstSearchUI, this.breadthFirstSearcahCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.breadthFirstSearchUI, this.breadthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureChromaticRunning()
@@ -123,16 +123,16 @@ public class AlgorithmManager
 
     public void EnsureDepthFirstSearchRunning( Vertex vert, Action< Edge, Vertex > action )
     {
-        int hash = DepthFirstSearchAlgorithm.GetHash();
+        int hash = DepthFirstSearchAlgorithm.GetHash( vert );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearcahCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureBreadthFirstSearchRunning( Vertex vert, Action< Edge, Vertex > action )
     {
-        int hash = BreadthFirstSearchAlgorithm.GetHash();
+        int hash = BreadthFirstSearchAlgorithm.GetHash( vert );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearcahCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;

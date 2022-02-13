@@ -71,7 +71,7 @@ public class BipartiteAlgorithm : Algorithm
         //         neighbors.Add( kvp.Key.Item1 );
         // }
 
-        return this.graph.GetIncidentEdges().Select( edge => edge.vert1 == vert ? edge.vert2 : edge.vert1 );;
+        return new HashSet< Vertex >( this.graph.GetIncidentEdges( vert ).Select( edge => edge.vert1 == vert ? edge.vert2 : edge.vert1 ) );;
     }
 
     public static void SetChromaticNumber( Graph graph, int chromaticNumber )
