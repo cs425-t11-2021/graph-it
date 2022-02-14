@@ -7,18 +7,22 @@ public abstract class Algorithm
     protected Graph graph;
     private Thread currThread;
     private Action updateUI;
+    private Action updateCalc;
     private Action< Algorithm > markRunning;
     private Action< Algorithm > markComplete;
+    private Action< Algorithm > unmarkRunning;
     protected bool running;
     protected bool complete;
 
-    public Algorithm( Graph graph, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete )
+    public Algorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning )
     {
         this.graph = graph;
         this.currThread = null;
         this.updateUI = updateUI;
+        this.updateCalc = updateCalc;
         this.markRunning = markRunning;
         this.markComplete = markComplete;
+        this.unmarkRunning = unmarkRunning;
         this.running = false;
         this.complete = false;
     }
@@ -39,7 +43,7 @@ public abstract class Algorithm
         {
             this.running = true;
             this.markRunning( this );
-            // TODO: update ui to calculating
+            RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
             this.Run();
             this.running = false;
             this.complete = true;
@@ -55,7 +59,7 @@ public abstract class Algorithm
         {
             this.running = false;
             this.complete = false;
-            // TODO: unmark running
+            this.unmarkRunning( this );
             this.currThread.Abort();
         }
     }

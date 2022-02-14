@@ -1,5 +1,6 @@
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -8,7 +9,7 @@ public class ChromaticAlgorithm : Algorithm
 {
     public int ChromaticNumber { get; private set; }
 
-    public ChromaticAlgorithm( Graph graph, Action updateUI, Action< Algorithm > markRunning, Action< Algorithm > markComplete ) : base( graph, updateUI, markRunning, markComplete ) { }
+    public ChromaticAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
 
     public override void Run()
     {
@@ -16,12 +17,14 @@ public class ChromaticAlgorithm : Algorithm
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
         {
-            int num_colors = ( new HashSet< int >( coloring ) ).Count;
-            if ( num_colors < chi && this.IsProperColoring( coloring ) )
-                chi = num_colors;
+            int numColors = ( new HashSet< int >( coloring ) ).Count;
+            if ( numColors < chi && this.IsProperColoring( coloring ) )
+                chi = numColors;
         }
 
         this.ChromaticNumber = chi;
+
+        BipartiteAlgorithm.SetChromaticNumber( this.graph, chi );
     }
 
     private bool IsProperColoring( List< int > coloring )
@@ -41,17 +44,17 @@ public class ChromaticAlgorithm : Algorithm
         return colorings;
     }
 
-    private static void GetAllColoringsHelper( HashSet< List< int > > colorings, List< int > coloring, int num_vertices, int num_colors )
+    private static void GetAllColoringsHelper( HashSet< List< int > > colorings, List< int > coloring, int numVertices, int numColors )
     {
-        if ( coloring.Count >= num_vertices )
+        if ( coloring.Count >= numVertices )
             colorings.Add( coloring );
         else
         {
-            for ( int i = 0; i < num_colors; i++ )
+            for ( int i = 0; i < numColors; i++ )
             {
-                List< int > new_coloring = new List< int >( coloring );
-                new_coloring.Add( i );
-                GetAllColoringsHelper( colorings, new_coloring, num_vertices, num_colors );
+                List< int > newColoring = new List< int >( coloring );
+                newColoring.Add( i );
+                GetAllColoringsHelper( colorings, newColoring, numVertices, numColors );
             }
         }
     }
