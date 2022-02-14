@@ -147,12 +147,10 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         {
             DeselectEdge(this.selectedEdges[i], false);
         }
-        this.selectedEdges = new List<EdgeObj>();
         for (int i = this.selectedVertices.Count - 1; i >= 0; i--)
         {
             DeselectVertex(this.selectedVertices[i], false);
         }
-        // this.selectedVertices = new List<VertexObj>();
 
         // Call selection changed event
         this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);

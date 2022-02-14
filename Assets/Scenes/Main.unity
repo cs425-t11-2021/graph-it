@@ -790,9 +790,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5eb089fa93f7e54a847f3da1fa3aa9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuObj: {fileID: 0}
-  menuButton: {fileID: 0}
-  dropdownObj: {fileID: 0}
 --- !u!1 &150277621
 GameObject:
   m_ObjectHideFlags: 0
@@ -4216,9 +4213,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5eb089fa93f7e54a847f3da1fa3aa9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menuObj: {fileID: 0}
-  menuButton: {fileID: 0}
-  dropdownObj: {fileID: 0}
 --- !u!114 &646254003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14203,7 +14197,6 @@ MonoBehaviour:
   vertexObjPrefab: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
   edgeObjPrefab: {fileID: 4532031476796509688, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
   graphObjContainerPrefab: {fileID: 6636080573536567373, guid: 15f2060c571ca455f89067d020354288, type: 3}
-  graphObj: {fileID: 0}
   clickableLayers:
     serializedVersion: 2
     m_Bits: 416

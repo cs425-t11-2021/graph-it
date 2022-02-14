@@ -1,15 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+// Abstract base class of all manipulation states
 public abstract class ManipulationState
 {
+    // Instance of each manipulation state
     public static ManipulationState viewState;
     public static ManipulationState selectionState;
     public static ManipulationState vertexCreationState;
     public static ManipulationState edgeCreationState;
     public static ManipulationState disabledState;
 
+    // Property for whether or not the state is active
     public bool Active {
         set {
             if (value) {

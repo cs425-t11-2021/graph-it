@@ -1,11 +1,10 @@
 // Modification of CodeMonkey Tutorial on Youtube
 // https://youtu.be/lT-SRLKUe5k
 
-using System.Collections;
 using System.IO;
-using System.Collections.Generic;
 using UnityEngine;
 
+// Class responsible for creating savable images from the current graph
 public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
 {
     // Component references
@@ -23,21 +22,16 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
         this.cam = GetComponent<Camera>();
     }
 
-    private void Update() {
-        // Tempoary testing code to take a screenshot
-        // if (Input.GetKeyDown(KeyCode.Minus)) {
-        //     TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/GraphImgs/test.png");
-        // }
-    }
-
+    // Screenshot code needs to be run in postrender
     private void OnPostRender() {
         if (this.takeScreenshotNextFrame) {
+            // Render the camera into a texture2d
             RenderTexture renderTex = this.cam.targetTexture;
             Texture2D renderResult = new Texture2D((int) (this.screenBounds.size.x + 0.5f), (int) (this.screenBounds.size.y + 0.5f), TextureFormat.ARGB32, false);
-
             Rect rect = new Rect(this.screenBounds.min.x, this.screenBounds.min.y, this.screenBounds.size.x, this.screenBounds.size.y);
             renderResult.ReadPixels(rect, 0, 0);
 
+            // Write the texture data as a png
             byte[] byteArray = renderResult.EncodeToPNG();
             File.WriteAllBytes(filepath, byteArray);
 
@@ -49,6 +43,7 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
         }
     }
 
+    // Tempoarty function for saving a screenshot to desktop
     public void SaveScrenshotToDesktop() {
         TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/graph_img.png");
     }
@@ -60,6 +55,7 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
         this.filepath = filepath;
     }
 
+    // Helper function for getting a bound around all graph objects active in the scene
     private Bounds GetBoundsOfGraphObjects() {
         Bounds bounds = new Bounds(Vector2.zero, Vector2.zero);
 

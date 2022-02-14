@@ -1,26 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
+// Selection state, left click to select multiple components, left click and drag on graph to select using the selection box
 public class SelectionState : ManipulationState
 {
+    // Reference to the selection box
     private RectTransform selectionRect;
-
+    // Stored last cursor world position
     private Vector3 lastCursorWorldPos;
 
     public override void OnStateEnter()
     {
+        // Get reference and deactivate the selection box
         this.selectionRect = UIManager.Singleton.selectionRect.GetComponent<RectTransform>();
         this.selectionRect.gameObject.SetActive(false);
-
+        // Subscribe to appropriate input event
         InputManager.Singleton.OnMouseClickInPlace += OnClickInPlace;
     }
 
     public override void OnStateExit()
     {
         this.selectionRect.gameObject.SetActive(false);
-
         InputManager.Singleton.OnMouseClickInPlace -= OnClickInPlace;
     }
 
@@ -28,12 +27,14 @@ public class SelectionState : ManipulationState
     {
         if (InputManager.Singleton.CursorOverGraphObj) return;
 
+        // Activate the selection box and update its position when clicked
         this.lastCursorWorldPos = InputManager.Singleton.CursorWorldPosition;
         UpdateSelectionRect();
         this.selectionRect.gameObject.SetActive(true);
     }
 
     public void OnClickInPlace() {
+        // If graph objects are clicked, select them
         if (InputManager.Singleton.CurrentHoveringVertex) {
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
             SelectionManager.Singleton.ToggleVertexSelection(vertex);
@@ -46,6 +47,7 @@ public class SelectionState : ManipulationState
 
     public override void OnMouseHold()
     {
+        // While mouse is being held, update the position of the selection box
         if (this.selectionRect.gameObject.activeInHierarchy) {
             UpdateSelectionRect();
         }
@@ -53,6 +55,7 @@ public class SelectionState : ManipulationState
 
     public override void OnMouseRelease()
     {
+        // When mouse is released, calcualte all objects that fall within the selection box and select them
         Bounds bounds = UpdateSelectionRect();
         foreach (VertexObj v in Controller.Singleton.VertexObjs) {
             if (bounds.Contains(v.transform.position))
@@ -67,6 +70,7 @@ public class SelectionState : ManipulationState
         this.selectionRect.gameObject.SetActive(false);
     }
 
+    // Method for updating the size and position of the selection box given the current cursor position
     private Bounds UpdateSelectionRect() {
         Vector2 currentMouseWorldPos = InputManager.Singleton.CursorWorldPosition;
         Vector2 middle = (InputManager.Singleton.CursorWorldPosition + lastCursorWorldPos) / 2f;

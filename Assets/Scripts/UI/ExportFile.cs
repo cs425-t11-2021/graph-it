@@ -21,7 +21,7 @@ public class ExportFile : MonoBehaviour
         UIManager.Singleton.ToolBarEnabled = false;
 
         // Suspend the manipulation state if the import menu is active
-        ManipulationStateManager.Singleton.SuspendeManipulationState(true);
+        ManipulationStateManager.Singleton.SuspendManipulationState(true);
     }
 
     // Function called when the object is diabled
@@ -31,7 +31,7 @@ public class ExportFile : MonoBehaviour
         UIManager.Singleton.ToolBarEnabled = true;
 
         // Unsuspend the manipulation state
-        ManipulationStateManager.Singleton.SuspendeManipulationState(false);
+        ManipulationStateManager.Singleton.SuspendManipulationState(false);
     }
 
     // Function called by the confirm button
