@@ -12,14 +12,14 @@ public class PrimsAlgorithm : Algorithm
 
     public PrimsAlgorithm( Graph graph, Vertex root, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
     {
-        if ( !this.graph.Vertices.Contains( root ) )
+        if ( !this.Graph.Vertices.Contains( root ) )
             throw new System.Exception( "Vertex for Prim's algorithm is not in graph." );
         this.Root = root;
     }
 
     public override void Run()
     {
-        if ( this.graph.Directed )
+        if ( this.Graph.Directed )
         {
             // Debug.Log( ( new System.Exception( "Prim's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
@@ -31,7 +31,7 @@ public class PrimsAlgorithm : Algorithm
         while ( mstVerticesPrevCount != mstVertices.Count )
         {
             mstVerticesPrevCount = mstVertices.Count;
-            List< Edge > incidentEdges = new List< Edge >( this.graph.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.weight ) );
+            List< Edge > incidentEdges = new List< Edge >( this.Graph.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.weight ) );
             foreach ( Edge edge in incidentEdges )
             {
                 if ( !mstVertices.Contains( edge.vert1 ) || !mstVertices.Contains( edge.vert2 ) )

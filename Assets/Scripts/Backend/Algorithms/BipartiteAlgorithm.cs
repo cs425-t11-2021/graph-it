@@ -19,7 +19,7 @@ public class BipartiteAlgorithm : Algorithm
         this.Set1 = new HashSet< Vertex >();
         this.Set2 = new HashSet< Vertex >();
 
-        int? chi = BipartiteAlgorithm.chromaticNumbers.GetValue( this.graph );
+        int? chi = BipartiteAlgorithm.chromaticNumbers.GetValue( this.Graph );
         if ( !( chi is null ) )
             IsBipartite = chi <= 2;
         else
@@ -71,7 +71,7 @@ public class BipartiteAlgorithm : Algorithm
         //         neighbors.Add( kvp.Key.Item1 );
         // }
 
-        return new HashSet< Vertex >( this.graph.GetIncidentEdges( vert ).Select( edge => edge.vert1 == vert ? edge.vert2 : edge.vert1 ) );;
+        return new HashSet< Vertex >( this.Graph.GetIncidentEdges( vert ).Select( edge => edge.vert1 == vert ? edge.vert2 : edge.vert1 ) );;
     }
 
     public static void SetChromaticNumber( Graph graph, int chromaticNumber )

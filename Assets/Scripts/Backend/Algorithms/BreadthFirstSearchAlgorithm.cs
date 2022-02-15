@@ -26,7 +26,7 @@ public class BreadthFirstSearchAlgorithm : Algorithm
         while ( queue.Count > 0 )
         {
             Vertex vert1 = queue.Dequeue();
-            foreach ( Edge edge in this.graph.GetIncidentEdges( vert1 ) )
+            foreach ( Edge edge in this.Graph.GetIncidentEdges( vert1 ) )
             {
                 Vertex vert2 = edge.vert1 == vert1 ? edge.vert2 : edge.vert1;
                 if ( !visited.GetValue( vert2 ) )
