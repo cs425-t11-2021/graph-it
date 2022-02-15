@@ -103,8 +103,8 @@ public class GraphViewState : ManipulationState
             }
 
             // Update the stored position info in the verterices
-            selectedVertex.Vertex.x_pos = selectedVertex.transform.position.x;
-            selectedVertex.Vertex.y_pos = selectedVertex.transform.position.y;
+            selectedVertex.Vertex.x = selectedVertex.transform.position.x;
+            selectedVertex.Vertex.y = selectedVertex.transform.position.y;
         }
 
         this.graphMovementInProgress = false;

@@ -12,32 +12,32 @@ public class PrimsAlgorithm : Algorithm
 
     public PrimsAlgorithm( Graph graph, Vertex root, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
     {
-        if ( !this.graph.vertices.Contains( root ) )
+        if ( !this.graph.Vertices.Contains( root ) )
             throw new System.Exception( "Vertex for Prim's algorithm is not in graph." );
         this.Root = root;
     }
 
     public override void Run()
     {
-        if ( this.graph.directed )
+        if ( this.graph.Directed )
         {
             // Debug.Log( ( new System.Exception( "Prim's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
         }
 
         this.Mst = new List< Edge >();
-        HashSet< Vertex > mst_vertices = new HashSet< Vertex >() { this.Root };
-        int mst_vertices_prev_count = -1;
-        while ( mst_vertices_prev_count != mst_vertices.Count )
+        HashSet< Vertex > mstVertices = new HashSet< Vertex >() { this.Root };
+        int mstVerticesPrevCount = -1;
+        while ( mstVerticesPrevCount != mstVertices.Count )
         {
-            mst_vertices_prev_count = mst_vertices.Count;
-            List< Edge > incident_edges = new List< Edge >( this.graph.GetIncidentEdges( mst_vertices ).OrderBy( edge => edge.weight ) );
-            foreach ( Edge edge in incident_edges )
+            mstVerticesPrevCount = mstVertices.Count;
+            List< Edge > incidentEdges = new List< Edge >( this.graph.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.weight ) );
+            foreach ( Edge edge in incidentEdges )
             {
-                if ( !mst_vertices.Contains( edge.vert1 ) || !mst_vertices.Contains( edge.vert2 ) )
+                if ( !mstVertices.Contains( edge.vert1 ) || !mstVertices.Contains( edge.vert2 ) )
                 {
-                    mst_vertices.Add( edge.vert1 );
-                    mst_vertices.Add( edge.vert2 );
+                    mstVertices.Add( edge.vert1 );
+                    mstVertices.Add( edge.vert2 );
                     this.Mst.Add( edge );
                 }
             }

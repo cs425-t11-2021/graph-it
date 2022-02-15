@@ -69,8 +69,8 @@ public class Controller : SingletonBehavior<Controller>
         SelectionManager.Singleton.DeSelectAll();
 
         // Iterate through each vertex in the graph data structure and create a corresponding vertexObj, do the same for edges
-        this.Graph.vertices.ForEach(vertex => CreateVertexObj(vertex));
-        this.Graph.adjacency.ForEach((vertices, edge) => CreateEdgeObj(edge));
+        this.Graph.Vertices.ForEach(vertex => CreateVertexObj(vertex));
+        this.Graph.Adjacency.ForEach((vertices, edge) => CreateEdgeObj(edge));
 
         // Update the Grpah information UI
         GraphInfo.Singleton.UpdateGraphInfo();
@@ -109,8 +109,8 @@ public class Controller : SingletonBehavior<Controller>
     // Create a new vertex object to correspond to a passed in graph vertex
     private void CreateVertexObj(Vertex vertex) {
         Vector2 pos;
-        if (vertex.x_pos != null && vertex.y_pos != null) {
-            pos = new Vector2( (float) vertex.x_pos, (float) vertex.y_pos);
+        if (vertex.x != null && vertex.y != null) {
+            pos = new Vector2( (float) vertex.x, (float) vertex.y);
         }
         else {
             Logger.Log("Attempting to create a vertex object with no position given.", this, LogType.ERROR);
