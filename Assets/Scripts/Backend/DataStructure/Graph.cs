@@ -13,65 +13,55 @@ using UnityEngine;
 [System.Serializable]
 public class Graph
 {
-    // Vertices list is read-only from outside of class
-    public List< Vertex > vertices { get; private set; }
-    // Adjacency dict is read-only from outside of class
-    public Dictionary< ( Vertex, Vertex ), Edge > adjacency { get; private set; } // currently supporting only single edges between vertices
+    public List< Vertex > Vertices { get; private set; }
+    public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // currently supporting only single edges between vertices
 
     // parameters
-    private bool _directed;
-    public bool directed // true if any edge is directed
+    public bool Directed // true if any edge is directed
     {
         get => this.IsDirected();
-        private set => this._directed = value;
     }
 
-    private bool _weighted;
-    public bool weighted // true if any edge is weighted
+    public bool Weighted // true if any edge is weighted
     {
         get => this.IsWeighted();
-        private set => this._weighted = value;
     }
 
-    private bool _fully_weighted;
-    public bool fully_weighted // true when all edges are weighted
+    public bool FullyWeighted // true when all edges are weighted
     {
         get => this.IsFullyWeighted();
-        private set => this._fully_weighted = value;
     }
 
-    private bool _simple;
-    public bool simple // false if multiple edges. false if loops on vertices (unless directed)
+    public bool Simple // false if multiple edges. false if loops on vertices (unless directed)
     {
         get => this.IsSimple();
-        private set => this._simple = value;
     }
 
-    private int? chromatic_num;
+    private int? chromaticNum;
 
 
     public Graph() // pass default settings parameters
     {
-        this.vertices = new List< Vertex >();
-        this.adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
+        this.Vertices = new List< Vertex >();
+        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
     }
 
     public Graph( Graph graph )
     {
-        this.vertices = new List< Vertex >( graph.vertices );
-        this.adjacency = new Dictionary< ( Vertex, Vertex ), Edge >( graph.adjacency );
+        this.Vertices = new List< Vertex >( graph.Vertices );
+        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
     }
 
     public void Clear()
     {
-        this.vertices = new List< Vertex >();
-        this.adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
+        this.Vertices = new List< Vertex >();
+        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
     }
 
     // temp
     private Vertex GetVertex( int id )
     {
-        foreach ( Vertex vert in this.vertices )
+        foreach ( Vertex vert in this.Vertices )
         {
             if ( vert.GetId() == id )
                 return vert;
@@ -82,12 +72,12 @@ public class Graph
 
     public Edge this[ Vertex vert1, Vertex vert2 ]
     {
-        get => vert1 > vert2 ? this.adjacency.GetValue( ( vert2, vert1 ) ) : this.adjacency.GetValue( ( vert1, vert2 ) );
+        get => vert1 > vert2 ? this.Adjacency.GetValue( ( vert2, vert1 ) ) : this.Adjacency.GetValue( ( vert1, vert2 ) );
     }
 
     private List< Edge > GetDirectedEdges()
     {
-        List< Edge > edges = this.adjacency.Values.ToList();
+        List< Edge > edges = this.Adjacency.Values.ToList();
         foreach ( Edge edge in edges )
         {
             if ( !edge.directed )
@@ -101,14 +91,14 @@ public class Graph
         return edges;
     }
 
-    public Vertex AddVertex( double? x_pos=null, double? y_pos=null )
+    public Vertex AddVertex( double? x=null, double? y=null )
     {
-        return this.AddVertex( new Vertex( x_pos : x_pos, y_pos : y_pos ) );
+        return this.AddVertex( new Vertex( x : x, y : y ) );
     }
 
     public Vertex AddVertex( Vertex vert )
     {
-        this.vertices.Add( vert );
+        this.Vertices.Add( vert );
         return vert;
     }
 
@@ -122,7 +112,7 @@ public class Graph
 
     public Edge AddEdge( Edge edge )
     {
-        if ( !this.vertices.Contains( edge.vert1 ) || !this.vertices.Contains( edge.vert2 ) )
+        if ( !this.Vertices.Contains( edge.vert1 ) || !this.Vertices.Contains( edge.vert2 ) )
         {
             Debug.Log( ( new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." );
@@ -133,16 +123,15 @@ public class Graph
             throw new System.Exception( "Edge must be directed." );
         }
         else
-            this.adjacency[ ( edge.vert1, edge.vert2 ) ] = edge;
-        this.directed = this.directed || edge.directed;
+            this.Adjacency[ ( edge.vert1, edge.vert2 ) ] = edge;
         return edge;
     }
 
     public void RemoveVertex( Vertex vect )
     {
-        this.vertices.Remove( vect );
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
-            this.adjacency.Remove( kvp.Key );
+        this.Vertices.Remove( vect );
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
+            this.Adjacency.Remove( kvp.Key );
     }
 
     public void RemoveVertices( List< Vertex > vects )
@@ -154,9 +143,9 @@ public class Graph
     public void RemoveEdge( Edge edge )
     {
         if ( edge.directed || edge.vert1 < edge.vert2 )
-            this.adjacency.Remove( ( edge.vert1, edge.vert2 ) );
+            this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
         else
-            this.adjacency.Remove( ( edge.vert2, edge.vert1 ) );
+            this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) );
     }
 
     public void RemoveEdges( List< Edge > edges )
@@ -185,11 +174,11 @@ public class Graph
         return edge;
     }
 
-    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.adjacency.ContainsKey( ( vert1, vert2 ) ) || this.adjacency.ContainsKey( ( vert2, vert1 ) );
+    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.Adjacency.ContainsKey( ( vert1, vert2 ) ) || this.Adjacency.ContainsKey( ( vert2, vert1 ) );
 
     private bool IsDirected()
     {
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
             if ( kvp.Value.directed )
                 return true;
@@ -199,7 +188,7 @@ public class Graph
 
     private bool IsWeighted()
     {
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
             if ( kvp.Value.weighted )
                 return true;
@@ -209,7 +198,7 @@ public class Graph
 
     private bool IsFullyWeighted()
     {
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
             if ( !kvp.Value.weighted )
                 return false;
@@ -219,15 +208,15 @@ public class Graph
 
     private bool IsSimple()
     {
-        if ( !this.directed )
+        if ( !this.Directed )
         {
-            foreach ( Vertex vert in this.vertices )
+            foreach ( Vertex vert in this.Vertices )
             {
                 // if ( this[ vert, vert ].Count > 0 )
                    // return false;
             }
         }
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
             // if ( kvp.Value.Count > 0 )
                 // return false;
@@ -284,42 +273,42 @@ public class Graph
 
     private Vertex ParseVertex( string line )
     {
-        Dictionary< string, string > vect_data = line.Replace( " ", "" )
+        Dictionary< string, string > vectData = line.Replace( " ", "" )
                                                      .Split( ',' )
                                                      .Select( part  => part.Split( ':' ) )
                                                      .Where( part => part.Length == 2 )
                                                      .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
 
         return new Vertex(
-            vect_data[ "label" ],
-            Graph.ToNullableDouble( vect_data[ "x_pos" ] ),
-            Graph.ToNullableDouble( vect_data[ "y_pos" ] ),
-            System.Convert.ToUInt32( vect_data[ "style" ] ),
-            System.Convert.ToUInt32( vect_data[ "color" ] ),
-            System.Convert.ToUInt32( vect_data[ "label_style" ] )
+            vectData[ "label" ],
+            Graph.ToNullableDouble( vectData[ "x" ] ),
+            Graph.ToNullableDouble( vectData[ "y" ] ),
+            System.Convert.ToUInt32( vectData[ "style" ] ),
+            System.Convert.ToUInt32( vectData[ "color" ] ),
+            System.Convert.ToUInt32( vectData[ "label style" ] )
         );
     }
 
     // requires that all new vertices are already added
     private Edge ParseEdge( string line )
     {
-        Dictionary< string, string > edge_data = line.Replace( " ", "" )
+        Dictionary< string, string > edgeData = line.Replace( " ", "" )
                                                      .Split( ',' )
                                                      .Select( part  => part.Split( ':' ) )
                                                      .Where( part => part.Length == 2 )
                                                      .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
 
         return new Edge(
-            this.GetVertex( System.Convert.ToInt32( edge_data[ "vert1" ] ) ),
-            this.GetVertex( System.Convert.ToInt32( edge_data[ "vert2" ] ) ),
-            System.Convert.ToBoolean( edge_data[ "directed" ] ),
-            edge_data[ "label" ],
-            System.Convert.ToUInt32( edge_data[ "style" ] ),
-            System.Convert.ToUInt32( edge_data[ "color" ] ),
-            System.Convert.ToUInt32( edge_data[ "thickness" ] ),
-            System.Convert.ToUInt32( edge_data[ "label_style" ] )
-            // System.Convert.ToInt32( edge_data[ "tail_style" ] ),
-            // System.Convert.ToInt32( edge_data[ "head_style" ] ) 
+            this.GetVertex( System.Convert.ToInt32( edgeData[ "vert1" ] ) ),
+            this.GetVertex( System.Convert.ToInt32( edgeData[ "vert2" ] ) ),
+            System.Convert.ToBoolean( edgeData[ "directed" ] ),
+            edgeData[ "label" ],
+            System.Convert.ToUInt32( edgeData[ "style" ] ),
+            System.Convert.ToUInt32( edgeData[ "color" ] ),
+            System.Convert.ToUInt32( edgeData[ "thickness" ] ),
+            System.Convert.ToUInt32( edgeData[ "label style" ] )
+            // System.Convert.ToInt32( edgeData[ "tail style" ] ),
+            // System.Convert.ToInt32( edgeData[ "head style" ] ) 
         );
     }
 
@@ -349,14 +338,14 @@ public class Graph
     private void ExportVertices( FileStream fs )
     {
         Graph.ExportText( fs, "vertices:\n" );
-        foreach ( Vertex vert in this.vertices )
+        foreach ( Vertex vert in this.Vertices )
             Graph.ExportText( fs, vert.ToString() + '\n' );
     }
 
     private void ExportEdges( FileStream fs )
     {
         Graph.ExportText( fs, "edges:\n" );
-        foreach ( Edge edge in this.adjacency.Values )
+        foreach ( Edge edge in this.Adjacency.Values )
             Graph.ExportText( fs, edge.ToString() + '\n' );
     }
 
@@ -371,25 +360,25 @@ public class Graph
 
     public List< Edge > Prim( Vertex vert )
     {
-        if ( this.directed )
+        if ( this.Directed )
         {
             Debug.Log( ( new System.Exception( "Prim's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
         }
 
         List< Edge > mst = new List< Edge >();
-        HashSet< Vertex > mst_vertices = new HashSet< Vertex >() { vert };
-        int mst_vertices_prev_count = -1;
-        while ( mst_vertices_prev_count != mst_vertices.Count )
+        HashSet< Vertex > mstVertices = new HashSet< Vertex >() { vert };
+        int mstVerticesPrevCount = -1;
+        while ( mstVerticesPrevCount != mstVertices.Count )
         {
-            mst_vertices_prev_count = mst_vertices.Count;
-            List< Edge > incident_edges = new List< Edge >( this.GetIncidentEdges( mst_vertices ).OrderBy( edge => edge.weight ) );
-            foreach ( Edge edge in incident_edges )
+            mstVerticesPrevCount = mstVertices.Count;
+            List< Edge > incidentEdges = new List< Edge >( this.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.weight ) );
+            foreach ( Edge edge in incidentEdges )
             {
-                if ( !mst_vertices.Contains( edge.vert1 ) || !mst_vertices.Contains( edge.vert2 ) )
+                if ( !mstVertices.Contains( edge.vert1 ) || !mstVertices.Contains( edge.vert2 ) )
                 {
-                    mst_vertices.Add( edge.vert1 );
-                    mst_vertices.Add( edge.vert2 );
+                    mstVertices.Add( edge.vert1 );
+                    mstVertices.Add( edge.vert2 );
                     mst.Add( edge );
                 }
             }
@@ -404,27 +393,27 @@ public class Graph
 
     public List< Edge > GetIncidentEdges( HashSet< Vertex > verts )
     {
-        List< Edge > incident_edges = new List< Edge >();
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.adjacency )
+        List< Edge > incidentEdges = new List< Edge >();
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
             if ( verts.Contains( kvp.Value.vert1 ) || kvp.Value.directed && verts.Contains( kvp.Value.vert2 ) )
-                incident_edges.Add( kvp.Value );
+                incidentEdges.Add( kvp.Value );
         }
-        return incident_edges;
+        return incidentEdges;
     }
 
     public List< Edge > Kruskal()
     {
-        if ( this.directed )
+        if ( this.Directed )
         {
             Debug.Log( ( new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
         }
 
         List< Edge > mst = new List< Edge >();
-        List< Edge > edges = new List< Edge >( this.adjacency.Values.OrderBy( edge => edge.weight ) );
+        List< Edge > edges = new List< Edge >( this.Adjacency.Values.OrderBy( edge => edge.weight ) );
         HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
-        foreach ( Vertex vert in this.vertices )
+        foreach ( Vertex vert in this.Vertices )
             forest.Add( new HashSet< Vertex >() { vert } );
         foreach ( Edge edge in edges )
         {
@@ -463,29 +452,29 @@ public class Graph
 
     public List< Vertex > Dijkstra( Vertex src, Vertex dest )
     {
-        HashSet< Vertex > not_visited = new HashSet< Vertex >( this.vertices );
+        HashSet< Vertex > notVisited = new HashSet< Vertex >( this.Vertices );
         Dictionary< Vertex, double > dist = new Dictionary< Vertex, double >();
         Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
 
-        foreach ( Vertex v in this.vertices )
+        foreach ( Vertex v in this.Vertices )
             dist[ v ] = double.PositiveInfinity;
 
         dist[ src ] = 0;
 
-        while ( not_visited.Count() > 0 )
+        while ( notVisited.Count() > 0 )
         {
-            // find u in not_visited such that dist[u] is minimal
-            Vertex u = not_visited.First();
-            foreach ( Vertex v in not_visited )
+            // find u in notVisited such that dist[u] is minimal
+            Vertex u = notVisited.First();
+            foreach ( Vertex v in notVisited )
             {
                 if ( dist[ v ] < dist[ u ] )
                     u = v;
             }
 
-            not_visited.Remove( u );
+            notVisited.Remove( u );
 
             // update neighbors of u
-            foreach ( Vertex v in not_visited )
+            foreach ( Vertex v in notVisited )
             {
                 if ( this.IsAdjacent( u, v ) )
                 {
@@ -520,22 +509,22 @@ public class Graph
     // returns minimum spanning tree when provided a source
     public List< Edge > BellmanFord( Vertex src )
     {
-        if ( this.weighted && !this.fully_weighted )
+        if ( this.Weighted && !this.FullyWeighted )
         {
             Debug.Log( ( new System.Exception( "Graph is not fully weighted." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Graph is not fully weighted." );
         }
 
         // initialize data
-        List< Edge > edges = this.adjacency.Values.ToList();
+        List< Edge > edges = this.Adjacency.Values.ToList();
         Dictionary< Vertex, double > dist = new Dictionary< Vertex, double >();
         Dictionary< Vertex, Edge > prev = new Dictionary< Vertex, Edge >();
-        foreach ( Vertex vert in this.vertices )
+        foreach ( Vertex vert in this.Vertices )
             dist[ vert ] = Double.PositiveInfinity;
         dist[ src ] = 0;
 
         // relax edges
-        for ( int i = 0; i < this.vertices.Count - 1; i++ )
+        for ( int i = 0; i < this.Vertices.Count - 1; i++ )
         {
             foreach ( Edge edge in edges )
             {

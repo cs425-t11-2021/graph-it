@@ -63,7 +63,7 @@ public class BipartiteAlgorithm : Algorithm
     private HashSet< Vertex > GetNeighborhood( Vertex vert )
     {
         // HashSet< Vertex > neighbors = new HashSet< Vertex >();
-        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.graph.adjacency )
+        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.graph.Adjacency )
         // {
         //     if ( kvp.Key.Item1 == vert )
         //         neighbors.Add( kvp.Key.Item2 );

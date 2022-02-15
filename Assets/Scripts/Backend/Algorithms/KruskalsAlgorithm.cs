@@ -13,16 +13,16 @@ public class KruskalsAlgorithm : Algorithm
 
     public override void Run()
     {
-        if ( this.graph.directed )
+        if ( this.graph.Directed )
         {
             // Debug.Log( ( new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
         }
 
         this.Mst = new List< Edge >();
-        List< Edge > edges = new List< Edge >( graph.adjacency.Values.OrderBy( edge => edge.weight ) );
+        List< Edge > edges = new List< Edge >( graph.Adjacency.Values.OrderBy( edge => edge.weight ) );
         HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
-        foreach ( Vertex vert in this.graph.vertices )
+        foreach ( Vertex vert in this.graph.Vertices )
             forest.Add( new HashSet< Vertex >() { vert } );
         foreach ( Edge edge in edges )
         {

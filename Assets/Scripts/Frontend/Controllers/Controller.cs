@@ -69,8 +69,8 @@ public class Controller : SingletonBehavior<Controller>
         SelectionManager.Singleton.DeSelectAll();
 
         // Iterate through each vertex in the graph data structure and create a corresponding vertexObj, do the same for edges
-        this.Graph.vertices.ForEach(vertex => CreateVertexObj(vertex));
-        this.Graph.adjacency.ForEach((vertices, edge) => CreateEdgeObj(edge));
+        this.Graph.Vertices.ForEach(vertex => CreateVertexObj(vertex));
+        this.Graph.Adjacency.ForEach((vertices, edge) => CreateEdgeObj(edge));
 
         // Update the Grpah information UI
         GraphInfo.Singleton.UpdateGraphInfo();
@@ -109,8 +109,8 @@ public class Controller : SingletonBehavior<Controller>
     // Create a new vertex object to correspond to a passed in graph vertex
     private void CreateVertexObj(Vertex vertex) {
         Vector2 pos;
-        if (vertex.x_pos != null && vertex.y_pos != null) {
-            pos = new Vector2( (float) vertex.x_pos, (float) vertex.y_pos);
+        if (vertex.x != null && vertex.y != null) {
+            pos = new Vector2( (float) vertex.x, (float) vertex.y);
         }
         else {
             Logger.Log("Attempting to create a vertex object with no position given.", this, LogType.ERROR);
@@ -134,6 +134,29 @@ public class Controller : SingletonBehavior<Controller>
         this.currentGraphInstance.vertexObjs.Add(vertexObj);
         // Send the onVertexObjCreation event
         this.OnVertexObjectCreation?.Invoke(vertexObj);
+    }
+
+    public void RemoveVertex(VertexObj vertexObj) {
+        for (int i = this.currentGraphInstance.edgeObjs.Count - 1; i >= 0; i--)
+        {
+            if (this.currentGraphInstance.edgeObjs[i].Vertex1 == vertexObj || this.currentGraphInstance.edgeObjs[i].Vertex2 == vertexObj)
+            {
+                RemoveEdge(this.currentGraphInstance.edgeObjs[i]);
+            }
+        }
+
+        // Update the graph ds
+        Controller.Singleton.Graph.RemoveVertex(vertexObj.Vertex);
+        this.currentGraphInstance.vertexObjs.Remove(vertexObj);
+        Destroy(vertexObj.gameObject);
+        Logger.Log("Removed a vertex from the current graph instance.", this, LogType.INFO);
+    }
+
+    public void RemoveEdge(EdgeObj edgeObj) {
+        Controller.Singleton.Graph.RemoveEdge(edgeObj.Edge);
+        this.currentGraphInstance.edgeObjs.Remove(edgeObj);
+        Destroy(edgeObj.transform.parent.gameObject);
+        Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);
     }
 
     public void AddEdge(Vertex vertex1, Vertex vertex2) {
@@ -168,8 +191,8 @@ public class Controller : SingletonBehavior<Controller>
         // Instantiate an edge object
         EdgeObj edgeObj = Instantiate(this.edgeObjPrefab, Vector2.zero, Quaternion.identity).transform.GetChild(0).GetComponent<EdgeObj>();
         // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
-        edgeObj.transform.parent.SetParent(fromVertexObj.transform);
-        edgeObj.Initiate(edge, fromVertexObj.gameObject, toVertexObj.gameObject);
+        edgeObj.transform.parent.SetParent(this.GraphObjContainer);
+        edgeObj.Initiate(edge, fromVertexObj, toVertexObj);
         Logger.Log("Creating new edge in the current graph instance.", this, LogType.INFO);
         // Add edge to the list of edges in instance
         this.currentGraphInstance.edgeObjs.Add(edgeObj);

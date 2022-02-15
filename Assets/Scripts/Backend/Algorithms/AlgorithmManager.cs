@@ -64,7 +64,7 @@ public class AlgorithmManager
     public void RunBipartite()
     {
         // BipartiteAlgorithm ba = new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning );
-        // foreach ( Vertex vert in this.graph.vertices )
+        // foreach ( Vertex vert in this.graph.Vertices )
         // {
         //     EnsureBreadthFirstSearchRunning( vert, ba.  ); 
         // }

@@ -51,8 +51,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
     
     public void UpdateGraphInfo() {
-        this.orderText.text = "Order: " + Controller.Singleton.Graph.vertices.Count;
-        this.sizeText.text = "Size: " + Controller.Singleton.Graph.adjacency.Count;
+        this.orderText.text = "Order: " + Controller.Singleton.Graph.Vertices.Count;
+        this.sizeText.text = "Size: " + Controller.Singleton.Graph.Adjacency.Count;
 
         // Run multithreaded chromatic
         // this.algorithmManager.RunChromatic();

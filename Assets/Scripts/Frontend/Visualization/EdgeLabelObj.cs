@@ -5,7 +5,7 @@ using TMPro;
 
 public class EdgeLabelObj : MonoBehaviour
 {
-    private double weight;
+    // private double weight;
     // UI Rect of the label object
     private Rect rect;
     // Store previous global position of the labelObj
@@ -18,10 +18,17 @@ public class EdgeLabelObj : MonoBehaviour
 
     [SerializeField] private EdgeObj edgeObject;
 
-    public void Initiate(double weight)
+    public void Initiate(EdgeObj edgeObject)
     {
-        this.weight = weight;
-        inputField.text = weight.ToString();
+        this.edgeObject = edgeObject;
+        if (this.edgeObject.Edge.weighted) {
+            this.inputField.text = this.edgeObject.Edge.ToString();
+        }
+        else {
+            this.inputField.text = "";
+        }
+        
+        this.gameObject.SetActive(true);
 
         OnToggleVertexLabels(SettingsManager.Singleton.DisplayVertexLabels);
     }
@@ -29,10 +36,11 @@ public class EdgeLabelObj : MonoBehaviour
     private void Awake() {
         RectTransform rectTransform = GetComponent<RectTransform>();
         this.rect = rectTransform.rect;
-
-        inputField = GetComponentInChildren<TMP_InputField>();
+        this.inputField = GetComponentInChildren<TMP_InputField>();
 
         SettingsManager.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
+        this.gameObject.SetActive(false);
+
     }
 
     private void OnToggleVertexLabels(bool enabled)
@@ -54,35 +62,21 @@ public class EdgeLabelObj : MonoBehaviour
             return;
         }
 
-        // Only check to see if the label needs to move if the edge moved
-        // if (transform.position != previousPosition)
-        // {
-        //     previousPosition = transform.position;
-        //     transform.localPosition = FindSuitablePosition();
-        // }
         transform.position = FindSuitablePosition();
         transform.localScale = new Vector3(0.01f, 0.01f, 1);
     }
 
     Vector3 FindSuitablePosition()
     {
-        Vector3 toPos = this.edgeObject.ToVertexObj.transform.position;
-        Vector3 fromPos = this.edgeObject.FromVertexObj.transform.position;
+        Vector3 pos1 = this.edgeObject.Vertex1.transform.position;
+        Vector3 pos2 = this.edgeObject.Vertex2.transform.position;
 
-        Vector3 center = (toPos + fromPos) / 2f;
-        // Vector3 pos = center + new Vector3(0f, 0.4f, 0f);
-        // Collider2D col = Physics2D.OverlapArea(new Vector2(pos.x - this.rect.width / 2, pos.y + this.rect.height / 2), new Vector2(pos.x + this.rect.width / 2, pos.y - this.rect.height / 2), LayerMask.GetMask("Edge", "Vertex"));
-        // if (!col)
-        // {
-        //     return pos;
-        // }
-        float angle = Mathf.Atan2(toPos.y - fromPos.y, toPos.x - fromPos.x) * Mathf.Rad2Deg;
-        // Debug.Log(angle);
-        // return center + new Vector3(0f, -0.4f, 0f);
+        Vector3 center = (pos1 + pos2) / 2f;
+        float angle = Mathf.Atan2(pos1.y - pos2.y, pos1.x - pos2.x) * Mathf.Rad2Deg;
         if (Mathf.Abs(angle) > 45f && Mathf.Abs(angle) < 135f) {
-            return center + new Vector3(0.4f, 0f, 0f);
+            return center + new Vector3(0.4f, 0f, 1f);
         }
-        return center + new Vector3(0f, 0.4f, 0f);
+        return center + new Vector3(0f, 0.4f, 1f);
     }
 
     // Make the label editable
@@ -116,14 +110,21 @@ public class EdgeLabelObj : MonoBehaviour
     // Update the content field with a new label
     public void UpdateLabel(string newLabel)
     {
+
+       
         if (double.TryParse(inputField.text, out double newWeight)) {
-            this.weight = newWeight;
-            this.transform.parent.GetComponentInChildren<EdgeObj>().UpdateWeight(this.weight);
-            inputField.text = this.weight.ToString();
+            this.edgeObject.Edge.Label = newWeight.ToString();
+            inputField.text = newWeight.ToString();
+            Logger.Log("Edge weight set to " + this.edgeObject.Edge.weight, this, LogType.INFO);
         }
         else {
-            inputField.text = this.weight.ToString();
+            this.edgeObject.Edge.Label = newLabel;
+            this.edgeObject.Edge.weighted = false;
+            inputField.text = newLabel;
+            Logger.Log("Edge label set to " + this.edgeObject.Edge.Label, this, LogType.INFO);
         }
+        Logger.Log("Edge weights " + (this.edgeObject.Edge.weighted ? "enabled." : "disabled."), this, LogType.INFO);
+
         
     }
 }
