@@ -49,7 +49,8 @@ public abstract class Algorithm
             this.running = false;
             this.complete = true;
             this.markComplete( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+            RunInMain.Singleton.AddToQueue(this.updateUI);
         }
         catch ( ThreadAbortException e ) { }
     }
