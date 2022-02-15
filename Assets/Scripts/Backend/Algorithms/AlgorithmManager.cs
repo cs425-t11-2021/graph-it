@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+// using UnityEngine;
 
 // TODO: algorithm manager needs to know when graph is updated so that it can kill all running algorithms and remove all completed
 public class AlgorithmManager
@@ -69,6 +70,8 @@ public class AlgorithmManager
         //     EnsureBreadthFirstSearchRunning( vert, ba.  ); 
         // }
         // ba.RunThread();
+
+        this.EnsureChromaticRunning();
         new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
@@ -146,8 +149,8 @@ public class AlgorithmManager
 
     public void MarkComplete( Algorithm algo )
     {
-        this.UnmarkRunning( algo );
         this.complete[ algo.GetHashCode() ] = algo;
+        this.UnmarkRunning( algo );
     }
 
     public void UnmarkRunning( Algorithm algo )

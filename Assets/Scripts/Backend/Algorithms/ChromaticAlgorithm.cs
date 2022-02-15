@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
@@ -57,6 +56,12 @@ public class ChromaticAlgorithm : Algorithm
                 GetAllColoringsHelper( colorings, newColoring, numVertices, numColors );
             }
         }
+    }
+
+    public override void Kill()
+    {
+        base.Kill();
+        BipartiteAlgorithm.ClearChromaticNumber( this.Graph );
     }
 
     public static int GetHash() => typeof ( ChromaticAlgorithm ).GetHashCode();
