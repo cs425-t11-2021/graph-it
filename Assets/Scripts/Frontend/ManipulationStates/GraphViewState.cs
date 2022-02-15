@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+// Default viewing state, double click to add vertex, left click to select, shift + left click to select multiple
 public class GraphViewState : ManipulationState
 {
+    // Whether or not graph objects are current being moved
     private bool graphMovementInProgress = false;
 
+    // Subscribe to appropriate input events on state enter
     public override void OnStateEnter() {
         InputManager.Singleton.OnMouseDragStart += OnDragStart;
         InputManager.Singleton.OnMouseDragEnd += OnDragEnd;
@@ -13,6 +12,7 @@ public class GraphViewState : ManipulationState
         InputManager.Singleton.OnDeleteKeyPress += OnDeleteKeyPress;
     }
 
+    // Unsubscribe to input events on state exit
     public override void OnStateExit() {
         InputManager.Singleton.OnMouseDragStart -= OnDragStart;
         InputManager.Singleton.OnMouseDragEnd -= OnDragEnd;
@@ -20,15 +20,19 @@ public class GraphViewState : ManipulationState
         InputManager.Singleton.OnDeleteKeyPress -= OnDeleteKeyPress;
     }
 
+    // Add a new vertex on double click
     public override void OnDoubleClick()
     {
+        // Do not add new vertex if double clicking on an existing vertex
         if (InputManager.Singleton.CursorOverGraphObj) return;
 
         SelectionManager.Singleton.DeSelectAll();
         Controller.Singleton.AddVertex(InputManager.Singleton.CursorWorldPosition);
     }
 
+    // Clicked and not dragged
     public void OnClickInPlace() {
+        // If a vertex or edge object is clicked, select/deselect it
         if (InputManager.Singleton.CurrentHoveringVertex) {
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
 
@@ -47,6 +51,7 @@ public class GraphViewState : ManipulationState
 
             SelectionManager.Singleton.ToggleEdgeSelection(edge);
         }
+        // If a vertex or edge object is not clicked, deselect all
         else {
             if (!InputManager.Singleton.HoldSelectionKeyHeld) {
                 SelectionManager.Singleton.DeSelectAll();
@@ -55,8 +60,9 @@ public class GraphViewState : ManipulationState
     }
 
     public void OnDragStart() {
+        // If mouse drag starts on a vertex or edge, start dragging the component
         if (InputManager.Singleton.CurrentHoveringVertex) {
-            graphMovementInProgress = true;
+            this.graphMovementInProgress = true;
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
 
             if (!vertex.Selected)
@@ -65,12 +71,13 @@ public class GraphViewState : ManipulationState
             SelectionManager.Singleton.SelectVertex(vertex);
         }
         else if (InputManager.Singleton.CurrentHoveringEdge) {
-            graphMovementInProgress = true;
+            this.graphMovementInProgress = true;
         }
         else {
             return;
         }
 
+        // Tell all of the vertex objects to follow cursor, and remove it from the grid
         foreach (VertexObj selectedVertex in SelectionManager.Singleton.SelectedVertices) {
             selectedVertex.GetComponent<VertexMovement>().FollowCursor = true;
 
@@ -83,8 +90,9 @@ public class GraphViewState : ManipulationState
     }
 
     public void OnDragEnd() {
-        if (!graphMovementInProgress) return;
+        if (!this.graphMovementInProgress) return;
 
+        // Tell the vertices to stop following the cursor and add them back to the grid
         foreach (VertexObj selectedVertex in SelectionManager.Singleton.SelectedVertices) {
             selectedVertex.GetComponent<VertexMovement>().FollowCursor = false;
 
@@ -94,13 +102,15 @@ public class GraphViewState : ManipulationState
                 Grid.Singleton.HideGridLines();
             }
 
+            // Update the stored position info in the verterices
             selectedVertex.Vertex.x_pos = selectedVertex.transform.position.x;
             selectedVertex.Vertex.y_pos = selectedVertex.transform.position.y;
         }
 
-        graphMovementInProgress = false;
+        this.graphMovementInProgress = false;
     }
 
+    // Delete current selection when the delete key is pressed
     private void OnDeleteKeyPress() {
         SelectionManager.Singleton.DeleteSelection();
     }

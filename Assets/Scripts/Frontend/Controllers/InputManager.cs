@@ -4,9 +4,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
+// Central class for managing mouse and keyboard input using C# events
 public class InputManager : SingletonBehavior<InputManager>
 {
-
+    // Actions associated with various input related events
     public event Action OnMouseClick;
     public event Action OnMouseDoubleClick;
     public event Action OnMouseHold;
@@ -18,8 +19,10 @@ public class InputManager : SingletonBehavior<InputManager>
     public event Action OnMouseClickInPlace;
     public event Action OnDeleteKeyPress;
 
+    // Duration between clicks that counts as a double click
     [SerializeField] private float doubleClickTimeDelta = 0.2f;
     private float timeOfLastClick = 0f;
+    // Stored mouse position used to detect a drag
     private Vector3 mouseLastClickPosition;
     private bool dragging = false;
     private bool doubleClickedThisFrame = false;
@@ -79,15 +82,18 @@ public class InputManager : SingletonBehavior<InputManager>
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
             if (!UIManager.Singleton.CursorOnUI) {
+                // Double click detection
                 if (Time.time - timeOfLastClick < doubleClickTimeDelta) {
                     Logger.Log("Double click detected.", this, LogType.DEBUG);
                     doubleClickedThisFrame = true;
                     OnMouseDoubleClick?.Invoke();
                 }
                 else {
+                    // Single click detection
                     Logger.Log("Click detected.", this, LogType.DEBUG);
                     OnMouseClick?.Invoke();
 
+                    // Vertex click detection
                     GameObject hoveringVertex = CurrentHoveringVertex;
                     if (hoveringVertex) {
                         OnVertexClick?.Invoke(hoveringVertex);
@@ -101,6 +107,7 @@ public class InputManager : SingletonBehavior<InputManager>
         else if (Input.GetMouseButton(0)) {
             OnMouseHold?.Invoke();
 
+            // Mouse drag start detection
             if (!this.doubleClickedThisFrame && !this.dragging && Input.mousePosition != this.mouseLastClickPosition) {
                 Logger.Log("Mouse drag started.", this, LogType.DEBUG);
                 this.dragging = true;
@@ -111,11 +118,13 @@ public class InputManager : SingletonBehavior<InputManager>
             if (!doubleClickedThisFrame) {
                 OnMouseRelease?.Invoke();
 
+                /// Mouse drag end detection
                 if (Input.mousePosition != this.mouseLastClickPosition) {
                     Logger.Log("Mouse drag finished.", this, LogType.DEBUG);
                     OnMouseDragEnd?.Invoke();
                 }
                 else {
+                    // Non mouse drag detection
                     if (!UIManager.Singleton.CursorOnUI) {
                         Logger.Log("Click in place detected.", this, LogType.DEBUG);
                         OnMouseClickInPlace?.Invoke();

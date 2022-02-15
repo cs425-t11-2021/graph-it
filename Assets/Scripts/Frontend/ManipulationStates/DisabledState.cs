@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
+// State where all manipulations are disabled, used for when UI dialogues are active
 public class DisabledState : ManipulationState
 {
     public override void OnStateEnter() {}

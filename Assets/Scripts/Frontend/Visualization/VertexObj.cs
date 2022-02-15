@@ -71,20 +71,10 @@ public class VertexObj : MonoBehaviour
         this.Vertex.y_pos = transform.position.y;
     }
 
-    // When Cursor enters a vertex obj, play hovering animation
-    // private void OnMouseOver()
-    // {
-    //     // Check if cursor is over collider
-    //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //     RaycastHit2D hit = Physics2D.GetRayIntersection(ray, 11f, LayerMask.GetMask("Vertex"));  //11f since camera is at z = -10
-    //     if (hit && hit.collider.gameObject == gameObject)
-    //     {
-    //         this.animator.SetBool("Hovering", true);
-    //     }
-    // }
-
+    // Set the hover animation when the mouse is hoving over the vertex object
     private void OnMouseOver() {
-        if (InputManager.Singleton.CurrentHoveringVertex && InputManager.Singleton.CurrentHoveringVertex == this.gameObject) {
+        GameObject hoveringVertex = InputManager.Singleton.CurrentHoveringVertex;
+        if (hoveringVertex && hoveringVertex == this.gameObject) {
             this.animator.SetBool("Hovering", true);
         }
     }
