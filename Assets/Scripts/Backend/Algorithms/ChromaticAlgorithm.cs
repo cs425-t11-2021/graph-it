@@ -12,7 +12,7 @@ public class ChromaticAlgorithm : Algorithm
 
     public override void Run()
     {
-        int chi = this.graph.Vertices.Count;
+        int chi = this.Graph.Vertices.Count;
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
         {
@@ -23,14 +23,14 @@ public class ChromaticAlgorithm : Algorithm
 
         this.ChromaticNumber = chi;
 
-        BipartiteAlgorithm.SetChromaticNumber( this.graph, chi );
+        BipartiteAlgorithm.SetChromaticNumber( this.Graph, chi );
     }
 
     private bool IsProperColoring( List< int > coloring )
     {
-        foreach ( Edge edge in graph.Adjacency.Values )
+        foreach ( Edge edge in Graph.Adjacency.Values )
         {
-            if ( coloring[ graph.Vertices.IndexOf( edge.vert1 ) ] == coloring[ graph.Vertices.IndexOf( edge.vert2 ) ] )
+            if ( coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
                 return false;
         }
         return true;
@@ -39,7 +39,7 @@ public class ChromaticAlgorithm : Algorithm
     private HashSet< List< int > > GetAllColorings()
     {
         HashSet< List< int > > colorings = new HashSet< List< int > >();
-        GetAllColoringsHelper( colorings, new List< int >(), graph.Vertices.Count, graph.Vertices.Count );
+        GetAllColoringsHelper( colorings, new List< int >(), this.Graph.Vertices.Count, this.Graph.Vertices.Count );
         return colorings;
     }
 

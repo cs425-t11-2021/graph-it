@@ -16,7 +16,7 @@ public abstract class Algorithm
 
     public Algorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning )
     {
-        this.graph = graph;
+        this.Graph = graph;
         this.currThread = null;
         this.updateUI = updateUI;
         this.updateCalc = updateCalc;

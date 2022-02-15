@@ -25,7 +25,7 @@ public class DepthFirstSearchAlgorithm : Algorithm
 
     private void DepthFirstSearchHelper( Vertex vert, Dictionary< Vertex, bool > visited, Action< Edge, Vertex > f )
     {
-        foreach ( Edge edge in this.graph.GetIncidentEdges( vert ) )
+        foreach ( Edge edge in this.Graph.GetIncidentEdges( vert ) )
         {
             if ( !visited.GetValue( edge.vert1 ) )
             {
