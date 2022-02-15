@@ -14,10 +14,8 @@ public class EdgeObj : MonoBehaviour
     // Uses a custom timer to reduce the frequency of physics updates (to reduce lag)
     private float physicsTimer = 0f;
 
-    // Reference to the game object of the source vertex
-    public GameObject FromVertexObj {get; set;}
-    // Reference to the game object of the target vertex
-    public GameObject ToVertexObj {get; set;}
+    public VertexObj Vertex1 {get; private set;}
+    public VertexObj Vertex2 {get; private set;}
 
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
@@ -50,7 +48,7 @@ public class EdgeObj : MonoBehaviour
     private SpriteRenderer arrowSpriteRenderer;
     private int direction;
     // Edge weights/labels
-    private EdgeLabelObj labelObj;
+    [SerializeField] private EdgeLabelObj labelObj;
 
     private void Awake() {
         // Edge objects starts non active
@@ -59,28 +57,27 @@ public class EdgeObj : MonoBehaviour
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
-        this.labelObj = this.transform.parent.GetComponentInChildren<EdgeLabelObj>();
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
-    public void Initiate(Edge edge, GameObject from, GameObject to) {
+    public void Initiate(Edge edge, VertexObj vertex1, VertexObj vertex2) {
         this.Edge = edge;
 
-        this.ToVertexObj = to;
-        this.FromVertexObj = from;
+        this.Vertex1 = vertex1;
+        this.Vertex2 = vertex2;
         
         this.gameObject.SetActive(true);
         // TODO: Make this better
         // Currently, direction = 1 means pointing from parent to target vertex
         this.direction = 1;
         
-        this.labelObj.Initiate(this.Edge.weight);
+        this.labelObj.Initiate(this);
     }
 
     // Method to stretch the edge so it extends from one point to another 
     private void StretchBetweenPoints(Vector2 point1, Vector2 point2)
     {
-        this.transform.parent.localPosition = new Vector3(0, 0, 1);
+        this.transform.parent.position = point1;
         Vector2 dir = point2 - point1;
         this.transform.localScale = new Vector3(dir.magnitude * 2, transform.localScale.y, 1);
 
@@ -114,7 +111,7 @@ public class EdgeObj : MonoBehaviour
 
         if (Edge != null) {
             // Stretch the edge between the two vertices
-            StretchBetweenPoints(this.transform.parent.position, ToVertexObj.transform.position);
+            StretchBetweenPoints(this.Vertex1.transform.position, this.Vertex2.transform.position);
         }
     }
 
@@ -142,7 +139,6 @@ public class EdgeObj : MonoBehaviour
     private void OnMouseOver()
     {
         this.transform.localScale = new Vector3(this.transform.localScale.x, (0.25f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, 1f);
-
     }
 
     private void OnMouseExit()

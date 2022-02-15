@@ -22,14 +22,14 @@ public class GraphPhysics : SingletonBehavior<GraphPhysics> {
     // Function called when a new edge object is created
     private void OnEdgeObjectCreation(EdgeObj edgeObj) {
         // Add a DistanceJoint2D which connects the two vertices
-        DistanceJoint2D joint = edgeObj.FromVertexObj.gameObject.AddComponent<DistanceJoint2D>();
+        DistanceJoint2D joint = edgeObj.Vertex1.gameObject.AddComponent<DistanceJoint2D>();
         // Configure the properties of the joint
         joint.autoConfigureConnectedAnchor = false;
         joint.enableCollision = true;
         joint.distance = this.edgeLength;
         joint.maxDistanceOnly = true;
         joint.autoConfigureDistance = false;
-        joint.connectedBody = edgeObj.ToVertexObj.gameObject.GetComponent<Rigidbody2D>();
+        joint.connectedBody = edgeObj.Vertex2.gameObject.GetComponent<Rigidbody2D>();
         // Disable joint by default, the joint will only be enabled when graph physics is in use
         joint.enabled = false;
     }

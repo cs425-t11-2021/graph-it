@@ -136,6 +136,29 @@ public class Controller : SingletonBehavior<Controller>
         this.OnVertexObjectCreation?.Invoke(vertexObj);
     }
 
+    public void RemoveVertex(VertexObj vertexObj) {
+        for (int i = this.currentGraphInstance.edgeObjs.Count - 1; i >= 0; i--)
+        {
+            if (this.currentGraphInstance.edgeObjs[i].Vertex1 == vertexObj || this.currentGraphInstance.edgeObjs[i].Vertex2 == vertexObj)
+            {
+                RemoveEdge(this.currentGraphInstance.edgeObjs[i]);
+            }
+        }
+
+        // Update the graph ds
+        Controller.Singleton.Graph.RemoveVertex(vertexObj.Vertex);
+        this.currentGraphInstance.vertexObjs.Remove(vertexObj);
+        Destroy(vertexObj.gameObject);
+        Logger.Log("Removed a vertex from the current graph instance.", this, LogType.INFO);
+    }
+
+    public void RemoveEdge(EdgeObj edgeObj) {
+        Controller.Singleton.Graph.RemoveEdge(edgeObj.Edge);
+        this.currentGraphInstance.edgeObjs.Remove(edgeObj);
+        Destroy(edgeObj.transform.parent.gameObject);
+        Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);
+    }
+
     public void AddEdge(Vertex vertex1, Vertex vertex2) {
         // If the requested edge already exists, return
         if (Controller.Singleton.Graph.IsAdjacent(vertex1, vertex2))  {
@@ -168,8 +191,8 @@ public class Controller : SingletonBehavior<Controller>
         // Instantiate an edge object
         EdgeObj edgeObj = Instantiate(this.edgeObjPrefab, Vector2.zero, Quaternion.identity).transform.GetChild(0).GetComponent<EdgeObj>();
         // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
-        edgeObj.transform.parent.SetParent(fromVertexObj.transform);
-        edgeObj.Initiate(edge, fromVertexObj.gameObject, toVertexObj.gameObject);
+        edgeObj.transform.parent.SetParent(this.GraphObjContainer);
+        edgeObj.Initiate(edge, fromVertexObj, toVertexObj);
         Logger.Log("Creating new edge in the current graph instance.", this, LogType.INFO);
         // Add edge to the list of edges in instance
         this.currentGraphInstance.edgeObjs.Add(edgeObj);

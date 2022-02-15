@@ -108,9 +108,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         // Destroy the gameObjects for edges in selectedEdges
         foreach (EdgeObj edgeObj in this.selectedEdges)
         {
-            // Update the graph ds
-            Controller.Singleton.Graph.RemoveEdge(edgeObj.Edge);
-            Destroy(edgeObj.transform.parent.gameObject);
+            Controller.Singleton.RemoveEdge(edgeObj);
         }
 
         this.selectedEdges = new List<EdgeObj>();
@@ -118,18 +116,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         // For each vertex to be deleted, find all edges connecting to the vertex, then destroy the vertex object
         foreach (VertexObj vertexObj in this.selectedVertices)
         {
-            foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-            {
-                if (edgeObj.ToVertexObj == vertexObj.gameObject)
-                {
-                    Destroy(edgeObj.transform.parent.gameObject);
-                }
-            }
-
-            // Update the graph ds
-            Controller.Singleton.Graph.RemoveVertex(vertexObj.Vertex);
-
-            Destroy(vertexObj.gameObject);
+            Controller.Singleton.RemoveVertex(vertexObj);
         }
         this.selectedVertices = new List<VertexObj>();
 
