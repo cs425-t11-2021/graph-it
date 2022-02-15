@@ -46,7 +46,7 @@ public class EdgeObj : MonoBehaviour
     // Directed edge variables
     private Transform arrow;
     private SpriteRenderer arrowSpriteRenderer;
-    private int direction;
+    // private int direction;
     // Edge weights/labels
     [SerializeField] private EdgeLabelObj labelObj;
 
@@ -69,7 +69,7 @@ public class EdgeObj : MonoBehaviour
         this.gameObject.SetActive(true);
         // TODO: Make this better
         // Currently, direction = 1 means pointing from parent to target vertex
-        this.direction = 1;
+        // this.direction = 1;
         
         this.labelObj.Initiate(this);
     }
@@ -85,9 +85,9 @@ public class EdgeObj : MonoBehaviour
         this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         if (this.Edge.directed) {
-            this.arrow.localPosition = new Vector3((this.direction == 1 ? 0.5f : 0f) - (this.direction * this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
+            this.arrow.localPosition = new Vector3((this.Edge.directed ? 0.5f : 0f) - (this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
             this.arrow.localScale = new Vector3(1f / this.transform.lossyScale.x, 1f / (this.transform.lossyScale.y - this.Edge.thickness * edgeWidthScaleFactor), 1);
-            this.arrow.localRotation = Quaternion.AngleAxis(this.direction == 1 ? 0f : 180f, Vector3.forward);
+            this.arrow.localRotation = Quaternion.AngleAxis(this.Edge.directed ? 0f : 180f, Vector3.forward);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -117,21 +117,22 @@ public class EdgeObj : MonoBehaviour
 
     // Toggle between undirected, direction 1, and direction -1
     public void ToggleEdgeType() {
-        if (!this.Edge.directed) {
-            this.Edge.directed = true;
-            this.direction = 1;
-        }
-        else {
-            if (this.direction == 1) {
-                this.Edge.Reverse();
-                this.direction = -1;
-            }
-            else {
-                this.Edge.Reverse();
-                this.direction = 1;
-                this.Edge.directed = false;
-            }
-        }
+        // if (!this.Edge.directed) {
+        //     this.Edge.directed = true;
+        //     // this.direction = 1;
+        // }
+        // else {
+        //     // if (this.direction == 1) {
+        //     //     this.Edge.Reverse();
+        //     //     this.direction = -1;
+        //     // }
+        //     // else {
+        //     //     this.Edge.Reverse();
+        //     //     this.direction = 1;
+        //     //     this.Edge.directed = false;
+        //     // }
+        // }
+        this.Edge.directed = !this.Edge.directed;
     }
 
     // When Cursor enters a edge obj, increase its sprite object size by 33%

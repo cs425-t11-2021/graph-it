@@ -25,6 +25,7 @@ public class Controller : SingletonBehavior<Controller>
     // Prefabs for the unity vertex and edge objects
     [SerializeField] private GameObject vertexObjPrefab;
     [SerializeField] private GameObject edgeObjPrefab;
+    [SerializeField] public GameObject edgeTemplatePrefab;
     // Prefab for the graph container object
     [SerializeField] private GameObject graphObjContainerPrefab;
     // Mask of Collider Layers that should receive mouse input
@@ -159,7 +160,7 @@ public class Controller : SingletonBehavior<Controller>
         Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);
     }
 
-    public void AddEdge(Vertex vertex1, Vertex vertex2) {
+    public void AddEdge(Vertex vertex1, Vertex vertex2, bool directed = false) {
         // If the requested edge already exists, return
         if (Controller.Singleton.Graph.IsAdjacent(vertex1, vertex2))  {
             Logger.Log("Attempting to add edge between two vertices that are already connected.", this, LogType.WARNING);
@@ -172,7 +173,7 @@ public class Controller : SingletonBehavior<Controller>
             return;
         }
 
-        Edge newEdge = this.Graph.AddEdge(vertex1, vertex2);
+        Edge newEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
         CreateEdgeObj(newEdge);
         GraphInfo.Singleton.UpdateGraphInfo();
     }

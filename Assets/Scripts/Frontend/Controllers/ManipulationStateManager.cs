@@ -27,6 +27,7 @@ public class ManipulationStateManager : SingletonBehavior<ManipulationStateManag
         ManipulationState.selectionState = new SelectionState();
         ManipulationState.vertexCreationState = new VertexCreationState();
         ManipulationState.edgeCreationState = new EdgeCreationState();
+        ManipulationState.edgeDrawingState = new EdgeDrawingState();
         ManipulationState.disabledState = new DisabledState();
         // Go into view state at program start
         this.ActiveState = ManipulationState.viewState;
