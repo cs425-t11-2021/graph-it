@@ -26,11 +26,20 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     private AlgorithmManager algorithmManager;
 
+     // Property for whether or not the algorithm buttons are enabled
+    public bool AlgorithmButtonsEnabled {
+        set {
+            primButton.enabled = value;
+            dijkstraButton.enabled = value;
+            kruskalButton.enabled = value;
+        }
+    }
+
     private void Awake() {
         this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateDepthFirstSearchResult, ( Action ) this.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating, ( Action ) this.UpdateDepthFirstSearchCalculating, ( Action ) this.UpdateBreadthFirstSearchCalculating );
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
 
-        //this.primButton.interactable = false;
+        this.primButton.interactable = false;
         //UpdateGraphInfo();
     }
 

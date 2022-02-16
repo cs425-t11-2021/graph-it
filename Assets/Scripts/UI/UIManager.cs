@@ -29,7 +29,7 @@ public class UIManager : SingletonBehavior<UIManager>
 
     // Property for whether or not the algorithm panel is enabled
     public bool AlgorithmsPanelEnabled {
-        set => this.graphInfo.AlgorithmButtonsEnabled = value;
+        set => this.algorithmsPanel.AlgorithmButtonsEnabled = value;
     }
 
     // Property for whether or not the toolbar is enabled
@@ -46,12 +46,12 @@ public class UIManager : SingletonBehavior<UIManager>
     private MenuButton[] menuButtons;
 
     // Reference to the graph info
-    private GraphInfo graphInfo;
+    private AlgorithmsPanel algorithmsPanel;
 
     private void Awake() {
         // Get references
         this.menuButtons = this.menuBar.GetComponentsInChildren<MenuButton>();
-        this.graphInfo = this.infoAndAlgorithmsPanel.GetComponentInChildren<GraphInfo>();
+        this.algorithmsPanel = this.infoAndAlgorithmsPanel.GetComponentInChildren<AlgorithmsPanel>();
     }
 
     private void Update() {
