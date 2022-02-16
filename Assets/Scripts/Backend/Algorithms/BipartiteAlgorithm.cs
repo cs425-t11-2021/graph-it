@@ -6,7 +6,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class BipartiteAlgorithm : Algorithm
 {
-    private static Dictionary< Graph, int? > chromaticNumbers = new Dictionary< Graph, int? >();
+    private static Dictionary< Graph, int? > chromaticNumbers = new Dictionary< Graph, int? >(); // TODO: make concurrent
     public bool IsBipartite { get; private set; }
     public HashSet< Vertex > Set1 { get; private set; }
     public HashSet< Vertex > Set2 { get; private set; }

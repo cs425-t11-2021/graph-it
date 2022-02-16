@@ -109,8 +109,8 @@ public class Controller : SingletonBehavior<Controller>
     // Create a new vertex object to correspond to a passed in graph vertex
     private void CreateVertexObj(Vertex vertex) {
         Vector2 pos;
-        if (vertex.x != null && vertex.y != null) {
-            pos = new Vector2( (float) vertex.x, (float) vertex.y);
+        if (vertex.X != null && vertex.Y != null) {
+            pos = new Vector2( (float) vertex.X, (float) vertex.Y);
         }
         else {
             Logger.Log("Attempting to create a vertex object with no position given.", this, LogType.ERROR);
