@@ -3863,6 +3863,7 @@ GameObject:
   - component: {fileID: 579688375}
   - component: {fileID: 579688377}
   - component: {fileID: 579688376}
+  - component: {fileID: 579688378}
   m_Layer: 5
   m_Name: Graph Info Panel
   m_TagString: Untagged
@@ -3903,7 +3904,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.6698113, g: 0.6476949, b: 0.6476949, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3928,6 +3929,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 579688374}
   m_CullTransparentMesh: 1
+--- !u!114 &579688378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579688374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eaa084c87c61b49afac856fa0afe941c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chromaticText: {fileID: 823532443}
+  bipartiteText: {fileID: 510125109}
+  orderText: {fileID: 1553925998}
+  sizeText: {fileID: 324383124}
+  primButton: {fileID: 0}
+  kruskalButton: {fileID: 0}
+  dijkstraButton: {fileID: 0}
 --- !u!1 &606668068
 GameObject:
   m_ObjectHideFlags: 0
@@ -6754,6 +6774,7 @@ GameObject:
   - component: {fileID: 1012987117}
   - component: {fileID: 1012987119}
   - component: {fileID: 1012987118}
+  - component: {fileID: 1012987120}
   m_Layer: 5
   m_Name: Algorithm Selection Panel
   m_TagString: Untagged
@@ -6822,6 +6843,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1012987116}
   m_CullTransparentMesh: 1
+--- !u!114 &1012987120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1012987116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21d62ac4f584a5945b80b57ca448555d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chromaticText: {fileID: 0}
+  bipartiteText: {fileID: 0}
+  orderText: {fileID: 0}
+  sizeText: {fileID: 0}
+  primButton: {fileID: 1072866586}
+  kruskalButton: {fileID: 1937964947}
+  dijkstraButton: {fileID: 1394906815}
 --- !u!1 &1035785018
 GameObject:
   m_ObjectHideFlags: 0

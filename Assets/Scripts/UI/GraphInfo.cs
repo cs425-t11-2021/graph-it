@@ -36,19 +36,19 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     private void Awake() {
         this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateDepthFirstSearchResult, ( Action ) this.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating, ( Action ) this.UpdateDepthFirstSearchCalculating, ( Action ) this.UpdateBreadthFirstSearchCalculating );
-        SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
+        //SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
 
-        this.primButton.interactable = false;
+        //this.primButton.interactable = false;
         UpdateGraphInfo();
     }
 
     // Function called when the selection is changed
-    private void OnSelectionChange(int selectedVertexCount, int selectedEdgeCount) {
+    /*private void OnSelectionChange(int selectedVertexCount, int selectedEdgeCount) {
         // Only allow the prim button to be pressed if there is exactly one vertex selected
         this.primButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
         // Only allow dijkstra if exactly two vertices are selected
         this.dijkstraButton.interactable = selectedVertexCount == 2 && selectedEdgeCount == 0;
-    }
+    }*/
     
     public void UpdateGraphInfo() {
         this.orderText.text = "Order: " + Controller.Singleton.Graph.Vertices.Count;
