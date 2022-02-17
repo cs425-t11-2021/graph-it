@@ -38,8 +38,6 @@ public class Graph
         get => this.IsSimple();
     }
 
-    private int? chromaticNum;
-
 
     public Graph() // pass default settings parameters
     {

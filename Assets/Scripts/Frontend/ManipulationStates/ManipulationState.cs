@@ -8,6 +8,7 @@ public abstract class ManipulationState
     public static ManipulationState selectionState;
     public static ManipulationState vertexCreationState;
     public static ManipulationState edgeCreationState;
+    public static ManipulationState edgeDrawingState;
     public static ManipulationState disabledState;
 
     // Property for whether or not the state is active

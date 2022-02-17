@@ -1,7 +1,11 @@
 //All code developed by Team 11
 using System.Collections;
 using System.Collections.Generic;
+using PathCreation;
+using  PathCreation.Examples;
+using PathCreation.Utility;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class EdgeObj : MonoBehaviour
 {
@@ -17,9 +21,15 @@ public class EdgeObj : MonoBehaviour
     public VertexObj Vertex1 {get; private set;}
     public VertexObj Vertex2 {get; private set;}
 
+    private bool curved;
+
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
     private bool selected = false;
+    private PathCreator pathCreator;
+    private RoadMeshCreator roadMeshCreator;
+    private Spline spline;
+    
     // Property for getting and setting whether or not the edge is selected, and edit the edge's color to match
     public bool Selected {
         get => this.selected;
@@ -46,7 +56,7 @@ public class EdgeObj : MonoBehaviour
     // Directed edge variables
     private Transform arrow;
     private SpriteRenderer arrowSpriteRenderer;
-    private int direction;
+    // private int direction;
     // Edge weights/labels
     [SerializeField] private EdgeLabelObj labelObj;
 
@@ -57,6 +67,8 @@ public class EdgeObj : MonoBehaviour
         this.spriteRenderer = GetComponent<SpriteRenderer>();
         this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
+
+        
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -69,7 +81,15 @@ public class EdgeObj : MonoBehaviour
         this.gameObject.SetActive(true);
         // TODO: Make this better
         // Currently, direction = 1 means pointing from parent to target vertex
-        this.direction = 1;
+        // this.direction = 1;
+
+        this.curved = edge.vert1 == edge.vert2;
+
+        if (this.curved) {
+            pathCreator = this.gameObject.GetComponent<PathCreator>();
+            roadMeshCreator = this.gameObject.GetComponent<RoadMeshCreator>();
+            pathCreator.enabled = true;
+        }
         
         this.labelObj.Initiate(this);
     }
@@ -85,9 +105,9 @@ public class EdgeObj : MonoBehaviour
         this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         if (this.Edge.directed) {
-            this.arrow.localPosition = new Vector3((this.direction == 1 ? 0.5f : 0f) - (this.direction * this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
+            this.arrow.localPosition = new Vector3((this.Edge.directed ? 0.5f : 0f) - (this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
             this.arrow.localScale = new Vector3(1f / this.transform.lossyScale.x, 1f / (this.transform.lossyScale.y - this.Edge.thickness * edgeWidthScaleFactor), 1);
-            this.arrow.localRotation = Quaternion.AngleAxis(this.direction == 1 ? 0f : 180f, Vector3.forward);
+            this.arrow.localRotation = Quaternion.AngleAxis(this.Edge.directed ? 0f : 180f, Vector3.forward);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -110,28 +130,42 @@ public class EdgeObj : MonoBehaviour
         }
 
         if (Edge != null) {
-            // Stretch the edge between the two vertices
-            StretchBetweenPoints(this.Vertex1.transform.position, this.Vertex2.transform.position);
+            if (!this.curved) {
+                // Stretch the edge between the two vertices
+                StretchBetweenPoints(this.Vertex1.transform.position, this.Vertex2.transform.position);
+            }
+            else {
+                transform.position = this.Vertex1.transform.position;
+                pathCreator.bezierPath = new BezierPath(new Vector3[] {new Vector3(0f, -0.1f, 0f), new Vector3(1f, 0f, 0f), new Vector3(0f, 0.1f, 0f)}, false, PathSpace.xy);
+                pathCreator.bezierPath.AutoControlLength = 0.5f;
+                pathCreator.bezierPath.ControlPointMode = BezierPath.ControlMode.Automatic;
+                this.transform.GetChild(0).gameObject.SetActive(true);
+                // pathCreator.bezierPath.MovePoint(0, Vector3.zero);
+                // pathCreator.bezierPath.MovePoint(1, Vector3.right);
+                // pathCreator.bezierPath.MovePoint(2, Vector3.left);
+                roadMeshCreator.TriggerUpdate();
+            }
         }
     }
 
     // Toggle between undirected, direction 1, and direction -1
     public void ToggleEdgeType() {
-        if (!this.Edge.directed) {
-            this.Edge.directed = true;
-            this.direction = 1;
-        }
-        else {
-            if (this.direction == 1) {
-                this.Edge.Reverse();
-                this.direction = -1;
-            }
-            else {
-                this.Edge.Reverse();
-                this.direction = 1;
-                this.Edge.directed = false;
-            }
-        }
+        // if (!this.Edge.directed) {
+        //     this.Edge.directed = true;
+        //     // this.direction = 1;
+        // }
+        // else {
+        //     // if (this.direction == 1) {
+        //     //     this.Edge.Reverse();
+        //     //     this.direction = -1;
+        //     // }
+        //     // else {
+        //     //     this.Edge.Reverse();
+        //     //     this.direction = 1;
+        //     //     this.Edge.directed = false;
+        //     // }
+        // }
+        this.Edge.directed = !this.Edge.directed;
     }
 
     // When Cursor enters a edge obj, increase its sprite object size by 33%

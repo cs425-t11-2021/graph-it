@@ -24,10 +24,13 @@ public class GraphViewState : ManipulationState
     public override void OnDoubleClick()
     {
         // Do not add new vertex if double clicking on an existing vertex
-        if (InputManager.Singleton.CursorOverGraphObj) return;
-
-        SelectionManager.Singleton.DeSelectAll();
-        Controller.Singleton.AddVertex(InputManager.Singleton.CursorWorldPosition);
+        if (InputManager.Singleton.CursorOverGraphObj) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.edgeDrawingState;
+        }
+        else {
+            SelectionManager.Singleton.DeSelectAll();
+            Controller.Singleton.AddVertex(InputManager.Singleton.CursorWorldPosition);
+        }
     }
 
     // Clicked and not dragged
