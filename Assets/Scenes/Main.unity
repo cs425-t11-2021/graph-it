@@ -880,6 +880,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   checkedColor: {r: 0.105882354, g: 0.827451, b: 0.98039216, a: 1}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
 --- !u!114 &150277625
 MonoBehaviour:
@@ -894,7 +895,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2860,6 +2861,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   checkedColor: {r: 0, g: 0.54226303, b: 1, a: 1}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
 --- !u!1 &506519944
 GameObject:
@@ -3550,7 +3552,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   menuBar: {fileID: 1251704790}
-  infoAndAlgorithmsPanel: {fileID: 0}
+  graphInfo: {fileID: 579688374}
+  algPanel: {fileID: 1012987116}
   importFileMenu: {fileID: 646253996}
   exportFileMenu: {fileID: 1983837607}
   importErrorDialog: {fileID: 2075901294}
@@ -3913,6 +3916,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   checkedColor: {r: 0, g: 0.5411765, b: 1, a: 1}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
 --- !u!114 &606668071
 MonoBehaviour:
@@ -5315,6 +5319,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   checkedColor: {r: 0.105882354, g: 0.827451, b: 0.98039216, a: 1}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
 --- !u!114 &798110305
 MonoBehaviour:
@@ -5329,7 +5334,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7485,6 +7490,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   checkedColor: {r: 0.105882354, g: 0.827451, b: 0.98039216, a: 1}
+  highlightColor: {r: 0.8301887, g: 0.8301887, b: 0.8301887, a: 0.90588236}
   group: {fileID: 0}
 --- !u!114 &1119136490
 MonoBehaviour:
@@ -7499,7 +7505,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.7843138, g: 0.7843138, b: 0.7843138, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -8850,7 +8856,7 @@ MonoBehaviour:
     m_Left: 30
     m_Right: 0
     m_Top: 0
-    m_Bottom: 0
+    m_Bottom: 5
   m_ChildAlignment: 6
   m_Spacing: 0
   m_ChildForceExpandWidth: 0
@@ -11878,6 +11884,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   checkedColor: {r: 0, g: 0.5411765, b: 1, a: 1}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
 --- !u!114 &1723796978
 MonoBehaviour:

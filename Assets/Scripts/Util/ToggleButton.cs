@@ -16,6 +16,7 @@ public class ToggleButton : MonoBehaviour, IPointerClickHandler
 
     private bool @checked;
     [SerializeField] private Color checkedColor;
+    [SerializeField] private Color highlightColor;
     [SerializeField] private ToggleButtonGroup group;
 
 

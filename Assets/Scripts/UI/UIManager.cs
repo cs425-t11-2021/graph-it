@@ -10,7 +10,8 @@ public class UIManager : SingletonBehavior<UIManager>
     [Header("UI Components")]
     // References to the different main UI components
     [SerializeField] private GameObject menuBar;
-    [SerializeField] private GameObject infoAndAlgorithmsPanel;
+    [SerializeField] private GameObject graphInfo;
+    [SerializeField] private GameObject algPanel;
     [SerializeField] private GameObject importFileMenu;
     [SerializeField] private GameObject exportFileMenu;
     [SerializeField] private GameObject importErrorDialog;
@@ -44,14 +45,16 @@ public class UIManager : SingletonBehavior<UIManager>
 
     // Array of all menu bar buttons
     private MenuButton[] menuButtons;
+    //Reference to the graph info
+    //private GraphInfo graphInfo;
 
-    // Reference to the graph info
+    // Reference to the algorithm panel
     private AlgorithmsPanel algorithmsPanel;
 
     private void Awake() {
         // Get references
         this.menuButtons = this.menuBar.GetComponentsInChildren<MenuButton>();
-        this.algorithmsPanel = this.infoAndAlgorithmsPanel.GetComponentInChildren<AlgorithmsPanel>();
+        this.algorithmsPanel = this.algPanel.GetComponentInChildren<AlgorithmsPanel>();
     }
 
     private void Update() {
