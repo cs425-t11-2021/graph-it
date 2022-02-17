@@ -460,6 +460,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   edgeWidthScaleFactor: 0.1
+  arrow: {fileID: 6631653332621607862}
   labelObj: {fileID: 1506942182237321478}
 --- !u!61 &476915494955129104
 BoxCollider2D:
