@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
@@ -17,7 +16,7 @@ public class ChromaticAlgorithm : Algorithm
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
         {
-            int numColors = ( new HashSet< int >( coloring ) ).Count;
+            int numColors = coloring.Count;
             if ( numColors < chi && this.IsProperColoring( coloring ) )
                 chi = numColors;
         }
@@ -29,7 +28,7 @@ public class ChromaticAlgorithm : Algorithm
 
     private bool IsProperColoring( List< int > coloring )
     {
-        foreach ( Edge edge in this.Graph.Adjacency.Values )
+        foreach ( Edge edge in Graph.Adjacency.Values )
         {
             if ( coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
                 return false;
@@ -57,6 +56,12 @@ public class ChromaticAlgorithm : Algorithm
                 GetAllColoringsHelper( colorings, newColoring, numVertices, numColors );
             }
         }
+    }
+
+    public override void Kill()
+    {
+        base.Kill();
+        BipartiteAlgorithm.ClearChromaticNumber( this.Graph );
     }
 
     public static int GetHash() => typeof ( ChromaticAlgorithm ).GetHashCode();

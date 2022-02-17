@@ -4,7 +4,7 @@ using System.Threading;
 
 public abstract class Algorithm
 {
-    protected Graph Graph { get; }
+    protected Graph Graph { get; private set; }
     private Thread currThread;
     private Action updateUI;
     private Action updateCalc;
@@ -43,17 +43,24 @@ public abstract class Algorithm
         {
             this.running = true;
             this.markRunning( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
+            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
+            RunInMain.Singleton.AddToQueue(this.updateCalc);
             this.Run();
             this.running = false;
             this.complete = true;
             this.markComplete( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+            RunInMain.Singleton.AddToQueue(this.updateUI);
         }
         catch ( ThreadAbortException e ) { }
     }
 
-    public void Kill()
+    protected void WaitUntil( Func< bool > condition )
+    {
+        SpinWait.SpinUntil( condition );
+    }
+
+    public virtual void Kill()
     {
         if ( this.currThread?.IsAlive ?? false )
         {

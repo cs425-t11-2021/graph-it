@@ -9,12 +9,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [System.Serializable]
 public class Graph
 {
     public List< Vertex > Vertices { get; private set; }
     public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // currently supporting only single edges between vertices
+    public Stack< GraphModification > Changes { get; private set; } // logs changes to vertices and edges, removal and addition of vertices and edges, load from file
+    // if delete vertex, delete all edges first and add to queue
 
     // parameters
     public bool Directed // true if any edge is directed
@@ -42,6 +43,7 @@ public class Graph
     {
         this.Vertices = new List< Vertex >();
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
+        this.Changes = new Stack< GraphModification >();
     }
 
     public Graph( Graph graph )
@@ -80,6 +82,7 @@ public class Graph
         {
             if ( !edge.directed )
             {
+                // TODO: fix this, this will mess with this.Changes
                 edge.Reverse();
                 edges.Add( edge );
                 edge.Reverse();
@@ -89,18 +92,21 @@ public class Graph
         return edges;
     }
 
-    public Vertex AddVertex( double? x=null, double? y=null )
+    // TODO: add more parameters
+    public Vertex AddVertex( double? x=null, double? y=null, bool recordChange=true )
     {
-        return this.AddVertex( new Vertex( x : x, y : y ) );
+        return this.AddVertex( new Vertex( this.CreateModification, x : x, y : y ), recordChange );
     }
 
-    public Vertex AddVertex( Vertex vert )
+    public Vertex AddVertex( Vertex vert, bool recordChange=true )
     {
+        // if ( recordChange )
+            // new GraphModification( this, Modification.ADD_VERTEX, vert );
         this.Vertices.Add( vert );
         return vert;
     }
 
-    public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false )
+    public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false, bool recordChange=true )
     {
         if ( directed || vert1 < vert2 )
             return this.AddEdge( new Edge( vert1, vert2, directed ) );
@@ -108,7 +114,7 @@ public class Graph
             return this.AddEdge( new Edge( vert2, vert1 ) );
     }
 
-    public Edge AddEdge( Edge edge )
+    public Edge AddEdge( Edge edge, bool recordChange=true )
     {
         if ( !this.Vertices.Contains( edge.vert1 ) || !this.Vertices.Contains( edge.vert2 ) )
         {
@@ -125,20 +131,23 @@ public class Graph
         return edge;
     }
 
-    public void RemoveVertex( Vertex vect )
+    public void RemoveVertex( Vertex vert, bool recordChange=true )
     {
-        this.Vertices.Remove( vect );
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
-            this.Adjacency.Remove( kvp.Key );
+        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
+            // this.RemoveEdge( kvp.Value );
+        this.RemoveEdges( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), recordChange );
+        this.Vertices.Remove( vert );
+        // if ( recordChange )
+            // new GraphModification( this, Modification.REMOVE_VERTEX, vert );
     }
 
-    public void RemoveVertices( List< Vertex > vects )
+    public void RemoveVertices( List< Vertex > verts, bool recordChange=true )
     {
-        foreach ( Vertex vect in vects )
-            this.RemoveVertex( vect );
+        foreach ( Vertex vert in verts )
+            this.RemoveVertex( vert, recordChange );
     }
 
-    public void RemoveEdge( Edge edge )
+    public void RemoveEdge( Edge edge, bool recordChange=true )
     {
         if ( edge.directed || edge.vert1 < edge.vert2 )
             this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
@@ -146,7 +155,7 @@ public class Graph
             this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) );
     }
 
-    public void RemoveEdges( List< Edge > edges )
+    public void RemoveEdges( List< Edge > edges, bool recordChange=true )
     {
         foreach ( Edge edge in edges )
             this.RemoveEdge( edge );
@@ -222,6 +231,11 @@ public class Graph
         return true;
     }
 
+    public void CreateModification( Modification mod, System.Object modified )
+    {
+        // new GraphModification( this, mod, modified );
+    }
+
 
     // file io methods ////////////////////////////////////////////////
 
@@ -282,8 +296,7 @@ public class Graph
             Graph.ToNullableDouble( vectData[ "x" ] ),
             Graph.ToNullableDouble( vectData[ "y" ] ),
             System.Convert.ToUInt32( vectData[ "style" ] ),
-            System.Convert.ToUInt32( vectData[ "color" ] ),
-            System.Convert.ToUInt32( vectData[ "label style" ] )
+            System.Convert.ToUInt32( vectData[ "color" ] )
         );
     }
 
@@ -303,8 +316,7 @@ public class Graph
             edgeData[ "label" ],
             System.Convert.ToUInt32( edgeData[ "style" ] ),
             System.Convert.ToUInt32( edgeData[ "color" ] ),
-            System.Convert.ToUInt32( edgeData[ "thickness" ] ),
-            System.Convert.ToUInt32( edgeData[ "label style" ] )
+            System.Convert.ToUInt32( edgeData[ "thickness" ] )
             // System.Convert.ToInt32( edgeData[ "tail style" ] ),
             // System.Convert.ToInt32( edgeData[ "head style" ] ) 
         );
