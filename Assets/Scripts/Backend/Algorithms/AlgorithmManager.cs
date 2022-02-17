@@ -5,7 +5,7 @@ using System.Collections.Generic;
 // using UnityEngine;
 
 // TODO: algorithm manager needs to know when graph is updated so that it can kill all running algorithms and remove all completed
-public class AlgorithmManager
+public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 {
     private Graph graph;
     private Action chromaticUI;
