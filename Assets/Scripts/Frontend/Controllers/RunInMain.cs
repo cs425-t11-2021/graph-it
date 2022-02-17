@@ -11,10 +11,10 @@ public class RunInMain : SingletonBehavior<RunInMain>
     // Queue of actions that needs to be run on the main thread
     public ConcurrentQueue<Action> queuedTasks;
 
-    public void AddToQueue(Action action) {
-        // Debug.Log("adding " + action.Method.Name);
-        this.queuedTasks.Enqueue(action);
-    }
+    // public void AddToQueue(Action action) {
+    //     Debug.Log("adding " + action.Method.Name);
+    //     this.queuedTasks.Enqueue(action);
+    // }
 
     private void Awake() {
         queuedTasks = new ConcurrentQueue<Action>();

@@ -170,9 +170,16 @@ public class AlgorithmManager
 
     public bool IsComplete( int key ) => this.complete.ContainsKey( key );
 
+    public void Clear()
+    {
+        this.KillAll();
+        this.running.Clear();
+        this.complete.Clear();
+    }
+
     public void KillAll()
     {
-        foreach ( KeyValuePair< int, Algorithm > kvp in this.running )
-            kvp.Value.Kill();
+        foreach ( KeyValuePair< int, Algorithm > kvp in this.running.ToList() )
+            kvp.Value?.Kill();
     }
 }

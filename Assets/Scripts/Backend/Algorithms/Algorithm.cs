@@ -43,14 +43,12 @@ public abstract class Algorithm
         {
             this.running = true;
             this.markRunning( this );
-            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
-            RunInMain.Singleton.AddToQueue(this.updateCalc);
+            RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
             this.Run();
             this.running = false;
             this.complete = true;
             this.markComplete( this );
-            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
-            RunInMain.Singleton.AddToQueue(this.updateUI);
+            RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
         }
         catch ( ThreadAbortException e ) { }
     }
