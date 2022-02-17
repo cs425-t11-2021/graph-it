@@ -219,6 +219,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         }
     }
 
+    // TEMOPARY CODE
     public void RunDijkstra() {
         if (selectedVertices.Count != 2) {
             Debug.Log( ( new System.Exception( "Cannot start Dijkstra's algorithm." ) ).ToString() );
@@ -226,13 +227,16 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         }
 
         List<Edge> dijkstraEdges = new List<Edge>();
-        Debug.Log(selectedVertices[0].Vertex);
-        Debug.Log(selectedVertices[1].Vertex);
+
         List<Vertex> dijkstraVertices = Controller.Singleton.Graph.Dijkstra(selectedVertices[0].Vertex, selectedVertices[1].Vertex);
-        // foreach (Edge e in dijkstraEdges) {
-        //     dijkstraVertices.Add(e.vert1);
-        //     dijkstraVertices.Add(e.vert2);
-        // }
+        for (int i = 0; i < dijkstraVertices.Count - 1; i++) {
+            List<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges(dijkstraVertices[i]);
+            foreach (Edge edge in incidentEdges) {
+                if (edge.vert1 == dijkstraVertices[i + 1] || edge.vert2 == dijkstraVertices[i + 1]) {
+                    dijkstraEdges.Add(edge);
+                }
+            }
+        }
 
         foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
         {
