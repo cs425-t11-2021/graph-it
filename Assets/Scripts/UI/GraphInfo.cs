@@ -17,11 +17,11 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // Reference of the text display of the graph size
     [SerializeField] private TMP_Text sizeText;
     // Reference of the button of prim
-    [SerializeField] private Button primButton;
+    //[SerializeField] private Button primButton;
     // Reference of the kruskal button
-    [SerializeField] private Button kruskalButton;
+    //[SerializeField] private Button kruskalButton;
     // Reference of the button of dijkstra
-    [SerializeField] private Button dijkstraButton;
+    //[SerializeField] private Button dijkstraButton;
 
     private AlgorithmManager algorithmManager;
 
