@@ -25,7 +25,6 @@ public class Controller : SingletonBehavior<Controller>
     // Prefabs for the unity vertex and edge objects
     [SerializeField] private GameObject vertexObjPrefab;
     [SerializeField] private GameObject edgeObjPrefab;
-    [SerializeField] private GameObject curvedEdgePrefab;
     [SerializeField] public GameObject edgeTemplatePrefab;
     // Prefab for the graph container object
     [SerializeField] private GameObject graphObjContainerPrefab;
@@ -170,17 +169,13 @@ public class Controller : SingletonBehavior<Controller>
 
         // If both vertices are the same, return
         if (vertex1 == vertex2) {
-            // Logger.Log("Attempting to add edge from a vertex to itself is not currently implmented.", this, LogType.WARNING);
-            // return;
-            Edge curvedEdge = this.Graph.AddEdge(vertex1, vertex2, false);
-            CreateCurvedEdgeObj(curvedEdge);
-            GraphInfo.Singleton.UpdateGraphInfo();
+            Logger.Log("Attempting to add edge from a vertex to itself is not currently implmented.", this, LogType.WARNING);
+            return;
         }
-        else {
-            Edge newEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
-            CreateEdgeObj(newEdge);
-            GraphInfo.Singleton.UpdateGraphInfo();
-        }
+
+        Edge newEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
+        CreateEdgeObj(newEdge);
+        GraphInfo.Singleton.UpdateGraphInfo();
     }
 
     // Create a new edge object to correspond to a passed in graph edge
@@ -199,22 +194,6 @@ public class Controller : SingletonBehavior<Controller>
         // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
         edgeObj.transform.parent.SetParent(this.GraphObjContainer);
         edgeObj.Initiate(edge, fromVertexObj, toVertexObj);
-        Logger.Log("Creating new edge in the current graph instance.", this, LogType.INFO);
-        // Add edge to the list of edges in instance
-        this.currentGraphInstance.edgeObjs.Add(edgeObj);
-
-        // Send the OnEdgeObjectCreation event
-        this.OnEdgeObjectCreation?.Invoke(edgeObj);
-    }
-
-    private void CreateCurvedEdgeObj(Edge curvedEdge) {
-        VertexObj vertexObj = GetVertexObj(curvedEdge.vert1);
-
-        // Instantiate an edge object
-        EdgeObj edgeObj = Instantiate(this.curvedEdgePrefab, Vector2.zero, Quaternion.identity).transform.GetChild(0).GetComponent<EdgeObj>();
-        // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
-        edgeObj.transform.parent.SetParent(this.GraphObjContainer);
-        edgeObj.Initiate(curvedEdge, vertexObj, vertexObj);
         Logger.Log("Creating new edge in the current graph instance.", this, LogType.INFO);
         // Add edge to the list of edges in instance
         this.currentGraphInstance.edgeObjs.Add(edgeObj);
