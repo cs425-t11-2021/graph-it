@@ -406,7 +406,7 @@ public class Graph
         List< Edge > incidentEdges = new List< Edge >();
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
-            if ( verts.Contains( kvp.Value.vert1 ) || kvp.Value.directed && verts.Contains( kvp.Value.vert2 ) )
+            if ( verts.Contains( kvp.Value.vert1 ) || !kvp.Value.directed && verts.Contains( kvp.Value.vert2 ) )
                 incidentEdges.Add( kvp.Value );
         }
         return incidentEdges;

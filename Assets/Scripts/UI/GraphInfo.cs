@@ -39,7 +39,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
 
         this.primButton.interactable = false;
-        UpdateGraphInfo();
+        this.UpdateGraphInfo();
     }
 
     // Function called when the selection is changed
