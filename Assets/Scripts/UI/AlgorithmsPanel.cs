@@ -24,7 +24,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private Button dijkstraButton;
     // Start is called before the first frame update
 
-    private AlgorithmManager algorithmManager;
+    public AlgorithmManager algorithmManager;
 
      // Property for whether or not the algorithm buttons are enabled
     public bool AlgorithmButtonsEnabled {

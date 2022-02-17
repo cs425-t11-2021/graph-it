@@ -35,7 +35,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }*/
 
     private void Awake() {
-        this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateDepthFirstSearchResult, ( Action ) this.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating, ( Action ) this.UpdateDepthFirstSearchCalculating, ( Action ) this.UpdateBreadthFirstSearchCalculating );
+        // this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateDepthFirstSearchResult, ( Action ) this.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating, ( Action ) this.UpdateDepthFirstSearchCalculating, ( Action ) this.UpdateBreadthFirstSearchCalculating );
         //SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
 
         //this.primButton.interactable = false;
@@ -56,7 +56,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
         // Run multithreaded chromatic
         // this.algorithmManager.RunChromatic();
-        this.algorithmManager.RunBipartite();
+        AlgorithmsPanel.Singleton.algorithmManager.RunBipartite(); //TEMPORARY FIX
     }
 
     public void UpdateChromaticResult() {
@@ -71,13 +71,13 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.bipartiteText.text = "Bipartite: " + ( this.algorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
     }
 
-    public void UpdatePrimsResult() { }
+    // public void UpdatePrimsResult() { }
 
-    public void UpdateKruskalsResult() { }
+    // public void UpdateKruskalsResult() { }
 
-    public void UpdateDepthFirstSearchResult() { }
+    // public void UpdateDepthFirstSearchResult() { }
 
-    public void UpdateBreadthFirstSearchResult() { }
+    // public void UpdateBreadthFirstSearchResult() { }
 
     public void UpdateChromaticCalculating() {
         this.chromaticText.text = "Chromatic Number: Calculating";
@@ -87,11 +87,11 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.bipartiteText.text = "Bipartite: Calculating";
     }
 
-    public void UpdatePrimsCalculating() { }
+    // public void UpdatePrimsCalculating() { }
 
-    public void UpdateKruskalsCalculating() { }
+    // public void UpdateKruskalsCalculating() { }
 
-    public void UpdateDepthFirstSearchCalculating() { }
+    // public void UpdateDepthFirstSearchCalculating() { }
 
-    public void UpdateBreadthFirstSearchCalculating() { }
+    // public void UpdateBreadthFirstSearchCalculating() { }
 }
