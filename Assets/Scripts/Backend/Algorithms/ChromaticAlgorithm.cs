@@ -16,7 +16,7 @@ public class ChromaticAlgorithm : Algorithm
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
         {
-            int numColors = ( new HashSet< int >( coloring ) ).Count;
+            int numColors = coloring.Count;
             if ( numColors < chi && this.IsProperColoring( coloring ) )
                 chi = numColors;
         }
