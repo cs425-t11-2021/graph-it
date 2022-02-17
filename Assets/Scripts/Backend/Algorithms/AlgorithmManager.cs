@@ -31,7 +31,7 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
         get => this.running.Values.ToList();
     }
 
-    public AlgorithmManager( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
+    public void Initiate( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
     {
         this.graph = graph;
         this.chromaticUI = chromaticUI;
@@ -181,5 +181,9 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
     {
         foreach ( KeyValuePair< int, Algorithm > kvp in this.running.ToList() )
             kvp.Value?.Kill();
+    }
+
+    private void OnApplicationQuit() {
+        KillAll();
     }
 }
