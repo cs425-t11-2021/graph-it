@@ -59,7 +59,7 @@ public class Graph
     }
 
     // temp
-    private Vertex GetVertex( int id )
+    private Vertex GetVertex( uint id )
     {
         foreach ( Vertex vert in this.Vertices )
         {
@@ -243,6 +243,7 @@ public class Graph
     // currently not importing directed info
     public void Import( string path )
     {
+        this.Clear();
         try
         {
             if ( !File.Exists( path ) )
@@ -251,6 +252,7 @@ public class Graph
                 throw new System.Exception( "The provided file cannot be found." );
             }
 
+            Dictionary< uint, uint > vertexIndices = new Dictionary< uint, uint >();
             bool flag = true;
             foreach ( string line in System.IO.File.ReadLines( path ) )
             {
@@ -266,7 +268,14 @@ public class Graph
                     flag = false;
                     continue;
                 }
-                this.ParseLine( line, flag );
+                this.ParseLine( line, flag, vertexIndices );
+
+                // Debug.Log( this.Adjacency.Count );
+                // foreach ( var kvp in this.Adjacency )
+                // {
+                //     Debug.Log( kvp.Value.vert1.GetId() + " " + kvp.Value.vert2.GetId() );
+                //     Debug.Log( " " );
+                // }
             }
         }
         catch ( Exception ex )
@@ -275,48 +284,50 @@ public class Graph
         }
     }
 
-    private void ParseLine( string line, bool flag )
+    private void ParseLine( string line, bool flag, Dictionary< uint, uint > indices )
     {
         if ( flag )
-            this.AddVertex( this.ParseVertex( line ) );
+            this.AddVertex( this.ParseVertex( line, indices ) );
         else
-            this.AddEdge( this.ParseEdge( line ) );
+            this.AddEdge( this.ParseEdge( line, indices ) );
     }
 
-    private Vertex ParseVertex( string line )
+    private Vertex ParseVertex( string line, Dictionary< uint, uint > indices )
     {
         Dictionary< string, string > vectData = line.Replace( " ", "" )
-                                                     .Split( ',' )
-                                                     .Select( part  => part.Split( ':' ) )
-                                                     .Where( part => part.Length == 2 )
-                                                     .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
+                                                    .Split( ',' )
+                                                    .Select( part  => part.Split( ':' ) )
+                                                    .Where( part => part.Length == 2 )
+                                                    .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
 
-        return new Vertex(
+        Vertex vert = new Vertex(
             vectData[ "label" ],
             Graph.ToNullableDouble( vectData[ "x" ] ),
             Graph.ToNullableDouble( vectData[ "y" ] ),
             System.Convert.ToUInt32( vectData[ "style" ] ),
             System.Convert.ToUInt32( vectData[ "color" ] )
         );
+        indices.Add( System.Convert.ToUInt32( vectData[ "id" ] ), vert.GetId() );
+        return vert;
     }
 
     // requires that all new vertices are already added
-    private Edge ParseEdge( string line )
+    private Edge ParseEdge( string line, Dictionary< uint, uint > indices )
     {
         Dictionary< string, string > edgeData = line.Replace( " ", "" )
-                                                     .Split( ',' )
-                                                     .Select( part  => part.Split( ':' ) )
-                                                     .Where( part => part.Length == 2 )
-                                                     .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
+                                                    .Split( ',' )
+                                                    .Select( part  => part.Split( ':' ) )
+                                                    .Where( part => part.Length == 2 )
+                                                    .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
 
         return new Edge(
-            this.GetVertex( System.Convert.ToInt32( edgeData[ "vert1" ] ) ),
-            this.GetVertex( System.Convert.ToInt32( edgeData[ "vert2" ] ) ),
+            this.GetVertex( indices[ System.Convert.ToUInt32( edgeData[ "vert1" ] ) ] ),
+            this.GetVertex( indices[ System.Convert.ToUInt32( edgeData[ "vert2" ] ) ] ),
             System.Convert.ToBoolean( edgeData[ "directed" ] ),
             edgeData[ "label" ],
             System.Convert.ToUInt32( edgeData[ "style" ] ),
             System.Convert.ToUInt32( edgeData[ "color" ] ),
-            System.Convert.ToUInt32( edgeData[ "thickness" ] )
+            System.Convert.ToUInt32( edgeData[ "thickness" ] )//,
             // System.Convert.ToInt32( edgeData[ "tail style" ] ),
             // System.Convert.ToInt32( edgeData[ "head style" ] ) 
         );

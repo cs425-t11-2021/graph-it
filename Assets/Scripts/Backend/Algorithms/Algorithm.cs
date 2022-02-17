@@ -1,6 +1,7 @@
 
 using System;
 using System.Threading;
+using UnityEngine;
 
 public abstract class Algorithm
 {
@@ -50,7 +51,11 @@ public abstract class Algorithm
             this.markComplete( this );
             RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
         }
-        catch ( ThreadAbortException e ) { }
+        catch ( ThreadAbortException e )
+        {
+            RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "killing thread") );
+        }
+        // catch ( NullReferenceException e ) { }
     }
 
     protected void WaitUntil( Func< bool > condition )
