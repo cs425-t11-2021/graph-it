@@ -1,9 +1,6 @@
 //All code developed by Team 11
 using System.Collections;
 using System.Collections.Generic;
-using PathCreation;
-using  PathCreation.Examples;
-using PathCreation.Utility;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -22,13 +19,13 @@ public class EdgeObj : MonoBehaviour
     public VertexObj Vertex2 {get; private set;}
 
     private bool curved;
+    private SpriteShapeController shapeController;
+    private SpriteShapeRenderer shapeRenderer;
 
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
     private bool selected = false;
-    private PathCreator pathCreator;
-    private RoadMeshCreator roadMeshCreator;
-    private Spline spline;
+
     
     // Property for getting and setting whether or not the edge is selected, and edit the edge's color to match
     public bool Selected {
@@ -36,12 +33,18 @@ public class EdgeObj : MonoBehaviour
         set {
             this.selected = value;
             if (value) {
-                this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+                if (!this.curved)
+                    this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+                else
+                    this.shapeRenderer.color = new Color32(0, 125, 255, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
                 labelObj.MakeEditable();
             }
             else {
-                this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                if (!this.curved)
+                    this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                else
+                    this.shapeRenderer.color = new Color32(0, 0, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
                 labelObj.MakeUneditable();
             }
@@ -54,7 +57,7 @@ public class EdgeObj : MonoBehaviour
     [SerializeField] private float edgeWidthScaleFactor = 0.1f;
 
     // Directed edge variables
-    private Transform arrow;
+    [SerializeField] private Transform arrow;
     private SpriteRenderer arrowSpriteRenderer;
     // private int direction;
     // Edge weights/labels
@@ -65,9 +68,8 @@ public class EdgeObj : MonoBehaviour
         this.gameObject.SetActive(false);
 
         this.spriteRenderer = GetComponent<SpriteRenderer>();
-        this.arrow = this.transform.GetChild(0);
+        // this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
-
         
     }
 
@@ -86,9 +88,8 @@ public class EdgeObj : MonoBehaviour
         this.curved = edge.vert1 == edge.vert2;
 
         if (this.curved) {
-            pathCreator = this.gameObject.GetComponent<PathCreator>();
-            roadMeshCreator = this.gameObject.GetComponent<RoadMeshCreator>();
-            pathCreator.enabled = true;
+            this.shapeController = GetComponent<SpriteShapeController>();
+            this.shapeRenderer = GetComponent<SpriteShapeRenderer>();
         }
         
         this.labelObj.Initiate(this);
@@ -135,17 +136,79 @@ public class EdgeObj : MonoBehaviour
                 StretchBetweenPoints(this.Vertex1.transform.position, this.Vertex2.transform.position);
             }
             else {
-                transform.position = this.Vertex1.transform.position;
-                pathCreator.bezierPath = new BezierPath(new Vector3[] {new Vector3(0f, -0.1f, 0f), new Vector3(1f, 0f, 0f), new Vector3(0f, 0.1f, 0f)}, false, PathSpace.xy);
-                pathCreator.bezierPath.AutoControlLength = 0.5f;
-                pathCreator.bezierPath.ControlPointMode = BezierPath.ControlMode.Automatic;
-                this.transform.GetChild(0).gameObject.SetActive(true);
-                // pathCreator.bezierPath.MovePoint(0, Vector3.zero);
-                // pathCreator.bezierPath.MovePoint(1, Vector3.right);
-                // pathCreator.bezierPath.MovePoint(2, Vector3.left);
-                roadMeshCreator.TriggerUpdate();
+                transform.parent.position = this.Vertex1.transform.position;
+                UpdateSpline();
             }
         }
+    }
+
+    public void UpdateSpline() {
+        Vector3[] pointsOnCurve = {new Vector3(0f, 0.3f, 0f), new Vector3(.5f, 2f, 0f), new Vector3(1f, 0f, 0f), new Vector3(.5f, -2f, 0f), new Vector3(0f, -0.3f, 0f)};
+
+        this.shapeController.spline.Clear();
+        int splinePointIndex = 0;
+        for (int i = 0; i < pointsOnCurve.Length; i++) {
+            if (i == 0 || i == 1) {
+                this.shapeController.spline.InsertPointAt(splinePointIndex, pointsOnCurve[i] + new Vector3(0f, 0.2f, 0f));
+                this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Linear);
+
+                if (i == 1) {
+                    this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+                    this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(-.33f, 0, 0f));
+                    this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(.25f, 0, 0f));
+                }
+            }
+            else if (i == 2) {
+                this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0.125f, 0f, 0f));
+                this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+                this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(0f, 2f, 0f));
+                this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(0f, -2f, 0f));
+            }
+            else if (i == 4 || i == 3) {
+                this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, -0.2f, 0f));
+                this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Linear);
+
+                if (i == 3) {
+                    this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+                    this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(.25f, 0, 0f));
+                    this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(-.33f, 0, 0f));
+                }
+            }
+            splinePointIndex++;
+        }
+
+        for (int i = pointsOnCurve.Length - 1; i >= 0; i--) {
+            if (i == 0 || i == 1) {
+                this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, -0.2f, 0f));
+                this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Linear);
+
+                if (i == 1) {
+                    this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+                    this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(.33f, 0, 0f));
+                    this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(-.25f, 0, 0f));
+                }
+            }
+            else if (i == 2) {
+                this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, 0f, 0f));
+                this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+                this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(0f, -1.5f, 0f));
+                this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(0f, 1.5f, 0f));
+            }
+            else if (i == 4 || i == 3) {
+                this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, 0.2f, 0f));
+                this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Linear);
+
+                if (i == 3) {
+                    this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+                    this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(-.25f, 0, 0f));
+                    this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(.33f, 0, 0f));
+                }
+            }
+            splinePointIndex++;
+        }
+
+        // this.arrow.transform.rotation = Quaternion.AngleAxis(45f, Vector3.forward);
+        this.arrow.gameObject.SetActive(true);
     }
 
     // Toggle between undirected, direction 1, and direction -1

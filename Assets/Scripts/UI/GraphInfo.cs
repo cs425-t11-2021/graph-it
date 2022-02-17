@@ -38,14 +38,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateDepthFirstSearchResult, ( Action ) this.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating, ( Action ) this.UpdateDepthFirstSearchCalculating, ( Action ) this.UpdateBreadthFirstSearchCalculating );
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
 
-        // Debug.Log( ( ( Action ) this.UpdateChromaticResult ).GetHashCode() );
-        // Debug.Log( ( ( Action ) this.UpdateBipartiteResult ).GetHashCode() );
-        // Debug.Log( ( ( Action ) this.UpdateChromaticCalculating ).GetHashCode() );
-        // Debug.Log( ( ( Action ) this.UpdateBipartiteCalculating ).GetHashCode() );
-        // Debug.Log( "run algorithms" );
-
         this.primButton.interactable = false;
-        UpdateGraphInfo();
+        this.UpdateGraphInfo();
     }
 
     // Function called when the selection is changed
@@ -60,7 +54,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.orderText.text = "Order: " + Controller.Singleton.Graph.Vertices.Count;
         this.sizeText.text = "Size: " + Controller.Singleton.Graph.Adjacency.Count;
 
-        // Run multithreaded chromatic
+        // Run multithreaded algorithms
+        this.algorithmManager.Clear();
         // this.algorithmManager.RunChromatic();
         this.algorithmManager.RunBipartite();
     }

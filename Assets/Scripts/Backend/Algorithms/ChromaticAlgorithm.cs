@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
@@ -16,7 +17,7 @@ public class ChromaticAlgorithm : Algorithm
         HashSet< List< int > > colorings = this.GetAllColorings();
         foreach ( List< int > coloring in colorings )
         {
-            int numColors = coloring.Count;
+            int numColors = new HashSet< int >( coloring ).Count;
             if ( numColors < chi && this.IsProperColoring( coloring ) )
                 chi = numColors;
         }
@@ -28,7 +29,7 @@ public class ChromaticAlgorithm : Algorithm
 
     private bool IsProperColoring( List< int > coloring )
     {
-        foreach ( Edge edge in Graph.Adjacency.Values )
+        foreach ( Edge edge in this.Graph.Adjacency.Values )
         {
             if ( coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
                 return false;
