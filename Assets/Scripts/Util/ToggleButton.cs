@@ -16,6 +16,7 @@ public class ToggleButton : MonoBehaviour, IPointerClickHandler
 
     private bool @checked;
     [SerializeField] private Color checkedColor;
+    [SerializeField] private Color highlightColor;
     [SerializeField] private ToggleButtonGroup group;
 
 
@@ -65,4 +66,15 @@ public class ToggleButton : MonoBehaviour, IPointerClickHandler
     public class ToggleEvent : UnityEvent<ToggleButton>
     {
     }
+
+   /* //doesn't work
+    //If mouse hovers over the button, highlight the button with a different color
+    //referenced for onMouseHover and onMouseExit https://docs.unity3d.com/ScriptReference/MonoBehaviour.OnMouseOver.html
+    private void OnMouseOver(){
+        this.image.color = this.highlightColor;
+    }
+
+    private void onMouseExit(){
+        this.image.color = this.originalColor;
+    }*/
 }

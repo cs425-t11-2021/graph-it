@@ -10,7 +10,8 @@ public class UIManager : SingletonBehavior<UIManager>
     [Header("UI Components")]
     // References to the different main UI components
     [SerializeField] private GameObject menuBar;
-    [SerializeField] private GameObject infoAndAlgorithmsPanel;
+    [SerializeField] private GameObject graphInfo;
+    [SerializeField] private GameObject algPanel;
     [SerializeField] private GameObject importFileMenu;
     [SerializeField] private GameObject exportFileMenu;
     [SerializeField] private GameObject importErrorDialog;
@@ -29,7 +30,7 @@ public class UIManager : SingletonBehavior<UIManager>
 
     // Property for whether or not the algorithm panel is enabled
     public bool AlgorithmsPanelEnabled {
-        set => this.graphInfo.AlgorithmButtonsEnabled = value;
+        set => this.algorithmsPanel.AlgorithmButtonsEnabled = value;
     }
 
     // Property for whether or not the toolbar is enabled
@@ -44,14 +45,16 @@ public class UIManager : SingletonBehavior<UIManager>
 
     // Array of all menu bar buttons
     private MenuButton[] menuButtons;
+    //Reference to the graph info
+    //private GraphInfo graphInfo;
 
-    // Reference to the graph info
-    private GraphInfo graphInfo;
+    // Reference to the algorithm panel
+    private AlgorithmsPanel algorithmsPanel;
 
     private void Awake() {
         // Get references
         this.menuButtons = this.menuBar.GetComponentsInChildren<MenuButton>();
-        this.graphInfo = this.infoAndAlgorithmsPanel.GetComponentInChildren<GraphInfo>();
+        this.algorithmsPanel = this.algPanel.GetComponentInChildren<AlgorithmsPanel>();
     }
 
     private void Update() {
