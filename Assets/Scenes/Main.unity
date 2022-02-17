@@ -2059,7 +2059,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 0
   m_FlexibleHeight: -1
-  m_LayoutPriority: 1
+  m_LayoutPriority: 7
 --- !u!114 &394208187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3864,6 +3864,7 @@ GameObject:
   - component: {fileID: 579688377}
   - component: {fileID: 579688376}
   - component: {fileID: 579688378}
+  - component: {fileID: 579688379}
   m_Layer: 5
   m_Name: Graph Info Panel
   m_TagString: Untagged
@@ -3904,7 +3905,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.6698113, g: 0.6476949, b: 0.6476949, a: 1}
+  m_Color: {r: 0.8431373, g: 0.8431373, b: 0.8431373, a: 0.8862745}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3948,6 +3949,26 @@ MonoBehaviour:
   primButton: {fileID: 0}
   kruskalButton: {fileID: 0}
   dijkstraButton: {fileID: 0}
+--- !u!114 &579688379
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579688374}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreLayout: 0
+  m_MinWidth: -1
+  m_MinHeight: -1
+  m_PreferredWidth: -1
+  m_PreferredHeight: -1
+  m_FlexibleWidth: -1
+  m_FlexibleHeight: -1
+  m_LayoutPriority: 2
 --- !u!1 &606668068
 GameObject:
   m_ObjectHideFlags: 0
@@ -5487,7 +5508,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &798872254
 RectTransform:
   m_ObjectHideFlags: 0
