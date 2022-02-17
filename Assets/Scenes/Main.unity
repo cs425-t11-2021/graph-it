@@ -14195,6 +14195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vertexObjPrefab: {fileID: 8772286338830264576, guid: 6eaf373f0543140978685aeeb9160516, type: 3}
   edgeObjPrefab: {fileID: 4532031476796509688, guid: c19261e6e8e2044bab6e99346b7f5316, type: 3}
+  curvedEdgePrefab: {fileID: 5664161781634348165, guid: ba213a007096545e99195e35de8b7bb6, type: 3}
   edgeTemplatePrefab: {fileID: 8218623938757396673, guid: dcc1de16ece5b49fa9d00dc668b1e423, type: 3}
   graphObjContainerPrefab: {fileID: 6636080573536567373, guid: 15f2060c571ca455f89067d020354288, type: 3}
   clickableLayers:
