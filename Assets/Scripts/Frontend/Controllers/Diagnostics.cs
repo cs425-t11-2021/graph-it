@@ -34,7 +34,7 @@ public class Diagnostics : SingletonBehavior<Diagnostics>
             {
                 if (this.tenSecondsAgoMemory != 0)
                 {
-                    Logger.Log(String.Format("Rate Over Last Ten Seconds: {0} mb/s", (memory - this.previousSecondMemory) / 10f), this, LogType.INFO);
+                    Logger.Log(String.Format("Rate Over Last Ten Seconds: {0} mb/s", (memory - this.tenSecondsAgoMemory) / 10f), this, LogType.INFO);
                 }
 
                 this.tenSecondsAgoMemory = memory;
