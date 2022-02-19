@@ -1,12 +1,19 @@
 
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Scripting;
+
 // using UnityEngine;
 
 // TODO: algorithm manager needs to know when graph is updated so that it can kill all running algorithms and remove all completed
 public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 {
+
+    [SerializeField] private bool printMemoryLogs = false;
+    
     private Graph graph;
     private Action chromaticUI;
     private Action bipartiteUI;
@@ -29,6 +36,26 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
     public List< Algorithm > Complete
     {
         get => this.running.Values.ToList();
+    }
+
+    private void Awake()
+    {
+        if (this.printMemoryLogs)
+        {
+            StartCoroutine(LogMemoryUse());
+            Logger.Log("Incremental GC: " + UnityEngine.Scripting.GarbageCollector.isIncremental, this, LogType.WARNING);
+        }
+    }
+
+    private IEnumerator LogMemoryUse()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(1);
+            long memory = System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / (1024*1024);
+            Logger.Log("Process Memory: " + memory + " mb", this, LogType.INFO);
+        }
+
     }
 
     public void Initiate( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
@@ -179,11 +206,15 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 
     public void KillAll()
     {
+        Logger.Log("Stopping all algorithms.", this, LogType.INFO);
         foreach ( KeyValuePair< int, Algorithm > kvp in this.running.ToList() )
             kvp.Value?.Kill();
     }
 
-    private void OnApplicationQuit() {
+    private void OnDestroy()
+    {
         KillAll();
     }
+
+    
 }

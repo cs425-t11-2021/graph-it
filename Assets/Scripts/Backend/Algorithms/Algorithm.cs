@@ -53,9 +53,8 @@ public abstract class Algorithm
         }
         catch ( ThreadAbortException e )
         {
-            RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "killing thread") );
+            Logger.Log("Killing thread.", this, LogType.INFO);
         }
-        // catch ( NullReferenceException e ) { }
     }
 
     protected void WaitUntil( Func< bool > condition )
