@@ -14,10 +14,10 @@ public class ChromaticAlgorithm : Algorithm
     public override void Run()
     {
         int chi = this.Graph.Vertices.Count;
-        HashSet< List< int > > colorings = this.GetAllColorings();
-        foreach ( List< int > coloring in colorings )
+        HashSet< byte[] > colorings = this.GetAllColorings();
+        foreach ( byte[] coloring in colorings )
         {
-            int numColors = new HashSet< int >( coloring ).Count;
+            int numColors = new HashSet< byte >( coloring ).Count;
             if ( numColors < chi && this.IsProperColoring( coloring ) )
                 chi = numColors;
         }
@@ -27,7 +27,7 @@ public class ChromaticAlgorithm : Algorithm
         BipartiteAlgorithm.SetChromaticNumber( this.Graph, chi );
     }
 
-    private bool IsProperColoring( List< int > coloring )
+    private bool IsProperColoring( byte[] coloring )
     {
         foreach ( Edge edge in this.Graph.Adjacency.Values )
         {
@@ -37,23 +37,23 @@ public class ChromaticAlgorithm : Algorithm
         return true;
     }
 
-    private HashSet< List< int > > GetAllColorings()
+    private HashSet< byte[] > GetAllColorings()
     {
-        HashSet< List< int > > colorings = new HashSet< List< int > >();
-        GetAllColoringsHelper( colorings, new List< int >(), this.Graph.Vertices.Count, this.Graph.Vertices.Count );
+        HashSet< byte[] > colorings = new HashSet< byte[] >();
+        GetAllColoringsHelper( colorings, new List< byte >(), (byte) this.Graph.Vertices.Count, (byte) this.Graph.Vertices.Count );
         return colorings;
     }
 
-    private static void GetAllColoringsHelper( HashSet< List< int > > colorings, List< int > coloring, int numVertices, int numColors )
+    private static void GetAllColoringsHelper( HashSet< byte[] > colorings, List<byte> coloring, byte numVertices, byte numColors )
     {
         if ( coloring.Count >= numVertices )
-            colorings.Add( coloring );
+            colorings.Add( coloring.ToArray() );
         else
         {
-            for ( int i = 0; i < numColors; i++ )
+            for ( byte i = 0; i < numColors; i++ )
             {
-                List< int > newColoring = new List< int >( coloring );
-                newColoring.Add( i );
+                List< byte > newColoring = new List< byte >( coloring );
+                newColoring.Add(i);
                 GetAllColoringsHelper( colorings, newColoring, numVertices, numColors );
             }
         }
