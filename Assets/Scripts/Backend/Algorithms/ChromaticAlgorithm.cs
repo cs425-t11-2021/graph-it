@@ -13,23 +13,26 @@ public class ChromaticAlgorithm : Algorithm
 
     public override void Run()
     {
-        int chi = this.Graph.Vertices.Count;
-        HashSet< byte[] > colorings = this.GetAllColorings();
-        foreach ( byte[] coloring in colorings )
-        {
-            int numColors = new HashSet< byte >( coloring ).Count;
-            if ( numColors < chi && this.IsProperColoring( coloring ) )
-                chi = numColors;
-        }
+        // HashSet< byte[] > colorings = this.GetAllColorings();
+        // foreach ( byte[] coloring in colorings )
+        // {
+        //     int numColors = new HashSet< byte >( coloring ).Count;
+        //     if ( numColors < chi && this.IsProperColoring( coloring ) )
+        //         chi = numColors;
+        // }
 
-        this.ChromaticNumber = chi;
+        ushort upperBound = ( ushort ) this.Graph.Vertices.Count;
+        ushort[] coloring = new ushort[ this.Graph.Vertices.Count ];
+        while ( !this.IsProperColoring( coloring ) )
+            this.UpdateColoring( coloring, upperBound );
+        this.ChromaticNumber = coloring.Distinct().Count();
 
-        BipartiteAlgorithm.SetChromaticNumber( this.Graph, chi );
+        BipartiteAlgorithm.SetChromaticNumber( this.Graph, this.ChromaticNumber );
     }
 
-    private bool IsProperColoring( byte[] coloring )
+    private bool IsProperColoring( ushort[] coloring )
     {
-        foreach ( Edge edge in this.Graph.Adjacency.Values )
+        foreach ( Edge edge in this.Graph.Adjacency.Values.ToList() )
         {
             if ( coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
                 return false;
@@ -37,27 +40,46 @@ public class ChromaticAlgorithm : Algorithm
         return true;
     }
 
-    private HashSet< byte[] > GetAllColorings()
+    private void UpdateColoring( ushort[] coloring, ushort max )
     {
-        HashSet< byte[] > colorings = new HashSet< byte[] >();
-        GetAllColoringsHelper( colorings, new List< byte >(), (byte) this.Graph.Vertices.Count, (byte) this.Graph.Vertices.Count );
-        return colorings;
+        this.UpdateColoringHelper( coloring, max, 0 );
     }
 
-    private static void GetAllColoringsHelper( HashSet< byte[] > colorings, List<byte> coloring, byte numVertices, byte numColors )
+    private void UpdateColoringHelper( ushort[] coloring, ushort max, ushort index )
     {
-        if ( coloring.Count >= numVertices )
-            colorings.Add( coloring.ToArray() );
-        else
+        if ( index >= coloring.Length ) // something really bad happened
+            throw new System.Exception( "Coloring could not found." );
+        if ( coloring[ index ] < max )
         {
-            for ( byte i = 0; i < numColors; i++ )
-            {
-                List< byte > newColoring = new List< byte >( coloring );
-                newColoring.Add(i);
-                GetAllColoringsHelper( colorings, newColoring, numVertices, numColors );
-            }
+            coloring[ index ]++;
+            for ( int i = 0; i < index; ++i )
+                coloring[ i ] = 0;
         }
+        else
+            this.UpdateColoringHelper( coloring, max, ++index );
     }
+
+    // private HashSet< byte[] > GetAllColorings()
+    // {
+    //     HashSet< byte[] > colorings = new HashSet< byte[] >();
+    //     GetAllColoringsHelper( colorings, new List< byte >(), (byte) this.Graph.Vertices.Count, (byte) this.Graph.Vertices.Count );
+    //     return colorings;
+    // }
+
+    // private static void GetAllColoringsHelper( HashSet< byte[] > colorings, List<byte> coloring, byte numVertices, byte numColors )
+    // {
+    //     if ( coloring.Count >= numVertices )
+    //         colorings.Add( coloring.ToArray() );
+    //     else
+    //     {
+    //         for ( byte i = 0; i < numColors; i++ )
+    //         {
+    //             List< byte > newColoring = new List< byte >( coloring );
+    //             newColoring.Add(i);
+    //             GetAllColoringsHelper( colorings, newColoring, numVertices, numColors );
+    //         }
+    //     }
+    // }
 
     public override void Kill()
     {
