@@ -2,28 +2,26 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using UnityEngine;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
     public int ChromaticNumber { get; private set; }
-    private Vertex[] vertices;
 
     public ChromaticAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
 
     public override void Run()
     {
-        // this.vertices = this.Graph.Vertices.ToArray(); // temp
         ushort upperBound = ( ushort ) this.Graph.Vertices.Count;
         ushort[] coloring = new ushort[ this.Graph.Vertices.Count ];
-        while ( !this.IsProperColoring( coloring ) )
+        int chi = upperBound;
+        while ( chi != 0 && coloring.Min() < upperBound - 1 )
         {
+            if ( this.IsProperColoring( coloring ) )
+                chi = Math.Min( chi, coloring.Distinct().Count() );
             this.UpdateColoring( coloring, upperBound );
-            
         }
-        RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "^ proper coloring" ) );
-        this.ChromaticNumber = coloring.Distinct().Count();
+        this.ChromaticNumber = chi;
 
         BipartiteAlgorithm.SetChromaticNumber( this.Graph, this.ChromaticNumber );
     }
