@@ -237,6 +237,20 @@ public class Graph
         // new GraphModification( this, mod, modified );
     }
 
+    public int GetVertexDegree( Vertex u )
+    {
+        int count = 0;
+        foreach ( Vertex v in this.Vertices )
+        {
+            if ( this[ u, v ].Count > 0 )
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
 
     // file io methods ////////////////////////////////////////////////
 
