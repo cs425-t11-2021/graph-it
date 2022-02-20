@@ -7,15 +7,16 @@ using System.Text;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
 
 [System.Serializable]
 public class Graph
 {
-    public List< Vertex > Vertices { get; private set; }
-    public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // currently supporting only single edges between vertices
+    public List< Vertex > Vertices { get; private set; } // TODO: make concurrent
+    public ConcurrentDictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // currently supporting at most single edges between vertices
+    // TODO: need modified stack structure
     public Stack< GraphModification > Changes { get; private set; } // logs changes to vertices and edges, removal and addition of vertices and edges, load from file
-    // if delete vertex, delete all edges first and add to queue
 
     // parameters
     public bool Directed // true if any edge is directed
@@ -42,20 +43,20 @@ public class Graph
     public Graph() // pass default settings parameters
     {
         this.Vertices = new List< Vertex >();
-        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
+        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
         this.Changes = new Stack< GraphModification >();
     }
 
     public Graph( Graph graph )
     {
         this.Vertices = new List< Vertex >( graph.Vertices );
-        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
+        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
     }
 
     public void Clear()
     {
         this.Vertices = new List< Vertex >();
-        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
+        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
     }
 
     // temp
@@ -150,9 +151,9 @@ public class Graph
     public void RemoveEdge( Edge edge, bool recordChange=true )
     {
         if ( edge.directed || edge.vert1 < edge.vert2 )
-            this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
+            this.Adjacency.TryRemove( ( edge.vert1, edge.vert2 ), out _ );
         else
-            this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) );
+            this.Adjacency.TryRemove( ( edge.vert2, edge.vert1 ), out _ );
     }
 
     public void RemoveEdges( List< Edge > edges, bool recordChange=true )
@@ -269,13 +270,6 @@ public class Graph
                     continue;
                 }
                 this.ParseLine( line, flag, vertexIndices );
-
-                // Debug.Log( this.Adjacency.Count );
-                // foreach ( var kvp in this.Adjacency )
-                // {
-                //     Debug.Log( kvp.Value.vert1.GetId() + " " + kvp.Value.vert2.GetId() );
-                //     Debug.Log( " " );
-                // }
             }
         }
         catch ( Exception ex )
