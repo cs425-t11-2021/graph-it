@@ -242,7 +242,7 @@ public class Graph
         int count = 0;
         foreach ( Vertex v in this.Vertices )
         {
-            if ( this[ u, v ].Count > 0 )
+            if ( this.IsAdjacent( u, v ) )
             {
                 count++;
             }

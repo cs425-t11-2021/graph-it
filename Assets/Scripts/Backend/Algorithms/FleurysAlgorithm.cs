@@ -28,9 +28,9 @@ public class FleurysAlgorithm : Algorithm
         //      - graph is connected
 
         int numOddDegrees = 0;
-        foreach ( Vertex u in this.graph.Vertices )
+        foreach ( Vertex u in this.Graph.Vertices )
         {
-            if (this.graph.GetVertexDegree(u) % 2 == 1) 
+            if (this.Graph.GetVertexDegree(u) % 2 == 1) 
             {
                 numOddDegrees++;
             }
@@ -50,4 +50,8 @@ public class FleurysAlgorithm : Algorithm
 
 
     }
+
+    public static int GetHash() => typeof ( FleurysAlgorithm ).GetHashCode();
+
+    public override int GetHashCode() => FleurysAlgorithm.GetHash();
 }
