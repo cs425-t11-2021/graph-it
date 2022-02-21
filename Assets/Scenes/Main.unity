@@ -14340,4 +14340,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 090898b3b2f2747089831150f69904c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  printMemoryLogs: 1
+  printMemoryLogs: 0

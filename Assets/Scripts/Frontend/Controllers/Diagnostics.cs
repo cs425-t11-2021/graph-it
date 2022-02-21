@@ -14,6 +14,7 @@ public class Diagnostics : SingletonBehavior<Diagnostics>
     {
         if (this.printMemoryLogs)
         {
+            Debug.developerConsoleVisible = true;
             StartCoroutine(LogMemoryUse());
             Logger.Log("Incremental GC: " + UnityEngine.Scripting.GarbageCollector.isIncremental, this, LogType.WARNING);
         }
