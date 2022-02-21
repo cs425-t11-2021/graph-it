@@ -27,7 +27,7 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
         if (this.takeScreenshotNextFrame) {
             // Render the camera into a texture2d
             RenderTexture renderTex = this.cam.targetTexture;
-            Texture2D renderResult = new Texture2D((int) (this.screenBounds.size.x + 0.5f), (int) (this.screenBounds.size.y + 0.5f), TextureFormat.ARGB32, false);
+            Texture2D renderResult = new Texture2D((int) (this.screenBounds.size.x), (int) (this.screenBounds.size.y), TextureFormat.ARGB32, false);
             Rect rect = new Rect(this.screenBounds.min.x, this.screenBounds.min.y, this.screenBounds.size.x, this.screenBounds.size.y);
             renderResult.ReadPixels(rect, 0, 0);
 
@@ -59,14 +59,14 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
     private Bounds GetBoundsOfGraphObjects() {
         Bounds bounds = new Bounds(Vector2.zero, Vector2.zero);
 
-        Transform ObjContainer = Controller.Singleton.GraphObjContainer;
-        float xMin = 0;
-        float xMax = 0;
-        float yMin = 0;
-        float yMax = 0;
+        Transform objContainer = Controller.Singleton.GraphObjContainer;
+        float xMin = float.PositiveInfinity;
+        float xMax = float.NegativeInfinity;
+        float yMin = float.PositiveInfinity;
+        float yMax = float.NegativeInfinity;
 
-        for (int i = 0; i < ObjContainer.childCount; i++) {
-            Transform vertex = ObjContainer.GetChild(i);
+        for (int i = 0; i < objContainer.childCount; i++) {
+            Transform vertex = objContainer.GetChild(i);
 
             if (vertex.position.x < xMin) {
                 xMin = vertex.position.x;
@@ -82,7 +82,7 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
             }
         }
 
-        bounds.SetMinMax(cam.WorldToScreenPoint(new Vector3(xMin - 1, yMin - 1, 0)), cam.WorldToScreenPoint(new Vector3(xMax + 1, yMax + 1, 0)));
+        bounds.SetMinMax(cam.WorldToScreenPoint(new Vector3(xMin - 1, yMin - 1, cam.transform.position.z)), cam.WorldToScreenPoint(new Vector3(xMax + 1, yMax + 1, cam.transform.position.z)));
 
         return bounds;
     }
