@@ -86,6 +86,9 @@ public class EdgeObj : MonoBehaviour
         // this.direction = 1;
 
         this.curved = edge.vert1 == edge.vert2;
+        
+        // Fix for edge temporarily appearing in the wrong place when getting added
+        if (spriteRenderer) spriteRenderer.enabled = false;
 
         if (this.curved) {
             this.shapeController = GetComponent<SpriteShapeController>();
@@ -114,6 +117,9 @@ public class EdgeObj : MonoBehaviour
         else {
             this.arrow.gameObject.SetActive(false);
         }
+        
+        // Fix for edge temporarily appearing in the wrong place when getting added
+        if (spriteRenderer) spriteRenderer.enabled = true;
     }
 
     private void Update() {
