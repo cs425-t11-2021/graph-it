@@ -132,8 +132,7 @@ public class Controller : SingletonBehavior<Controller>
         {
             vertexObj.transform.position = Grid.Singleton.FindClosestGridPosition(vertexObj);
         }
-        // Add vertex to the list of vertices in the graph instance
-        this.currentGraphInstance.vertexObjs.Add(vertexObj);
+
         // Send the onVertexObjCreation event
         this.OnVertexObjectCreation?.Invoke(vertexObj);
     }
