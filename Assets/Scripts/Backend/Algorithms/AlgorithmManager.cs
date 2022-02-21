@@ -1,7 +1,11 @@
 
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Scripting;
+
 // using UnityEngine;
 
 // TODO: algorithm manager needs to know when graph is updated so that it can kill all running algorithms and remove all completed
@@ -179,11 +183,15 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 
     public void KillAll()
     {
+        Logger.Log("Stopping all algorithms.", this, LogType.INFO);
         foreach ( KeyValuePair< int, Algorithm > kvp in this.running.ToList() )
             kvp.Value?.Kill();
     }
 
-    private void OnApplicationQuit() {
+    private void OnDestroy()
+    {
         KillAll();
     }
+
+    
 }

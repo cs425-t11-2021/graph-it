@@ -2,11 +2,12 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 [System.Serializable]
 public class BipartiteAlgorithm : Algorithm
 {
-    private static Dictionary< Graph, int? > chromaticNumbers = new Dictionary< Graph, int? >(); // TODO: make concurrent
+    private static ConcurrentDictionary< Graph, int > chromaticNumbers = new ConcurrentDictionary< Graph, int >();
     public bool IsBipartite { get; private set; }
     public HashSet< Vertex > Set1 { get; private set; }
     public HashSet< Vertex > Set2 { get; private set; }
@@ -78,7 +79,7 @@ public class BipartiteAlgorithm : Algorithm
         return new HashSet< Vertex >( this.Graph.GetIncidentEdges( vert ).Select( edge => edge.vert1 == vert ? edge.vert2 : edge.vert1 ) );
     }
 
-    private static bool HasChromaticNumber( Graph graph ) => !( BipartiteAlgorithm.chromaticNumbers.GetValue( graph ) is null );
+    private static bool HasChromaticNumber( Graph graph ) => BipartiteAlgorithm.chromaticNumbers.GetValue( graph, -1 ) != -1;
 
     public static void SetChromaticNumber( Graph graph, int chromaticNumber )
     {
@@ -87,7 +88,7 @@ public class BipartiteAlgorithm : Algorithm
 
     public static void ClearChromaticNumber( Graph graph )
     {
-        BipartiteAlgorithm.chromaticNumbers.Remove( graph );
+        BipartiteAlgorithm.chromaticNumbers.TryRemove( graph, out _ );
     }
 
     public static int GetHash() => typeof ( BipartiteAlgorithm ).GetHashCode();
