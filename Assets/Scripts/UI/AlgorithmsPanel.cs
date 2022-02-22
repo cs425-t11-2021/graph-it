@@ -24,7 +24,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private Button dijkstraButton;
     // Start is called before the first frame update
 
-    public AlgorithmManager algorithmManager;
+    // public AlgorithmManager algorithmManager;
 
      // Property for whether or not the algorithm buttons are enabled
     public bool AlgorithmButtonsEnabled {
@@ -36,11 +36,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     private void Awake() {
-        this.algorithmManager = new AlgorithmManager( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateDepthFirstSearchResult, ( Action ) this.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating, ( Action ) this.UpdateDepthFirstSearchCalculating, ( Action ) this.UpdateBreadthFirstSearchCalculating );
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
-
         this.primButton.interactable = false;
-        //UpdateGraphInfo();
     }
 
     // Function called when the selection is changed
@@ -61,7 +58,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }*/
 
     public void UpdateChromaticResult() {
-        int? chromaticNumber = this.algorithmManager.GetChromaticNumber();
+        int? chromaticNumber = AlgorithmManager.Singleton.GetChromaticNumber();
         if ( chromaticNumber is null )
             this.chromaticText.text = "Chromatic Number: Error";
         else
@@ -69,7 +66,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     public void UpdateBipartiteResult() {
-        this.bipartiteText.text = "Bipartite: " + ( this.algorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
+        this.bipartiteText.text = "Bipartite: " + ( AlgorithmManager.Singleton.GetBipartite() ?? false ? "Yes" : "No" );
     }
 
     public void UpdatePrimsResult() { }

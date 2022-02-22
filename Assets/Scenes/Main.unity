@@ -7122,6 +7122,7 @@ MonoBehaviour:
   primButton: {fileID: 1072866586}
   kruskalButton: {fileID: 1937964947}
   dijkstraButton: {fileID: 1394906815}
+  algorithmManager: {fileID: 0}
 --- !u!1 &1035785018
 GameObject:
   m_ObjectHideFlags: 0
@@ -7848,7 +7849,7 @@ MonoBehaviour:
           m_BoolArgument: 0
         m_CallState: 2
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
-  highlightColor: {r: 0.93333334, g: 0.93333334, b: 0.93333334, a: 1}
+  highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
 --- !u!114 &1119136490
 MonoBehaviour:
