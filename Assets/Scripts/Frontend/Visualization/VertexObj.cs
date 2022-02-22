@@ -67,8 +67,7 @@ public class VertexObj : MonoBehaviour
         this.labelObj.Initiate(vertex.Label);
 
         // Update associated Vertex positions;
-        this.Vertex.X = transform.position.x;
-        this.Vertex.Y = transform.position.y;
+        this.Vertex.SetPos( new System.Numerics.Vector2( transform.position.x, transform.position.y ), false );
     }
 
     // Set the hover animation when the mouse is hoving over the vertex object

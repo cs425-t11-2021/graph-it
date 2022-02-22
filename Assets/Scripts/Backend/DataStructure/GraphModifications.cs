@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 public enum Modification
 {
@@ -32,10 +33,10 @@ public class GraphModification
 {
     private Graph graph;
     public Modification Mod { get; private set; }
-    public Object Modified { get; private set; }
+    public System.Object Modified { get; private set; }
 
     // TODO: remove graph, use delegates to push and pop from graph.Changes
-    public GraphModification( Graph graph, Modification mod, Object modified )
+    public GraphModification( Graph graph, Modification mod, System.Object modified )
     {
         this.graph = graph;
         this.Mod = mod;
@@ -47,6 +48,8 @@ public class GraphModification
             // this.graph.Changes.Push( new GraphModification( this.graph, Modification.VERTEX_POS, ( posData.Item1,  ) ) );
         // }
         this.graph.Changes.Push( this );
+        Graph.PrintStack( this.graph.Changes );
+        Debug.Log( "" );
     }
 
     public void Undo()

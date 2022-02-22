@@ -110,14 +110,7 @@ public class Controller : SingletonBehavior<Controller>
 
     // Create a new vertex object to correspond to a passed in graph vertex
     private void CreateVertexObj(Vertex vertex) {
-        Vector2 pos;
-        if (vertex.X != null && vertex.Y != null) {
-            pos = new Vector2( (float) vertex.X, (float) vertex.Y);
-        }
-        else {
-            Logger.Log("Attempting to create a vertex object with no position given.", this, LogType.ERROR);
-            return;
-        }
+        Vector2 pos = new Vector2( vertex.Pos.X, vertex.Pos.Y );
 
         // Instantiate a vertex object, set its parent to the graphObj, and call the initiation function
         VertexObj vertexObj = Instantiate(this.vertexObjPrefab, pos, Quaternion.identity).GetComponent<VertexObj>();

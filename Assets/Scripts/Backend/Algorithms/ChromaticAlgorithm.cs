@@ -12,6 +12,7 @@ public class ChromaticAlgorithm : Algorithm
 
     public override void Run()
     {
+        // TODO: if HasLoops, then make ChromaticNum null
         ushort upperBound = ( ushort ) this.Graph.Vertices.Count;
         ushort[] coloring = new ushort[ this.Graph.Vertices.Count ];
         int chi = upperBound;

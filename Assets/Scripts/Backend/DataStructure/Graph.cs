@@ -5,17 +5,19 @@ using System;
 using System.IO;
 using System.Text;
 using System.Linq;
+using System.Globalization;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
+using UnityEngine;
 
 [System.Serializable]
 public class Graph
 {
     public List< Vertex > Vertices { get; private set; } // TODO: make concurrent
-    public ConcurrentDictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // currently supporting at most single edges between vertices
-    // TODO: need modified stack structure
-    public Stack< GraphModification > Changes { get; private set; } // logs changes to vertices and edges, removal and addition of vertices and edges, load from file
+    public ConcurrentDictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // not yet supporting multiple edges
+    public Stack< GraphModification > Changes { get; private set; } // logs all changes to graph
+    private Stack< GraphModification > redoChanges; // logs all undone changes
 
     // parameters
     public bool Directed // true if any edge is directed
@@ -36,6 +38,31 @@ public class Graph
     public bool Simple // false if multiple edges. false if loops on vertices (unless directed)
     {
         get => this.IsSimple();
+    }
+
+    // TODO: need HasLoops and HasMultipleEdges
+
+    public static void PrintStack( Stack< GraphModification > s ) // temp, for testing undo/redo
+    {
+        // If stack is empty then return
+        if (s.Count == 0)
+            return;
+         
+        GraphModification x = s.Peek();
+     
+        // Pop the top element of the stack
+        s.Pop();
+     
+        // Recursively call the function PrintStack
+        PrintStack(s);
+     
+        // Print the stack element starting
+        // from the bottom
+        Debug.Log(x.Mod);
+     
+        // Push the same element onto the stack
+        // to preserve the order
+        s.Push(x);
     }
 
 
@@ -92,7 +119,7 @@ public class Graph
     }
 
     // TODO: add more parameters
-    public Vertex AddVertex( double? x=null, double? y=null, bool recordChange=true )
+    public Vertex AddVertex( float x, float y, bool recordChange=true )
     {
         return this.AddVertex( new Vertex( this.CreateModification, x : x, y : y ), recordChange );
     }
@@ -160,10 +187,20 @@ public class Graph
         if ( edge != this[ edge.vert1, edge.vert2 ] )
             throw new System.Exception( "The provided edge to reverse is not in the graph." );
 
-        this.RemoveEdge( edge );
+        this.RemoveEdge( edge, false );
         edge.Reverse();
-        this.AddEdge( edge );
+        this.AddEdge( edge, false );
         return edge;
+    }
+
+    public void Undo()
+    {
+
+    }
+
+    public void Redo()
+    {
+
     }
 
     public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.Adjacency.ContainsKey( ( vert1, vert2 ) ) || this.Adjacency.ContainsKey( ( vert2, vert1 ) );
@@ -277,8 +314,8 @@ public class Graph
 
         Vertex vert = new Vertex(
             vectData[ "label" ],
-            Graph.ToNullableDouble( vectData[ "x" ] ),
-            Graph.ToNullableDouble( vectData[ "y" ] ),
+            float.Parse( vectData[ "x" ], CultureInfo.InvariantCulture.NumberFormat ),
+            float.Parse( vectData[ "y" ], CultureInfo.InvariantCulture.NumberFormat ),
             System.Convert.ToUInt32( vectData[ "style" ] ),
             System.Convert.ToUInt32( vectData[ "color" ] )
         );
@@ -541,16 +578,5 @@ public class Graph
         }
 
         return prev.Values.ToList();
-    }
-
-
-    // helper methods ////////////////////////////////////////////////
-
-    private static double? ToNullableDouble( string s )
-    {
-        double d;
-        if ( double.TryParse( s, out d ) )
-            return d;
-        return null;
     }
 }

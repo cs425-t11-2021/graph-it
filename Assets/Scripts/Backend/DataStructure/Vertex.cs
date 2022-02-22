@@ -2,6 +2,7 @@
 // All code developed by Team 11
 
 using System;
+using System.Numerics;
 
 [System.Serializable]
 public class Vertex
@@ -16,34 +17,27 @@ public class Vertex
         get => this.label;
         set => this.SetLabel( value );
     }
-    private double? x, y; // TODO: change double to float, remove nullable
-    public double? X
+    private Vector2 pos;
+    public Vector2 Pos
     {
-        get => this.x;
-        set => this.SetX( value );
-    }
-    public double? Y
-    {
-        get => this.y;
-        set => this.SetY( value );
+        get => this.pos;
+        set => this.SetPos( value );
     }
 
     // TODO: make enums
     public uint style;
     public uint color;
 
-    // default value position is null
-    public Vertex( string label="", double? x=null, double? y=null, uint style=0, uint color=0 )
+    public Vertex( string label="", float x=0, float y=0, uint style=0, uint color=0 )
     {
         this.id = Vertex.idCount++;
         this.label = label;
-        this.x = x;
-        this.y = y;
+        this.pos = new Vector2( x, y );
         this.style = style;
         this.color = color;
     }
 
-    public Vertex( Action< Modification, Object > createMod, string label="", double? x=null, double? y=null, uint style=0, uint color=0 ) : this( label, x, y, style, color )
+    public Vertex( Action< Modification, Object > createMod, string label="", float x=0, float y=0, uint style=0, uint color=0 ) : this( label, x, y, style, color )
     {
         this.createMod = createMod;
     }
@@ -59,18 +53,11 @@ public class Vertex
         this.label = label;
     }
 
-    public void SetX( double? x, bool recordChange=true )
+    public void SetPos( Vector2 pos, bool recordChange=true )
     {
-        // if ( recordChange )
-            // this.createMod( Modification.VERTEX_POS, ( this, this.x, this.y, x, this.y ) );
-        this.x = x;
-    }
-
-    public void SetY( double? y, bool recordChange=true )
-    {
-        // if ( recordChange )
-            // this.createMod( Modification.VERTEX_LABEL, ( this, this.label, label ) );
-        this.y = y;
+        if ( recordChange )
+            this.createMod( Modification.VERTEX_POS, ( this, this.pos, pos ) );
+        this.pos = pos;
     }
 
     public uint GetId() => this.id; // temp
@@ -89,5 +76,5 @@ public class Vertex
 
     public static bool operator >( Vertex lhs, Vertex rhs ) => lhs.id > rhs.id;
 
-    public override string ToString() => String.Format( "id: {0}, label: {1}, x: {2}, y: {3}, style: {4}, color: {5}", this.id, this.label, this.x, this.y, this.style, this.color );
+    public override string ToString() => String.Format( "id: {0}, label: {1}, x: {2}, y: {3}, style: {4}, color: {5}", this.id, this.label, this.pos.X, this.pos.Y, this.style, this.color );
 }
