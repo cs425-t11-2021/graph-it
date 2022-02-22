@@ -8,7 +8,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using UnityEngine;
 
 [System.Serializable]
 public class Graph
@@ -40,7 +39,7 @@ public class Graph
     }
 
 
-    public Graph() // pass default settings parameters
+    public Graph()
     {
         this.Vertices = new List< Vertex >();
         this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
@@ -67,7 +66,6 @@ public class Graph
             if ( vert.GetId() == id )
                 return vert;
         }
-        Debug.Log( ( new System.Exception( "Vertex could not be found." ) ).ToString() ); // for testing purposes
         throw new System.Exception( "Vertex could not be found." );
     }
 
@@ -101,8 +99,8 @@ public class Graph
 
     public Vertex AddVertex( Vertex vert, bool recordChange=true )
     {
-        // if ( recordChange )
-            // new GraphModification( this, Modification.ADD_VERTEX, vert );
+        if ( recordChange )
+            new GraphModification( this, Modification.ADD_VERTEX, vert );
         this.Vertices.Add( vert );
         return vert;
     }
@@ -118,15 +116,9 @@ public class Graph
     public Edge AddEdge( Edge edge, bool recordChange=true )
     {
         if ( !this.Vertices.Contains( edge.vert1 ) || !this.Vertices.Contains( edge.vert2 ) )
-        {
-            Debug.Log( ( new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." );
-        }
         if ( edge.vert1 > edge.vert2 && !edge.directed )
-        {
-            Debug.Log( ( new System.Exception( "Edge must be directed." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Edge must be directed." );
-        }
         else
             this.Adjacency[ ( edge.vert1, edge.vert2 ) ] = edge;
         return edge;
@@ -134,12 +126,10 @@ public class Graph
 
     public void RemoveVertex( Vertex vert, bool recordChange=true )
     {
-        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
-            // this.RemoveEdge( kvp.Value );
         this.RemoveEdges( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), recordChange );
         this.Vertices.Remove( vert );
-        // if ( recordChange )
-            // new GraphModification( this, Modification.REMOVE_VERTEX, vert );
+        if ( recordChange )
+            new GraphModification( this, Modification.REMOVE_VERTEX, vert );
     }
 
     public void RemoveVertices( List< Vertex > verts, bool recordChange=true )
@@ -165,16 +155,10 @@ public class Graph
     public Edge ReverseEdge( Edge edge )
     {
         if ( !edge.directed )
-        {
-            Debug.Log( ( new System.Exception( "Cannot reverse undirected edge." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Cannot reverse undirected edge." );
-        }
       
         if ( edge != this[ edge.vert1, edge.vert2 ] )
-        {
-            Debug.Log( ( new System.Exception( "The provided edge to reverse is not in the graph." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "The provided edge to reverse is not in the graph." );
-        }
 
         this.RemoveEdge( edge );
         edge.Reverse();
@@ -234,21 +218,7 @@ public class Graph
 
     public void CreateModification( Modification mod, System.Object modified )
     {
-        // new GraphModification( this, mod, modified );
-    }
-
-    public int GetVertexDegree( Vertex u )
-    {
-        int count = 0;
-        foreach ( Vertex v in this.Vertices )
-        {
-            if ( this.IsAdjacent( u, v ) )
-            {
-                count++;
-            }
-        }
-
-        return count;
+        new GraphModification( this, mod, modified );
     }
 
 
@@ -262,10 +232,7 @@ public class Graph
         try
         {
             if ( !File.Exists( path ) )
-            {
-                Debug.Log( ( new System.Exception( "The provided file cannot be found." ) ).ToString() ); // for testing purposes
                 throw new System.Exception( "The provided file cannot be found." );
-            }
 
             Dictionary< uint, uint > vertexIndices = new Dictionary< uint, uint >();
             bool flag = true;
@@ -288,7 +255,7 @@ public class Graph
         }
         catch ( Exception ex )
         {
-            Debug.Log( ex.ToString() );
+            throw ex;
         }
     }
 
@@ -359,8 +326,7 @@ public class Graph
         }
         catch ( Exception ex )
         {
-            // TODO: inform user of issue
-            Debug.Log( ex.ToString() );
+            throw ex;
         }
     }
 
@@ -390,10 +356,7 @@ public class Graph
     public List< Edge > Prim( Vertex vert )
     {
         if ( this.Directed )
-        {
-            Debug.Log( ( new System.Exception( "Prim's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
-        }
 
         List< Edge > mst = new List< Edge >();
         HashSet< Vertex > mstVertices = new HashSet< Vertex >() { vert };
@@ -431,13 +394,22 @@ public class Graph
         return incidentEdges;
     }
 
+    public int GetVertexDegree( Vertex u )
+    {
+        int count = 0;
+        foreach ( Vertex v in this.Vertices )
+        {
+            if ( this.IsAdjacent( u, v ) )
+                count++;
+        }
+
+        return count;
+    }
+
     public List< Edge > Kruskal()
     {
         if ( this.Directed )
-        {
-            Debug.Log( ( new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
-        }
 
         List< Edge > mst = new List< Edge >();
         List< Edge > edges = new List< Edge >( this.Adjacency.Values.OrderBy( edge => edge.weight ) );
@@ -465,7 +437,6 @@ public class Graph
             if ( component.Contains( vert ) )
                 return component;
         }
-        Debug.Log( ( new System.Exception( "Vertex could not be found in collection of components." ) ).ToString() );
         throw new System.Exception( "Vertex could not be found in collection of components." );
     }
 
@@ -539,10 +510,7 @@ public class Graph
     public List< Edge > BellmanFord( Vertex src )
     {
         if ( this.Weighted && !this.FullyWeighted )
-        {
-            Debug.Log( ( new System.Exception( "Graph is not fully weighted." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Graph is not fully weighted." );
-        }
 
         // initialize data
         List< Edge > edges = this.Adjacency.Values.ToList();
@@ -569,10 +537,7 @@ public class Graph
         foreach ( Edge edge in edges )
         {
             if ( dist[ edge.vert1 ] + edge.weight < dist[ edge.vert2 ] )
-            {
-                Debug.Log( ( new System.Exception( "Negative weight cycle found." ) ).ToString() ); // for testing purposes
                 throw new System.Exception( "Negative weight cycle found." );
-            }
         }
 
         return prev.Values.ToList();
