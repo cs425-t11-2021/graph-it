@@ -42,6 +42,16 @@ public class Vertex
         this.createMod = createMod;
     }
 
+    public Vertex( Vertex vert )
+    {
+        this.id = Vertex.idCount++;
+        this.createMod = vert.createMod;
+        this.label = vert.label;
+        this.pos = vert.pos;
+        this.style = vert.style;
+        this.color = vert.color;
+    }
+
     public void SetLabel( string label, bool recordChange=true )
     {
         if ( recordChange )
