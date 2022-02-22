@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class EdgeTemplate : MonoBehaviour
 {
-
     private Vector2 startingPoint;
     private Transform arrow;
     private SpriteRenderer arrowSpriteRenderer;

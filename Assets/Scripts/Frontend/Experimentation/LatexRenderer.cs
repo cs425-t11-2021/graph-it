@@ -8,8 +8,6 @@ public class LatexRenderer : SingletonBehavior<LatexRenderer>
 {
     private Texture latexTexture = null;
 
-    public static LatexRenderer singleton;
-
     public IEnumerator GetLatexTexture(string formula, Action<Texture> textureAction) {
         UnityWebRequest www = UnityWebRequestTexture.GetTexture("https://latex.codecogs.com/png.image?" + formula);
         yield return www.SendWebRequest();

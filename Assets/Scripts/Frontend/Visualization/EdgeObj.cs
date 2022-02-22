@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class EdgeObj : MonoBehaviour
 {
@@ -17,21 +18,33 @@ public class EdgeObj : MonoBehaviour
     public VertexObj Vertex1 {get; private set;}
     public VertexObj Vertex2 {get; private set;}
 
+    private bool curved;
+    private SpriteShapeController shapeController;
+    private SpriteShapeRenderer shapeRenderer;
+
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
     private bool selected = false;
+
+    
     // Property for getting and setting whether or not the edge is selected, and edit the edge's color to match
     public bool Selected {
         get => this.selected;
         set {
             this.selected = value;
             if (value) {
-                this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+                if (!this.curved)
+                    this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+                else
+                    this.shapeRenderer.color = new Color32(0, 125, 255, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
                 labelObj.MakeEditable();
             }
             else {
-                this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                if (!this.curved)
+                    this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                else
+                    this.shapeRenderer.color = new Color32(0, 0, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
                 labelObj.MakeUneditable();
             }
@@ -44,7 +57,7 @@ public class EdgeObj : MonoBehaviour
     [SerializeField] private float edgeWidthScaleFactor = 0.1f;
 
     // Directed edge variables
-    private Transform arrow;
+    [SerializeField] private Transform arrow;
     private SpriteRenderer arrowSpriteRenderer;
     // private int direction;
     // Edge weights/labels
@@ -55,8 +68,9 @@ public class EdgeObj : MonoBehaviour
         this.gameObject.SetActive(false);
 
         this.spriteRenderer = GetComponent<SpriteRenderer>();
-        this.arrow = this.transform.GetChild(0);
+        // this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
+        
     }
 
     // TODO: Modify this initialize code to not involve passing around a Unity GameObject
@@ -70,6 +84,16 @@ public class EdgeObj : MonoBehaviour
         // TODO: Make this better
         // Currently, direction = 1 means pointing from parent to target vertex
         // this.direction = 1;
+
+        this.curved = edge.vert1 == edge.vert2;
+        
+        // Fix for edge temporarily appearing in the wrong place when getting added
+        if (spriteRenderer) spriteRenderer.enabled = false;
+
+        if (this.curved) {
+            this.shapeController = GetComponent<SpriteShapeController>();
+            this.shapeRenderer = GetComponent<SpriteShapeRenderer>();
+        }
         
         this.labelObj.Initiate(this);
     }
@@ -93,6 +117,9 @@ public class EdgeObj : MonoBehaviour
         else {
             this.arrow.gameObject.SetActive(false);
         }
+        
+        // Fix for edge temporarily appearing in the wrong place when getting added
+        if (spriteRenderer) spriteRenderer.enabled = true;
     }
 
     private void Update() {
@@ -110,9 +137,108 @@ public class EdgeObj : MonoBehaviour
         }
 
         if (Edge != null) {
-            // Stretch the edge between the two vertices
-            StretchBetweenPoints(this.Vertex1.transform.position, this.Vertex2.transform.position);
+            if (!this.curved) {
+                // Stretch the edge between the two vertices
+                StretchBetweenPoints(this.Vertex1.transform.position, this.Vertex2.transform.position);
+            }
+            else {
+                transform.parent.position = this.Vertex1.transform.position;
+                UpdateSpline();
+            }
         }
+    }
+
+    // TODO: Find a way not to hard code this
+    private void UpdateSpline() {
+        Vector3[] pointsOnCurve = {new Vector3(.75f, 0f, 0f), new Vector3(0f, .75f, 0f), new Vector3(-.75f, 0f, 0f), new Vector3(0f, -.75f, 0f)};
+
+        this.shapeController.spline.Clear();
+        int splinePointIndex = 0;
+        for (int i = 0; i < pointsOnCurve.Length; i++) {
+            this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i]);
+            this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+            splinePointIndex++;
+        }
+
+        float R = .55f * .75f;
+        float r = .45f * .75f;
+        
+        this.shapeController.spline.SetTangentMode(0, ShapeTangentMode.Broken);
+        this.shapeController.spline.SetLeftTangent(0, new Vector3(-r, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(0, new Vector3(0f, R, 0f));
+        this.shapeController.spline.SetLeftTangent(1, new Vector3(R, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(1, new Vector3(-R, 0f, 0f));
+        this.shapeController.spline.SetLeftTangent(2, new Vector3(0f, R, 0f));
+        this.shapeController.spline.SetRightTangent(2, new Vector3(0f, -R, 0f));
+        this.shapeController.spline.SetLeftTangent(3, new Vector3(-R, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(3, new Vector3(R, 0f, 0f));
+        
+        this.shapeController.spline.InsertPointAt(4,  pointsOnCurve[0]+ new Vector3(0f, 0f, 1f));
+        this.shapeController.spline.SetTangentMode(4, ShapeTangentMode.Broken);
+        this.shapeController.spline.SetLeftTangent(4, new Vector3(0f, -R, 0f));
+        this.shapeController.spline.SetRightTangent(4, new Vector3(-r, 0, 0f));
+        
+        pointsOnCurve = new Vector3[] {new Vector3(.75f - this.edgeWidthScaleFactor, 0f, 0f), new Vector3(0f, .75f - this.edgeWidthScaleFactor, 0f), new Vector3(-(.75f - this.edgeWidthScaleFactor), 0f, 0f), new Vector3(0f, -(.75f - this.edgeWidthScaleFactor), 0f)};
+        
+        this.shapeController.spline.InsertPointAt(5,  pointsOnCurve[0]);
+        this.shapeController.spline.SetTangentMode(5, ShapeTangentMode.Broken);
+        this.shapeController.spline.SetRightTangent(5, new Vector3(0f, -r, 0f));
+        this.shapeController.spline.SetLeftTangent(5, new Vector3(r, 0, 0f));
+        
+        this.shapeController.spline.InsertPointAt(6,  pointsOnCurve[3]);
+        this.shapeController.spline.SetTangentMode(6, ShapeTangentMode.Continuous);
+        this.shapeController.spline.SetLeftTangent(6, new Vector3(r, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(6, new Vector3(-r, 0f, 0f));
+        
+        this.shapeController.spline.InsertPointAt(7,  pointsOnCurve[2]);
+        this.shapeController.spline.SetTangentMode(7, ShapeTangentMode.Continuous);
+        this.shapeController.spline.SetLeftTangent(7, new Vector3(0f, -r, 0f));
+        this.shapeController.spline.SetRightTangent(7, new Vector3(0f, r, 0f));
+        
+        this.shapeController.spline.InsertPointAt(8,  pointsOnCurve[1]);
+        this.shapeController.spline.SetTangentMode(8, ShapeTangentMode.Continuous);
+        this.shapeController.spline.SetLeftTangent(8, new Vector3(-r, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(8, new Vector3(r, 0f, 0f));
+        
+        this.shapeController.spline.InsertPointAt(9,  pointsOnCurve[0] + new Vector3(0f, 0f, 1f));
+        this.shapeController.spline.SetTangentMode(9, ShapeTangentMode.Broken);
+        this.shapeController.spline.SetLeftTangent(9, new Vector3(0f, r, 0f));
+        this.shapeController.spline.SetRightTangent(9, new Vector3(r, 0f, 0f));
+
+        this.transform.localPosition = new Vector3(0.7f, 0f, 0f);
+
+        // for (int i = pointsOnCurve.Length - 1; i >= 0; i--) {
+        //     if (i == 0 || i == 1) {
+        //         this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, -0.2f, 0f));
+        //         this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Linear);
+        //
+        //         if (i == 1) {
+        //             this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+        //             this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(.33f, 0, 0f));
+        //             this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(-.25f, 0, 0f));
+        //         }
+        //     }
+        //     else if (i == 2) {
+        //         this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, 0f, 0f));
+        //         this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+        //         this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(0f, -1.5f, 0f));
+        //         this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(0f, 1.5f, 0f));
+        //     }
+        //     else if (i == 4 || i == 3) {
+        //         this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, 0.2f, 0f));
+        //         this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Linear);
+        //
+        //         if (i == 3) {
+        //             this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
+        //             this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(-.25f, 0, 0f));
+        //             this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(.33f, 0, 0f));
+        //         }
+        //     }
+        //     splinePointIndex++;
+        // }
+
+        // this.arrow.transform.rotation = Quaternion.AngleAxis(45f, Vector3.forward);
+        this.arrow.gameObject.SetActive(true);
     }
 
     // Toggle between undirected, direction 1, and direction -1
@@ -139,13 +265,28 @@ public class EdgeObj : MonoBehaviour
     // TODO: Change this to be controlled by an animator later
     private void OnMouseOver()
     {
-        this.transform.localScale = new Vector3(this.transform.localScale.x, (0.25f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, 1f);
+        if (this.curved)
+        {
+            this.transform.localScale = new Vector3((1f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, (1f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, 1f);
+        }
+        else
+        {
+            this.transform.localScale = new Vector3(this.transform.localScale.x, (0.25f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, 1f);
+        }
+        
     }
 
     private void OnMouseExit()
     {
         // When cursor exits, reset the thickness
-        this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+        if (this.curved)
+        {
+            this.transform.localScale = new Vector3(1f + (this.Edge.thickness * edgeWidthScaleFactor), 1f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+        }
+        else
+        {
+            this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+        }
     }
 
     public void UpdateWeight(double newWeight) {

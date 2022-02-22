@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
@@ -13,21 +12,21 @@ public class ChromaticAlgorithm : Algorithm
 
     public override void Run()
     {
-        int chi = this.Graph.Vertices.Count;
-        HashSet< List< int > > colorings = this.GetAllColorings();
-        foreach ( List< int > coloring in colorings )
+        ushort upperBound = ( ushort ) this.Graph.Vertices.Count;
+        ushort[] coloring = new ushort[ this.Graph.Vertices.Count ];
+        int chi = upperBound;
+        while ( chi != 0 && coloring.Min() < upperBound - 1 )
         {
-            int numColors = ( new HashSet< int >( coloring ) ).Count;
-            if ( numColors < chi && this.IsProperColoring( coloring ) )
-                chi = numColors;
+            if ( this.IsProperColoring( coloring ) )
+                chi = Math.Min( chi, coloring.Distinct().Count() );
+            this.UpdateColoring( coloring, upperBound );
         }
-
         this.ChromaticNumber = chi;
 
-        BipartiteAlgorithm.SetChromaticNumber( this.Graph, chi );
+        BipartiteAlgorithm.SetChromaticNumber( this.Graph, this.ChromaticNumber );
     }
 
-    private bool IsProperColoring( List< int > coloring )
+    private bool IsProperColoring( ushort[] coloring )
     {
         foreach ( Edge edge in this.Graph.Adjacency.Values )
         {
@@ -37,26 +36,27 @@ public class ChromaticAlgorithm : Algorithm
         return true;
     }
 
-    private HashSet< List< int > > GetAllColorings()
+    private void UpdateColoring( ushort[] coloring, ushort max )
     {
-        HashSet< List< int > > colorings = new HashSet< List< int > >();
-        GetAllColoringsHelper( colorings, new List< int >(), this.Graph.Vertices.Count, this.Graph.Vertices.Count );
-        return colorings;
+        this.UpdateColoringHelper( coloring, max, 0 );
     }
 
-    private static void GetAllColoringsHelper( HashSet< List< int > > colorings, List< int > coloring, int numVertices, int numColors )
+    private void UpdateColoringHelper( ushort[] coloring, ushort max, ushort index )
     {
-        if ( coloring.Count >= numVertices )
-            colorings.Add( coloring );
-        else
+        if ( coloring[ index ] < max )
         {
-            for ( int i = 0; i < numColors; i++ )
-            {
-                List< int > newColoring = new List< int >( coloring );
-                newColoring.Add( i );
-                GetAllColoringsHelper( colorings, newColoring, numVertices, numColors );
-            }
+            coloring[ index ]++;
+            for ( int i = 0; i < index; ++i )
+                coloring[ i ] = 0;
         }
+        else
+            this.UpdateColoringHelper( coloring, max, ++index );
+    }
+
+    public override void Kill()
+    {
+        base.Kill();
+        BipartiteAlgorithm.ClearChromaticNumber( this.Graph );
     }
 
     public static int GetHash() => typeof ( ChromaticAlgorithm ).GetHashCode();

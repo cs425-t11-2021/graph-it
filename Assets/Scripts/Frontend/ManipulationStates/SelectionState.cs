@@ -55,6 +55,8 @@ public class SelectionState : ManipulationState
 
     public override void OnMouseRelease()
     {
+        if (!selectionRect.gameObject.activeInHierarchy) return;
+        
         // When mouse is released, calcualte all objects that fall within the selection box and select them
         Bounds bounds = UpdateSelectionRect();
         foreach (VertexObj v in Controller.Singleton.VertexObjs) {

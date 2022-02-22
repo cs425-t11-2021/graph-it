@@ -26,6 +26,7 @@ public class VertexLabelObj : MonoBehaviour
     private bool waitingForLatex = false;
     private bool latexMode = false;
     private string latexFormula = "";
+    [SerializeField] private VertexObj vertexObj;
     
 
     public void Initiate(string content)
@@ -172,7 +173,7 @@ public class VertexLabelObj : MonoBehaviour
     // Update the content field with a new label
     public void UpdateLabel(string newLabel)
     {
-        if (newLabel.StartsWith("$$") && newLabel.EndsWith("$$")) {
+        if (newLabel.StartsWith("$") && newLabel.EndsWith("$")) {
             if (latexMode) {
                 latexMode = false;
                 this.latexTexture = null;
@@ -185,7 +186,10 @@ public class VertexLabelObj : MonoBehaviour
             this.latexFormula = formula;
 
             waitingForLatex = true;
-            StartCoroutine(LatexRenderer.singleton.GetLatexTexture(formula, result => this.latexTexture = result));
+            StartCoroutine(LatexRenderer.Singleton.GetLatexTexture(formula, result => this.latexTexture = result));
+
+            Logger.Log("Vertex label changed to " + formula, this, LogType.INFO);
+            this.vertexObj.Vertex.Label = formula;
         }
         else {
             latexMode = false;
@@ -195,6 +199,9 @@ public class VertexLabelObj : MonoBehaviour
             this.latexTexture = null;
             image.enabled = false;
             this.content = newLabel;
+
+            Logger.Log("Vertex label changed to " + newLabel, this, LogType.INFO);
+            this.vertexObj.Vertex.Label = newLabel;
         }
     }
 }

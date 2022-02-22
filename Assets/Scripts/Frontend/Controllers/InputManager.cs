@@ -12,6 +12,7 @@ public class InputManager : SingletonBehavior<InputManager>
     public event Action OnMouseDoubleClick;
     public event Action OnMouseHold;
     public event Action OnMouseRelease;
+    public event Action OnMouseRightClick;
     public event Action<GameObject> OnVertexClick;
     public event Action<GameObject> OnEdgeClick;
     public event Action OnMouseDragStart;
@@ -133,6 +134,10 @@ public class InputManager : SingletonBehavior<InputManager>
             }
             this.dragging = false;
             this.doubleClickedThisFrame = false;
+        }
+        else if (Input.GetMouseButton(1))
+        {
+            OnMouseRightClick?.Invoke();
         }
 
         // Keyboard events detection and firing

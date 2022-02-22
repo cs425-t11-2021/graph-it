@@ -1,10 +1,15 @@
 
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Scripting;
+
+// using UnityEngine;
 
 // TODO: algorithm manager needs to know when graph is updated so that it can kill all running algorithms and remove all completed
-public class AlgorithmManager
+public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 {
     private Graph graph;
     private Action chromaticUI;
@@ -30,7 +35,7 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
 
-    public AlgorithmManager( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
+    public void Initiate( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
     {
         this.graph = graph;
         this.chromaticUI = chromaticUI;
@@ -69,6 +74,8 @@ public class AlgorithmManager
         //     EnsureBreadthFirstSearchRunning( vert, ba.  ); 
         // }
         // ba.RunThread();
+
+        this.EnsureChromaticRunning();
         new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
@@ -146,8 +153,8 @@ public class AlgorithmManager
 
     public void MarkComplete( Algorithm algo )
     {
-        this.UnmarkRunning( algo );
         this.complete[ algo.GetHashCode() ] = algo;
+        this.UnmarkRunning( algo );
     }
 
     public void UnmarkRunning( Algorithm algo )
@@ -167,9 +174,24 @@ public class AlgorithmManager
 
     public bool IsComplete( int key ) => this.complete.ContainsKey( key );
 
+    public void Clear()
+    {
+        this.KillAll();
+        this.running.Clear();
+        this.complete.Clear();
+    }
+
     public void KillAll()
     {
-        foreach ( KeyValuePair< int, Algorithm > kvp in this.running )
-            kvp.Value.Kill();
+        Logger.Log("Stopping all algorithms.", this, LogType.INFO);
+        foreach ( KeyValuePair< int, Algorithm > kvp in this.running.ToList() )
+            kvp.Value?.Kill();
     }
+
+    private void OnDestroy()
+    {
+        KillAll();
+    }
+
+    
 }

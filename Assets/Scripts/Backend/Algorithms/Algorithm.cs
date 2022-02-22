@@ -1,10 +1,11 @@
 
 using System;
 using System.Threading;
+using UnityEngine;
 
 public abstract class Algorithm
 {
-    protected Graph Graph { get; }
+    protected Graph Graph { get; private set; }
     private Thread currThread;
     private Action updateUI;
     private Action updateCalc;
@@ -50,10 +51,18 @@ public abstract class Algorithm
             this.markComplete( this );
             RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
         }
-        catch ( ThreadAbortException e ) { }
+        catch ( ThreadAbortException e )
+        {
+            Logger.Log("Killing thread.", this, LogType.INFO);
+        }
     }
 
-    public void Kill()
+    protected void WaitUntil( Func< bool > condition )
+    {
+        SpinWait.SpinUntil( condition );
+    }
+
+    public virtual void Kill()
     {
         if ( this.currThread?.IsAlive ?? false )
         {

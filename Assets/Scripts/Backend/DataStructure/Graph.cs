@@ -7,14 +7,16 @@ using System.Text;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
-
 
 [System.Serializable]
 public class Graph
 {
-    public List< Vertex > Vertices { get; private set; }
-    public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // currently supporting only single edges between vertices
+    public List< Vertex > Vertices { get; private set; } // TODO: make concurrent
+    public ConcurrentDictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // currently supporting at most single edges between vertices
+    // TODO: need modified stack structure
+    public Stack< GraphModification > Changes { get; private set; } // logs changes to vertices and edges, removal and addition of vertices and edges, load from file
 
     // parameters
     public bool Directed // true if any edge is directed
@@ -41,23 +43,24 @@ public class Graph
     public Graph() // pass default settings parameters
     {
         this.Vertices = new List< Vertex >();
-        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
+        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
+        this.Changes = new Stack< GraphModification >();
     }
 
     public Graph( Graph graph )
     {
         this.Vertices = new List< Vertex >( graph.Vertices );
-        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
+        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
     }
 
     public void Clear()
     {
         this.Vertices = new List< Vertex >();
-        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
+        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
     }
 
     // temp
-    private Vertex GetVertex( int id )
+    private Vertex GetVertex( uint id )
     {
         foreach ( Vertex vert in this.Vertices )
         {
@@ -80,6 +83,7 @@ public class Graph
         {
             if ( !edge.directed )
             {
+                // TODO: fix this, this will mess with this.Changes
                 edge.Reverse();
                 edges.Add( edge );
                 edge.Reverse();
@@ -89,18 +93,21 @@ public class Graph
         return edges;
     }
 
-    public Vertex AddVertex( double? x=null, double? y=null )
+    // TODO: add more parameters
+    public Vertex AddVertex( double? x=null, double? y=null, bool recordChange=true )
     {
-        return this.AddVertex( new Vertex( x : x, y : y ) );
+        return this.AddVertex( new Vertex( this.CreateModification, x : x, y : y ), recordChange );
     }
 
-    public Vertex AddVertex( Vertex vert )
+    public Vertex AddVertex( Vertex vert, bool recordChange=true )
     {
+        // if ( recordChange )
+            // new GraphModification( this, Modification.ADD_VERTEX, vert );
         this.Vertices.Add( vert );
         return vert;
     }
 
-    public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false )
+    public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false, bool recordChange=true )
     {
         if ( directed || vert1 < vert2 )
             return this.AddEdge( new Edge( vert1, vert2, directed ) );
@@ -108,7 +115,7 @@ public class Graph
             return this.AddEdge( new Edge( vert2, vert1 ) );
     }
 
-    public Edge AddEdge( Edge edge )
+    public Edge AddEdge( Edge edge, bool recordChange=true )
     {
         if ( !this.Vertices.Contains( edge.vert1 ) || !this.Vertices.Contains( edge.vert2 ) )
         {
@@ -125,28 +132,31 @@ public class Graph
         return edge;
     }
 
-    public void RemoveVertex( Vertex vect )
+    public void RemoveVertex( Vertex vert, bool recordChange=true )
     {
-        this.Vertices.Remove( vect );
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
-            this.Adjacency.Remove( kvp.Key );
+        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency.Where( kvp => kvp.Key.Item1 == vect || kvp.Key.Item2 == vect ).ToList() )
+            // this.RemoveEdge( kvp.Value );
+        this.RemoveEdges( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), recordChange );
+        this.Vertices.Remove( vert );
+        // if ( recordChange )
+            // new GraphModification( this, Modification.REMOVE_VERTEX, vert );
     }
 
-    public void RemoveVertices( List< Vertex > vects )
+    public void RemoveVertices( List< Vertex > verts, bool recordChange=true )
     {
-        foreach ( Vertex vect in vects )
-            this.RemoveVertex( vect );
+        foreach ( Vertex vert in verts )
+            this.RemoveVertex( vert, recordChange );
     }
 
-    public void RemoveEdge( Edge edge )
+    public void RemoveEdge( Edge edge, bool recordChange=true )
     {
         if ( edge.directed || edge.vert1 < edge.vert2 )
-            this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
+            this.Adjacency.TryRemove( ( edge.vert1, edge.vert2 ), out _ );
         else
-            this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) );
+            this.Adjacency.TryRemove( ( edge.vert2, edge.vert1 ), out _ );
     }
 
-    public void RemoveEdges( List< Edge > edges )
+    public void RemoveEdges( List< Edge > edges, bool recordChange=true )
     {
         foreach ( Edge edge in edges )
             this.RemoveEdge( edge );
@@ -222,6 +232,25 @@ public class Graph
         return true;
     }
 
+    public void CreateModification( Modification mod, System.Object modified )
+    {
+        // new GraphModification( this, mod, modified );
+    }
+
+    public int GetVertexDegree( Vertex u )
+    {
+        int count = 0;
+        foreach ( Vertex v in this.Vertices )
+        {
+            if ( this.IsAdjacent( u, v ) )
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
 
     // file io methods ////////////////////////////////////////////////
 
@@ -229,6 +258,7 @@ public class Graph
     // currently not importing directed info
     public void Import( string path )
     {
+        this.Clear();
         try
         {
             if ( !File.Exists( path ) )
@@ -237,6 +267,7 @@ public class Graph
                 throw new System.Exception( "The provided file cannot be found." );
             }
 
+            Dictionary< uint, uint > vertexIndices = new Dictionary< uint, uint >();
             bool flag = true;
             foreach ( string line in System.IO.File.ReadLines( path ) )
             {
@@ -252,7 +283,7 @@ public class Graph
                     flag = false;
                     continue;
                 }
-                this.ParseLine( line, flag );
+                this.ParseLine( line, flag, vertexIndices );
             }
         }
         catch ( Exception ex )
@@ -261,50 +292,50 @@ public class Graph
         }
     }
 
-    private void ParseLine( string line, bool flag )
+    private void ParseLine( string line, bool flag, Dictionary< uint, uint > indices )
     {
         if ( flag )
-            this.AddVertex( this.ParseVertex( line ) );
+            this.AddVertex( this.ParseVertex( line, indices ) );
         else
-            this.AddEdge( this.ParseEdge( line ) );
+            this.AddEdge( this.ParseEdge( line, indices ) );
     }
 
-    private Vertex ParseVertex( string line )
+    private Vertex ParseVertex( string line, Dictionary< uint, uint > indices )
     {
         Dictionary< string, string > vectData = line.Replace( " ", "" )
-                                                     .Split( ',' )
-                                                     .Select( part  => part.Split( ':' ) )
-                                                     .Where( part => part.Length == 2 )
-                                                     .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
+                                                    .Split( ',' )
+                                                    .Select( part  => part.Split( ':' ) )
+                                                    .Where( part => part.Length == 2 )
+                                                    .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
 
-        return new Vertex(
+        Vertex vert = new Vertex(
             vectData[ "label" ],
             Graph.ToNullableDouble( vectData[ "x" ] ),
             Graph.ToNullableDouble( vectData[ "y" ] ),
             System.Convert.ToUInt32( vectData[ "style" ] ),
-            System.Convert.ToUInt32( vectData[ "color" ] ),
-            System.Convert.ToUInt32( vectData[ "label style" ] )
+            System.Convert.ToUInt32( vectData[ "color" ] )
         );
+        indices.Add( System.Convert.ToUInt32( vectData[ "id" ] ), vert.GetId() );
+        return vert;
     }
 
     // requires that all new vertices are already added
-    private Edge ParseEdge( string line )
+    private Edge ParseEdge( string line, Dictionary< uint, uint > indices )
     {
         Dictionary< string, string > edgeData = line.Replace( " ", "" )
-                                                     .Split( ',' )
-                                                     .Select( part  => part.Split( ':' ) )
-                                                     .Where( part => part.Length == 2 )
-                                                     .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
+                                                    .Split( ',' )
+                                                    .Select( part  => part.Split( ':' ) )
+                                                    .Where( part => part.Length == 2 )
+                                                    .ToDictionary( sp => sp[ 0 ], sp => sp[ 1 ] );
 
         return new Edge(
-            this.GetVertex( System.Convert.ToInt32( edgeData[ "vert1" ] ) ),
-            this.GetVertex( System.Convert.ToInt32( edgeData[ "vert2" ] ) ),
+            this.GetVertex( indices[ System.Convert.ToUInt32( edgeData[ "vert1" ] ) ] ),
+            this.GetVertex( indices[ System.Convert.ToUInt32( edgeData[ "vert2" ] ) ] ),
             System.Convert.ToBoolean( edgeData[ "directed" ] ),
             edgeData[ "label" ],
             System.Convert.ToUInt32( edgeData[ "style" ] ),
             System.Convert.ToUInt32( edgeData[ "color" ] ),
-            System.Convert.ToUInt32( edgeData[ "thickness" ] ),
-            System.Convert.ToUInt32( edgeData[ "label style" ] )
+            System.Convert.ToUInt32( edgeData[ "thickness" ] )//,
             // System.Convert.ToInt32( edgeData[ "tail style" ] ),
             // System.Convert.ToInt32( edgeData[ "head style" ] ) 
         );
@@ -394,7 +425,7 @@ public class Graph
         List< Edge > incidentEdges = new List< Edge >();
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
-            if ( verts.Contains( kvp.Value.vert1 ) || kvp.Value.directed && verts.Contains( kvp.Value.vert2 ) )
+            if ( verts.Contains( kvp.Value.vert1 ) || !kvp.Value.directed && verts.Contains( kvp.Value.vert2 ) )
                 incidentEdges.Add( kvp.Value );
         }
         return incidentEdges;

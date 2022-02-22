@@ -278,6 +278,14 @@ PrefabInstance:
     - target: {fileID: 6734520041803663066, guid: a0d770082ae6d4656978057d405099c0, type: 3}
       propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
+      objectReference: {fileID: 2777056870469226200}
+    - target: {fileID: 6734520041803663066, guid: a0d770082ae6d4656978057d405099c0, type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: UpdateLabel
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734520041803663066, guid: a0d770082ae6d4656978057d405099c0, type: 3}
+      propertyPath: m_OnEndEdit.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: VertexLabelObj, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 7268066207930782846, guid: a0d770082ae6d4656978057d405099c0, type: 3}
       propertyPath: m_Pivot.x
@@ -428,3 +436,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 381f2f5b5309745059010ee6c4ebfe74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  vertexObj: {fileID: 8772286338830264603}

@@ -64,11 +64,11 @@ public class VertexObj : MonoBehaviour
         this.gameObject.SetActive(true);
 
         // Initiate the label
-        this.labelObj.Initiate(vertex.label);
+        this.labelObj.Initiate(vertex.Label);
 
         // Update associated Vertex positions;
-        this.Vertex.x = transform.position.x;
-        this.Vertex.y = transform.position.y;
+        this.Vertex.X = transform.position.x;
+        this.Vertex.Y = transform.position.y;
     }
 
     // Set the hover animation when the mouse is hoving over the vertex object
