@@ -150,7 +150,9 @@ public class EdgeObj : MonoBehaviour
 
     // TODO: Find a way not to hard code this
     private void UpdateSpline() {
-        Vector3[] pointsOnCurve = {new Vector3(.75f, 0f, 0f), new Vector3(0f, .75f, 0f), new Vector3(-.75f, 0f, 0f), new Vector3(0f, -.75f, 0f)};
+        float largeRadius = .65f;
+
+        Vector3[] pointsOnCurve = {new Vector3(largeRadius, 0f, 0f), new Vector3(0f, largeRadius, 0f), new Vector3(-largeRadius, 0f, 0f), new Vector3(0f, -largeRadius, 0f)};
 
         this.shapeController.spline.Clear();
         int splinePointIndex = 0;
@@ -160,82 +162,52 @@ public class EdgeObj : MonoBehaviour
             splinePointIndex++;
         }
 
-        float R = .55f * .75f;
-        float r = .45f * .75f;
+        float largeArm = .55f * largeRadius;
+        float smallArm = .45f * largeRadius;
         
         this.shapeController.spline.SetTangentMode(0, ShapeTangentMode.Broken);
-        this.shapeController.spline.SetLeftTangent(0, new Vector3(-r, 0f, 0f));
-        this.shapeController.spline.SetRightTangent(0, new Vector3(0f, R, 0f));
-        this.shapeController.spline.SetLeftTangent(1, new Vector3(R, 0f, 0f));
-        this.shapeController.spline.SetRightTangent(1, new Vector3(-R, 0f, 0f));
-        this.shapeController.spline.SetLeftTangent(2, new Vector3(0f, R, 0f));
-        this.shapeController.spline.SetRightTangent(2, new Vector3(0f, -R, 0f));
-        this.shapeController.spline.SetLeftTangent(3, new Vector3(-R, 0f, 0f));
-        this.shapeController.spline.SetRightTangent(3, new Vector3(R, 0f, 0f));
+        this.shapeController.spline.SetLeftTangent(0, new Vector3(-smallArm, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(0, new Vector3(0f, largeArm, 0f));
+        this.shapeController.spline.SetLeftTangent(1, new Vector3(largeArm, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(1, new Vector3(-largeArm, 0f, 0f));
+        this.shapeController.spline.SetLeftTangent(2, new Vector3(0f, largeArm, 0f));
+        this.shapeController.spline.SetRightTangent(2, new Vector3(0f, -largeArm, 0f));
+        this.shapeController.spline.SetLeftTangent(3, new Vector3(-largeArm, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(3, new Vector3(largeArm, 0f, 0f));
         
         this.shapeController.spline.InsertPointAt(4,  pointsOnCurve[0]+ new Vector3(0f, 0f, 1f));
         this.shapeController.spline.SetTangentMode(4, ShapeTangentMode.Broken);
-        this.shapeController.spline.SetLeftTangent(4, new Vector3(0f, -R, 0f));
-        this.shapeController.spline.SetRightTangent(4, new Vector3(-r, 0, 0f));
+        this.shapeController.spline.SetLeftTangent(4, new Vector3(0f, -largeArm, 0f));
+        this.shapeController.spline.SetRightTangent(4, new Vector3(-smallArm, 0, 0f));
         
-        pointsOnCurve = new Vector3[] {new Vector3(.75f - this.edgeWidthScaleFactor, 0f, 0f), new Vector3(0f, .75f - this.edgeWidthScaleFactor, 0f), new Vector3(-(.75f - this.edgeWidthScaleFactor), 0f, 0f), new Vector3(0f, -(.75f - this.edgeWidthScaleFactor), 0f)};
+        pointsOnCurve = new Vector3[] {new Vector3(largeRadius - this.edgeWidthScaleFactor, 0f, 0f), new Vector3(0f, largeRadius - this.edgeWidthScaleFactor, 0f), new Vector3(-(largeRadius - this.edgeWidthScaleFactor), 0f, 0f), new Vector3(0f, -(largeRadius - this.edgeWidthScaleFactor), 0f)};
         
         this.shapeController.spline.InsertPointAt(5,  pointsOnCurve[0]);
         this.shapeController.spline.SetTangentMode(5, ShapeTangentMode.Broken);
-        this.shapeController.spline.SetRightTangent(5, new Vector3(0f, -r, 0f));
-        this.shapeController.spline.SetLeftTangent(5, new Vector3(r, 0, 0f));
+        this.shapeController.spline.SetRightTangent(5, new Vector3(0f, -smallArm, 0f));
+        this.shapeController.spline.SetLeftTangent(5, new Vector3(smallArm, 0, 0f));
         
         this.shapeController.spline.InsertPointAt(6,  pointsOnCurve[3]);
         this.shapeController.spline.SetTangentMode(6, ShapeTangentMode.Continuous);
-        this.shapeController.spline.SetLeftTangent(6, new Vector3(r, 0f, 0f));
-        this.shapeController.spline.SetRightTangent(6, new Vector3(-r, 0f, 0f));
+        this.shapeController.spline.SetLeftTangent(6, new Vector3(smallArm, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(6, new Vector3(-smallArm, 0f, 0f));
         
         this.shapeController.spline.InsertPointAt(7,  pointsOnCurve[2]);
         this.shapeController.spline.SetTangentMode(7, ShapeTangentMode.Continuous);
-        this.shapeController.spline.SetLeftTangent(7, new Vector3(0f, -r, 0f));
-        this.shapeController.spline.SetRightTangent(7, new Vector3(0f, r, 0f));
+        this.shapeController.spline.SetLeftTangent(7, new Vector3(0f, -smallArm, 0f));
+        this.shapeController.spline.SetRightTangent(7, new Vector3(0f, smallArm, 0f));
         
         this.shapeController.spline.InsertPointAt(8,  pointsOnCurve[1]);
         this.shapeController.spline.SetTangentMode(8, ShapeTangentMode.Continuous);
-        this.shapeController.spline.SetLeftTangent(8, new Vector3(-r, 0f, 0f));
-        this.shapeController.spline.SetRightTangent(8, new Vector3(r, 0f, 0f));
+        this.shapeController.spline.SetLeftTangent(8, new Vector3(-smallArm, 0f, 0f));
+        this.shapeController.spline.SetRightTangent(8, new Vector3(smallArm, 0f, 0f));
         
         this.shapeController.spline.InsertPointAt(9,  pointsOnCurve[0] + new Vector3(0f, 0f, 1f));
         this.shapeController.spline.SetTangentMode(9, ShapeTangentMode.Broken);
-        this.shapeController.spline.SetLeftTangent(9, new Vector3(0f, r, 0f));
-        this.shapeController.spline.SetRightTangent(9, new Vector3(r, 0f, 0f));
+        this.shapeController.spline.SetLeftTangent(9, new Vector3(0f, smallArm, 0f));
+        this.shapeController.spline.SetRightTangent(9, new Vector3(smallArm, 0f, 0f));
 
-        this.transform.localPosition = new Vector3(0.7f, 0f, 0f);
-
-        // for (int i = pointsOnCurve.Length - 1; i >= 0; i--) {
-        //     if (i == 0 || i == 1) {
-        //         this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, -0.2f, 0f));
-        //         this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Linear);
-        //
-        //         if (i == 1) {
-        //             this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
-        //             this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(.33f, 0, 0f));
-        //             this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(-.25f, 0, 0f));
-        //         }
-        //     }
-        //     else if (i == 2) {
-        //         this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, 0f, 0f));
-        //         this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
-        //         this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(0f, -1.5f, 0f));
-        //         this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(0f, 1.5f, 0f));
-        //     }
-        //     else if (i == 4 || i == 3) {
-        //         this.shapeController.spline.InsertPointAt(splinePointIndex,  pointsOnCurve[i] + new Vector3(0f, 0.2f, 0f));
-        //         this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Linear);
-        //
-        //         if (i == 3) {
-        //             this.shapeController.spline.SetTangentMode(splinePointIndex, ShapeTangentMode.Continuous);
-        //             this.shapeController.spline.SetLeftTangent(splinePointIndex, new Vector3(-.25f, 0, 0f));
-        //             this.shapeController.spline.SetRightTangent(splinePointIndex, new Vector3(.33f, 0, 0f));
-        //         }
-        //     }
-        //     splinePointIndex++;
-        // }
+        this.transform.localPosition = new Vector3(largeRadius * .9f, 0f, 0f);
 
         // this.arrow.transform.rotation = Quaternion.AngleAxis(45f, Vector3.forward);
         this.arrow.gameObject.SetActive(true);
