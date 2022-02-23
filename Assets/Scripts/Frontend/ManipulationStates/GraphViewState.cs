@@ -24,7 +24,7 @@ public class GraphViewState : ManipulationState
     public override void OnDoubleClick()
     {
         // Do not add new vertex if double clicking on an existing vertex
-        if (InputManager.Singleton.CursorOverGraphObj) {
+        if (InputManager.Singleton.CurrentHoveringVertex) {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.edgeDrawingState;
         }
         else {
