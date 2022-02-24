@@ -25,6 +25,7 @@ public class EdgeObj : MonoBehaviour
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
     private bool selected = false;
+    private bool hovering = false;
 
     
     // Property for getting and setting whether or not the edge is selected, and edit the edge's color to match
@@ -143,15 +144,13 @@ public class EdgeObj : MonoBehaviour
             }
             else {
                 transform.parent.position = this.Vertex1.transform.position;
-                UpdateSpline();
+                UpdateCircularSpline(0.65f);
             }
         }
     }
 
     // TODO: Find a way not to hard code this
-    private void UpdateSpline() {
-        float largeRadius = .65f;
-
+    private void UpdateCircularSpline(float largeRadius) {
         Vector3[] pointsOnCurve = {new Vector3(largeRadius, 0f, 0f), new Vector3(0f, largeRadius, 0f), new Vector3(-largeRadius, 0f, 0f), new Vector3(0f, -largeRadius, 0f)};
 
         this.shapeController.spline.Clear();
@@ -180,7 +179,7 @@ public class EdgeObj : MonoBehaviour
         this.shapeController.spline.SetLeftTangent(4, new Vector3(0f, -largeArm, 0f));
         this.shapeController.spline.SetRightTangent(4, new Vector3(-smallArm, 0, 0f));
         
-        pointsOnCurve = new Vector3[] {new Vector3(largeRadius - this.edgeWidthScaleFactor, 0f, 0f), new Vector3(0f, largeRadius - this.edgeWidthScaleFactor, 0f), new Vector3(-(largeRadius - this.edgeWidthScaleFactor), 0f, 0f), new Vector3(0f, -(largeRadius - this.edgeWidthScaleFactor), 0f)};
+        pointsOnCurve = new Vector3[] {new Vector3(largeRadius - this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f), 0f, 0f), new Vector3(0f, largeRadius - this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f), 0f), new Vector3(-(largeRadius - this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f)), 0f, 0f), new Vector3(0f, -(largeRadius - this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f)), 0f)};
         
         this.shapeController.spline.InsertPointAt(5,  pointsOnCurve[0]);
         this.shapeController.spline.SetTangentMode(5, ShapeTangentMode.Broken);
@@ -213,6 +212,12 @@ public class EdgeObj : MonoBehaviour
         this.arrow.gameObject.SetActive(true);
     }
 
+    // private void UpdateStraightSpline() {
+    //     Vector3[] pointsOnCurve = {this.Vertex1.transform.position, this.Vertex2.transform.position};
+
+
+    // }
+
     // Toggle between undirected, direction 1, and direction -1
     public void ToggleEdgeType() {
         // if (!this.Edge.directed) {
@@ -239,7 +244,7 @@ public class EdgeObj : MonoBehaviour
     {
         if (this.curved)
         {
-            this.transform.localScale = new Vector3((1f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, (1f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, 1f);
+            this.hovering = true;
         }
         else
         {
@@ -253,7 +258,7 @@ public class EdgeObj : MonoBehaviour
         // When cursor exits, reset the thickness
         if (this.curved)
         {
-            this.transform.localScale = new Vector3(1f + (this.Edge.thickness * edgeWidthScaleFactor), 1f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
+            this.hovering = false;
         }
         else
         {
