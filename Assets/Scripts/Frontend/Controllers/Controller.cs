@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // Struct which stores a instance of graph datastructure along with its associated Unity objects
@@ -162,18 +163,59 @@ public class Controller : SingletonBehavior<Controller>
 
     public void AddEdge(Vertex vertex1, Vertex vertex2, bool directed = false) {
         // If the requested edge already exists, return
-        if (Controller.Singleton.Graph.IsAdjacent(vertex1, vertex2))  {
-            Logger.Log("Attempting to add edge between two vertices that are already connected.", this, LogType.WARNING);
+        if (!directed && Controller.Singleton.Graph.IsAdjacent(vertex1, vertex2))  {
+            Logger.Log("Attempting to add undirected edge between two vertices that are already connected.", this, LogType.WARNING);
             return;
         }
 
         // If both vertices are the same, return
         if (vertex1 == vertex2) {
-            // Logger.Log("Attempting to add edge from a vertex to itself is not currently implmented.", this, LogType.WARNING);
-            // return;
             Edge curvedEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
-            CreateCurvedEdgeObj(curvedEdge);
+            CreateCurvedEdgeObj(curvedEdge, int.MaxValue);
             GraphInfo.Singleton.UpdateGraphInfo();
+        }
+        else if (Controller.Singleton.Graph.IsAdjacent(vertex2, vertex1))
+        {
+            // TEMPOARY
+            EdgeObj foundEdge = null;
+            foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
+            {
+                if (!edgeObj.Edge.directed && ((edgeObj.Edge.vert1 == vertex2 && edgeObj.Edge.vert2 == vertex2) || (edgeObj.Edge.vert1 == vertex1 && edgeObj.Edge.vert2 == vertex2)))
+                {
+                    Logger.Log("Attempting to add undirected edge between two vertices that are already connected.", this, LogType.WARNING);
+                    return;
+                }
+                
+                if (edgeObj.Edge.vert1 == vertex2 && edgeObj.Edge.vert2 == vertex1)
+                {
+                    if (foundEdge == null)
+                    {
+                        foundEdge = edgeObj;
+                    }
+                    else
+                    {
+                        Logger.Log("Attempting to add edge between two vertices that are already connected.", this, LogType.WARNING);
+                        return;
+                    }
+                }
+                else if (edgeObj.Edge.vert1 == vertex1 && edgeObj.Edge.vert2 == vertex2)
+                {
+                    Logger.Log("Attempting to add edge between two vertices that are already connected in the same direction.", this, LogType.WARNING);
+                    return;
+                }
+            }
+
+            if (!foundEdge)
+            {
+                Logger.Log("Mismatch between graph data structure and graph objects in the instance.", this, LogType.ERROR);
+                return;
+            }
+            foundEdge.Curvature = 8;
+            
+            Edge curvedEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
+            CreateCurvedEdgeObj(curvedEdge, 8);
+            GraphInfo.Singleton.UpdateGraphInfo();
+
         }
         else {
             Edge newEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
@@ -182,7 +224,7 @@ public class Controller : SingletonBehavior<Controller>
         }
     }
 
-    // Create a new edge object to correspond to a passed in graph edge
+        // Create a new edge object to correspond to a passed in graph edge
     private void CreateEdgeObj(Edge edge) {
         // Get the two vertex objects associated with the edge
         VertexObj fromVertexObj = GetVertexObj(edge.vert1);
@@ -206,14 +248,16 @@ public class Controller : SingletonBehavior<Controller>
         this.OnEdgeObjectCreation?.Invoke(edgeObj);
     }
 
-    private void CreateCurvedEdgeObj(Edge curvedEdge) {
-        VertexObj vertexObj = GetVertexObj(curvedEdge.vert1);
+    private void CreateCurvedEdgeObj(Edge curvedEdge, int curvature = 0) {
+        VertexObj vertex1 = GetVertexObj(curvedEdge.vert1);
+        VertexObj vertex2 = curvedEdge.vert2 == curvedEdge.vert1 ? vertex1 : GetVertexObj(curvedEdge.vert2);
 
         // Instantiate an edge object
         EdgeObj edgeObj = Instantiate(this.curvedEdgePrefab, Vector2.zero, Quaternion.identity).transform.GetChild(0).GetComponent<EdgeObj>();
         // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
         edgeObj.transform.parent.SetParent(this.GraphObjContainer);
-        edgeObj.Initiate(curvedEdge, vertexObj, vertexObj);
+        edgeObj.Initiate(curvedEdge, vertex1, vertex2);
+        edgeObj.Curvature = curvature;
         Logger.Log("Creating new edge in the current graph instance.", this, LogType.INFO);
         // Add edge to the list of edges in instance
         this.currentGraphInstance.edgeObjs.Add(edgeObj);

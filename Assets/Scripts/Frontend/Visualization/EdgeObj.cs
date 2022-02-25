@@ -1,6 +1,7 @@
 //All code developed by Team 11
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.U2D;
 
@@ -12,40 +13,43 @@ public class EdgeObj : MonoBehaviour
     // Label of the edge
     private string label;
 
-    // Uses a custom timer to reduce the frequency of physics updates (to reduce lag)
-    private float physicsTimer = 0f;
-
     public VertexObj Vertex1 {get; private set;}
     public VertexObj Vertex2 {get; private set;}
 
-    private bool curved;
     private SpriteShapeController shapeController;
     private SpriteShapeRenderer shapeRenderer;
 
     // TODO: Remove once animations are implemented
     // Whether edge is selected in the SelectionManager
     private bool selected = false;
+    // Whether edge is currently being hovered over
     private bool hovering = false;
 
-    
+    private int curvature;
+    public int Curvature
+    {
+        get => this.curvature;
+        set
+        {
+            this.curvature = value;
+            if (curvature == 0) UpdateStraightSpline();
+            else if (this.curvature == int.MaxValue) UpdateCircularSpline(0.7f, 45f);
+            else UpdateCurvedSpline(this.curvature * 0.1f);
+        }
+    }
+
     // Property for getting and setting whether or not the edge is selected, and edit the edge's color to match
     public bool Selected {
         get => this.selected;
         set {
             this.selected = value;
             if (value) {
-                if (!this.curved)
-                    this.shapeRenderer.color = new Color32(0, 125, 255, 255);
-                else
-                    this.shapeRenderer.color = new Color32(0, 125, 255, 255);
+                this.shapeRenderer.color = new Color32(0, 125, 255, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
                 labelObj.MakeEditable();
             }
             else {
-                if (!this.curved)
-                    this.shapeRenderer.color = new Color32(0, 0, 0, 255);
-                else
-                    this.shapeRenderer.color = new Color32(0, 0, 0, 255);
+                this.shapeRenderer.color = new Color32(0, 0, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
                 labelObj.MakeUneditable();
             }
@@ -83,7 +87,14 @@ public class EdgeObj : MonoBehaviour
         
         this.gameObject.SetActive(true);
 
-        this.curved = edge.vert1 == edge.vert2;
+        if (edge.vert1 == edge.vert2)
+        {
+            this.curvature = int.MaxValue;
+        }
+        else
+        {
+            this.curvature = 0;
+        }
         
         // Fix for edge temporarily appearing in the wrong place when getting added
         if (spriteRenderer) spriteRenderer.enabled = false;
@@ -96,56 +107,42 @@ public class EdgeObj : MonoBehaviour
         this.labelObj.Initiate(this);
     }
 
-    // Method to stretch the edge so it extends from one point to another 
-    // private void StretchBetweenPoints(Vector2 point1, Vector2 point2)
-    // {
-    //     this.transform.parent.position = point1;
-    //     Vector2 dir = point2 - point1;
-    //     this.transform.localScale = new Vector3(dir.magnitude * 2, transform.localScale.y, 1);
-
-    //     float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-    //     this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-
-    //     if (this.Edge.directed) {
-    //         this.arrow.localPosition = new Vector3((this.Edge.directed ? 0.5f : 0f) - (this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
-    //         this.arrow.localScale = new Vector3(1f / this.transform.lossyScale.x, 1f / (this.transform.lossyScale.y - this.Edge.thickness * edgeWidthScaleFactor), 1);
-    //         this.arrow.localRotation = Quaternion.AngleAxis(this.Edge.directed ? 0f : 180f, Vector3.forward);
-    //         this.arrow.gameObject.SetActive(true);
-    //     }
-    //     else {
-    //         this.arrow.gameObject.SetActive(false);
-    //     }
-        
-    //     // Fix for edge temporarily appearing in the wrong place when getting added
-    //     if (spriteRenderer) spriteRenderer.enabled = true;
-    // }
-
     private void Update() {
-        if (this.Selected) {
-            // If selected and Plus is pressed, increase thickness
-            // if (Input.GetKeyDown(KeyCode.Equals) && this.Edge.thickness < 5) {
-            //     this.Edge.thickness++;
-            //     this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
-            // }
-            // // If selected and Minus is pressed, decrease thickness
-            // else if (Input.GetKeyDown(KeyCode.Minus) && this.Edge.thickness > 0) {
-            //     this.Edge.thickness--;
-            //     this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
-            // }
-        }
-
         if (this.Edge != null) {
             transform.parent.position = this.Vertex1.transform.position;
-            if (!this.curved) {
-                // Stretch the edge between the two vertices
-                // StretchBetweenPoints(this.Vertex1.transform.position, this.Vertex2.transform.position);
-                // UpdateStraightSpline();
-                UpdateCurvedSpline(-1f);
+            if (this.curvature == int.MaxValue) {
+                UpdateCircularSpline(0.7f, FindBestAngleForLoop());
             }
-            else {
-                UpdateCircularSpline(0.7f, 45f);
+            else if (this.curvature == 0) {
+                UpdateStraightSpline();
+            }
+            else
+            {
+                UpdateCurvedSpline(this.curvature * 0.1f);
             }
         }
+    }
+
+    private float FindBestAngleForLoop()
+    {
+        List<float> connectedEdgeAngles = new List<float>();
+        Vertex vertex = this.Edge.vert1;
+        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
+        {
+            if (edgeObj.Vertex1 == edgeObj.Vertex2) continue;
+            
+            if (edgeObj.Vertex2 == this.Vertex1)
+            {
+                connectedEdgeAngles.Add(Mathf.Atan2(edgeObj.Vertex1.transform.position.y - this.Vertex1.transform.position.y, edgeObj.Vertex1.transform.position.x - this.Vertex1.transform.position.x) * Mathf.Rad2Deg);
+            }
+            else if (edgeObj.Vertex1 == this.Vertex1)
+            {
+                connectedEdgeAngles.Add(Mathf.Atan2(edgeObj.Vertex2.transform.position.y - this.Vertex1.transform.position.y, edgeObj.Vertex2.transform.position.x - this.Vertex1.transform.position.x) * Mathf.Rad2Deg);
+            }
+        }
+
+        if (connectedEdgeAngles.Count == 0) return 0f;
+        return connectedEdgeAngles.Average() + 180f;
     }
 
     // TODO: Find a way not to hard code this
@@ -207,9 +204,6 @@ public class EdgeObj : MonoBehaviour
 
         this.transform.localPosition = Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(largeRadius * .9f, 0f, 0f);
 
-        // this.arrow.transform.rotation = Quaternion.AngleAxis(45f, Vector3.forward);
-        // this.arrow.gameObject.SetActive(true);
-
         if (this.Edge.directed) {
             Vector3 dir =  (Quaternion.AngleAxis(angle - 20, Vector3.forward) * pointsOnCurve[1]).normalized;
             this.arrow.rotation = Quaternion.AngleAxis(angle - 110, Vector3.forward);
@@ -256,10 +250,10 @@ public class EdgeObj : MonoBehaviour
         Vector3[] pointsOnCurve = {Vector3.zero, distance / 2f + (radius * normal), distance};
 
         this.shapeController.spline.Clear();
-
+        
         this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(0, ShapeTangentMode.Linear);
-
+        
         this.shapeController.spline.InsertPointAt(1,  pointsOnCurve[1] + normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(1, ShapeTangentMode.Continuous);
         this.shapeController.spline.SetLeftTangent(1, -distance * .25f);
@@ -284,7 +278,6 @@ public class EdgeObj : MonoBehaviour
             float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.arrow.position = this.Vertex2.transform.position + -distance.normalized * (this.arrowSpriteRenderer.size.x + .066f);
-            // this.arrow.localPosition = distance * (1f - (this.arrowSpriteRenderer.size.x + .066f) / distance.magnitude);
             this.arrow.localScale = new Vector3(1f, (1f + this.Edge.thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
@@ -296,21 +289,6 @@ public class EdgeObj : MonoBehaviour
 
     // Toggle between undirected, direction 1, and direction -1
     public void ToggleEdgeType() {
-        // if (!this.Edge.directed) {
-        //     this.Edge.directed = true;
-        //     // this.direction = 1;
-        // }
-        // else {
-        //     // if (this.direction == 1) {
-        //     //     this.Edge.Reverse();
-        //     //     this.direction = -1;
-        //     // }
-        //     // else {
-        //     //     this.Edge.Reverse();
-        //     //     this.direction = 1;
-        //     //     this.Edge.directed = false;
-        //     // }
-        // }
         this.Edge.directed = !this.Edge.directed;
     }
 
@@ -318,29 +296,11 @@ public class EdgeObj : MonoBehaviour
     // TODO: Change this to be controlled by an animator later
     private void OnMouseOver()
     {
-        // if (this.curved)
-        // {
-        //     this.hovering = true;
-        // }
-        // else
-        // {
-        //     this.transform.localScale = new Vector3(this.transform.localScale.x, (0.25f + (this.Edge.thickness * edgeWidthScaleFactor)) * 1.33f, 1f);
-        // }
         this.hovering = true;
-        
     }
 
     private void OnMouseExit()
     {
-        // When cursor exits, reset the thickness
-        // if (this.curved)
-        // {
-        //     this.hovering = false;
-        // }
-        // else
-        // {
-        //     this.transform.localScale = new Vector3(this.transform.localScale.x, 0.25f + (this.Edge.thickness * edgeWidthScaleFactor), 1f);
-        // }
         this.hovering = false;
     }
 
