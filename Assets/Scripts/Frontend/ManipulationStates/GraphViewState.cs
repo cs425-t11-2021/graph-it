@@ -1,3 +1,5 @@
+using System.Numerics;
+
 // Default viewing state, double click to add vertex, left click to select, shift + left click to select multiple
 public class GraphViewState : ManipulationState
 {
@@ -106,8 +108,7 @@ public class GraphViewState : ManipulationState
             }
 
             // Update the stored position info in the verterices
-            selectedVertex.Vertex.X = selectedVertex.transform.position.x;
-            selectedVertex.Vertex.Y = selectedVertex.transform.position.y;
+            selectedVertex.Vertex.Pos = new Vector2( selectedVertex.transform.position.x, selectedVertex.transform.position.y );
         }
 
         this.graphMovementInProgress = false;

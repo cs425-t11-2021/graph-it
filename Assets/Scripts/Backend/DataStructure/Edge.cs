@@ -39,6 +39,19 @@ public class Edge
         this.headStyle = headStyle;
     }
 
+    public Edge( Edge edge )
+    {
+        this.vert1 = edge.vert1;
+        this.vert2 = edge.vert2;
+        this.directed = edge.directed;
+        this.Label = edge.label;
+        this.style = edge.style;
+        this.color = edge.color;
+        this.thickness = edge.thickness;
+        this.tailStyle = edge.tailStyle;
+        this.headStyle = edge.headStyle;
+    }
+
     public void Reverse()
     {
         Vertex temp = vert2;
