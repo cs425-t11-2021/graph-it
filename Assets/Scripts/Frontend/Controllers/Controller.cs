@@ -171,7 +171,7 @@ public class Controller : SingletonBehavior<Controller>
         if (vertex1 == vertex2) {
             // Logger.Log("Attempting to add edge from a vertex to itself is not currently implmented.", this, LogType.WARNING);
             // return;
-            Edge curvedEdge = this.Graph.AddEdge(vertex1, vertex2, false);
+            Edge curvedEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
             CreateCurvedEdgeObj(curvedEdge);
             GraphInfo.Singleton.UpdateGraphInfo();
         }
