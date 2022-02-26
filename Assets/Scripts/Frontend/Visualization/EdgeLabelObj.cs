@@ -111,20 +111,16 @@ public class EdgeLabelObj : MonoBehaviour
     public void UpdateLabel(string newLabel)
     {
 
-       
-        if (double.TryParse(inputField.text, out double newWeight)) {
-            this.edgeObject.Edge.Label = newWeight.ToString();
-            inputField.text = newWeight.ToString();
-            Logger.Log("Edge weight set to " + this.edgeObject.Edge.weight, this, LogType.INFO);
-        }
-        else {
-            this.edgeObject.Edge.Label = newLabel;
-            this.edgeObject.Edge.weighted = false;
-            inputField.text = newLabel;
-            Logger.Log("Edge label set to " + this.edgeObject.Edge.Label, this, LogType.INFO);
-        }
-        Logger.Log("Edge weights " + (this.edgeObject.Edge.weighted ? "enabled." : "disabled."), this, LogType.INFO);
+        this.edgeObject.Edge.Label = newLabel;
 
-        
+        if (this.edgeObject.Edge.weighted)
+        {
+            inputField.text = this.edgeObject.Edge.weight.ToString();
+        }
+        else
+        {
+            inputField.text = this.edgeObject.Edge.Label;
+        }
+        Logger.Log(string.Format("Edge {0} set to {1}.", this.edgeObject.Edge.weighted ? "weight" : "label", inputField.text), this, LogType.INFO);
     }
 }
