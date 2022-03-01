@@ -17,38 +17,24 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // Reference of the text display of the graph size
     [SerializeField] private TMP_Text sizeText;
     // Reference of the button of prim
-    [SerializeField] private Button primButton;
+    //[SerializeField] private Button primButton;
     // Reference of the kruskal button
-    [SerializeField] private Button kruskalButton;
+    //[SerializeField] private Button kruskalButton;
     // Reference of the button of dijkstra
-    [SerializeField] private Button dijkstraButton;
-
-    private AlgorithmManager algorithmManager;
+    //[SerializeField] private Button dijkstraButton;
 
     // Property for whether or not the algorithm buttons are enabled
-    public bool AlgorithmButtonsEnabled {
+    /*public bool AlgorithmButtonsEnabled {
         set {
             primButton.enabled = value;
             dijkstraButton.enabled = value;
             kruskalButton.enabled = value;
         }
-    }
+    }*/
 
     private void Awake() {
-        this.algorithmManager = AlgorithmManager.Singleton;
-        this.algorithmManager.Initiate( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) this.UpdatePrimsResult, ( Action ) this.UpdateKruskalsResult, ( Action ) this.UpdateDepthFirstSearchResult, ( Action ) this.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) this.UpdatePrimsCalculating, ( Action ) this.UpdateKruskalsCalculating, ( Action ) this.UpdateDepthFirstSearchCalculating, ( Action ) this.UpdateBreadthFirstSearchCalculating );
-        SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
-
-        this.primButton.interactable = false;
+        AlgorithmManager.Singleton.Initiate( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating );
         this.UpdateGraphInfo();
-    }
-
-    // Function called when the selection is changed
-    private void OnSelectionChange(int selectedVertexCount, int selectedEdgeCount) {
-        // Only allow the prim button to be pressed if there is exactly one vertex selected
-        this.primButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
-        // Only allow dijkstra if exactly two vertices are selected
-        this.dijkstraButton.interactable = selectedVertexCount == 2 && selectedEdgeCount == 0;
     }
     
     public void UpdateGraphInfo() {
@@ -56,14 +42,14 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.sizeText.text = "Size: " + Controller.Singleton.Graph.Adjacency.Count;
 
         // Run multithreaded algorithms
-        this.algorithmManager.Clear();
+        AlgorithmManager.Singleton.Clear();
         // this.algorithmManager.RunChromatic();
-        this.algorithmManager.RunBipartite();
+        AlgorithmManager.Singleton.RunBipartite(); //TEMPORARY FIX
     }
 
     public void UpdateChromaticResult() {
         // Debug.Log("Running UpdateChromaticResult");
-        int? chromaticNumber = this.algorithmManager.GetChromaticNumber();
+        int? chromaticNumber = AlgorithmManager.Singleton.GetChromaticNumber();
         if ( chromaticNumber is null )
             this.chromaticText.text = "Chromatic Number: Error";
         else
@@ -72,16 +58,16 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     public void UpdateBipartiteResult() {
         // Debug.Log("Running UpdateBipartiteResult");
-        this.bipartiteText.text = "Bipartite: " + ( this.algorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
+        this.bipartiteText.text = "Bipartite: " + ( AlgorithmManager.Singleton.GetBipartite() ?? false ? "Yes" : "No" );
     }
 
-    public void UpdatePrimsResult() { }
+    // public void UpdatePrimsResult() { }
 
-    public void UpdateKruskalsResult() { }
+    // public void UpdateKruskalsResult() { }
 
-    public void UpdateDepthFirstSearchResult() { }
+    // public void UpdateDepthFirstSearchResult() { }
 
-    public void UpdateBreadthFirstSearchResult() { }
+    // public void UpdateBreadthFirstSearchResult() { }
 
     public void UpdateChromaticCalculating() {
         this.chromaticText.text = "Chromatic Number: Calculating";
@@ -93,11 +79,11 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         // Debug.Log("Running UpdateBipartiteCalculating");
     }
 
-    public void UpdatePrimsCalculating() { }
+    // public void UpdatePrimsCalculating() { }
 
-    public void UpdateKruskalsCalculating() { }
+    // public void UpdateKruskalsCalculating() { }
 
-    public void UpdateDepthFirstSearchCalculating() { }
+    // public void UpdateDepthFirstSearchCalculating() { }
 
-    public void UpdateBreadthFirstSearchCalculating() { }
+    // public void UpdateBreadthFirstSearchCalculating() { }
 }
