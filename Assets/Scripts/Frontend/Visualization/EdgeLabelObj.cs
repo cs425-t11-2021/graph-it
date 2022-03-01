@@ -21,7 +21,7 @@ public class EdgeLabelObj : MonoBehaviour
     public void Initiate(EdgeObj edgeObject)
     {
         this.edgeObject = edgeObject;
-        if (this.edgeObject.Edge.weighted) {
+        if (this.edgeObject.Edge.Weighted) {
             this.inputField.text = this.edgeObject.Edge.ToString();
         }
         else {
@@ -113,17 +113,17 @@ public class EdgeLabelObj : MonoBehaviour
 
        
         if (double.TryParse(inputField.text, out double newWeight)) {
+            Logger.Log("Edge weight set to " + this.edgeObject.Edge.Weight, this, LogType.INFO);
             this.edgeObject.Edge.Label = newWeight.ToString();
             inputField.text = newWeight.ToString();
-            Logger.Log("Edge weight set to " + this.edgeObject.Edge.weight, this, LogType.INFO);
         }
         else {
             this.edgeObject.Edge.Label = newLabel;
-            this.edgeObject.Edge.weighted = false;
+            // this.edgeObject.Edge.weighted = false;
             inputField.text = newLabel;
             Logger.Log("Edge label set to " + this.edgeObject.Edge.Label, this, LogType.INFO);
         }
-        Logger.Log("Edge weights " + (this.edgeObject.Edge.weighted ? "enabled." : "disabled."), this, LogType.INFO);
+        Logger.Log("Edge weights " + (this.edgeObject.Edge.Weighted ? "enabled." : "disabled."), this, LogType.INFO);
 
         
     }
