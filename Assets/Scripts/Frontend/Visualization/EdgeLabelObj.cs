@@ -21,7 +21,7 @@ public class EdgeLabelObj : MonoBehaviour
     public void Initiate(EdgeObj edgeObject)
     {
         this.edgeObject = edgeObject;
-        if (this.edgeObject.Edge.weighted) {
+        if (this.edgeObject.Edge.Weighted) {
             this.inputField.text = this.edgeObject.Edge.ToString();
         }
         else {
@@ -110,7 +110,6 @@ public class EdgeLabelObj : MonoBehaviour
     // Update the content field with a new label
     public void UpdateLabel(string newLabel)
     {
-
         this.edgeObject.Edge.Label = newLabel;
 
         if (this.edgeObject.Edge.weighted)

@@ -206,11 +206,11 @@ public class EdgeObj : MonoBehaviour
 
         this.transform.localPosition = Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(largeRadius * .9f, 0f, 0f);
 
-        if (this.Edge.directed) {
+        if (this.Edge.Directed) {
             Vector3 dir =  (Quaternion.AngleAxis(angle - 20, Vector3.forward) * pointsOnCurve[1]).normalized;
             this.arrow.rotation = Quaternion.AngleAxis(angle - 110, Vector3.forward);
             this.arrow.position = this.transform.parent.position + (dir * this.arrowSpriteRenderer.size.x);
-            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.Thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -233,11 +233,11 @@ public class EdgeObj : MonoBehaviour
         this.shapeController.spline.InsertPointAt(3,  pointsOnCurve[0] - normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(3, ShapeTangentMode.Linear);
 
-        if (this.Edge.directed) {
+        if (this.Edge.Directed) {
             float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.arrow.localPosition = distance * (1f - (this.arrowSpriteRenderer.size.x + .066f) / distance.magnitude);
-            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.Thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -275,12 +275,12 @@ public class EdgeObj : MonoBehaviour
         this.shapeController.spline.InsertPointAt(5,  pointsOnCurve[0] - normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) + (pointsOnCurve[1] - pointsOnCurve[0]).normalized * 0.1f);
         this.shapeController.spline.SetTangentMode(5, ShapeTangentMode.Linear);
 
-        if (this.Edge.directed) {
+        if (this.Edge.Directed) {
             distance = this.Vertex2.transform.position - (this.transform.position + pointsOnCurve[1]);
             float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.arrow.position = this.Vertex2.transform.position + -distance.normalized * (this.arrowSpriteRenderer.size.x + .066f);
-            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.Thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -324,7 +324,7 @@ public class EdgeObj : MonoBehaviour
         this.hovering = false;
     }
 
-    public void UpdateWeight(double newWeight) {
-        this.Edge.weight = newWeight;
-    }
+    // public void UpdateWeight(double newWeight) {
+    //     this.Edge.Weight = newWeight;
+    // }
 }

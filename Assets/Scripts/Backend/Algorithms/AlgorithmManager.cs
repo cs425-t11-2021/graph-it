@@ -12,12 +12,16 @@ using UnityEngine.Scripting;
 public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 {
     private Graph graph;
+    private Action minDegreeUI;
+    private Action maxDegreeUI;
     private Action chromaticUI;
     private Action bipartiteUI;
     private Action primsUI;
     private Action kruskalsUI;
     private Action depthFirstSearchUI;
     private Action breadthFirstSearchUI;
+    private Action minDegreeCalc;
+    private Action maxDegreeCalc;
     private Action chromaticCalc;
     private Action bipartiteCalc;
     private Action primsCalc;
@@ -35,15 +39,19 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
         get => this.running.Values.ToList();
     }
 
-    public void Initiate( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
+    public void Initiate( Graph graph, Action minDegreeUI, Action maxDegreeUI, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action minDegreeCalc, Action maxDegreeCalc, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
     {
         this.graph = graph;
+        this.minDegreeUI = minDegreeUI;
+        this.maxDegreeUI = maxDegreeUI;
         this.chromaticUI = chromaticUI;
         this.bipartiteUI = bipartiteUI;
         this.primsUI = primsUI;
         this.kruskalsUI = kruskalsUI;
         this.depthFirstSearchUI = depthFirstSearchUI;
         this.breadthFirstSearchUI = breadthFirstSearchUI;
+        this.minDegreeCalc = minDegreeCalc;
+        this.maxDegreeCalc = maxDegreeCalc;
         this.chromaticCalc = chromaticCalc;
         this.bipartiteCalc = bipartiteCalc;
         this.primsCalc = primsCalc;
@@ -56,9 +64,21 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 
     public void RunAll()
     {
+        this.RunMinDegree();
+        this.RunMaxDegree();
         this.RunChromatic();
         // this.RunPrims();
         this.RunKruskals();
+    }
+
+    public void RunMinDegree()
+    {
+        new MinDegreeAlgorithm( this.graph, this.minDegreeUI, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
+    public void RunMaxDegree()
+    {
+        new MaxDegreeAlgorithm( this.graph, this.maxDegreeUI, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunChromatic()
@@ -98,6 +118,20 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
     public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
     {
         new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.breadthFirstSearchUI, this.breadthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
+    public void EnsureMinDegreeRunning()
+    {
+        int hash = MinDegreeAlgorithm.GetHash();
+        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+            new MinDegreeAlgorithm( this.graph, this.minDegreeUI, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
+    public void EnsureMaxDegreeRunning()
+    {
+        int hash = MaxDegreeAlgorithm.GetHash();
+        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+            new MaxDegreeAlgorithm( this.graph, this.maxDegreeUI, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureChromaticRunning()
@@ -141,6 +175,10 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
+
+    public int? GetMinDegree() => ( ( MinDegreeAlgorithm ) this.complete.GetValue( MinDegreeAlgorithm.GetHash() ) )?.MinDegree;
+
+    public int? GetMaxDegree() => ( ( MaxDegreeAlgorithm ) this.complete.GetValue( MaxDegreeAlgorithm.GetHash() ) )?.MaxDegree;
 
     public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;
 

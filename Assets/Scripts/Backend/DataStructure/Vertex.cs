@@ -10,7 +10,7 @@ public class Vertex
     static private uint idCount = 0;
 
     private uint id;
-    private Action< Modification, Object > createMod;
+    public Action< Modification, Object > CreateMod { private get; set; }
     private string label;
     public string Label
     {
@@ -24,9 +24,18 @@ public class Vertex
         set => this.SetPos( value );
     }
 
-    // TODO: make enums
-    public uint style;
-    public uint color;
+    private uint style;
+    public uint Style
+    {
+        get => this.style;
+        set => this.SetStyle( value );
+    }
+    private uint color;
+    public uint Color
+    {
+        get => this.color;
+        set => this.SetColor( value );
+    }
 
     public Vertex( string label="", float x=0, float y=0, uint style=0, uint color=0 )
     {
@@ -37,15 +46,10 @@ public class Vertex
         this.color = color;
     }
 
-    public Vertex( Action< Modification, Object > createMod, string label="", float x=0, float y=0, uint style=0, uint color=0 ) : this( label, x, y, style, color )
-    {
-        this.createMod = createMod;
-    }
-
     public Vertex( Vertex vert )
     {
         this.id = Vertex.idCount++;
-        this.createMod = vert.createMod;
+        this.CreateMod = vert.CreateMod;
         this.label = vert.label;
         this.pos = vert.pos;
         this.style = vert.style;
@@ -56,9 +60,9 @@ public class Vertex
     {
         if ( recordChange )
         {
-            if ( this.createMod is null )
-                throw new System.Exception( "Vertex cannot record label change with null reference to graph." );
-            this.createMod( Modification.VERTEX_LABEL, ( this, this.label, label ) );
+            if ( this.CreateMod is null )
+                throw new System.Exception( "Vertex label change cannot be recorded." );
+            this.CreateMod( Modification.VERTEX_LABEL, ( this, this.label, label ) );
         }
         this.label = label;
     }
@@ -66,8 +70,22 @@ public class Vertex
     public void SetPos( Vector2 pos, bool recordChange=true )
     {
         if ( recordChange )
-            this.createMod( Modification.VERTEX_POS, ( this, this.pos, pos ) );
+            this.CreateMod( Modification.VERTEX_POS, ( this, this.pos, pos ) );
         this.pos = pos;
+    }
+
+    public void SetStyle( uint style, bool recordChange=true )
+    {
+        if ( recordChange )
+            this.CreateMod( Modification.VERTEX_STYLE, ( this, this.style, style ) );
+        this.style = style;
+    }
+
+    public void SetColor( uint color, bool recordChange=true )
+    {
+        if ( recordChange )
+            this.CreateMod( Modification.VERTEX_COLOR, ( this, this.color, color ) );
+        this.color = color;
     }
 
     public uint GetId() => this.id; // temp

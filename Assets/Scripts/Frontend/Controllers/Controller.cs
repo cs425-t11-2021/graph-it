@@ -173,7 +173,7 @@ public class Controller : SingletonBehavior<Controller>
             EdgeObj foundEdge = null;
             foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
             {
-                if (!edgeObj.Edge.directed && ((edgeObj.Edge.vert1 == vertex2 && edgeObj.Edge.vert2 == vertex2) || (edgeObj.Edge.vert1 == vertex1 && edgeObj.Edge.vert2 == vertex2)))
+                if (!edgeObj.Edge.Directed && ((edgeObj.Edge.vert1 == vertex2 && edgeObj.Edge.vert2 == vertex2) || (edgeObj.Edge.vert1 == vertex1 && edgeObj.Edge.vert2 == vertex2)))
                 {
                     Logger.Log("Attempting to add undirected edge between two vertices that are already connected.", this, LogType.WARNING);
                     return;

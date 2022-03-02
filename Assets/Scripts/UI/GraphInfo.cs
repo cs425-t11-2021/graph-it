@@ -33,7 +33,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }*/
 
     private void Awake() {
-        AlgorithmManager.Singleton.Initiate( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating );
+        AlgorithmManager.Singleton.Initiate( Controller.Singleton.Graph, ( Action ) this.UpdateMinDegreeResult, ( Action ) this.UpdateMaxDegreeResult, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateMinDegreeCalculating, ( Action ) this.UpdateMaxDegreeCalculating, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating );
         this.UpdateGraphInfo();
     }
     
@@ -44,8 +44,14 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         // Run multithreaded algorithms
         AlgorithmManager.Singleton.Clear();
         // this.algorithmManager.RunChromatic();
+        AlgorithmManager.Singleton.RunMinDegree();
+        AlgorithmManager.Singleton.RunMaxDegree();
         AlgorithmManager.Singleton.RunBipartite(); //TEMPORARY FIX
     }
+
+    public void UpdateMinDegreeResult() { Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); } // temp
+
+    public void UpdateMaxDegreeResult() { Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); } // temp
 
     public void UpdateChromaticResult() {
         // Debug.Log("Running UpdateChromaticResult");
@@ -68,6 +74,10 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // public void UpdateDepthFirstSearchResult() { }
 
     // public void UpdateBreadthFirstSearchResult() { }
+
+    public void UpdateMinDegreeCalculating() { }
+
+    public void UpdateMaxDegreeCalculating() { }
 
     public void UpdateChromaticCalculating() {
         this.chromaticText.text = "Chromatic Number: Calculating";
