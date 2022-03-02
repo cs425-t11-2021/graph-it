@@ -6,17 +6,23 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // Struct which stores a instance of graph datastructure along with its associated Unity objects
-public struct GraphInstance {
+public class GraphInstance
+{
+    public uint id;
     public Graph graph;
     public Transform container;
     public List<VertexObj> vertexObjs;
     public List<EdgeObj> edgeObjs;
+    public AlgorithmManager algorithmManager;
 
-    public GraphInstance(Transform container) {
+    public GraphInstance(Transform container, uint id, AlgorithmManager algoMan)
+    {
+        this.id = id;
         this.graph = new Graph();
         this.vertexObjs = new List<VertexObj>();
         this.edgeObjs = new List<EdgeObj>();
         this.container = container;
+        this.algorithmManager = algoMan;
     }
 }
 
@@ -32,38 +38,53 @@ public class Controller : SingletonBehavior<Controller>
     [SerializeField] private GameObject graphObjContainerPrefab;
     // Mask of Collider Layers that should receive mouse input
     [SerializeField] private LayerMask clickableLayers;
+    
+    // List of currently available graph instances
+    public List<GraphInstance> instances = new List<GraphInstance>();
+    private uint newInstanceID = 0;
 
     // Graph instance active in the current tab
-    private GraphInstance currentGraphInstance;
+    private GraphInstance activeGraphInstance;
 
     // Readonly property for the graph container in the current graph instance
-    public Transform GraphObjContainer { get => currentGraphInstance.container; }
+    public Transform GraphObjContainer { get => this.activeGraphInstance.container; }
 
     // Readonly property for getting the list of vertex objects in the current graph instance
     public List<VertexObj> VertexObjs {
-        get => currentGraphInstance.vertexObjs;
+        get => this.activeGraphInstance.vertexObjs;
     }
 
     // Readonly property for getting the list of edge objects in the current graph instance
     public List<EdgeObj> EdgeObjs {
-        get => currentGraphInstance.edgeObjs;
+        get => this.activeGraphInstance.edgeObjs;
     }
 
     // Main graph DS in the active graph instance
     public Graph Graph { 
-        get => currentGraphInstance.graph;
+        get => this.activeGraphInstance.graph;
+    }
+
+    public AlgorithmManager AlgorithmManager
+    {
+        get => this.activeGraphInstance.algorithmManager;
     }
 
     // Events called when new vertex and edge objects are created
     public event Action<VertexObj> OnVertexObjectCreation;
     public event Action<EdgeObj> OnEdgeObjectCreation;
+    public event Action OnGraphModified;
 
     private void Awake() {
         // Instantiate a new garph instance and graph object container
-        this.currentGraphInstance = new GraphInstance(Instantiate(graphObjContainerPrefab, Vector3.zero, Quaternion.identity).transform);
+        CreateGraphInstance(false);
 
         // Set the camera's event mask to clickableLayers
         Camera.main.eventMask = this.clickableLayers;
+    }
+
+    private void Start()
+    {
+        ChangeActiveInstance(this.instances[0]);
     }
 
     // Creates the vertex and edge unity objects according to the contents of the graph ds
@@ -81,7 +102,7 @@ public class Controller : SingletonBehavior<Controller>
 
     // Create a new graph instance and removing the current one
     // TODO: Add to a list instead of deleting the old one once multi-graph support is setup
-    public void CreateGraphInstance() {
+    public void CreateGraphInstance(bool setAsActive = false) {
         // Deselect All
         SelectionManager.Singleton.DeSelectAll();
 
@@ -95,11 +116,33 @@ public class Controller : SingletonBehavior<Controller>
         }
 
         // Destroy current graph objects and create a new instance
-        Destroy(this.GraphObjContainer.gameObject);
-        this.currentGraphInstance = new GraphInstance(Instantiate(graphObjContainerPrefab, Vector3.zero, Quaternion.identity).transform);
+        // Destroy(this.GraphObjContainer.gameObject);
+        Logger.Log("Creating a new graph instance.", this, LogType.INFO);
+        GraphInstance newInstance = new GraphInstance(Instantiate(graphObjContainerPrefab, Vector3.zero, Quaternion.identity).transform, this.newInstanceID++, new AlgorithmManager());
+        this.instances.Add(newInstance);
+        
+        TabManager.Singleton.CreateNewTab(newInstance, "Graph" + newInstance.id);
 
-        // Update the Grpah information UI
-        GraphInfo.Singleton.UpdateGraphInfo();
+        if (setAsActive)
+        {
+            ChangeActiveInstance(newInstance);
+        }
+    }
+
+    public void ChangeActiveInstance(GraphInstance instance)
+    {
+        if (!this.instances.Contains(instance))
+        {
+            Logger.Log("Graph instance being requested does not exist.", this, LogType.ERROR);
+            return;
+        }
+        Logger.Log("Changing active graph instance to " + instance.id + ".", this, LogType.INFO);
+        if (this.activeGraphInstance != null)
+            this.GraphObjContainer.gameObject.SetActive(false);
+        this.activeGraphInstance = instance;
+        this.GraphObjContainer.gameObject.SetActive(true);
+        
+        GraphInfo.Singleton.InitiateAlgorithmManager();
     }
 
     // Add a new vertex at a given position
@@ -119,7 +162,7 @@ public class Controller : SingletonBehavior<Controller>
         vertexObj.Initiate(vertex);
 
         Logger.Log("Creating new vertex in the current graph instance.", this, LogType.INFO);
-        this.currentGraphInstance.vertexObjs.Add(vertexObj);
+        this.activeGraphInstance.vertexObjs.Add(vertexObj);
 
         // If snap to grid is enabled, move the new vertex obj to the nearest grid spot
         if (Grid.Singleton.GridEnabled)
@@ -129,29 +172,34 @@ public class Controller : SingletonBehavior<Controller>
 
         // Send the onVertexObjCreation event
         this.OnVertexObjectCreation?.Invoke(vertexObj);
+        this.OnGraphModified?.Invoke();
     }
 
     public void RemoveVertex(VertexObj vertexObj) {
-        for (int i = this.currentGraphInstance.edgeObjs.Count - 1; i >= 0; i--)
+        for (int i = this.activeGraphInstance.edgeObjs.Count - 1; i >= 0; i--)
         {
-            if (this.currentGraphInstance.edgeObjs[i].Vertex1 == vertexObj || this.currentGraphInstance.edgeObjs[i].Vertex2 == vertexObj)
+            if (this.activeGraphInstance.edgeObjs[i].Vertex1 == vertexObj || this.activeGraphInstance.edgeObjs[i].Vertex2 == vertexObj)
             {
-                RemoveEdge(this.currentGraphInstance.edgeObjs[i]);
+                RemoveEdge(this.activeGraphInstance.edgeObjs[i]);
             }
         }
 
         // Update the graph ds
         Controller.Singleton.Graph.RemoveVertex(vertexObj.Vertex);
-        this.currentGraphInstance.vertexObjs.Remove(vertexObj);
+        this.activeGraphInstance.vertexObjs.Remove(vertexObj);
         Destroy(vertexObj.gameObject);
         Logger.Log("Removed a vertex from the current graph instance.", this, LogType.INFO);
+        
+        this.OnGraphModified?.Invoke();
     }
 
     public void RemoveEdge(EdgeObj edgeObj) {
         Controller.Singleton.Graph.RemoveEdge(edgeObj.Edge);
-        this.currentGraphInstance.edgeObjs.Remove(edgeObj);
+        this.activeGraphInstance.edgeObjs.Remove(edgeObj);
         Destroy(edgeObj.transform.parent.gameObject);
         Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);
+        
+        this.OnGraphModified?.Invoke();
     }
 
     public void AddEdge(Vertex vertex1, Vertex vertex2, bool directed = false) {
@@ -207,14 +255,14 @@ public class Controller : SingletonBehavior<Controller>
             
             Edge curvedEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
             CreateCurvedEdgeObj(curvedEdge, 8);
-            GraphInfo.Singleton.UpdateGraphInfo();
 
         }
         else {
             Edge newEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
             CreateEdgeObj(newEdge);
-            GraphInfo.Singleton.UpdateGraphInfo();
         }
+        
+        GraphInfo.Singleton.UpdateGraphInfo();
     }
 
         // Create a new edge object to correspond to a passed in graph edge
@@ -235,10 +283,11 @@ public class Controller : SingletonBehavior<Controller>
         edgeObj.Initiate(edge, fromVertexObj, toVertexObj);
         Logger.Log("Creating new edge in the current graph instance.", this, LogType.INFO);
         // Add edge to the list of edges in instance
-        this.currentGraphInstance.edgeObjs.Add(edgeObj);
+        this.activeGraphInstance.edgeObjs.Add(edgeObj);
 
         // Send the OnEdgeObjectCreation event
         this.OnEdgeObjectCreation?.Invoke(edgeObj);
+        this.OnGraphModified?.Invoke();
     }
 
     private void CreateCurvedEdgeObj(Edge curvedEdge, int curvature = 0) {
@@ -253,15 +302,16 @@ public class Controller : SingletonBehavior<Controller>
         edgeObj.Curvature = curvature;
         Logger.Log("Creating new edge in the current graph instance.", this, LogType.INFO);
         // Add edge to the list of edges in instance
-        this.currentGraphInstance.edgeObjs.Add(edgeObj);
+        this.activeGraphInstance.edgeObjs.Add(edgeObj);
 
         // Send the OnEdgeObjectCreation event
         this.OnEdgeObjectCreation?.Invoke(edgeObj);
+        this.OnGraphModified?.Invoke();
     }
 
     // Get a vertex object in the current graph instance given a vertex
     private VertexObj GetVertexObj(Vertex v) {
-        foreach (VertexObj vertexObj in this.currentGraphInstance.vertexObjs) {
+        foreach (VertexObj vertexObj in this.activeGraphInstance.vertexObjs) {
             if (vertexObj.Vertex == v) return vertexObj;
         }
         return null;

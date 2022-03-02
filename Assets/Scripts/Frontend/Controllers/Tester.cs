@@ -7,8 +7,18 @@ using UnityEngine;
 public class Tester : SingletonBehavior<Tester>
 {
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.P)) {
-            GraphPhysics.Singleton.UseGraphPhysics(3);
+        if (Input.GetKeyDown(KeyCode.N)) {
+            Controller.Singleton.CreateGraphInstance();
+        }
+
+        if (Input.GetKeyDown(KeyCode.RightBracket))
+        {
+            Controller.Singleton.ChangeActiveInstance(Controller.Singleton.instances[1]);
+        }
+        
+        if (Input.GetKeyDown(KeyCode.LeftBracket))
+        {
+            Controller.Singleton.ChangeActiveInstance(Controller.Singleton.instances[0]);
         }
     }
    

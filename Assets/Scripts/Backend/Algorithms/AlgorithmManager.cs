@@ -9,7 +9,7 @@ using UnityEngine.Scripting;
 // using UnityEngine;
 
 // TODO: algorithm manager needs to know when graph is updated so that it can kill all running algorithms and remove all completed
-public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
+public class AlgorithmManager
 {
     private Graph graph;
     private Action chromaticUI;
@@ -24,12 +24,12 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
     private Action kruskalsCalc;
     private Action depthFirstSearchCalc;
     private Action breadthFirstSearchCalc;
-    private Dictionary< int, Algorithm > running; 
+    private Dictionary< int, Algorithm > running = new Dictionary< int, Algorithm >(); 
     public List< Algorithm > Running
     {
         get => this.running.Values.ToList();
     }
-    private Dictionary< int, Algorithm > complete;
+    private Dictionary< int, Algorithm > complete = new Dictionary< int, Algorithm >();
     public List< Algorithm > Complete
     {
         get => this.running.Values.ToList();
@@ -37,6 +37,7 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 
     public void Initiate( Graph graph, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
     {
+        Controller.Singleton.OnGraphModified += Clear;
         this.graph = graph;
         this.chromaticUI = chromaticUI;
         this.bipartiteUI = bipartiteUI;
@@ -50,8 +51,6 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
         this.kruskalsCalc = kruskalsCalc;
         this.depthFirstSearchCalc = depthFirstSearchCalc;
         this.breadthFirstSearchCalc = breadthFirstSearchCalc;
-        this.running  = new Dictionary< int, Algorithm >();
-        this.complete = new Dictionary< int, Algorithm >();
     }
 
     public void RunAll()
@@ -63,7 +62,15 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 
     public void RunChromatic()
     {
-        new ChromaticAlgorithm( this.graph, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        if (!IsComplete(ChromaticAlgorithm.GetHash()))
+        {
+            new ChromaticAlgorithm( this.graph, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
+        else
+        {
+            this.chromaticUI.Invoke();
+        }
+        
     }
 
     public void RunBipartite()
@@ -75,8 +82,17 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
         // }
         // ba.RunThread();
 
-        this.EnsureChromaticRunning();
-        new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        if (!IsComplete(BipartiteAlgorithm.GetHash()))
+        {
+            this.EnsureChromaticRunning();
+            new BipartiteAlgorithm(this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning,
+                this.MarkComplete, this.UnmarkRunning).RunThread();
+        }
+        else
+        {
+            this.chromaticUI.Invoke();
+            this.bipartiteUI.Invoke();
+        }
     }
 
     public void RunPrims( Vertex vert ) // temp parameter
@@ -188,7 +204,7 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
             kvp.Value?.Kill();
     }
 
-    private void OnDestroy()
+    ~AlgorithmManager()
     {
         KillAll();
     }

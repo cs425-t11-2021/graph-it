@@ -58,7 +58,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }*/
 
     public void UpdateChromaticResult() {
-        int? chromaticNumber = AlgorithmManager.Singleton.GetChromaticNumber();
+        int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
         if ( chromaticNumber is null )
             this.chromaticText.text = "Chromatic Number: Error";
         else
@@ -66,7 +66,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     public void UpdateBipartiteResult() {
-        this.bipartiteText.text = "Bipartite: " + ( AlgorithmManager.Singleton.GetBipartite() ?? false ? "Yes" : "No" );
+        this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
     }
 
     public void UpdatePrimsResult() { }

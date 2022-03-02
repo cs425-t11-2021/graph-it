@@ -139,7 +139,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         }
 
         // Call selection changed event
-        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+        this.OnSelectionChange?.Invoke(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Method called to select all objects
@@ -158,7 +158,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         }
 
         // Call selection changed event
-        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+        this.OnSelectionChange?.Invoke(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Gets the number of vertices currently selected
