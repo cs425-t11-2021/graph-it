@@ -82,3 +82,5 @@ ehthumbs.db
 Thumbs.db
 
 .vscode/
+.idea/
+.vsconfig

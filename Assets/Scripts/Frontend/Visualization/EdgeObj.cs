@@ -12,6 +12,9 @@ public class EdgeObj : MonoBehaviour
 
     // Label of the edge
     private string label;
+    
+    // Int representing the direction of the label, 0 being undirected, 1 being the direction given at creation, and -1 being reversed
+    private int direction;
 
     public VertexObj Vertex1 {get; private set;}
     public VertexObj Vertex2 {get; private set;}
@@ -73,7 +76,6 @@ public class EdgeObj : MonoBehaviour
         this.gameObject.SetActive(false);
 
         this.spriteRenderer = GetComponent<SpriteRenderer>();
-        // this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
         
     }
@@ -95,14 +97,14 @@ public class EdgeObj : MonoBehaviour
         {
             this.curvature = 0;
         }
+
+        this.direction = edge.directed ? 1 : 0;
         
         // Fix for edge temporarily appearing in the wrong place when getting added
         if (spriteRenderer) spriteRenderer.enabled = false;
 
-        // if (this.curved) {
         this.shapeController = GetComponent<SpriteShapeController>();
         this.shapeRenderer = GetComponent<SpriteShapeRenderer>();
-        // }
         
         this.labelObj.Initiate(this);
     }
@@ -289,7 +291,25 @@ public class EdgeObj : MonoBehaviour
 
     // Toggle between undirected, direction 1, and direction -1
     public void ToggleEdgeType() {
-        this.Edge.Directed = !this.Edge.Directed;
+        if (this.direction == 0)
+        {
+            this.direction = 1;
+            this.Edge.directed = true;
+        }
+        else if (this.direction == 1)
+        {
+            this.direction = -1;
+            Controller.Singleton.Graph.ReverseEdge(this.Edge);
+            (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
+        }
+        else
+        {
+            Controller.Singleton.Graph.ReverseEdge(this.Edge);
+            (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
+            
+            this.direction = 0;
+            this.Edge.directed = false;
+        }
     }
 
     // When Cursor enters a edge obj, increase its sprite object size by 33%
