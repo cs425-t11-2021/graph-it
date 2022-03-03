@@ -8,48 +8,26 @@ public class Toolbar : SingletonBehavior<Toolbar>
 {
     [SerializeField]
     private ToggleButton selectionModeButton;
-    // private bool selectionMode = false;
-    // public bool SelectionMode { 
-    //     get => this.selectionMode;
-    //     private set {
-    //         if (value) {
-    //             this.createVertexModeButton.Checked = false;
-    //             this.edgeCreationModeButton.Checked = false;
-    //         }
-    //         this.selectionMode = value;
-    //     }
-    // }
 
     [SerializeField]
     private ToggleButton createVertexModeButton;
-    // private bool createVertexMode = false;
-    // public bool CreateVertexMode { 
-    //     get => this.createVertexMode;
-    //     private set { 
-    //         if (value) {
-    //             this.selectionModeButton.Checked = false;
-    //             this.edgeCreationModeButton.Checked = false;
-    //         }
-    //         this.createVertexMode = value;
-    //     }
-    // }
 
     [SerializeField]
     private Button deleteButton;
 
     [SerializeField]
     private ToggleButton edgeCreationModeButton;
-    private bool edgeCreationMode = false;
-    public bool EdgeCreationMode {
-        get => this.edgeCreationMode;
-        private set {
-            if (value) {
-                this.selectionModeButton.Checked = false;
-                this.createVertexModeButton.Checked = false;
-            }
-            this.edgeCreationMode = value;
-        }
-    }
+    // private bool edgeCreationMode = false;
+    // public bool EdgeCreationMode {
+    //     get => this.edgeCreationMode;
+    //     private set {
+    //         if (value) {
+    //             this.selectionModeButton.Checked = false;
+    //             this.createVertexModeButton.Checked = false;
+    //         }
+    //         this.edgeCreationMode = value;
+    //     }
+    // }
 
     [SerializeField]
     private Button addEdgeButton;
@@ -57,15 +35,26 @@ public class Toolbar : SingletonBehavior<Toolbar>
     [SerializeField]
     private Button changeTypeButton;
 
+    [SerializeField] private ToggleButton edgeThicknessButton;
+    [SerializeField] private GameObject edgeThicknessSubpanel;
+
+    [SerializeField] private ToggleButton edgeCurvatureButton;
+    [SerializeField] private GameObject edgeCurvatureSubpanel;
+
     private void Awake() {
         // Subscribe to OnSelectionChange event
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
+        
+        // Subscribe to Onclick event
+        InputManager.Singleton.OnMouseClick += CloseSubpanels;
 
         // Default configuration
         deleteButton.gameObject.SetActive(false);
         edgeCreationModeButton.gameObject.SetActive(false);
         addEdgeButton.gameObject.SetActive(false);
         changeTypeButton.gameObject.SetActive(false);
+        edgeThicknessButton.gameObject.SetActive(false);
+        edgeCurvatureButton.gameObject.SetActive(false);
     }
 
     private void Update() {
@@ -102,6 +91,15 @@ public class Toolbar : SingletonBehavior<Toolbar>
             }
         }
     }
+    
+    // Turn off the edge thickness and curvature subpanels
+    private void CloseSubpanels()
+    {
+        if (this.edgeThicknessButton.Checked)
+            this.edgeThicknessButton.Checked = false;
+        if (this.edgeCurvatureButton.Checked)
+            this.edgeCurvatureButton.Checked = false;
+    }
 
     // Turn off all toggles
     public void ResetAll() {
@@ -120,6 +118,8 @@ public class Toolbar : SingletonBehavior<Toolbar>
         else {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
         }
+        
+        CloseSubpanels();
     }
 
     // Enable or disable vertex creation mode
@@ -132,6 +132,8 @@ public class Toolbar : SingletonBehavior<Toolbar>
         else {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
         }
+        
+        CloseSubpanels();
     }
 
     // Function to enable certain toolbar buttons when a graph component is selected
@@ -151,6 +153,20 @@ public class Toolbar : SingletonBehavior<Toolbar>
         // Enable the Add Edge button when two vertices are selected
         this.addEdgeButton.gameObject.SetActive(selectedVertexCount == 2 && selectedEdgeCount == 0);
         this.changeTypeButton.gameObject.SetActive(selectedVertexCount == 0 && selectedEdgeCount > 0);
+        
+        // Enable the thickness and curvature toggles when only edges are selected
+        if (selectedVertexCount == 0 && selectedEdgeCount > 0)
+        {
+            this.edgeThicknessButton.gameObject.SetActive(true);
+            this.edgeCurvatureButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            this.edgeThicknessButton.Checked = false;
+            this.edgeCurvatureButton.Checked = false;
+            this.edgeThicknessButton.gameObject.SetActive(false);
+            this.edgeCurvatureButton.gameObject.SetActive(false);
+        }
     }
 
     // Function called by delete button
@@ -178,5 +194,36 @@ public class Toolbar : SingletonBehavior<Toolbar>
     // Function called by Change Type button
     public void ChangeType() {
         SelectionManager.Singleton.ChangeSelectedEdgesType();
+    }
+    
+    // Function called by the edge thickness and curvature buttons to toggle the add/subtract subpanel
+    public void ToggleAddSubtractSubpanel(GameObject subpanel)
+    {
+        if (subpanel.activeInHierarchy)
+        {
+            subpanel.SetActive(false);
+        }
+        else
+        {
+            subpanel.SetActive(true);
+        }
+    }
+    
+    // Function called by the edge thickness plus or minus buttons
+    public void ChangeEdgeThickness(int change)
+    {
+        foreach (EdgeObj edgeObj in SelectionManager.Singleton.SelectedEdges)
+        {
+            edgeObj.ChangeThickness(change);
+        }
+    }
+    
+    // Function called by the edge curvature plus or minus buttons
+    public void ChangeEdgeCurvature(int change)
+    {
+        foreach (EdgeObj edgeObj in SelectionManager.Singleton.SelectedEdges)
+        {
+            edgeObj.ChangeCurvature(change);
+        }
     }
 }

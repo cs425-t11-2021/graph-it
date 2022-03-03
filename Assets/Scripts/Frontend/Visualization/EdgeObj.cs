@@ -1,4 +1,6 @@
 //All code developed by Team 11
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -62,7 +64,7 @@ public class EdgeObj : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     // Width scale factor for edge thickness increse of 1
-    [SerializeField] private float edgeWidthScaleFactor = 0.1f;
+    [SerializeField] private float edgeWidthScaleFactor = 0.05f;
 
     // Directed edge variables
     [SerializeField] private Transform arrow;
@@ -133,18 +135,39 @@ public class EdgeObj : MonoBehaviour
         {
             if (edgeObj.Vertex1 == edgeObj.Vertex2) continue;
             
+            // Connected To
             if (edgeObj.Vertex2 == this.Vertex1)
             {
-                connectedEdgeAngles.Add(Mathf.Atan2(edgeObj.Vertex1.transform.position.y - this.Vertex1.transform.position.y, edgeObj.Vertex1.transform.position.x - this.Vertex1.transform.position.x) * Mathf.Rad2Deg);
+                float angle = Mathf.Atan2(edgeObj.Vertex1.transform.position.y - this.Vertex2.transform.position.y,
+                    edgeObj.Vertex1.transform.position.x - this.Vertex2.transform.position.x) * Mathf.Rad2Deg;
+                // if (angle < 0) angle += 180f;
+                connectedEdgeAngles.Add(angle);
             }
+            // Connected From
             else if (edgeObj.Vertex1 == this.Vertex1)
             {
-                connectedEdgeAngles.Add(Mathf.Atan2(edgeObj.Vertex2.transform.position.y - this.Vertex1.transform.position.y, edgeObj.Vertex2.transform.position.x - this.Vertex1.transform.position.x) * Mathf.Rad2Deg);
+                float angle = Mathf.Atan2(edgeObj.Vertex2.transform.position.y - this.Vertex1.transform.position.y,
+                    edgeObj.Vertex2.transform.position.x - this.Vertex1.transform.position.x) * Mathf.Rad2Deg;
+                // if (angle < 0) angle += 180f;
+                connectedEdgeAngles.Add(angle);
             }
         }
 
         if (connectedEdgeAngles.Count == 0) return 0f;
-        return connectedEdgeAngles.Average() + 180f;
+        return AngleAverage(connectedEdgeAngles) + 180f;
+    }
+
+    private float AngleAverage(List<float> connectedEdgeAngles)
+    {
+        float num = 0;
+        float den = 0;
+        foreach (float angle in connectedEdgeAngles)
+        {
+            num += Mathf.Sin(angle * Mathf.Deg2Rad);
+            den += Mathf.Cos(angle * Mathf.Deg2Rad);
+        }
+
+        return Mathf.Atan2(num, den) * Mathf.Rad2Deg;
     }
 
     // TODO: Find a way not to hard code this
@@ -177,7 +200,7 @@ public class EdgeObj : MonoBehaviour
         this.shapeController.spline.SetLeftTangent(4, Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(0f, -largeArm, 0f));
         this.shapeController.spline.SetRightTangent(4, Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(-smallArm, 0, 0f));
         
-        pointsOnCurve = new Vector3[] {new Vector3(largeRadius - this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f), 0f, 0f), new Vector3(0f, largeRadius - this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f), 0f), new Vector3(-(largeRadius - this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f)), 0f, 0f), new Vector3(0f, -(largeRadius - this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f)), 0f)};
+        pointsOnCurve = new Vector3[] {new Vector3(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f), 0f, 0f), new Vector3(0f, largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f), 0f), new Vector3(-(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f)), 0f, 0f), new Vector3(0f, -(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f)), 0f)};
         
         this.shapeController.spline.InsertPointAt(5,  Quaternion.AngleAxis(angle, Vector3.forward) * pointsOnCurve[0]);
         this.shapeController.spline.SetTangentMode(5, ShapeTangentMode.Broken);
@@ -210,7 +233,7 @@ public class EdgeObj : MonoBehaviour
             Vector3 dir =  (Quaternion.AngleAxis(angle - 20, Vector3.forward) * pointsOnCurve[1]).normalized;
             this.arrow.rotation = Quaternion.AngleAxis(angle - 110, Vector3.forward);
             this.arrow.position = this.transform.parent.position + (dir * this.arrowSpriteRenderer.size.x);
-            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.Thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -224,20 +247,20 @@ public class EdgeObj : MonoBehaviour
         Vector3 normal = Vector2.Perpendicular(distance).normalized;
 
         this.shapeController.spline.Clear();
-        this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(0, ShapeTangentMode.Linear);
-        this.shapeController.spline.InsertPointAt(1,  pointsOnCurve[1] + normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(1,  pointsOnCurve[1] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(1, ShapeTangentMode.Linear);
-        this.shapeController.spline.InsertPointAt(2,  pointsOnCurve[1] - normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(2,  pointsOnCurve[1] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(2, ShapeTangentMode.Linear);
-        this.shapeController.spline.InsertPointAt(3,  pointsOnCurve[0] - normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(3,  pointsOnCurve[0] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(3, ShapeTangentMode.Linear);
 
         if (this.Edge.Directed) {
             float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.arrow.localPosition = distance * (1f - (this.arrowSpriteRenderer.size.x + .066f) / distance.magnitude);
-            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.Thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -253,26 +276,26 @@ public class EdgeObj : MonoBehaviour
 
         this.shapeController.spline.Clear();
         
-        this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(0, ShapeTangentMode.Linear);
         
-        this.shapeController.spline.InsertPointAt(1,  pointsOnCurve[1] + normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(1,  pointsOnCurve[1] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(1, ShapeTangentMode.Continuous);
         this.shapeController.spline.SetLeftTangent(1, -distance * .25f);
         this.shapeController.spline.SetRightTangent(1, distance * .25f);
 
-        this.shapeController.spline.InsertPointAt(2,  pointsOnCurve[2] + normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(2,  pointsOnCurve[2] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
         this.shapeController.spline.SetTangentMode(2, ShapeTangentMode.Linear);
 
-        this.shapeController.spline.InsertPointAt(3,  pointsOnCurve[2] - normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) + (pointsOnCurve[1] - pointsOnCurve[2]).normalized * 0.1f);
+        this.shapeController.spline.InsertPointAt(3,  pointsOnCurve[2] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) + (pointsOnCurve[1] - pointsOnCurve[2]).normalized * 0.1f);
         this.shapeController.spline.SetTangentMode(3, ShapeTangentMode.Linear);
 
-        this.shapeController.spline.InsertPointAt(4,  pointsOnCurve[1] - normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.66f : 1.25f));
+        this.shapeController.spline.InsertPointAt(4,  pointsOnCurve[1] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.66f : 1.25f));
         this.shapeController.spline.SetTangentMode(4, ShapeTangentMode.Continuous);
         this.shapeController.spline.SetLeftTangent(4, distance * .25f);
         this.shapeController.spline.SetRightTangent(4, -distance * .25f);
         
-        this.shapeController.spline.InsertPointAt(5,  pointsOnCurve[0] - normal * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) + (pointsOnCurve[1] - pointsOnCurve[0]).normalized * 0.1f);
+        this.shapeController.spline.InsertPointAt(5,  pointsOnCurve[0] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) + (pointsOnCurve[1] - pointsOnCurve[0]).normalized * 0.1f);
         this.shapeController.spline.SetTangentMode(5, ShapeTangentMode.Linear);
 
         if (this.Edge.Directed) {
@@ -280,7 +303,7 @@ public class EdgeObj : MonoBehaviour
             float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.arrow.position = this.Vertex2.transform.position + -distance.normalized * (this.arrowSpriteRenderer.size.x + .066f);
-            this.arrow.localScale = new Vector3(1f, (1f + this.Edge.Thickness * edgeWidthScaleFactor) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -324,8 +347,45 @@ public class EdgeObj : MonoBehaviour
         this.hovering = false;
     }
 
-    // public void UpdateWeight(double newWeight)
-    // {
-    //     this.Edge.Weight = newWeight;
-    // }
+    public void ChangeThickness(int change)
+    {
+        if (change > 0)
+        {
+            this.Edge.Thickness += 1;
+            if (this.Edge.Thickness > 5)
+            {
+                this.Edge.Thickness = 5;
+            }
+        }
+        else
+        {
+            if (this.Edge.Thickness != 0)
+            {
+                this.Edge.Thickness -= 1;
+            }
+        }
+        
+        Logger.Log("Edge thickness changed to " + this.Edge.Thickness, this, LogType.INFO);
+    }
+
+    public void ChangeCurvature(int change)
+    {
+        if (change > 0)
+        {
+            this.Curvature += 1;
+            if (this.Curvature > 12)
+            {
+                this.Curvature = 12;
+            }
+        }
+        else
+        {
+            if (this.Curvature != 0)
+            {
+                this.Curvature -= 1;
+            }
+        }
+        
+        Logger.Log("Edge curvature changed to " + this.Curvature, this, LogType.INFO);
+    }
 }
