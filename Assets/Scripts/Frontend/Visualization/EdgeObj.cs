@@ -111,7 +111,7 @@ public class EdgeObj : MonoBehaviour
 
     private void Update() {
         if (this.Edge != null) {
-            transform.parent.position = this.Vertex1.transform.position;
+            transform.parent.position = this.Vertex1.transform.position + new Vector3(0f, 0f, 1f);
             if (this.curvature == int.MaxValue) {
                 UpdateCircularSpline(0.7f, FindBestAngleForLoop());
             }
