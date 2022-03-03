@@ -16,6 +16,16 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     [SerializeField] private TMP_Text orderText;
     // Reference of the text display of the graph size
     [SerializeField] private TMP_Text sizeText;
+    // Reference of the text display of the graph size
+    [SerializeField] private TMP_Text MinDegreeText;
+    // Reference of the text display of the minimum degree
+    [SerializeField] private TMP_Text MaxDegreeText;
+    // Reference of the text display of the maximmum degree
+    [SerializeField] private Button closePanel;
+    //Reference to the button to close the graph info panels
+    [SerializeField] private Button openPanel;
+    //Reference to the button to open the graph info panels
+
     // Reference of the button of prim
     //[SerializeField] private Button primButton;
     // Reference of the kruskal button
@@ -77,6 +87,19 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateBipartiteCalculating() {
         this.bipartiteText.text = "Bipartite: Calculating";
         // Debug.Log("Running UpdateBipartiteCalculating");
+    }
+
+    //moves the panel off the screen (TEMPORARY FIX) and shows the button to open the graph info panel
+    public void CloseGraphInfoPanel(){
+        GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0);
+        openPanel.gameObject.SetActive(true);
+    }
+
+    //moves the panel back onto the screen (TEMPORARY FIX) and make the open panel button not accessible
+    public void OpenGraphInfoPanel(){
+        //GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0);
+        this.transform.position = new Vector3 (0f,293.79f,0);
+        openPanel.gameObject.SetActive(false);
     }
 
     // public void UpdatePrimsCalculating() { }
