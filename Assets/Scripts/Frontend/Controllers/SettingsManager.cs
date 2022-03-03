@@ -58,6 +58,13 @@ public class SettingsManager : SingletonBehavior<SettingsManager>
             }
         }
     }
+    
+    // How big the gap should be between edges and vertices
+    [SerializeField] private float edgeVertexGap = 0f;
+    public float EdgeVertexGap
+    {
+        get => this.edgeVertexGap;
+    }
 
     // Method run at Awake to implement the default settings
     private void ImplementDefaultSettings()
