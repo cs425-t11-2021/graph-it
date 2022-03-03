@@ -112,14 +112,14 @@ public class EdgeLabelObj : MonoBehaviour
     {
         this.edgeObject.Edge.Label = newLabel;
 
-        if (this.edgeObject.Edge.weighted)
+        if (this.edgeObject.Edge.Weighted)
         {
-            inputField.text = this.edgeObject.Edge.weight.ToString();
+            inputField.text = this.edgeObject.Edge.Weight.ToString();
         }
         else
         {
             inputField.text = this.edgeObject.Edge.Label;
         }
-        Logger.Log(string.Format("Edge {0} set to {1}.", this.edgeObject.Edge.weighted ? "weight" : "label", inputField.text), this, LogType.INFO);
+        Logger.Log(string.Format("Edge {0} set to {1}.", this.edgeObject.Edge.Weighted ? "weight" : "label", inputField.text), this, LogType.INFO);
     }
 }

@@ -98,7 +98,7 @@ public class EdgeObj : MonoBehaviour
             this.curvature = 0;
         }
 
-        this.direction = edge.directed ? 1 : 0;
+        this.direction = edge.Directed ? 1 : 0;
         
         // Fix for edge temporarily appearing in the wrong place when getting added
         if (spriteRenderer) spriteRenderer.enabled = false;
@@ -294,7 +294,7 @@ public class EdgeObj : MonoBehaviour
         if (this.direction == 0)
         {
             this.direction = 1;
-            this.Edge.directed = true;
+            this.Edge.Directed = true;
         }
         else if (this.direction == 1)
         {
@@ -308,7 +308,7 @@ public class EdgeObj : MonoBehaviour
             (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
             
             this.direction = 0;
-            this.Edge.directed = false;
+            this.Edge.Directed = false;
         }
     }
 
@@ -324,7 +324,8 @@ public class EdgeObj : MonoBehaviour
         this.hovering = false;
     }
 
-    // public void UpdateWeight(double newWeight) {
+    // public void UpdateWeight(double newWeight)
+    // {
     //     this.Edge.Weight = newWeight;
     // }
 }
