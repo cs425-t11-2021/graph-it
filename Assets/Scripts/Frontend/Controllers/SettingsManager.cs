@@ -66,6 +66,8 @@ public class SettingsManager : SingletonBehavior<SettingsManager>
         get => this.edgeVertexGap;
     }
 
+    public Sprite[] vertexSprites;
+
     // Method run at Awake to implement the default settings
     private void ImplementDefaultSettings()
     {

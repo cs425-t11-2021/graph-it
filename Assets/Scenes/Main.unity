@@ -17766,6 +17766,10 @@ MonoBehaviour:
   displayVertexLabels: 1
   snapVerticesToGrid: 1
   alwaysShowGridlines: 0
+  edgeVertexGap: 0
+  vertexSprites:
+  - {fileID: 21300000, guid: 892af439bbf6d458dad2f5f46ef2ef9d, type: 3}
+  - {fileID: 21300000, guid: fad0d5feedf68374fb232715ba8978bc, type: 3}
 --- !u!114 &2144943531
 MonoBehaviour:
   m_ObjectHideFlags: 0

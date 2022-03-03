@@ -28,6 +28,7 @@ public class VertexLabelObj : MonoBehaviour
     private string latexFormula = "";
     [SerializeField] private VertexObj vertexObj;
     
+    public bool CenteredLabel { get; set; }
 
     public void Initiate(string content)
     {
@@ -105,13 +106,18 @@ public class VertexLabelObj : MonoBehaviour
         }
         else
         {
-            transform.localPosition = (Vector3) position;
+            transform.localPosition = (Vector3) position + Vector3.forward;
         }
     }
 
     // This code is slow as fuck, someone try to speed it up
     Vector3? FindSuitablePosition()
     {
+        if (this.CenteredLabel)
+        {
+            return Vector3.zero;
+        }
+        
         for (float radius = 0.3f; radius < 0.8f; radius += 0.1f)
         {
             for (float angle = 0f; angle <= 360f; angle += 30f)

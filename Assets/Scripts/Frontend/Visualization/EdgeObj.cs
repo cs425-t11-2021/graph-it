@@ -243,7 +243,7 @@ public class EdgeObj : MonoBehaviour
 
     private void UpdateStraightSpline() {
         Vector3 distance = this.Vertex2.transform.position - this.Vertex1.transform.position;
-        Vector3[] pointsOnCurve = {Vector3.zero + distance.normalized * (.066f + SettingsManager.Singleton.EdgeVertexGap), distance - distance.normalized * (.066f + SettingsManager.Singleton.EdgeVertexGap + (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f))};
+        Vector3[] pointsOnCurve = {Vector3.zero + distance.normalized * (Vertex1.spriteRadius + SettingsManager.Singleton.EdgeVertexGap), distance - distance.normalized * (this.Vertex2.spriteRadius + SettingsManager.Singleton.EdgeVertexGap + (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f))};
         Vector3 normal = Vector2.Perpendicular(distance).normalized;
 
         this.shapeController.spline.Clear();
@@ -259,7 +259,7 @@ public class EdgeObj : MonoBehaviour
         if (this.Edge.Directed) {
             float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            this.arrow.localPosition = distance * (1f - (this.arrowSpriteRenderer.size.x + .066f) / distance.magnitude) - distance.normalized * SettingsManager.Singleton.EdgeVertexGap;
+            this.arrow.localPosition = distance * (1f - (this.arrowSpriteRenderer.size.x + this.Vertex2.spriteRadius) / distance.magnitude) - distance.normalized * SettingsManager.Singleton.EdgeVertexGap;
             this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
@@ -272,7 +272,7 @@ public class EdgeObj : MonoBehaviour
         Vector3 distance = this.Vertex2.transform.position - this.Vertex1.transform.position;
         Vector3 normal = Vector2.Perpendicular(distance).normalized;
 
-        Vector3[] pointsOnCurve = {Vector3.zero + distance.normalized * (.066f + SettingsManager.Singleton.EdgeVertexGap), distance / 2f + (radius * normal), distance - distance.normalized * (.066f + SettingsManager.Singleton.EdgeVertexGap + (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f))};
+        Vector3[] pointsOnCurve = {Vector3.zero + distance.normalized * (this.Vertex1.spriteRadius + SettingsManager.Singleton.EdgeVertexGap), distance / 2f + (radius * normal), distance - distance.normalized * (this.Vertex2.spriteRadius + SettingsManager.Singleton.EdgeVertexGap + (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f))};
 
         this.shapeController.spline.Clear();
         
@@ -302,7 +302,7 @@ public class EdgeObj : MonoBehaviour
             distance = this.Vertex2.transform.position - (this.transform.position + pointsOnCurve[1]);
             float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
-            this.arrow.position = this.Vertex2.transform.position + -distance.normalized * (this.arrowSpriteRenderer.size.x + .066f) - distance.normalized * SettingsManager.Singleton.EdgeVertexGap;
+            this.arrow.position = this.Vertex2.transform.position + -distance.normalized * (this.arrowSpriteRenderer.size.x + this.Vertex2.spriteRadius) - distance.normalized * SettingsManager.Singleton.EdgeVertexGap;
             this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
