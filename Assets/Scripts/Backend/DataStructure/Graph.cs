@@ -86,7 +86,7 @@ public class Graph
 
     public Edge this[ Vertex vert1, Vertex vert2 ]
     {
-        get => vert1 > vert2 ? this.Adjacency.GetValue( ( vert2, vert1 ) ) : this.Adjacency.GetValue( ( vert1, vert2 ) );
+        get => vert1 > vert2 ? this.Adjacency.GetValue( ( vert1, vert2 ) ) : this.Adjacency.GetValue( ( vert2, vert1 ) );
     }
 
     private List< Edge > GetDirectedEdges()
@@ -191,6 +191,25 @@ public class Graph
         if ( recordChange )
             new GraphModification( this, Modification.EDGE_REVERSE, edge );
         return edge;
+    }
+
+    // temp, use delegates in future
+    public void MakeEdgeDirected( Edge edge )
+    {
+        if ( edge != this[ edge.vert1, edge.vert2 ] )
+            throw new System.Exception( "The provided edge to direct is not in the graph." );
+
+        edge.Directed = true;
+    }
+
+    public void MakeEdgeUndirected( Edge edge )
+    {
+        if ( edge != this[ edge.vert1, edge.vert2 ] )
+            throw new System.Exception( "The provided edge to undirect is not in the graph." );
+
+        if ( edge.vert1 > edge.vert2 )
+            this.ReverseEdge( edge );
+        edge.Directed = false;
     }
 
     public void Undo()

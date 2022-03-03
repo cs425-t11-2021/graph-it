@@ -82,7 +82,7 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
             }
         }
 
-        bounds.SetMinMax(cam.WorldToScreenPoint(new Vector3(xMin - 1, yMin - 1, cam.transform.position.z)), cam.WorldToScreenPoint(new Vector3(xMax + 1, yMax + 1, cam.transform.position.z)));
+        bounds.SetMinMax(cam.WorldToScreenPoint(new Vector3(xMin - 2, yMin - 2, cam.transform.position.z)), cam.WorldToScreenPoint(new Vector3(xMax + 2, yMax + 2, cam.transform.position.z)));
 
         return bounds;
     }

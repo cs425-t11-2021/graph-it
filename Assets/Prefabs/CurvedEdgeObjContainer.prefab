@@ -782,7 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 99cd7b80514174c0babb7f6957f1a532, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  edgeWidthScaleFactor: 0.1
+  edgeWidthScaleFactor: 0.08
   arrow: {fileID: 9056994099221006109}
   labelObj: {fileID: 5501775363169806817}
 --- !u!60 &9056994100037127507

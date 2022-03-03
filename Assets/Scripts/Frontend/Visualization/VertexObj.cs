@@ -43,6 +43,8 @@ public class VertexObj : MonoBehaviour
     // Reference to the labelObj attached to the vertexObj
     private VertexLabelObj labelObj;
 
+    public float spriteRadius;
+
     private void Awake() {
         // Vertex objects starts non active
         this.gameObject.SetActive(false);
@@ -53,6 +55,24 @@ public class VertexObj : MonoBehaviour
         this.spriteObj = transform.GetChild(0);
         this.spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
         this.labelObj = GetComponentInChildren<VertexLabelObj>();
+
+        this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
+    }
+
+    private void Update()
+    {
+        if (this.selected && Input.GetKeyDown(KeyCode.M))
+        {
+            ChangeStyle(1);
+            this.labelObj.CenteredLabel = true;
+            this.labelObj.UpdatePosition();
+        }
+        if (this.selected && Input.GetKeyDown(KeyCode.N))
+        {
+            ChangeStyle(0);
+            this.labelObj.CenteredLabel = false;
+            this.labelObj.UpdatePosition();
+        }
     }
 
     // Method called by a controller class to setup properties of the vertex object
@@ -91,5 +111,19 @@ public class VertexObj : MonoBehaviour
         {
             Grid.Singleton.RemoveFromOccupied(this);
         }
+    }
+
+    public void ChangeStyle(int spriteIndex)
+    {
+        Sprite sprite = SettingsManager.Singleton.vertexSprites[spriteIndex];
+
+        this.spriteRenderer.sprite = sprite;
+        this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
+
+        // if (sprite.texture.GetPixel(sprite.texture.width / 2, sprite.texture.height / 2).a == 0)
+        // {
+        //     this.labelObj.CenteredLabel = true;
+        //     this.labelObj.UpdatePosition();
+        // }
     }
 }
