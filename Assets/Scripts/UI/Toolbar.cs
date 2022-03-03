@@ -17,17 +17,6 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
     [SerializeField]
     private ToggleButton edgeCreationModeButton;
-    // private bool edgeCreationMode = false;
-    // public bool EdgeCreationMode {
-    //     get => this.edgeCreationMode;
-    //     private set {
-    //         if (value) {
-    //             this.selectionModeButton.Checked = false;
-    //             this.createVertexModeButton.Checked = false;
-    //         }
-    //         this.edgeCreationMode = value;
-    //     }
-    // }
 
     [SerializeField]
     private Button addEdgeButton;
@@ -36,10 +25,10 @@ public class Toolbar : SingletonBehavior<Toolbar>
     private Button changeTypeButton;
 
     [SerializeField] private ToggleButton edgeThicknessButton;
-    [SerializeField] private GameObject edgeThicknessSubpanel;
 
     [SerializeField] private ToggleButton edgeCurvatureButton;
-    [SerializeField] private GameObject edgeCurvatureSubpanel;
+
+    [SerializeField] private Button changeVertexStyleButton;
 
     private void Awake() {
         // Subscribe to OnSelectionChange event
@@ -55,6 +44,7 @@ public class Toolbar : SingletonBehavior<Toolbar>
         changeTypeButton.gameObject.SetActive(false);
         edgeThicknessButton.gameObject.SetActive(false);
         edgeCurvatureButton.gameObject.SetActive(false);
+        this.changeVertexStyleButton.gameObject.SetActive(false);
     }
 
     private void Update() {
@@ -167,6 +157,8 @@ public class Toolbar : SingletonBehavior<Toolbar>
             this.edgeThicknessButton.gameObject.SetActive(false);
             this.edgeCurvatureButton.gameObject.SetActive(false);
         }
+
+        this.changeVertexStyleButton.gameObject.SetActive(selectedVertexCount > 0 && selectedEdgeCount == 0);
     }
 
     // Function called by delete button
@@ -224,6 +216,13 @@ public class Toolbar : SingletonBehavior<Toolbar>
         foreach (EdgeObj edgeObj in SelectionManager.Singleton.SelectedEdges)
         {
             edgeObj.ChangeCurvature(change);
+        }
+    }
+
+    // Function called by the change vertex style button
+    public void ChangeVertexStyle() {
+        foreach (VertexObj vertexObj in SelectionManager.Singleton.SelectedVertices) {
+            vertexObj.ChangeStyle();
         }
     }
 }
