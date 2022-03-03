@@ -76,7 +76,7 @@ public class Edge
         this.vert1 = edge.vert1;
         this.vert2 = edge.vert2;
         this.directed = edge.directed;
-        this.Label = edge.label;
+        this.label = edge.label;
         this.style = edge.style;
         this.color = edge.color;
         this.thickness = edge.thickness;
@@ -168,7 +168,6 @@ public class Edge
             this.CreateMod( Modification.EDGE_HEAD_STYLE, ( this, this.headStyle, style ) );
         this.headStyle = style;
     }
-
 
     public void ResetWeight() => this.Weight = 1;
 
