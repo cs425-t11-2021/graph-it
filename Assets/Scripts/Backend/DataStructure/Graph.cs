@@ -468,16 +468,21 @@ public class Graph
         return incidentEdges;
     }
 
-    public int GetVertexDegree( Vertex u )
+    public int GetVertexDegree( Vertex vert )
     {
-        int count = 0;
-        foreach ( Vertex v in this.Vertices )
+        int degree = 0;
+        int undirected = 0;
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
-            if ( this.IsAdjacent( u, v ) )
-                count++;
+            if ( kvp.Value.IncidentOn( vert ) )
+            {
+                if ( !kvp.Value.Directed )
+                    undirected++;
+                degree++;
+            }
         }
 
-        return count;
+        return degree - undirected / 2;
     }
 
     // temp

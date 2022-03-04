@@ -12,16 +12,8 @@ public class MinDegreeAlgorithm : Algorithm
 
     public override void Run()
     {
-        Dictionary< Vertex, int >.ValueCollection degrees = this.GetDegrees().Values;
-        this.MinDegree = degrees.Count > 0 ? degrees.Min() : 0;
-    }
-
-    private Dictionary< Vertex, int > GetDegrees()
-    {
-        Dictionary< Vertex, int > degrees = new Dictionary< Vertex, int >();
-        foreach ( Vertex vert in this.Graph.Vertices )
-            degrees[ vert ] = this.Graph.GetIncidentEdges( vert ).Count;
-        return degrees;
+        IEnumerable< int > degrees = this.Graph.Vertices.Select( vert => this.Graph.GetVertexDegree( vert ) );
+        this.MinDegree = degrees.Count() > 0 ? degrees.Min() : 0;
     }
 
     public static int GetHash() => typeof ( MinDegreeAlgorithm ).GetHashCode();
