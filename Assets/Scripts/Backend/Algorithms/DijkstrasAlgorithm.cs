@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -10,15 +11,15 @@ public class DijkstrasAlgorithm
     public void Run( Graph graph, Vertex src, Vertex dest )
     {
         HashSet< Vertex > notVisited = new HashSet< Vertex >( graph.Vertices );
-        Dictionary< Vertex, double > dist = new Dictionary< Vertex, double >();
+        Dictionary< Vertex, float > dist = new Dictionary< Vertex, float >();
         Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
 
         foreach ( Vertex v in graph.Vertices )
-            dist[ v ] = double.PositiveInfinity;
+            dist[ v ] = float.PositiveInfinity;
 
         dist[ src ] = 0;
 
-        while ( notVisited.Count() > 0 )
+        while ( notVisited.Count > 0 )
         {
             // find u in notVisited such that dist[u] is minimal
             Vertex u = notVisited.First();
@@ -35,7 +36,7 @@ public class DijkstrasAlgorithm
             {
                 if ( graph.IsAdjacent( u, v ) )
                 {
-                    double tmp = dist[ u ] + graph[ u, v ].Weight;
+                    float tmp = dist[ u ] + graph[ u, v ].Weight;
                     if ( tmp < dist[ v ] )
                     {
                         dist[ v ] = tmp;
@@ -52,13 +53,14 @@ public class DijkstrasAlgorithm
         Vertex curr = dest;
         while ( curr != src )
         {
-            path.Add( curr );
+            this.path.Add( curr );
             curr = prev[ curr ];
             if ( curr is null )
-                return new List<Vertex>();
+                this.path = new List<Vertex>();
+                return;
         }
-        path.Add( src );
-        path.Reverse();
+        this.path.Add( src );
+        this.path.Reverse();
     }
 
 }
