@@ -5,7 +5,7 @@ public class DiameterAlgorithm : Algorithm
 {
     public float diameter { get; private set; }
 
-    public KruskalsAlgorithm(
+    public DiameterAlgorithm(
         Graph graph,
         Action updateUI,
         Action updateCalc,
