@@ -38,8 +38,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
     
     public void UpdateGraphInfo() {
-        this.orderText.text = "Order: " + Controller.Singleton.Graph.Vertices.Count;
-        this.sizeText.text = "Size: " + Controller.Singleton.Graph.Adjacency.Count;
+        this.orderText.text = "Order: " + Controller.Singleton.Graph.Order;
+        this.sizeText.text = "Size: " + Controller.Singleton.Graph.Size;
 
         // Run multithreaded algorithms
         AlgorithmManager.Singleton.Clear();
