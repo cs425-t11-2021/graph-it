@@ -44,6 +44,10 @@ public class VertexObj : MonoBehaviour
     private VertexLabelObj labelObj;
 
     public float spriteRadius;
+    
+    // Store previous global position of the vertexObj
+    private Vector3 previousPosition;
+    public event Action OnVertexObjMove;
 
     private void Awake() {
         // Vertex objects starts non active
@@ -57,6 +61,15 @@ public class VertexObj : MonoBehaviour
         this.labelObj = GetComponentInChildren<VertexLabelObj>();
 
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
+    }
+
+    private void Update()
+    {
+        if (this.transform.position != this.previousPosition)
+        {
+            this.previousPosition = this.transform.position;
+            this.OnVertexObjMove?.Invoke();
+        }
     }
 
     // Method called by a controller class to setup properties of the vertex object

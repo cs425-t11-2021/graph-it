@@ -230,7 +230,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
 
         List<Vertex> dijkstraVertices = Controller.Singleton.Graph.Dijkstra(selectedVertices[0].Vertex, selectedVertices[1].Vertex);
         for (int i = 0; i < dijkstraVertices.Count - 1; i++) {
-            List<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges(dijkstraVertices[i]);
+            HashSet<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges(dijkstraVertices[i]);
             foreach (Edge edge in incidentEdges) {
                 if (edge.vert1 == dijkstraVertices[i + 1] || edge.vert2 == dijkstraVertices[i + 1]) {
                     dijkstraEdges.Add(edge);

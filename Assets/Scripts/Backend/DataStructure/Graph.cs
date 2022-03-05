@@ -20,6 +20,15 @@ public class Graph
     private Stack< GraphModification > redoChanges; // logs all undone changes
 
     // parameters
+    public int Order // number of vertices
+    {
+        get => this.Vertices.Count;
+    }
+    public int Size // number of edges
+    {
+        get => ( from kvp in this.Adjacency select kvp.Value ).Distinct().Count();
+    }
+
     public bool Directed // true if any edge is directed
     {
         get => this.IsDirected();
@@ -86,7 +95,7 @@ public class Graph
 
     public Edge this[ Vertex vert1, Vertex vert2 ]
     {
-        get => vert1 > vert2 ? this.Adjacency.GetValue( ( vert1, vert2 ) ) : this.Adjacency.GetValue( ( vert2, vert1 ) );
+        get => this.Adjacency.GetValue( ( vert1, vert2 ) );
     }
 
     private List< Edge > GetDirectedEdges()
@@ -114,7 +123,7 @@ public class Graph
 
     public Vertex AddVertex( Vertex vert, bool recordChange=true )
     {
-        vert.CreateMod = ( Action< Modification, System.Object > ) this.CreateModification;
+        vert.CreateMod = ( Action< Modification, System.Object > ) this.CreateModificationAction;
         this.Vertices.Add( vert );
 
         if ( recordChange )
@@ -124,21 +133,22 @@ public class Graph
 
     public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false, bool recordChange=true )
     {
-        if ( directed || vert1 < vert2 )
-            return this.AddEdge( new Edge( vert1, vert2, directed ), recordChange );
-        else
-            return this.AddEdge( new Edge( vert2, vert1 ), recordChange );
+        return this.AddEdge( new Edge( vert1, vert2, directed ), recordChange );
     }
 
     public Edge AddEdge( Edge edge, bool recordChange=true )
     {
         if ( !this.Vertices.Contains( edge.vert1 ) || !this.Vertices.Contains( edge.vert2 ) )
             throw new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." );
-        if ( edge.vert1 > edge.vert2 && !edge.Directed )
-            throw new System.Exception( "Edge must be directed." );
-        
-        edge.CreateMod = ( Action< Modification, System.Object > ) this.CreateModification;
+
+        edge.MakeDirectedInGraph = ( Action< Edge > ) this.MakeEdgeDirectedAction;
+        edge.MakeUndirectedInGraph = ( Action< Edge > ) this.MakeEdgeUndirectedAction;
+        edge.ReverseInGraph = ( Action< Edge > ) this.ReverseEdgeAction;
+        edge.CreateMod = ( Action< Modification, System.Object > ) this.CreateModificationAction;
+
         this.Adjacency[ ( edge.vert1, edge.vert2 ) ] = edge;
+        if ( !edge.Directed )
+            this.Adjacency[ ( edge.vert2, edge.vert1 ) ] = edge;
 
         if ( recordChange )
             new GraphModification( this, Modification.ADD_EDGE, edge );
@@ -161,10 +171,13 @@ public class Graph
 
     public void RemoveEdge( Edge edge, bool recordChange=true )
     {
-        if ( edge.Directed || edge.vert1 < edge.vert2 )
+        if ( edge.Directed )
             this.Adjacency.TryRemove( ( edge.vert1, edge.vert2 ), out _ );
         else
+        {
+            this.Adjacency.TryRemove( ( edge.vert1, edge.vert2 ), out _ );
             this.Adjacency.TryRemove( ( edge.vert2, edge.vert1 ), out _ );
+        }
 
         if ( recordChange )
             new GraphModification( this, Modification.REMOVE_EDGE, edge );
@@ -174,42 +187,6 @@ public class Graph
     {
         foreach ( Edge edge in edges )
             this.RemoveEdge( edge, recordChange );
-    }
-
-    public Edge ReverseEdge( Edge edge, bool recordChange=true )
-    {
-        if ( !edge.Directed )
-            throw new System.Exception( "Cannot reverse undirected edge." );
-      
-        if ( edge != this[ edge.vert1, edge.vert2 ] )
-            throw new System.Exception( "The provided edge to reverse is not in the graph." );
-
-        this.RemoveEdge( edge, false );
-        edge.Reverse();
-        this.AddEdge( edge, false );
-
-        if ( recordChange )
-            new GraphModification( this, Modification.EDGE_REVERSE, edge );
-        return edge;
-    }
-
-    // temp, use delegates in future
-    public void MakeEdgeDirected( Edge edge )
-    {
-        if ( edge != this[ edge.vert1, edge.vert2 ] )
-            throw new System.Exception( "The provided edge to direct is not in the graph." );
-
-        edge.Directed = true;
-    }
-
-    public void MakeEdgeUndirected( Edge edge )
-    {
-        if ( edge != this[ edge.vert1, edge.vert2 ] )
-            throw new System.Exception( "The provided edge to undirect is not in the graph." );
-
-        if ( edge.vert1 > edge.vert2 )
-            this.ReverseEdge( edge );
-        edge.Directed = false;
     }
 
     public void Undo()
@@ -260,8 +237,8 @@ public class Graph
         {
             foreach ( Vertex vert in this.Vertices )
             {
-                // if ( this[ vert, vert ].Count > 0 )
-                   // return false;
+                if ( !( this[ vert, vert ] is null ) )
+                   return false;
             }
         }
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
@@ -272,7 +249,38 @@ public class Graph
         return true;
     }
 
-    public void CreateModification( Modification mod, System.Object modified )
+
+    // actions from other classes /////////////////////////////////////
+
+    public void ReverseEdgeAction( Edge edge )
+    {
+        if ( edge != this[ edge.vert1, edge.vert2 ] )
+            throw new System.Exception( "The provided edge to reverse is not in the graph." );
+
+        if ( edge.Directed )
+        {
+            this.RemoveEdge( edge, false );
+            this.Adjacency[ ( edge.vert2, edge.vert1 ) ] = edge;
+        }
+    }
+
+    public void MakeEdgeDirectedAction( Edge edge )
+    {
+        if ( edge != this[ edge.vert1, edge.vert2 ] )
+            throw new System.Exception( "The provided edge to direct is not in the graph." );
+
+        this.Adjacency.TryRemove( ( edge.vert2, edge.vert1 ), out _ ); // TODO: record this change
+    }
+
+    public void MakeEdgeUndirectedAction( Edge edge )
+    {
+        if ( edge != this[ edge.vert1, edge.vert2 ] )
+            throw new System.Exception( "The provided edge to undirect is not in the graph." );
+
+        this.Adjacency[ ( edge.vert2, edge.vert1 ) ] = edge; // TODO: record this change
+    }
+
+    public void CreateModificationAction( Modification mod, System.Object modified )
     {
         new GraphModification( this, mod, modified );
     }
@@ -281,7 +289,7 @@ public class Graph
     // file io methods ////////////////////////////////////////////////
 
     // TODO: relax import file formatting
-    // currently not importing directed info
+    // currently not importing tail and head style
     public void Import( string path )
     {
         this.Clear();
@@ -396,7 +404,8 @@ public class Graph
     private void ExportEdges( FileStream fs )
     {
         Graph.ExportText( fs, "edges:\n" );
-        foreach ( Edge edge in this.Adjacency.Values )
+        HashSet< Edge > edges = new HashSet< Edge >( this.Adjacency.Values );
+        foreach ( Edge edge in edges )
             Graph.ExportText( fs, edge.ToString() + '\n' );
     }
 
@@ -407,7 +416,7 @@ public class Graph
     }
 
 
-    // algorithms ////////////////////////////////////////////////
+    // algorithms /////////////////////////////////////////////////////
 
     // temp
     public List< Edge > Prim( Vertex vert )
@@ -435,14 +444,14 @@ public class Graph
         return mst;
     }
 
-    public List< Edge > GetIncidentEdges( Vertex vert )
+    public HashSet< Edge > GetIncidentEdges( Vertex vert )
     {
         return this.GetIncidentEdges( new HashSet< Vertex >() { vert } );
     }
 
-    public List< Edge > GetIncidentEdges( HashSet< Vertex > verts )
+    public HashSet< Edge > GetIncidentEdges( HashSet< Vertex > verts )
     {
-        List< Edge > incidentEdges = new List< Edge >();
+        HashSet< Edge > incidentEdges = new HashSet< Edge >();
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
             if ( verts.Contains( kvp.Value.vert1 ) || !kvp.Value.Directed && verts.Contains( kvp.Value.vert2 ) )
@@ -451,16 +460,21 @@ public class Graph
         return incidentEdges;
     }
 
-    public int GetVertexDegree( Vertex u )
+    public int GetVertexDegree( Vertex vert )
     {
-        int count = 0;
-        foreach ( Vertex v in this.Vertices )
+        int degree = 0;
+        int undirected = 0;
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
         {
-            if ( this.IsAdjacent( u, v ) )
-                count++;
+            if ( kvp.Value.IncidentOn( vert ) )
+            {
+                if ( !kvp.Value.Directed )
+                    undirected++;
+                degree++;
+            }
         }
 
-        return count;
+        return degree - undirected / 2;
     }
 
     // temp

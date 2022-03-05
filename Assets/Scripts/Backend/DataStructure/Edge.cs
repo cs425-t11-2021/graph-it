@@ -7,6 +7,9 @@ using UnityEngine;
 [System.Serializable]
 public class Edge
 {
+    public Action< Edge > MakeDirectedInGraph { private get; set; }
+    public Action< Edge > MakeUndirectedInGraph { private get; set; }
+    public Action< Edge > ReverseInGraph { private get; set; }
     public Action< Modification, System.Object > CreateMod { private get; set; }
     public Vertex vert1; // TODO: private set
     public Vertex vert2; // TODO: private set
@@ -63,7 +66,7 @@ public class Edge
         this.vert1 = vert1;
         this.vert2 = vert2;
         this.directed = directed;
-        this.Label = label;
+        this.SetLabel( label, false );
         this.style = style;
         this.color = color;
         this.thickness = thickness;
@@ -71,31 +74,33 @@ public class Edge
         this.headStyle = headStyle;
     }
 
-    public Edge( Edge edge )
-    {
-        this.vert1 = edge.vert1;
-        this.vert2 = edge.vert2;
-        this.directed = edge.directed;
-        this.label = edge.label;
-        this.style = edge.style;
-        this.color = edge.color;
-        this.thickness = edge.thickness;
-        this.tailStyle = edge.tailStyle;
-        this.headStyle = edge.headStyle;
-    }
+    public Edge( Edge edge ) : this( edge.vert1, edge.vert2, edge.directed, edge.label, edge.style, edge.color, edge.thickness, edge.tailStyle, edge.headStyle ) { }
 
-    public void Reverse()
+    public void Reverse( bool recordChange=true )
     {
-        Vertex temp = vert2;
-        vert2 = vert1;
-        vert1 = temp;
+        if ( !( this.ReverseInGraph is null ) )
+            this.ReverseInGraph( this );
+
+        ( this.vert1, this.vert2 ) = ( this.vert2, this.vert1 );
+
+        if ( recordChange )
+            this.CreateMod( Modification.EDGE_REVERSE, this );
     }
 
     public void SetDirected( bool directed, bool recordChange=true )
     {
-        if ( directed ^ this.directed && recordChange )
-            this.CreateMod( Modification.EDGE_DIRECTED, ( this, this.directed ) );
-        this.directed = directed;
+        if ( directed ^ this.directed )
+        {
+            if ( directed )
+                this.MakeDirectedInGraph( this );
+            else
+                this.MakeUndirectedInGraph( this );
+
+            if ( recordChange )
+                this.CreateMod( Modification.EDGE_DIRECTED, ( this, this.directed ) );
+
+            this.directed = directed;
+        }
     }
 
     public void SetLabel( string label, bool recordChange=true )
