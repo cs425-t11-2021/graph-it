@@ -322,12 +322,12 @@ public class EdgeObj : MonoBehaviour
         else if (this.direction == 1)
         {
             this.direction = -1;
-            Controller.Singleton.Graph.ReverseEdge(this.Edge);
+            this.Edge.Reverse();
             (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
         }
         else
         {
-            Controller.Singleton.Graph.ReverseEdge(this.Edge);
+            this.Edge.Reverse();
             (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
             
             this.direction = 0;
