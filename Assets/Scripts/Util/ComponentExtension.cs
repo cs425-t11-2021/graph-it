@@ -1,27 +1,55 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
-public class ComponentExtension : MonoBehaviour
+public static class ComponentExtension
 {
-    // https://answers.unity.com/questions/458207/copy-a-component-at-runtime.html
-    public static T CopyComponent<T>(T original, GameObject destination) where T : Component
+    // https://stackoverflow.com/questions/62553142/how-to-copy-values-of-a-component-from-object-a-to-the-same-component-on-object
+    public static T GetCopyOf<T>(this T comp, T other) where T : Component
     {
-        System.Type type = original.GetType();
-        var dst = destination.GetComponent(type) as T;
-        if (!dst) dst = destination.AddComponent(type) as T;
-        var fields = type.GetFields();
-        foreach (var field in fields)
+        Type type = comp.GetType();
+        Type othersType = other.GetType();
+        if (type != othersType)
         {
-            if (field.IsStatic) continue;
-            field.SetValue(dst, field.GetValue(original));
+            Debug.LogError($"The type \"{type.AssemblyQualifiedName}\" of \"{comp}\" does not match the type \"{othersType.AssemblyQualifiedName}\" of \"{other}\"!");
+            return null;
         }
-        var props = type.GetProperties();
-        foreach (var prop in props)
+
+        BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Default;
+        PropertyInfo[] pinfos = type.GetProperties(flags);
+
+        foreach (var pinfo in pinfos) 
         {
-            if (!prop.CanWrite || !prop.CanWrite || prop.Name == "name") continue;
-            prop.SetValue(dst, prop.GetValue(original, null), null);
+            if (pinfo.CanWrite) 
+            {
+                try 
+                {
+                    pinfo.SetValue(comp, pinfo.GetValue(other, null), null);
+                }
+                catch
+                {
+                    /*
+                     * In case of NotImplementedException being thrown.
+                     * For some reason specifying that exception didn't seem to catch it,
+                     * so I didn't catch anything specific.
+                     */
+                }
+            }
         }
-        return dst as T;
+
+        FieldInfo[] finfos = type.GetFields(flags);
+
+        foreach (var finfo in finfos) 
+        {
+            finfo.SetValue(comp, finfo.GetValue(other));
+        }
+        return comp as T;
+    }
+    
+    public static T AddComponent<T>(this GameObject go, T toAdd) where T : Component
+    {
+        return go.AddComponent<T>().GetCopyOf(toAdd) as T;
     }
 }
