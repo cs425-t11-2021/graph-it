@@ -18,6 +18,9 @@ public class FileMenu : MenuButton
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
         Controller.Singleton.CreateGraphInstance();
+        
+        // TEMPOARY
+        ResourceManager.Singleton.LoadVertexSprites();
     }
 
     // Function called by the import from file button

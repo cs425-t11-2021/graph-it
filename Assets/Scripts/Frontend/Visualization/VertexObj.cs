@@ -18,6 +18,9 @@ public class VertexObj : MonoBehaviour
     private Rigidbody2D rb;
     // Reference to the sprite child object of the vertex object
     private Transform spriteObj;
+    
+    private Color normalColor = Color.black;
+    private Color selectedColor = new Color32(0, 125, 255, 255);
 
     // Property for whether or not the vertex object is selected
     private bool selected;
@@ -27,13 +30,15 @@ public class VertexObj : MonoBehaviour
             this.selected = value;
             // If the vertex object becomes selected, make its label editable
             if (value) {
-                this.labelObj.MakeEditable();               
+                this.labelObj.MakeEditable();
+                this.spriteRenderer.color = selectedColor;
             }
             else {
                 this.labelObj.MakeUneditable();
+                this.spriteRenderer.color = normalColor;
             }
             // Change the animator to show that the vertex is selected
-            this.animator.SetBool("Selected", value);
+            // this.animator.SetBool("Selected", value);
         }
     }
 
@@ -50,7 +55,7 @@ public class VertexObj : MonoBehaviour
     // Store previous global position of the vertexObj
     private Vector3 previousPosition;
     public event Action OnVertexObjMove;
-
+    
     private void Awake() {
         // Vertex objects starts non active
         this.gameObject.SetActive(false);
@@ -115,10 +120,14 @@ public class VertexObj : MonoBehaviour
 
     public void ChangeStyle()
     {
-        uint spriteIndex = (uint) (this.Vertex.Style == 0 ? 1 : 0);
+        uint spriteIndex = (uint) (this.Vertex.Style + 1);
+        if (spriteIndex >= ResourceManager.Singleton.vertexSprites.Length)
+        {
+            spriteIndex = 0;
+        }
         this.Vertex.Style = spriteIndex;
 
-        Sprite sprite = SettingsManager.Singleton.vertexSprites[spriteIndex];
+        Sprite sprite = ResourceManager.Singleton.vertexSprites[spriteIndex];
 
         this.spriteRenderer.sprite = sprite;
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
@@ -135,6 +144,8 @@ public class VertexObj : MonoBehaviour
             AddColliderBasedOnSprite(false);
             this.labelObj.UpdatePosition();
         }
+        
+        this.normalColor = this.Vertex.Style < 2 ? Color.black  : Color.white;
     }
 
     private void AddColliderBasedOnSprite(bool poly)
