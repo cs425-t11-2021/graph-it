@@ -46,6 +46,12 @@ public class Edge
         get => this.thickness;
         set => this.SetThickness( value );
     }
+    private int curvature;
+    public int Curvature
+    {
+        get => this.curvature;
+        set => this.SetCurvature( value );
+    }
 
     // when undirected, following should be ignored
     private uint tailStyle;
@@ -61,7 +67,7 @@ public class Edge
         set => this.SetHeadStyle( value );
     }
 
-    public Edge( Vertex vert1, Vertex vert2, bool directed=false, string label="", uint style=0, uint color=0, uint thickness=0, uint tailStyle=0, uint headStyle=0 )
+    public Edge( Vertex vert1, Vertex vert2, bool directed=false, string label="", uint style=0, uint color=0, uint thickness=0, int curvature=0, uint tailStyle=0, uint headStyle=0 )
     {
         this.vert1 = vert1;
         this.vert2 = vert2;
@@ -70,11 +76,12 @@ public class Edge
         this.style = style;
         this.color = color;
         this.thickness = thickness;
+        this.curvature = curvature;
         this.tailStyle = tailStyle;
         this.headStyle = headStyle;
     }
 
-    public Edge( Edge edge ) : this( edge.vert1, edge.vert2, edge.directed, edge.label, edge.style, edge.color, edge.thickness, edge.tailStyle, edge.headStyle ) { }
+    public Edge( Edge edge ) : this( edge.vert1, edge.vert2, edge.directed, edge.label, edge.style, edge.color, edge.thickness, edge.curvature, edge.tailStyle, edge.headStyle ) { }
 
     public void Reverse( bool recordChange=true )
     {
@@ -158,6 +165,13 @@ public class Edge
         if ( recordChange )
             this.CreateMod( Modification.EDGE_THICKNESS, ( this, this.thickness, thickness ) );
         this.thickness = thickness;
+    }
+
+    public void SetCurvature( int curvature, bool recordChange=true )
+    {
+        if ( recordChange )
+            this.CreateMod( Modification.EDGE_CURVATURE, ( this, this.curvature, curvature ) );
+        this.curvature = curvature;
     }
 
     public void SetTailStyle( uint style, bool recordChange=true )

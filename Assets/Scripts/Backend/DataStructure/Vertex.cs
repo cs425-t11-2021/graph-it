@@ -30,6 +30,12 @@ public class Vertex
         get => this.style;
         set => this.SetStyle( value );
     }
+    private uint size;
+    public uint Size
+    {
+        get => this.size;
+        set => this.SetSize( value );
+    }
     private uint color;
     public uint Color
     {
@@ -37,24 +43,17 @@ public class Vertex
         set => this.SetColor( value );
     }
 
-    public Vertex( string label="", float x=0, float y=0, uint style=0, uint color=0 )
+    public Vertex( string label="", float x=0, float y=0, uint style=0, uint size=0, uint color=0 )
     {
         this.id = Vertex.idCount++;
         this.label = label;
         this.pos = new Vector2( x, y );
         this.style = style;
+        this.size = size;
         this.color = color;
     }
 
-    public Vertex( Vertex vert )
-    {
-        this.id = Vertex.idCount++;
-        this.CreateMod = vert.CreateMod;
-        this.label = vert.label;
-        this.pos = vert.pos;
-        this.style = vert.style;
-        this.color = vert.color;
-    }
+    public Vertex( Vertex vert ) : this( vert.label, vert.pos.X, vert.pos.Y, vert.style, vert.size, vert.color ) { }
 
     public void SetLabel( string label, bool recordChange=true )
     {
@@ -79,6 +78,13 @@ public class Vertex
         if ( recordChange )
             this.CreateMod( Modification.VERTEX_STYLE, ( this, this.style, style ) );
         this.style = style;
+    }
+
+    public void SetSize( uint size, bool recordChange=true )
+    {
+        if ( recordChange )
+            this.CreateMod( Modification.VERTEX_SIZE, ( this, this.size, size ) );
+        this.size = size;
     }
 
     public void SetColor( uint color, bool recordChange=true )
