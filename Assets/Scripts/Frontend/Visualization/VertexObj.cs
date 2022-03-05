@@ -44,6 +44,10 @@ public class VertexObj : MonoBehaviour
     private VertexLabelObj labelObj;
 
     public float spriteRadius;
+    
+    // Store previous global position of the vertexObj
+    private Vector3 previousPosition;
+    public event Action OnVertexObjMove;
 
     private void Awake() {
         // Vertex objects starts non active
@@ -61,17 +65,10 @@ public class VertexObj : MonoBehaviour
 
     private void Update()
     {
-        if (this.selected && Input.GetKeyDown(KeyCode.M))
+        if (this.transform.position != this.previousPosition)
         {
-            ChangeStyle(1);
-            this.labelObj.CenteredLabel = true;
-            this.labelObj.UpdatePosition();
-        }
-        if (this.selected && Input.GetKeyDown(KeyCode.N))
-        {
-            ChangeStyle(0);
-            this.labelObj.CenteredLabel = false;
-            this.labelObj.UpdatePosition();
+            this.previousPosition = this.transform.position;
+            this.OnVertexObjMove?.Invoke();
         }
     }
 

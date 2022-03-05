@@ -28,7 +28,7 @@ public class EdgeObj : MonoBehaviour
     // Whether edge is selected in the SelectionManager
     private bool selected = false;
     // Whether edge is currently being hovered over
-    private bool hovering = false;
+    [SerializeField] private bool hovering = false;
 
     private int curvature;
     public int Curvature
@@ -109,22 +109,40 @@ public class EdgeObj : MonoBehaviour
         this.shapeRenderer = GetComponent<SpriteShapeRenderer>();
         
         this.labelObj.Initiate(this);
+
+        this.Vertex1.OnVertexObjMove += UpdateSpline;
+        this.Vertex2.OnVertexObjMove += UpdateSpline;
+        
+        UpdateSpline();
     }
 
-    private void Update() {
-        if (this.Edge != null) {
-            transform.parent.position = this.Vertex1.transform.position + new Vector3(0f, 0f, 1f);
-            if (this.curvature == int.MaxValue) {
-                UpdateCircularSpline(0.7f, FindBestAngleForLoop());
-            }
-            else if (this.curvature == 0) {
-                UpdateStraightSpline();
-            }
-            else
-            {
-                UpdateCurvedSpline(this.curvature * 0.1f);
-            }
+    // private void Update() {
+    //     if (this.Edge != null)
+    //     {
+    //         
+    //     }
+    // }
+
+    private void UpdateSpline()
+    {
+        transform.parent.position = this.Vertex1.transform.position + new Vector3(0f, 0f, 1f);
+        if (this.curvature == int.MaxValue) {
+            UpdateCircularSpline(0.7f, FindBestAngleForLoop());
         }
+        else if (this.curvature == 0) {
+            UpdateStraightSpline();
+        }
+        else
+        {
+            UpdateCurvedSpline(this.curvature * 0.1f);
+        }
+
+        this.shapeController.BakeMesh();
+    }
+
+    private void OnPreRender()
+    {
+        this.shapeController.BakeMesh();
     }
 
     private float FindBestAngleForLoop()
@@ -333,6 +351,8 @@ public class EdgeObj : MonoBehaviour
             this.direction = 0;
             this.Edge.Directed = false;
         }
+
+        UpdateSpline();
     }
 
     // When Cursor enters a edge obj, increase its sprite object size by 33%
@@ -340,11 +360,13 @@ public class EdgeObj : MonoBehaviour
     private void OnMouseOver()
     {
         this.hovering = true;
+        UpdateSpline();
     }
 
     private void OnMouseExit()
     {
         this.hovering = false;
+        UpdateSpline();
     }
 
     public void ChangeThickness(int change)
@@ -366,6 +388,7 @@ public class EdgeObj : MonoBehaviour
         }
         
         Logger.Log("Edge thickness changed to " + this.Edge.Thickness, this, LogType.INFO);
+        UpdateSpline();
     }
 
     public void ChangeCurvature(int change)
@@ -387,5 +410,6 @@ public class EdgeObj : MonoBehaviour
         }
         
         Logger.Log("Edge curvature changed to " + this.Curvature, this, LogType.INFO);
+        UpdateSpline();
     }
 }

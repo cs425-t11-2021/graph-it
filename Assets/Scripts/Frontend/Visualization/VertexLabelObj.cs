@@ -13,8 +13,6 @@ public class VertexLabelObj : MonoBehaviour
 
     // UI Rect of the label object
     private Rect rect;
-    // Store previous global position of the labelObj
-    private Vector3 previousPosition;
 
     // Reference to the text mesh object
     TMP_InputField inputField;
@@ -53,6 +51,8 @@ public class VertexLabelObj : MonoBehaviour
 
         image = this.gameObject.GetComponentInChildren<RawImage>();
         image.enabled = false;
+
+        this.vertexObj.OnVertexObjMove += UpdatePosition;
     }
 
     private void OnToggleVertexLabels(bool enabled)
@@ -82,19 +82,19 @@ public class VertexLabelObj : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (!enabled) {
-            return;
-        }
-
-        // Only check to see if the label needs to move if the vertex  moved
-        if (transform.position != previousPosition)
-        {
-            previousPosition = transform.position;
-            UpdatePosition();
-        }
-    }
+    // private void FixedUpdate()
+    // {
+    //     if (!enabled) {
+    //         return;
+    //     }
+    //
+    //     // // Only check to see if the label needs to move if the vertex moved
+    //     // if (transform.position != previousPosition)
+    //     // {
+    //     //     previousPosition = transform.position;
+    //     //     UpdatePosition();
+    //     // }
+    // }
 
     // Updates the position of the label, moving it if needed
     public void UpdatePosition()
