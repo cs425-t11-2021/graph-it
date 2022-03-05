@@ -116,13 +116,6 @@ public class EdgeObj : MonoBehaviour
         UpdateSpline();
     }
 
-    // private void Update() {
-    //     if (this.Edge != null)
-    //     {
-    //         
-    //     }
-    // }
-
     private void UpdateSpline()
     {
         transform.parent.position = this.Vertex1.transform.position + new Vector3(0f, 0f, 1f);

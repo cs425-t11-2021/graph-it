@@ -42,6 +42,7 @@ public class VertexObj : MonoBehaviour
     private Animator animator;
     // Reference to the labelObj attached to the vertexObj
     private VertexLabelObj labelObj;
+    private CircleCollider2D collider;
 
     public float spriteRadius;
     
@@ -59,6 +60,7 @@ public class VertexObj : MonoBehaviour
         this.spriteObj = transform.GetChild(0);
         this.spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
         this.labelObj = GetComponentInChildren<VertexLabelObj>();
+        this.collider = GetComponent<CircleCollider2D>();
 
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
     }
@@ -119,6 +121,7 @@ public class VertexObj : MonoBehaviour
 
         this.spriteRenderer.sprite = sprite;
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
+        this.collider.radius = this.spriteRadius;
 
         if (this.Vertex.Style == 1) {
             this.labelObj.CenteredLabel = true;
