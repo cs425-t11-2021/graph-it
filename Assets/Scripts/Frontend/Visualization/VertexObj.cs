@@ -6,6 +6,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.U2D.Path;
 using UnityEngine;
 
 public class VertexObj : MonoBehaviour
@@ -42,7 +43,7 @@ public class VertexObj : MonoBehaviour
     private Animator animator;
     // Reference to the labelObj attached to the vertexObj
     private VertexLabelObj labelObj;
-    private CircleCollider2D collider;
+    private Collider2D collider;
 
     public float spriteRadius;
     
@@ -60,7 +61,7 @@ public class VertexObj : MonoBehaviour
         this.spriteObj = transform.GetChild(0);
         this.spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
         this.labelObj = GetComponentInChildren<VertexLabelObj>();
-        this.collider = GetComponent<CircleCollider2D>();
+        AddColliderBasedOnSprite(false);
 
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
     }
@@ -121,15 +122,38 @@ public class VertexObj : MonoBehaviour
 
         this.spriteRenderer.sprite = sprite;
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
-        this.collider.radius = this.spriteRadius;
-
+        // this.collider.radius = this.spriteRadius;
+        
+        Destroy(this.collider);
         if (this.Vertex.Style == 1) {
             this.labelObj.CenteredLabel = true;
+            AddColliderBasedOnSprite(true);
             this.labelObj.UpdatePosition();
         }
         else {
             this.labelObj.CenteredLabel = false;
+            AddColliderBasedOnSprite(false);
             this.labelObj.UpdatePosition();
         }
+    }
+
+    private void AddColliderBasedOnSprite(bool poly)
+    {
+        if (poly)
+        {
+            PolygonCollider2D newCol = this.spriteRenderer.gameObject.AddComponent<PolygonCollider2D>();
+            this.collider = this.gameObject.AddComponent<PolygonCollider2D>().CopyFromCollider(newCol);
+            Destroy(newCol);
+        }
+        else
+        {
+            CircleCollider2D newCol = this.spriteRenderer.gameObject.AddComponent<CircleCollider2D>();
+            this.collider = this.gameObject.AddComponent<CircleCollider2D>().CopyFromCollider(newCol);
+            Destroy(newCol);
+        }
+
+        
+        
+
     }
 }

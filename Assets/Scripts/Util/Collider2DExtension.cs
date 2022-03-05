@@ -21,6 +21,13 @@ public static class Collider2DExtension
         other.points.CopyTo(points, 0);
         self.points = points;
         self.offset = other.offset;
+
+        self.pathCount = other.pathCount;
+        for (int i = 0; i < other.pathCount; i++)
+        {
+            self.SetPath(i, other.GetPath(i));
+        }
+        
         return self;
     }
 }

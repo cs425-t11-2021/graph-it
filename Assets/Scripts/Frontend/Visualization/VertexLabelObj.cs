@@ -82,20 +82,6 @@ public class VertexLabelObj : MonoBehaviour
         }
     }
 
-    // private void FixedUpdate()
-    // {
-    //     if (!enabled) {
-    //         return;
-    //     }
-    //
-    //     // // Only check to see if the label needs to move if the vertex moved
-    //     // if (transform.position != previousPosition)
-    //     // {
-    //     //     previousPosition = transform.position;
-    //     //     UpdatePosition();
-    //     // }
-    // }
-
     // Updates the position of the label, moving it if needed
     public void UpdatePosition()
     {
@@ -118,7 +104,7 @@ public class VertexLabelObj : MonoBehaviour
             return Vector3.zero;
         }
         
-        for (float radius = 0.3f; radius < 0.8f; radius += 0.1f)
+        for (float radius = 0.4f; radius < 0.9f; radius += 0.1f)
         {
             for (float angle = 0f; angle <= 360f; angle += 30f)
             {
