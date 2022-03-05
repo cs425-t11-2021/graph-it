@@ -110,17 +110,23 @@ public class VertexObj : MonoBehaviour
         }
     }
 
-    public void ChangeStyle(int spriteIndex)
+    public void ChangeStyle()
     {
+        uint spriteIndex = (uint) (this.Vertex.Style == 0 ? 1 : 0);
+        this.Vertex.Style = spriteIndex;
+
         Sprite sprite = SettingsManager.Singleton.vertexSprites[spriteIndex];
 
         this.spriteRenderer.sprite = sprite;
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
 
-        // if (sprite.texture.GetPixel(sprite.texture.width / 2, sprite.texture.height / 2).a == 0)
-        // {
-        //     this.labelObj.CenteredLabel = true;
-        //     this.labelObj.UpdatePosition();
-        // }
+        if (this.Vertex.Style == 1) {
+            this.labelObj.CenteredLabel = true;
+            this.labelObj.UpdatePosition();
+        }
+        else {
+            this.labelObj.CenteredLabel = false;
+            this.labelObj.UpdatePosition();
+        }
     }
 }
