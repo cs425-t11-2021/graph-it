@@ -335,7 +335,7 @@ public class EdgeObj : MonoBehaviour
         if (this.direction == 0)
         {
             this.direction = 1;
-            Controller.Singleton.Graph.MakeEdgeDirected(this.Edge);
+            this.Edge.Directed = true;
         }
         else if (this.direction == 1)
         {
@@ -349,7 +349,7 @@ public class EdgeObj : MonoBehaviour
             (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
             
             this.direction = 0;
-            Controller.Singleton.Graph.MakeEdgeUndirected(this.Edge);
+            this.Edge.Directed = false;
         }
 
         UpdateSpline();
