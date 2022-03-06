@@ -34,7 +34,7 @@ public class VertexLabelObj : MonoBehaviour
 
         if (content != "")
         {
-            inputField.text = content;
+            UpdateLabel(content);
         }
 
         OnToggleVertexLabels(SettingsManager.Singleton.DisplayVertexLabels);
