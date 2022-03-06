@@ -83,6 +83,7 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 
     public void RunChromatic()
     {
+        this.EnsureMaxDegreeRunning();
         new ChromaticAlgorithm( this.graph, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 

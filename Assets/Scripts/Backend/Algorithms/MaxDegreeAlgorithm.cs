@@ -14,6 +14,8 @@ public class MaxDegreeAlgorithm : Algorithm
     {
         IEnumerable< int > degrees = this.Graph.Vertices.Select( vert => this.Graph.GetVertexDegree( vert ) );
         this.MaxDegree = degrees.Count() > 0 ? degrees.Max() : 0;
+
+        ChromaticAlgorithm.SetMaxDegree( this.Graph, this.MaxDegree );
     }
 
     public static int GetHash() => typeof ( MaxDegreeAlgorithm ).GetHashCode();

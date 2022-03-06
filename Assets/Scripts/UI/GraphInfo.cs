@@ -43,9 +43,9 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
         // Run multithreaded algorithms
         AlgorithmManager.Singleton.Clear();
-        // this.algorithmManager.RunChromatic();
-        AlgorithmManager.Singleton.RunMinDegree();
-        AlgorithmManager.Singleton.RunMaxDegree();
+        // AlgorithmManager.Singleton.RunChromatic();
+        // AlgorithmManager.Singleton.RunMinDegree();
+        // AlgorithmManager.Singleton.RunMaxDegree();
         AlgorithmManager.Singleton.RunBipartite(); //TEMPORARY FIX
     }
 
