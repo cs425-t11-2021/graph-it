@@ -1,14 +1,11 @@
-//All code developed by Team 11
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using System.Linq;
 using TMPro;
 
-public class VertexLabelObj : MonoBehaviour
+public class LabelObj : MonoBehaviour
 {
-    //TODO: ADD COMMENTS
-
     private string content;
 
     // UI Rect of the label object
@@ -24,10 +21,7 @@ public class VertexLabelObj : MonoBehaviour
     private bool waitingForLatex = false;
     private bool latexMode = false;
     private string latexFormula = "";
-    [SerializeField] private VertexObj vertexObj;
     
-    public bool CenteredLabel { get; set; }
-
     public void Initiate(string content)
     {
         this.content = content;
@@ -39,7 +33,7 @@ public class VertexLabelObj : MonoBehaviour
 
         OnToggleVertexLabels(SettingsManager.Singleton.DisplayVertexLabels);
     }
-
+    
     private void Awake()
     {
         RectTransform rectTransform = GetComponent<RectTransform>();
@@ -51,8 +45,6 @@ public class VertexLabelObj : MonoBehaviour
 
         image = this.gameObject.GetComponentInChildren<RawImage>();
         image.enabled = false;
-
-        this.vertexObj.OnVertexObjMove += UpdatePosition;
     }
 
     private void OnToggleVertexLabels(bool enabled)
@@ -81,45 +73,7 @@ public class VertexLabelObj : MonoBehaviour
             }
         }
     }
-
-    // Updates the position of the label, moving it if needed
-    public void UpdatePosition()
-    {
-        Vector3? position = FindSuitablePosition();
-        if (position == null)
-        {
-            inputField.gameObject.SetActive(false);
-        }
-        else
-        {
-            transform.localPosition = (Vector3) position + Vector3.forward;
-        }
-    }
-
-    // This code is slow as fuck, someone try to speed it up
-    Vector3? FindSuitablePosition()
-    {
-        if (this.CenteredLabel)
-        {
-            return Vector3.zero;
-        }
-        
-        for (float radius = 0.4f; radius < 0.9f; radius += 0.1f)
-        {
-            for (float angle = 0f; angle <= 360f; angle += 30f)
-            {
-                Vector2 vertexPos = transform.parent.position;
-                Vector3 localPos = new Vector3(radius * Mathf.Cos(angle * Mathf.Deg2Rad), radius * Mathf.Sin(angle * Mathf.Deg2Rad), 1);
-                Collider2D col = Physics2D.OverlapArea(vertexPos + new Vector2(localPos.x - this.rect.width / 200, localPos.y + this.rect.height / 200), vertexPos + new Vector2(localPos.x + this.rect.width / 200, localPos.y - this.rect.height / 200), LayerMask.GetMask("Edge", "Vertex"));
-                if (!col)
-                {
-                    return localPos;
-                }
-            }
-        }
-        return null;
-    }
-
+    
     // Make the label editable
     public void MakeEditable()
     {
@@ -131,7 +85,7 @@ public class VertexLabelObj : MonoBehaviour
 
         if (latexMode) {
             image.enabled = false;
-            inputField.text = "$" + this.latexFormula + "$";
+            inputField.text = "$$" + this.latexFormula + "$$";
         }
     }
 
@@ -149,7 +103,6 @@ public class VertexLabelObj : MonoBehaviour
             {
                 inputField.gameObject.SetActive(true);
             }
-            UpdatePosition();
         }
 
         if (waitingForLatex) {
@@ -178,10 +131,9 @@ public class VertexLabelObj : MonoBehaviour
             this.latexFormula = formula;
 
             waitingForLatex = true;
-            LatexRenderer.Singleton.AddToLatexQueue(formula, result => this.latexTexture = result);
+            // StartCoroutine(LatexRenderer.Singleton.GetLatexTexture(formula, result => this.latexTexture = result));
 
-            Logger.Log("Vertex label changed to " + formula, this, LogType.INFO);
-            this.vertexObj.Vertex.Label = newLabel;
+            Logger.Log("Label changed to " + formula, this, LogType.INFO);
         }
         else {
             latexMode = false;
@@ -192,8 +144,7 @@ public class VertexLabelObj : MonoBehaviour
             image.enabled = false;
             this.content = newLabel;
 
-            Logger.Log("Vertex label changed to " + newLabel, this, LogType.INFO);
-            this.vertexObj.Vertex.Label = newLabel;
+            Logger.Log("Label changed to " + newLabel, this, LogType.INFO);
         }
     }
 }
