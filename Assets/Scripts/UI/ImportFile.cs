@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.IO;
 using TMPro;
+using SFB;
+
 public class ImportFile : MonoBehaviour
 {
     // Reference to the file name field
@@ -49,6 +51,8 @@ public class ImportFile : MonoBehaviour
             // TODO: File selector, file always saved on desktop for now
             string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
             Debug.Log("Begin import at " + desktop + "/" + importFilenameInput.text + ".csv");
+            string[] paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
+            Debug.Log(paths[0]);
             Controller.Singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
 
             Controller.Singleton.CreateObjsFromGraph();
