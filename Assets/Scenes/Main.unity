@@ -811,8 +811,8 @@ RectTransform:
   m_Father: {fileID: 1908079559}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 30, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3649,7 +3649,7 @@ RectTransform:
   - {fileID: 1581409053}
   - {fileID: 608032729}
   m_Father: {fileID: 1012987117}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -180}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -4846,8 +4846,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -778.0901, y: 293.3307}
-  m_SizeDelta: {x: -1556.2, y: 385.2585}
+  m_AnchoredPosition: {x: -778.09503, y: 293.3307}
+  m_SizeDelta: {x: -1556.1901, y: 385.2585}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &579688376
 MonoBehaviour:
@@ -4905,7 +4905,6 @@ MonoBehaviour:
   sizeText: {fileID: 324383124}
   MinDegreeText: {fileID: 1348371724}
   MaxDegreeText: {fileID: 746479633}
-  closePanel: {fileID: 1003453692}
   openPanel: {fileID: 684446429}
 --- !u!114 &579688379
 MonoBehaviour:
@@ -5994,6 +5993,7 @@ GameObject:
   - component: {fileID: 684446431}
   - component: {fileID: 684446430}
   - component: {fileID: 684446429}
+  - component: {fileID: 684446432}
   m_Layer: 5
   m_Name: OpenGranInfoPanelButton
   m_TagString: Untagged
@@ -6116,6 +6116,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 684446427}
   m_CullTransparentMesh: 1
+--- !u!114 &684446432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 684446427}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &686939719
 GameObject:
   m_ObjectHideFlags: 0
@@ -8740,18 +8766,18 @@ RectTransform:
   m_Children:
   - {fileID: 100917941}
   - {fileID: 436423716}
-  - {fileID: 1908079559}
   - {fileID: 1072866585}
   - {fileID: 1937964946}
   - {fileID: 1394906814}
   - {fileID: 489172211}
+  - {fileID: 1908079559}
   m_Father: {fileID: 523876770}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -778.0901, y: 347.2769}
-  m_SizeDelta: {x: -1556.2, y: 710}
+  m_AnchoredPosition: {x: -778.09503, y: 347.2769}
+  m_SizeDelta: {x: -1556.1901, y: 710}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1012987118
 MonoBehaviour:
@@ -8810,6 +8836,7 @@ MonoBehaviour:
   primButton: {fileID: 1072866586}
   kruskalButton: {fileID: 1937964947}
   dijkstraButton: {fileID: 1394906815}
+  algOpenPanel: {fileID: 1689317852}
 --- !u!1 &1035785018
 GameObject:
   m_ObjectHideFlags: 0
@@ -9097,7 +9124,7 @@ RectTransform:
   m_Children:
   - {fileID: 654282166}
   m_Father: {fileID: 1012987117}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.61712825}
@@ -13139,7 +13166,7 @@ RectTransform:
   m_Children:
   - {fileID: 1709803081}
   m_Father: {fileID: 1012987117}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.61712825}
@@ -15797,6 +15824,7 @@ GameObject:
   - component: {fileID: 1689317854}
   - component: {fileID: 1689317853}
   - component: {fileID: 1689317852}
+  - component: {fileID: 1689317855}
   m_Layer: 5
   m_Name: OpenAlgorithmsPanelButton
   m_TagString: Untagged
@@ -15868,7 +15896,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1689317853}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: OpenAlgorithmInfoPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1689317853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15907,6 +15947,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1689317850}
   m_CullTransparentMesh: 1
+--- !u!114 &1689317855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1689317850}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1709803080
 GameObject:
   m_ObjectHideFlags: 0
@@ -16836,6 +16902,7 @@ GameObject:
   - component: {fileID: 1735708409}
   - component: {fileID: 1735708411}
   - component: {fileID: 1735708410}
+  - component: {fileID: 1735708412}
   m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
@@ -16900,6 +16967,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1735708408}
   m_CullTransparentMesh: 1
+--- !u!114 &1735708412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735708408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1752694955
 GameObject:
   m_ObjectHideFlags: 0
@@ -17678,6 +17771,7 @@ GameObject:
   - component: {fileID: 1908079562}
   - component: {fileID: 1908079561}
   - component: {fileID: 1908079560}
+  - component: {fileID: 1908079563}
   m_Layer: 5
   m_Name: ClosePanelButton
   m_TagString: Untagged
@@ -17699,7 +17793,7 @@ RectTransform:
   - {fileID: 29592076}
   - {fileID: 128261635}
   m_Father: {fileID: 1012987117}
-  m_RootOrder: 2
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -17749,7 +17843,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1908079561}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: CloseAlgorithmInfoPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1908079561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17788,6 +17894,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1908079558}
   m_CullTransparentMesh: 1
+--- !u!114 &1908079563
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908079558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Padding:
+    m_Left: 0
+    m_Right: 0
+    m_Top: 0
+    m_Bottom: 0
+  m_ChildAlignment: 4
+  m_Spacing: 0
+  m_ChildForceExpandWidth: 1
+  m_ChildForceExpandHeight: 1
+  m_ChildControlWidth: 0
+  m_ChildControlHeight: 0
+  m_ChildScaleWidth: 0
+  m_ChildScaleHeight: 0
+  m_ReverseArrangement: 0
 --- !u!1 &1909434788
 GameObject:
   m_ObjectHideFlags: 0
@@ -18029,7 +18161,7 @@ RectTransform:
   m_Children:
   - {fileID: 888970206}
   m_Father: {fileID: 1012987117}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.61712825}

@@ -21,7 +21,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // Reference of the text display of the minimum degree
     [SerializeField] private TMP_Text MaxDegreeText;
     // Reference of the text display of the maximmum degree
-    [SerializeField] private Button closePanel;
+    //[SerializeField] private Button closePanel;
     //Reference to the button to close the graph info panels
     [SerializeField] private Button openPanel;
     //Reference to the button to open the graph info panels
@@ -89,16 +89,18 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         // Debug.Log("Running UpdateBipartiteCalculating");
     }
 
-    //moves the panel off the screen (TEMPORARY FIX) and shows the button to open the graph info panel
+    //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseGraphInfoPanel(){
-        GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0);
+        //GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0); //moves the panel off the screen (TEMPORARY FIX) and shows the button to open the graph info panel
+        this.gameObject.SetActive(false); 
         openPanel.gameObject.SetActive(true);
     }
 
-    //moves the panel back onto the screen (TEMPORARY FIX) and make the open panel button not accessible
+    //activate the graphInfo panel and prevent access to the open panel button
     public void OpenGraphInfoPanel(){
-        //GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0);
-        this.transform.position = new Vector3 (0f,293.79f,0);
+        //GetComponent<RectTransform>().position = new Vector3(500f,0,0); //moves the panel back onto the screen (TEMPORARY FIX) and make the open panel button not accessible
+        //this.transform.position = new Vector3 (0f,293.79f,0);
+        this.gameObject.SetActive(true);
         openPanel.gameObject.SetActive(false);
     }
 
