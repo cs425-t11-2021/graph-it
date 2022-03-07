@@ -28,7 +28,7 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
     private Action kruskalsCalc;
     private Action depthFirstSearchCalc;
     private Action breadthFirstSearchCalc;
-    private Dictionary< int, Algorithm > running; 
+    private Dictionary< int, Algorithm > running;
     public List< Algorithm > Running
     {
         get => this.running.Values.ToList();
@@ -137,6 +137,8 @@ public class AlgorithmManager : SingletonBehavior< AlgorithmManager >
 
     public void EnsureChromaticRunning()
     {
+        this.EnsureMaxDegreeRunning();
+
         int hash = ChromaticAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             new ChromaticAlgorithm( this.graph, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
