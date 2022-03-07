@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class LabelObj : MonoBehaviour
 
     // Reference to the text mesh object
     TMP_InputField inputField;
+    private SpriteRenderer spriteRenderer;
 
     private bool displayEnabled;
 
@@ -21,6 +23,9 @@ public class LabelObj : MonoBehaviour
     private bool waitingForLatex = false;
     private bool latexMode = false;
     private string latexFormula = "";
+    
+    // The distance between the starting position of the vertex and the cursor world position
+    private Vector3 cursorOffset;
     
     public void Initiate(string content)
     {
@@ -36,14 +41,15 @@ public class LabelObj : MonoBehaviour
     
     private void Awake()
     {
-        RectTransform rectTransform = GetComponent<RectTransform>();
+        RectTransform rectTransform = GetComponentInChildren<RectTransform>();
         this.rect = rectTransform.rect;
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         inputField = GetComponentInChildren<TMP_InputField>();
 
         SettingsManager.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
 
-        image = this.gameObject.GetComponentInChildren<RawImage>();
+        image = this.gameObject.GetComponentInChildren<RawImage>(true);
         image.enabled = false;
     }
 
@@ -81,6 +87,7 @@ public class LabelObj : MonoBehaviour
         {
             inputField.gameObject.SetActive(true);
             inputField.interactable = true;
+            spriteRenderer.enabled = true;
         }
 
         if (latexMode) {
@@ -103,6 +110,8 @@ public class LabelObj : MonoBehaviour
             {
                 inputField.gameObject.SetActive(true);
             }
+
+            spriteRenderer.enabled = false;
         }
 
         if (waitingForLatex) {
@@ -146,5 +155,28 @@ public class LabelObj : MonoBehaviour
 
             Logger.Log("Label changed to " + newLabel, this, LogType.INFO);
         }
+    }
+
+    private void OnMouseDown()
+    {
+        Debug.Log("test");
+        this.cursorOffset = this.transform.position - InputManager.Singleton.CursorWorldPosition;
+    }
+
+    private void OnMouseDrag()
+    {
+        this.transform.position = InputManager.Singleton.CursorWorldPosition + this.cursorOffset;
+    }
+
+    public void ShowMover()
+    {
+        this.GetComponent<CircleCollider2D>().enabled = true;
+        this.spriteRenderer.enabled = true;
+    }
+
+    public void HideMover()
+    {
+        this.GetComponent<CircleCollider2D>().enabled = false;
+        this.spriteRenderer.enabled = false;
     }
 }
