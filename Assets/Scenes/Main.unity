@@ -10671,7 +10671,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1177481824}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1996968655}
+        m_TargetAssemblyTypeName: HelpMenu, Assembly-CSharp
+        m_MethodName: LinktoGraphItWebsite
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1177481824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12058,9 +12070,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ViewMenu, Assembly-CSharp
-        m_MethodName: ToggleLabels
+      - m_Target: {fileID: 1996968655}
+        m_TargetAssemblyTypeName: HelpMenu, Assembly-CSharp
+        m_MethodName: LinkResourcesWebpage
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -18780,8 +18792,8 @@ GameObject:
   - component: {fileID: 1996968659}
   - component: {fileID: 1996968658}
   - component: {fileID: 1996968657}
-  - component: {fileID: 1996968655}
   - component: {fileID: 1996968656}
+  - component: {fileID: 1996968655}
   m_Layer: 5
   m_Name: Help
   m_TagString: Untagged
@@ -18819,11 +18831,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1996968653}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff7b0976092ec43cdb4ebf9501521c9d, type: 3}
+  m_Script: {fileID: 11500000, guid: 821498c191190244b8e01537d181cd48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showGrpahLabelsText: {fileID: 1673780295}
-  toolbar: {fileID: 0}
+  websiteHomeURL: https://cs425-t11-2021.github.io/
+  resourcesURL: https://cs425-t11-2021.github.io/
 --- !u!114 &1996968656
 MonoBehaviour:
   m_ObjectHideFlags: 0
