@@ -5255,8 +5255,8 @@ MonoBehaviour:
   bipartiteText: {fileID: 510125109}
   orderText: {fileID: 1553925998}
   sizeText: {fileID: 324383124}
-  MinDegreeText: {fileID: 1348371724}
-  MaxDegreeText: {fileID: 746479633}
+  minDegreeText: {fileID: 1348371724}
+  maxDegreeText: {fileID: 746479633}
   openPanel: {fileID: 684446429}
 --- !u!114 &579688379
 MonoBehaviour:

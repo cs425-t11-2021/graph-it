@@ -17,9 +17,9 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // Reference of the text display of the graph size
     [SerializeField] private TMP_Text sizeText;
     // Reference of the text display of the graph size
-    [SerializeField] private TMP_Text MinDegreeText;
+    [SerializeField] private TMP_Text minDegreeText;
     // Reference of the text display of the minimum degree
-    [SerializeField] private TMP_Text MaxDegreeText;
+    [SerializeField] private TMP_Text maxDegreeText;
     // Reference of the text display of the maximmum degree
     //[SerializeField] private Button closePanel;
     //Reference to the button to close the graph info panels
@@ -59,9 +59,15 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         AlgorithmManager.Singleton.RunBipartite(); //TEMPORARY FIX
     }
 
-    public void UpdateMinDegreeResult() { Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); } // temp
+    public void UpdateMinDegreeResult() { 
+        // Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); 
+        this.minDegreeText.text = "Minimum Degree (δ): " + AlgorithmManager.Singleton.GetMinDegree();
+    }
 
-    public void UpdateMaxDegreeResult() { Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); } // temp
+    public void UpdateMaxDegreeResult() { 
+        // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
+        this.maxDegreeText.text = "Maximum Degree (Δ): " + AlgorithmManager.Singleton.GetMaxDegree();
+    }
 
     public void UpdateChromaticResult() {
         // Debug.Log("Running UpdateChromaticResult");
