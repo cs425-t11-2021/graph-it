@@ -27,27 +27,33 @@ public class FileMenu : MenuButton
     // Function called by the import from file button
     //Utilizes UnityStandAloneFileBrowser Plugin
     public void ImportFromFile(){
-        fileDropDown.SetActive(false);
+        fileDropDown.SetActive(false); //this doesn't work :(
         // Clear existing graph
         Controller.Singleton.CreateGraphInstance();
         //string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
         
         //declararion modified from UnityStandAloneFileBrowser Plugin example usage
-        ExtensionFilter[] extensions = new []{
+        ExtensionFilter[] importExtension = new []{
             new ExtensionFilter ("Comma Seperated Lists","csv") //from UnityStandAloneFileBrowser Plugin
         };
-        string[] paths = StandaloneFileBrowser.OpenFilePanel("Import from File", "", extensions, false); //from UnityStandAloneFileBrowser Plugin
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Import from File", "", importExtension, false); //from UnityStandAloneFileBrowser Plugin
         
         Debug.Log("Begin import at " + paths + ".csv");
         //Debug.Log(paths[0]);
-        //Controller.Singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
+        Controller.Singleton.Graph.Import(paths[0]);
 
         Controller.Singleton.CreateObjsFromGraph();
     }
 
     // Function called by the export to file button
     public void ExportToFile(){
-        this.exportFileMenu.gameObject.SetActive(true);
+        //this.exportFileMenu.gameObject.SetActive(true);
+        //declararion modified from UnityStandAloneFileBrowser Plugin example usage
+        ExtensionFilter[] exportExtensions = new [] {
+            new ExtensionFilter("Comma Seperated Lists", "csv")//from UnityStandAloneFileBrowser Plugin
+        };
+        string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "Graph1", exportExtensions); //from UnityStandAloneFileBrowser Plugin
+        Controller.Singleton.Graph.Export(path);
     }
 
     // Function called by the save as image button

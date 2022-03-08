@@ -1071,18 +1071,6 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1119136494}
-        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
-        m_MethodName: ToggleDropDown
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1119136494}
         m_TargetAssemblyTypeName: FileMenu, Assembly-CSharp
         m_MethodName: ImportFromFile
         m_Mode: 1
@@ -9812,6 +9800,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   importFileMenu: {fileID: 646253996}
   exportFileMenu: {fileID: 1983837607}
+  fileDropDown: {fileID: 798872253}
 --- !u!1 &1126108516
 GameObject:
   m_ObjectHideFlags: 0
