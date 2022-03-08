@@ -58,11 +58,20 @@ public class FileMenu : MenuButton
             new ExtensionFilter("Comma Seperated Lists", "csv")//from UnityStandAloneFileBrowser Plugin
         };
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "Graph1", exportExtensions); //from UnityStandAloneFileBrowser Plugin
+
         Controller.Singleton.Graph.Export(path);
     }
 
     // Function called by the save as image button
     public void SaveAsImage() {
-        ScreenshotManager.Singleton.SaveScrenshotToDesktop();
+        fileDropDown.SetActive(false); //this doesn't work as intended
+        //declararion modified from UnityStandAloneFileBrowser Plugin example usage
+        ExtensionFilter[] imageSaveExtensions = new [] {
+            new ExtensionFilter("Image Files", "png")//from UnityStandAloneFileBrowser Plugin
+        };
+        string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "GraphImage1", imageSaveExtensions); //from UnityStandAloneFileBrowser Plugin
+
+        //ScreenshotManager.Singleton.TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/graph_img.png");
+        ScreenshotManager.Singleton.SaveScrenshotToDesktop(path);
     }
 }
