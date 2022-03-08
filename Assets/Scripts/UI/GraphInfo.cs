@@ -78,7 +78,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     public void UpdateChromaticResult() {
-        Debug.Log("Running UpdateChromaticResult");
         int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
         if ( chromaticNumber is null )
             this.chromaticText.text = "Chromatic Number: Error";
@@ -87,7 +86,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     public void UpdateBipartiteResult() {
-        Debug.Log("Running UpdateBipartiteResult");
         this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
     }
 
