@@ -6,6 +6,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.U2D.Path;
 using UnityEngine;
 
 public class VertexObj : MonoBehaviour
@@ -17,6 +18,9 @@ public class VertexObj : MonoBehaviour
     private Rigidbody2D rb;
     // Reference to the sprite child object of the vertex object
     private Transform spriteObj;
+    
+    private Color normalColor = Color.black;
+    private Color selectedColor = new Color32(0, 125, 255, 255);
 
     // Property for whether or not the vertex object is selected
     private bool selected;
@@ -26,13 +30,15 @@ public class VertexObj : MonoBehaviour
             this.selected = value;
             // If the vertex object becomes selected, make its label editable
             if (value) {
-                this.labelObj.MakeEditable();               
+                this.labelObj.MakeEditable();
+                this.spriteRenderer.color = selectedColor;
             }
             else {
                 this.labelObj.MakeUneditable();
+                this.spriteRenderer.color = normalColor;
             }
             // Change the animator to show that the vertex is selected
-            this.animator.SetBool("Selected", value);
+            // this.animator.SetBool("Selected", value);
         }
     }
 
@@ -42,7 +48,14 @@ public class VertexObj : MonoBehaviour
     private Animator animator;
     // Reference to the labelObj attached to the vertexObj
     private VertexLabelObj labelObj;
+    private Collider2D collider;
 
+    public float spriteRadius;
+    
+    // Store previous global position of the vertexObj
+    private Vector3 previousPosition;
+    public event Action OnVertexObjMove;
+    
     private void Awake() {
         // Vertex objects starts non active
         this.gameObject.SetActive(false);
@@ -53,6 +66,18 @@ public class VertexObj : MonoBehaviour
         this.spriteObj = transform.GetChild(0);
         this.spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
         this.labelObj = GetComponentInChildren<VertexLabelObj>();
+        AddColliderBasedOnSprite(false);
+
+        this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
+    }
+
+    private void Update()
+    {
+        if (this.transform.position != this.previousPosition)
+        {
+            this.previousPosition = this.transform.position;
+            this.OnVertexObjMove?.Invoke();
+        }
     }
 
     // Method called by a controller class to setup properties of the vertex object
@@ -91,5 +116,55 @@ public class VertexObj : MonoBehaviour
         {
             Grid.Singleton.RemoveFromOccupied(this);
         }
+    }
+
+    public void ChangeStyle()
+    {
+        uint spriteIndex = (uint) (this.Vertex.Style + 1);
+        if (spriteIndex >= ResourceManager.Singleton.vertexSprites.Length)
+        {
+            spriteIndex = 0;
+        }
+        this.Vertex.Style = spriteIndex;
+
+        Sprite sprite = ResourceManager.Singleton.vertexSprites[spriteIndex];
+
+        this.spriteRenderer.sprite = sprite;
+        this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
+        // this.collider.radius = this.spriteRadius;
+        
+        Destroy(this.collider);
+        if (this.Vertex.Style == 1) {
+            this.labelObj.CenteredLabel = true;
+            AddColliderBasedOnSprite(true);
+            this.labelObj.UpdatePosition();
+        }
+        else {
+            this.labelObj.CenteredLabel = false;
+            AddColliderBasedOnSprite(false);
+            this.labelObj.UpdatePosition();
+        }
+        
+        this.normalColor = this.Vertex.Style < 2 ? Color.black  : Color.white;
+    }
+
+    private void AddColliderBasedOnSprite(bool poly)
+    {
+        if (poly)
+        {
+            PolygonCollider2D newCol = this.spriteRenderer.gameObject.AddComponent<PolygonCollider2D>();
+            this.collider = this.gameObject.AddComponent<PolygonCollider2D>().CopyFromCollider(newCol);
+            Destroy(newCol);
+        }
+        else
+        {
+            CircleCollider2D newCol = this.spriteRenderer.gameObject.AddComponent<CircleCollider2D>();
+            this.collider = this.gameObject.AddComponent<CircleCollider2D>().CopyFromCollider(newCol);
+            Destroy(newCol);
+        }
+
+        
+        
+
     }
 }

@@ -23,6 +23,9 @@ public class FileMenu : MenuButton
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
         Controller.Singleton.CreateGraphInstance();
+        
+        // TEMPOARY
+        ResourceManager.Singleton.LoadVertexSprites();
     }
 
     //display pop-up with options users can choose from to create graphs from

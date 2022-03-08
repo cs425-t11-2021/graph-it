@@ -13,13 +13,10 @@ public class KruskalsAlgorithm : Algorithm
     public override void Run()
     {
         if ( this.Graph.Directed )
-        {
-            // Debug.Log( ( new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
             throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
-        }
 
         this.Mst = new List< Edge >();
-        List< Edge > edges = new List< Edge >( this.Graph.Adjacency.Values.OrderBy( edge => edge.weight ) );
+        List< Edge > edges = new List< Edge >( this.Graph.Adjacency.Values.OrderBy( edge => edge.Weight ) );
         HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
         foreach ( Vertex vert in this.Graph.Vertices )
             forest.Add( new HashSet< Vertex >() { vert } );
@@ -43,7 +40,6 @@ public class KruskalsAlgorithm : Algorithm
             if ( component.Contains( vert ) )
                 return component;
         }
-        // Debug.Log( ( new System.Exception( "Vertex could not be found in collection of components." ) ).ToString() );
         throw new System.Exception( "Vertex could not be found in collection of components." );
     }
 

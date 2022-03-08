@@ -51,7 +51,8 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
     private void TakeScreenshot(string filepath) {
         this.screenBounds = GetBoundsOfGraphObjects();
         this.takeScreenshotNextFrame = true;
-        this.cam.targetTexture = RenderTexture.GetTemporary(Screen.width, Screen.height, 16);
+        Debug.Log(screenBounds.size.x + " " + screenBounds.size.y);
+        this.cam.targetTexture = RenderTexture.GetTemporary((int) (screenBounds.max.x + .5f), (int) (screenBounds.max.y + .5f), 16);
         this.filepath = filepath;
     }
 
@@ -82,8 +83,20 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
             }
         }
 
-        bounds.SetMinMax(cam.WorldToScreenPoint(new Vector3(xMin - 1, yMin - 1, cam.transform.position.z)), cam.WorldToScreenPoint(new Vector3(xMax + 1, yMax + 1, cam.transform.position.z)));
-
+        bounds.SetMinMax(cam.WorldToScreenPoint(new Vector3(xMin - 2, yMin - 2, cam.transform.position.z)), cam.WorldToScreenPoint(new Vector3(xMax + 2, yMax + 2, cam.transform.position.z)));
+        
+        // // Make sure the bounds doesn't exceed the camera's render texture
+        // if (bounds.min.x < 0)
+        // {
+        //     bounds.min = new Vector3(0f, bounds.min.y, bounds.min.z);
+        // }
+        // if (bounds.min.y < 0)
+        // {
+        //     bounds.min = new Vector3(bounds.min.x, 0, bounds.min.z);
+        // }
+        
+        Debug.Log(bounds.min + " " + bounds.max);
+        
         return bounds;
     }
 }

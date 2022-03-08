@@ -30,7 +30,7 @@ public class PrimsAlgorithm : Algorithm
         while ( mstVerticesPrevCount != mstVertices.Count )
         {
             mstVerticesPrevCount = mstVertices.Count;
-            List< Edge > incidentEdges = new List< Edge >( this.Graph.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.weight ) );
+            List< Edge > incidentEdges = new List< Edge >( this.Graph.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.Weight ) );
             foreach ( Edge edge in incidentEdges )
             {
                 if ( !mstVertices.Contains( edge.vert1 ) || !mstVertices.Contains( edge.vert2 ) )
