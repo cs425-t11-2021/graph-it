@@ -27,9 +27,8 @@ public class FileMenu : MenuButton
     // Function called by the import from file button
     //Utilizes UnityStandAloneFileBrowser Plugin
     public void ImportFromFile(){
-        fileDropDown.SetActive(false); //this doesn't work :(
-        // Clear existing graph
-        Controller.Singleton.CreateGraphInstance();
+        fileDropDown.SetActive(false); //this doesn't work as intended
+        
         //string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
         
         //declararion modified from UnityStandAloneFileBrowser Plugin example usage
@@ -38,6 +37,11 @@ public class FileMenu : MenuButton
         };
         string[] paths = StandaloneFileBrowser.OpenFilePanel("Import from File", "", importExtension, false); //from UnityStandAloneFileBrowser Plugin
         
+        //if the user does not cancel the file import menu, clear the current graph to import the new one //IMPORT INTO A NEW TAB LATER TO NOT OVERWRITE CURRENT WORK
+        if(paths.Length != 0){
+            // Clear existing graph
+            Controller.Singleton.CreateGraphInstance();
+        }
         Debug.Log("Begin import at " + paths + ".csv");
         //Debug.Log(paths[0]);
         Controller.Singleton.Graph.Import(paths[0]);
@@ -47,6 +51,7 @@ public class FileMenu : MenuButton
 
     // Function called by the export to file button
     public void ExportToFile(){
+        fileDropDown.SetActive(false); //this doesn't work as intended
         //this.exportFileMenu.gameObject.SetActive(true);
         //declararion modified from UnityStandAloneFileBrowser Plugin example usage
         ExtensionFilter[] exportExtensions = new [] {
