@@ -12,6 +12,20 @@ public class ViewMenu : MenuButton
     [SerializeField]
     private TMP_Text showGrpahLabelsText;
 
+    [SerializeField] private GameObject toolbar;
+
+    
+    public void ToggleToolbar(){ //TO DO need to change the button text as appropiate
+        //if active, set inactive
+        if(toolbar.activeSelf){
+            toolbar.SetActive(false);
+        }
+        //otherwise inactive and needs to be set active
+        else{
+            toolbar.SetActive(true);
+        }
+    }
+
     // Method called by the "Show Graph Labels" button in the view dropdown to toggle the display of vertex and edge labels
     public void ToggleLabels()
     {
