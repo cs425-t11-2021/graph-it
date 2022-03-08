@@ -100,6 +100,26 @@ public class Controller : SingletonBehavior<Controller>
         GraphInfo.Singleton.UpdateGraphInfo();
     }
 
+    public void ClearCurrentInstance() {
+        // Deselect All
+        SelectionManager.Singleton.DeSelectAll();
+
+        // Reset toolbar toggles
+        Toolbar.Singleton.ResetAll();
+
+        // If snap to grid is enabled, clear out the grid
+        if (Grid.Singleton.GridEnabled)
+        {
+            Grid.Singleton.ClearGrid();
+        }
+
+        var previousInstance = this.activeGraphInstance;
+
+        // Destroy current graph objects and create a new instance
+        CreateGraphInstance(true);
+        Destroy(previousInstance.container.gameObject);
+    }
+
     // Create a new graph instance and removing the current one
     // TODO: Add to a list instead of deleting the old one once multi-graph support is setup
     public void CreateGraphInstance(bool setAsActive = false) {

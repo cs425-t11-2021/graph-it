@@ -9569,7 +9569,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4782475346978306228}
         m_TargetAssemblyTypeName: SelectionManager, Assembly-CSharp
         m_MethodName: RunPrims
         m_Mode: 1
@@ -13665,7 +13665,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4782475346978306228}
         m_TargetAssemblyTypeName: SelectionManager, Assembly-CSharp
         m_MethodName: RunDijkstra
         m_Mode: 1
@@ -18838,7 +18838,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4782475346978306228}
         m_TargetAssemblyTypeName: SelectionManager, Assembly-CSharp
         m_MethodName: RunKruskal
         m_Mode: 1
@@ -22304,9 +22304,9 @@ GameObject:
   - component: {fileID: 4782475346978306234}
   - component: {fileID: 4782475346978306237}
   - component: {fileID: 4782475346978306236}
-  - component: {fileID: 4782475346978306231}
   - component: {fileID: 4782475346978306239}
   - component: {fileID: 4782475346978306238}
+  - component: {fileID: 4782475346978306225}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -22314,6 +22314,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &4782475346978306225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4782475346978306224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46e6ac06074fc4bf9a4eb8fd4ebfa9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tabPrefab: {fileID: 3286621971729624603, guid: cf1658cdf7f8843799433224837c3618, type: 3}
 --- !u!114 &4782475346978306226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22383,18 +22396,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e68742db1c86b0a6ab21cd5fb1c5de7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4782475346978306231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4782475346978306224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10d2ba2eda1af8fa094864d65f83c5dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4782475346978306232

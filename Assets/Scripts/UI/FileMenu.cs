@@ -22,7 +22,7 @@ public class FileMenu : MenuButton
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
-        Controller.Singleton.CreateGraphInstance();
+        Controller.Singleton.ClearCurrentInstance();
         
         // TEMPOARY
         ResourceManager.Singleton.LoadVertexSprites();

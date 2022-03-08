@@ -43,7 +43,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }*/
 
     public void InitiateAlgorithmManager() {
-        Controller.Singleton.AlgorithmManager.Initiate( Controller.Singleton.Graph, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating );
+        Controller.Singleton.AlgorithmManager.Initiate( Controller.Singleton.Graph, ( Action ) this.UpdateMinDegreeResult, ( Action ) this.UpdateMaxDegreeResult, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateMinDegreeCalculating, ( Action ) this.UpdateMaxDegreeCalculating, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating );
         this.UpdateGraphInfo();
     }
     
@@ -54,9 +54,9 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         // Run multithreaded algorithms
         // Controller.Singleton.AlgorithmManager.Clear();
         // this.algorithmManager.RunChromatic();
-        Controller.Singleton.AlgorithmManager.Singleton.RunMinDegree();
-        Controller.Singleton.AlgorithmManager.Singleton.RunMaxDegree();
-        Controller.Singleton.AlgorithmManager.Singleton.RunBipartite(); //TEMPORARY FIX
+        Controller.Singleton.AlgorithmManager.RunMinDegree();
+        Controller.Singleton.AlgorithmManager.RunMaxDegree();
+        Controller.Singleton.AlgorithmManager.RunBipartite(); //TEMPORARY FIX
         Controller.Singleton.AlgorithmManager.RunBipartite(); //TEMPORARY FIX
     }
 
@@ -70,12 +70,12 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     public void UpdateMinDegreeResult() { 
         // Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); 
-        this.minDegreeText.text = "Minimum Degree (δ): " + AlgorithmManager.Singleton.GetMinDegree();
+        this.minDegreeText.text = "Minimum Degree (δ): " + Controller.Singleton.AlgorithmManager.GetMinDegree();
     }
 
     public void UpdateMaxDegreeResult() { 
         // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
-        this.maxDegreeText.text = "Maximum Degree (Δ): " + AlgorithmManager.Singleton.GetMaxDegree();
+        this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
     }
 
     public void UpdateChromaticResult() {
