@@ -999,7 +999,6 @@ GameObject:
   - component: {fileID: 148480150}
   - component: {fileID: 148480149}
   - component: {fileID: 148480148}
-  - component: {fileID: 148480151}
   m_Layer: 5
   m_Name: Import From File
   m_TagString: Untagged
@@ -1072,6 +1071,18 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1119136494}
+        m_TargetAssemblyTypeName: MenuButton, Assembly-CSharp
+        m_MethodName: ToggleDropDown
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1119136494}
         m_TargetAssemblyTypeName: FileMenu, Assembly-CSharp
         m_MethodName: ImportFromFile
         m_Mode: 1
@@ -1121,18 +1132,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 148480146}
   m_CullTransparentMesh: 1
---- !u!114 &148480151
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 148480146}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5eb089fa93f7e54a847f3da1fa3aa9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &150277621
 GameObject:
   m_ObjectHideFlags: 0
@@ -5459,8 +5458,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 98a3241799e088e49ae9c128faed2320, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  importFilenameInput: {fileID: 757184706}
-  errorMessagePopUp: {fileID: 2075901294}
 --- !u!1 &652385414
 GameObject:
   m_ObjectHideFlags: 0

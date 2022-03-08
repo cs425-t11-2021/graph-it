@@ -1,9 +1,11 @@
-//All code developed by Team 11
+//All code developed by Team 11 -- code that is not is indicated
+////The file system (for importing, exporting, and saving)uses the UnityStandAloneFileBrowser Plugin found here: https://github.com/gkngkc/UnityStandaloneFileBrowser
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using SFB; //not developed by Team 11, from UnityStandAloneFileBrowser Plugin
 
 // Class for hosting functions called by buttons of the File dropdown menu, inherits from MenuButton
 public class FileMenu : MenuButton
@@ -22,7 +24,15 @@ public class FileMenu : MenuButton
 
     // Function called by the import from file button
     public void ImportFromFile(){
-        this.importFileMenu.gameObject.SetActive(true);
+        // Clear existing graph
+        Controller.Singleton.CreateGraphInstance();
+        //string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false); //from UnityStandAloneFileBrowser Plugin
+        Debug.Log("Begin import at " + paths + ".csv");
+        //Debug.Log(paths[0]);
+        //Controller.Singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
+
+        Controller.Singleton.CreateObjsFromGraph();
     }
 
     // Function called by the export to file button
