@@ -16,6 +16,16 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     [SerializeField] private TMP_Text orderText;
     // Reference of the text display of the graph size
     [SerializeField] private TMP_Text sizeText;
+    // Reference of the text display of the graph size
+    [SerializeField] private TMP_Text minDegreeText;
+    // Reference of the text display of the minimum degree
+    [SerializeField] private TMP_Text maxDegreeText;
+    // Reference of the text display of the maximmum degree
+    //[SerializeField] private Button closePanel;
+    //Reference to the button to close the graph info panels
+    [SerializeField] private Button openPanel;
+    //Reference to the button to open the graph info panels
+
     // Reference of the button of prim
     //[SerializeField] private Button primButton;
     // Reference of the kruskal button
@@ -49,9 +59,15 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         AlgorithmManager.Singleton.RunBipartite(); //TEMPORARY FIX
     }
 
-    public void UpdateMinDegreeResult() { Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); } // temp
+    public void UpdateMinDegreeResult() { 
+        // Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); 
+        this.minDegreeText.text = "Minimum Degree (δ): " + AlgorithmManager.Singleton.GetMinDegree();
+    }
 
-    public void UpdateMaxDegreeResult() { Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); } // temp
+    public void UpdateMaxDegreeResult() { 
+        // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
+        this.maxDegreeText.text = "Maximum Degree (Δ): " + AlgorithmManager.Singleton.GetMaxDegree();
+    }
 
     public void UpdateChromaticResult() {
         // Debug.Log("Running UpdateChromaticResult");
@@ -87,6 +103,21 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateBipartiteCalculating() {
         this.bipartiteText.text = "Bipartite: Calculating";
         // Debug.Log("Running UpdateBipartiteCalculating");
+    }
+
+    //deactivate the graphInfo panel and display the open panel button for the user to access
+    public void CloseGraphInfoPanel(){
+        //GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0); //moves the panel off the screen (TEMPORARY FIX) and shows the button to open the graph info panel
+        this.gameObject.SetActive(false); 
+        openPanel.gameObject.SetActive(true);
+    }
+
+    //activate the graphInfo panel and prevent access to the open panel button
+    public void OpenGraphInfoPanel(){
+        //GetComponent<RectTransform>().position = new Vector3(500f,0,0); //moves the panel back onto the screen (TEMPORARY FIX) and make the open panel button not accessible
+        //this.transform.position = new Vector3 (0f,293.79f,0);
+        this.gameObject.SetActive(true);
+        openPanel.gameObject.SetActive(false);
     }
 
     // public void UpdatePrimsCalculating() { }
