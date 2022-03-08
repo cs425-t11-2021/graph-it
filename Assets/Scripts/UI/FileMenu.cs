@@ -16,12 +16,18 @@ public class FileMenu : MenuButton
     [SerializeField]
     private GameObject exportFileMenu;
 
-    [SerializeField] private GameObject fileDropDown;
+    [SerializeField] private GameObject fileDropDown; //TO DO - close immediately after selection of option
+    [SerializeField] private GameObject createFromPresetMenu;
 
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
         Controller.Singleton.CreateGraphInstance();
+    }
+
+    //display pop-up with options users can choose from to create graphs from
+    public void CreateFromPreset(){
+        createFromPresetMenu.SetActive(true);
     }
 
     // Function called by the import from file button
