@@ -44,8 +44,8 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
     }
 
     // Tempoarty function for saving a screenshot to desktop
-    public void SaveScrenshotToDesktop() {
-        TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/graph_img.png");
+    public void SaveScrenshotToDesktop(string filepath_temp) {
+        TakeScreenshot(filepath_temp);
     }
 
     private void TakeScreenshot(string filepath) {

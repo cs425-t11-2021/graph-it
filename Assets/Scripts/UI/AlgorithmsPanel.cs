@@ -22,6 +22,10 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private Button kruskalButton;
     // Reference of the button of dijkstra
     [SerializeField] private Button dijkstraButton;
+    //[SerializeField] private Button algClosePanel;
+    //Reference to the button to close the algorithm info panels
+    [SerializeField] private Button algOpenPanel;
+    //Reference to the button to open the algorithm info panels
     // Start is called before the first frame update
 
     // public AlgorithmManager algorithmManager;
@@ -92,4 +96,20 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void UpdateDepthFirstSearchCalculating() { }
 
     public void UpdateBreadthFirstSearchCalculating() { }
+
+    //deactivate the graphInfo panel and display the open panel button for the user to access
+    public void CloseAlgorithmInfoPanel(){
+        //GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0); //moves the panel off the screen (TEMPORARY FIX) and shows the button to open the graph info panel
+        this.gameObject.SetActive(false); 
+        algOpenPanel.gameObject.SetActive(true);
+    }
+
+    //activate the graphInfo panel and prevent access to the open panel button
+    public void OpenAlgorithmInfoPanel(){
+        //GetComponent<RectTransform>().position = new Vector3(500f,0,0); //moves the panel back onto the screen (TEMPORARY FIX) and make the open panel button not accessible
+        //this.transform.position = new Vector3 (0f,293.79f,0);
+        this.gameObject.SetActive(true);
+        algOpenPanel.gameObject.SetActive(false);
+    }
+
 }
