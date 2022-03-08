@@ -16,6 +16,8 @@ public class FileMenu : MenuButton
     [SerializeField]
     private GameObject exportFileMenu;
 
+    [SerializeField] private GameObject fileDropDown;
+
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
@@ -23,11 +25,19 @@ public class FileMenu : MenuButton
     }
 
     // Function called by the import from file button
+    //Utilizes UnityStandAloneFileBrowser Plugin
     public void ImportFromFile(){
+        fileDropDown.SetActive(false);
         // Clear existing graph
         Controller.Singleton.CreateGraphInstance();
         //string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
-        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false); //from UnityStandAloneFileBrowser Plugin
+        
+        //declararion modified from UnityStandAloneFileBrowser Plugin example usage
+        ExtensionFilter[] extensions = new []{
+            new ExtensionFilter ("Comma Seperated Lists","csv") //from UnityStandAloneFileBrowser Plugin
+        };
+        string[] paths = StandaloneFileBrowser.OpenFilePanel("Import from File", "", extensions, false); //from UnityStandAloneFileBrowser Plugin
+        
         Debug.Log("Begin import at " + paths + ".csv");
         //Debug.Log(paths[0]);
         //Controller.Singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
