@@ -10,6 +10,7 @@ public enum Modification
     VERTEX_LABEL,       // modified is tuple consisting of vertex, oldLabel, newLabel
     VERTEX_POS,         // modified is tuple consisting of vertex, x0, y0, x1, y1
     VERTEX_STYLE,       // modified is tuple consisting of vertex, oldStyle, newStyle
+    VERTEX_SIZE,        // modified is tuple consisting of vertex, oldSize, newSize
     VERTEX_COLOR,       // modified is tuple consisting of vertex, oldColor, newColor
 
     ADD_EDGE,           // modified is added edge
@@ -19,6 +20,7 @@ public enum Modification
     EDGE_STYLE,         // modified is tuple consisting of edge, oldStyle, newStyle
     EDGE_COLOR,         // modified is tuple consisting of edge, oldColor, newColor
     EDGE_THICKNESS,     // modified is tuple consisting of edge, oldThickness, newThickness
+    EDGE_CURVATURE,     // modified is tuple consisting of edge, oldCurvature, newCurvature
     EDGE_TAIL_STYLE,    // modified is tuple consisting of edge, oldTail, newTail
     EDGE_HEAD_STYLE,    // modified is tuple consisting of edge, oldHead, newHead
     EDGE_REVERSE,       // modified is reversed edge
@@ -71,6 +73,9 @@ public class GraphModification
             case Modification.VERTEX_STYLE:
                 this.UndoVertexStyle();
                 break;
+            case Modification.VERTEX_SIZE:
+                this.UndoVertexSize();
+                break;
             case Modification.VERTEX_COLOR:
                 this.UndoVertexColor();
                 break;
@@ -94,6 +99,9 @@ public class GraphModification
                 break;
             case Modification.EDGE_THICKNESS:
                 this.UndoEdgeThickness();
+                break;
+            case Modification.EDGE_CURVATURE:
+                this.UndoEdgeCurvature();
                 break;
             case Modification.EDGE_TAIL_STYLE:
                 this.UndoEdgeTailStyle();
@@ -139,6 +147,11 @@ public class GraphModification
     {
         Tuple< Vertex, uint, uint > styleData = ( Tuple< Vertex, uint, uint > ) this.Modified;
         styleData.Item1.SetStyle( styleData.Item2, false );
+    }
+
+    private void UndoVertexSize()
+    {
+
     }
 
     private void UndoVertexColor()
@@ -187,6 +200,11 @@ public class GraphModification
         thicknessData.Item1.SetThickness( thicknessData.Item2, false );
     }
 
+    private void UndoEdgeCurvature()
+    {
+
+    }
+
     private void UndoEdgeTailStyle()
     {
         Tuple< Edge, uint, uint > tailStyleData = ( Tuple< Edge, uint, uint > ) this.Modified;
@@ -233,6 +251,9 @@ public class GraphModification
             case Modification.VERTEX_STYLE:
                 this.RedoVertexStyle();
                 break;
+            case Modification.VERTEX_SIZE:
+                this.RedoVertexSize();
+                break;
             case Modification.VERTEX_COLOR:
                 this.RedoVertexColor();
                 break;
@@ -256,6 +277,9 @@ public class GraphModification
                 break;
             case Modification.EDGE_THICKNESS:
                 this.RedoEdgeThickness();
+                break;
+            case Modification.EDGE_CURVATURE:
+                this.RedoEdgeCurvature();
                 break;
             case Modification.EDGE_TAIL_STYLE:
                 this.RedoEdgeTailStyle();
@@ -300,6 +324,11 @@ public class GraphModification
 
     }
 
+    private void RedoVertexSize()
+    {
+
+    }
+
     private void RedoVertexColor()
     {
         
@@ -336,6 +365,11 @@ public class GraphModification
     }
 
     private void RedoEdgeThickness()
+    {
+
+    }
+
+    private void RedoEdgeCurvature()
     {
 
     }

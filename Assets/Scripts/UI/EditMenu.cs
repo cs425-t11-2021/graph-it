@@ -26,11 +26,13 @@ public class EditMenu : MenuButton
     // Function called by select all button
     public void SelectAll(){
         SelectionManager.Singleton.SelectAll();
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by deselect all button
     public void DeselectAll(){
         SelectionManager.Singleton.DeSelectAll();
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the add edge button

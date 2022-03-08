@@ -116,16 +116,9 @@ public class EdgeObj : MonoBehaviour
         UpdateSpline();
     }
 
-    // private void Update() {
-    //     if (this.Edge != null)
-    //     {
-    //         
-    //     }
-    // }
-
     private void UpdateSpline()
     {
-        transform.parent.position = this.Vertex1.transform.position + new Vector3(0f, 0f, 1f);
+        this.transform.parent.position = this.Vertex1.transform.position + new Vector3(0f, 0f, 1f);
         if (this.curvature == int.MaxValue) {
             UpdateCircularSpline(0.7f, FindBestAngleForLoop());
         }
@@ -411,5 +404,11 @@ public class EdgeObj : MonoBehaviour
         
         Logger.Log("Edge curvature changed to " + this.Curvature, this, LogType.INFO);
         UpdateSpline();
+    }
+
+    private void OnDestroy()
+    {
+        this.Vertex1.OnVertexObjMove -= UpdateSpline;
+        this.Vertex2.OnVertexObjMove -= UpdateSpline;
     }
 }

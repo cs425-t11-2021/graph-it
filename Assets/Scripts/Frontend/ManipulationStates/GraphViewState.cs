@@ -63,7 +63,8 @@ public class GraphViewState : ManipulationState
             }
         }
     }
-
+    
+    // TODO: optimization
     public void OnDragStart() {
         // If mouse drag starts on a vertex or edge, start dragging the component
         if (InputManager.Singleton.CurrentHoveringVertex) {
@@ -75,8 +76,21 @@ public class GraphViewState : ManipulationState
 
             SelectionManager.Singleton.SelectVertex(vertex);
         }
-        else if (InputManager.Singleton.CurrentHoveringEdge) {
-            this.graphMovementInProgress = true;
+        else if (InputManager.Singleton.CurrentHoveringEdge)
+        {
+            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponent<EdgeObj>();
+            if (edge.Selected)
+            {
+                this.graphMovementInProgress = true;
+            }
+            else
+            {
+                if (!InputManager.Singleton.HoldSelectionKeyHeld) {
+                    SelectionManager.Singleton.DeSelectAll();
+                }
+
+                SelectionManager.Singleton.ToggleEdgeSelection(edge);
+            }
         }
         else {
             return;
