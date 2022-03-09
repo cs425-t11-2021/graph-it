@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Scripting;
@@ -28,12 +29,12 @@ public class AlgorithmManager
     private Action kruskalsCalc;
     private Action depthFirstSearchCalc;
     private Action breadthFirstSearchCalc;
-    private Dictionary< int, Algorithm > running = new Dictionary< int, Algorithm >(); 
+    private ConcurrentDictionary< int, Algorithm > running = new ConcurrentDictionary< int, Algorithm >(); 
     public List< Algorithm > Running
     {
         get => this.running.Values.ToList();
     }
-    private Dictionary< int, Algorithm > complete = new Dictionary< int, Algorithm >();
+    private ConcurrentDictionary< int, Algorithm > complete = new ConcurrentDictionary< int, Algorithm >();
     public List< Algorithm > Complete
     {
         get => this.running.Values.ToList();
@@ -216,7 +217,7 @@ public class AlgorithmManager
 
     public void UnmarkRunning( Algorithm algo )
     {
-        this.running.Remove( algo.GetHashCode() );
+        this.running.TryRemove( algo.GetHashCode() , out _ );
     }
 
     // public bool IsRunning( Type Algo ) => this.IsRunning( Algo.GetHash() );
