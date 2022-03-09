@@ -5724,8 +5724,6 @@ GameObject:
   - component: {fileID: 646253999}
   - component: {fileID: 646253998}
   - component: {fileID: 646254000}
-  - component: {fileID: 646254002}
-  - component: {fileID: 646254003}
   m_Layer: 5
   m_Name: ImportFileMenu
   m_TagString: Untagged
@@ -5816,30 +5814,6 @@ MonoBehaviour:
   m_FlexibleWidth: 0
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
---- !u!114 &646254002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646253996}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5eb089fa93f7e54a847f3da1fa3aa9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &646254003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 646253996}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 98a3241799e088e49ae9c128faed2320, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &652385414
 GameObject:
   m_ObjectHideFlags: 0
@@ -10502,7 +10476,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 646254003}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ImportFile, Assembly-CSharp
         m_MethodName: Cancel
         m_Mode: 1
@@ -11325,7 +11299,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1983837611}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ExportFile, Assembly-CSharp
         m_MethodName: Cancel
         m_Mode: 1
@@ -16186,7 +16160,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1983837611}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ExportFile, Assembly-CSharp
         m_MethodName: Confirm
         m_Mode: 1
@@ -17545,7 +17519,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 646254003}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ImportFile, Assembly-CSharp
         m_MethodName: Confirm
         m_Mode: 1
@@ -19250,7 +19224,6 @@ GameObject:
   - component: {fileID: 1983837608}
   - component: {fileID: 1983837610}
   - component: {fileID: 1983837609}
-  - component: {fileID: 1983837611}
   m_Layer: 5
   m_Name: ExportFileMenu
   m_TagString: Untagged
@@ -19321,20 +19294,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1983837607}
   m_CullTransparentMesh: 1
---- !u!114 &1983837611
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1983837607}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7618ff3886b89d0438806b35f54449bc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  errorMessagePopUp: {fileID: 2075901294}
-  exportFilenameInput: {fileID: 506519946}
 --- !u!1 &1993927229
 GameObject:
   m_ObjectHideFlags: 0
