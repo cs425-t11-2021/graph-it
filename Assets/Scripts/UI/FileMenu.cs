@@ -51,8 +51,6 @@ public class FileMenu : MenuButton
             // Clear existing graph
             Controller.Singleton.CreateGraphInstance();
         }
-        Debug.Log("Begin import at " + paths + ".csv");
-        //Debug.Log(paths[0]);
         Controller.Singleton.Graph.Import(paths[0]);
 
         Controller.Singleton.CreateObjsFromGraph();
@@ -81,6 +79,6 @@ public class FileMenu : MenuButton
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "GraphImage1", imageSaveExtensions); //from UnityStandAloneFileBrowser Plugin
 
         //ScreenshotManager.Singleton.TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/graph_img.png");
-        ScreenshotManager.Singleton.SaveScrenshotToDesktop(path);
+        ScreenshotManager.Singleton.TakeScreenshot(path);
     }
 }
