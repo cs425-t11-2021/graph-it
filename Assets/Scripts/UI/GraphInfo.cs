@@ -21,6 +21,11 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // Reference of the text display of the minimum degree
     [SerializeField] private TMP_Text maxDegreeText;
     // Reference of the text display of the maximmum degree
+    [SerializeField] private TMP_Text radiusText;
+    // Reference to the text display of radius
+    [SerializeField] private TMP_Text diameterText;
+    // Reference to the text display of diameter
+
     //[SerializeField] private Button closePanel;
     //Reference to the button to close the graph info panels
     [SerializeField] private Button openPanel;
@@ -102,12 +107,12 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateMaxDegreeCalculating() { }
 
     public void UpdateChromaticCalculating() {
-        this.chromaticText.text = "Chromatic Number: Calculating";
+        this.chromaticText.text = "Chromatic Number: ...";
         // Debug.Log("Running UpdateChromaticCalculating");
     }
 
     public void UpdateBipartiteCalculating() {
-        this.bipartiteText.text = "Bipartite: Calculating";
+        this.bipartiteText.text = "Bipartite: ...";
         // Debug.Log("Running UpdateBipartiteCalculating");
     }
 
