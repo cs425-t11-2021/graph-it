@@ -325,6 +325,13 @@ public class EdgeObj : MonoBehaviour
 
     // Toggle between undirected, direction 1, and direction -1
     public void ToggleEdgeType() {
+        // TEMPORARY: If special case where two directed edges are connected to a pair of vertices, do not allow type change until one is removed
+        if (this.Edge.Directed && Controller.Singleton.Graph.Adjacency.ContainsKey( (this.Edge.vert1, this.Edge.vert2) ) && Controller.Singleton.Graph.Adjacency.ContainsKey( (this.Edge.vert2, this.Edge.vert1) ))
+        {
+            Logger.Log("Modifying the type of a directed edge with a corresponding directed edge connecting the same pair of vertices is unsupported at this time", this, LogType.WARNING);
+            return;
+        }
+        
         if (this.direction == 0)
         {
             this.direction = 1;
@@ -340,9 +347,16 @@ public class EdgeObj : MonoBehaviour
         {
             this.Edge.Reverse();
             (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
+
+            // if (Controller.Singleton.Graph.Adjacency.ContainsKey( (this.Edge.vert2, this.Edge.vert1) ))
+            // {
+            //     Edge parallelDirectedEdge = Controller.Singleton.Graph.Adjacency[(this.Edge.vert2, this.Edge.vert1)];
+            //     Controller.Singleton.RemoveEdge(parallelDirectedEdge);
+            // }
             
             this.direction = 0;
             this.Edge.Directed = false;
+            this.curvature = 0;
         }
 
         UpdateSpline();

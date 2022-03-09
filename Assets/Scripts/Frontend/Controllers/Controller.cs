@@ -222,6 +222,11 @@ public class Controller : SingletonBehavior<Controller>
         this.OnGraphModified?.Invoke();
     }
 
+    public void RemoveEdge(Edge edge)
+    {
+        RemoveEdge(GetEdgeObj(edge));
+    }
+
     public void AddEdge(Vertex vertex1, Vertex vertex2, bool directed = false) {
         // If the requested edge already exists, return
         if (!directed && Controller.Singleton.Graph.IsAdjacent(vertex1, vertex2))  {
@@ -333,6 +338,16 @@ public class Controller : SingletonBehavior<Controller>
     private VertexObj GetVertexObj(Vertex v) {
         foreach (VertexObj vertexObj in this.activeGraphInstance.vertexObjs) {
             if (vertexObj.Vertex == v) return vertexObj;
+        }
+        return null;
+    }
+    
+    // Get a edge object in the current graph instance given a edge
+    private EdgeObj GetEdgeObj(Edge e)
+    {
+        foreach (EdgeObj edgeObj in this.activeGraphInstance.edgeObjs)
+        {
+            if (edgeObj.Edge == e) return edgeObj;
         }
         return null;
     }
