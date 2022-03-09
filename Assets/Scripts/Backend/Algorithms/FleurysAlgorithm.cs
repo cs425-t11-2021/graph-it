@@ -1,6 +1,4 @@
-
 using System;
-using System.Threading;
 
 [System.Serializable]
 public class FleurysAlgorithm : Algorithm
@@ -9,7 +7,6 @@ public class FleurysAlgorithm : Algorithm
 
     public FleurysAlgorithm(
         Graph graph,
-        CancellationToken token,
         Action updateUI,
         Action updateCalc,
         Action< Algorithm > markRunning, 
@@ -17,7 +14,6 @@ public class FleurysAlgorithm : Algorithm
         Action< Algorithm > unmarkRunning)
         : base(
             graph,
-            token,
             updateUI,
             updateCalc,
             markRunning,

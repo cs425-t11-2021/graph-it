@@ -7,7 +7,6 @@ public abstract class Algorithm
 {
     protected Graph Graph { get; private set; }
     private Thread currThread;
-    private CancellationToken token;
     private Action updateUI;
     private Action updateCalc;
     private Action< Algorithm > markRunning;
@@ -16,11 +15,10 @@ public abstract class Algorithm
     protected bool running;
     protected bool complete;
 
-    public Algorithm( Graph graph, CancellationToken token, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning )
+    public Algorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning )
     {
         this.Graph = graph;
         this.currThread = null;
-        this.token = token;
         this.updateUI = updateUI;
         this.updateCalc = updateCalc;
         this.markRunning = markRunning;
@@ -48,14 +46,12 @@ public abstract class Algorithm
             this.markRunning( this );
             RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
             this.Run();
-            if ( this.IsKillRequested() )
-                this.Kill();
             this.running = false;
             this.complete = true;
             this.markComplete( this );
             RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
         }
-        catch ( OperationCanceledException )
+        catch ( ThreadAbortException e )
         {
             Logger.Log("Killing thread.", this, LogType.INFO);
         }
@@ -63,22 +59,19 @@ public abstract class Algorithm
 
     protected void WaitUntil( Func< bool > condition )
     {
-        Func< bool > conditionOrKill = () => condition() || this.IsKillRequested();
-        SpinWait.SpinUntil( conditionOrKill );
+        SpinWait.SpinUntil( condition );
     }
 
-    protected virtual void Kill()
+    public virtual void Kill()
     {
         if ( this.currThread?.IsAlive ?? false )
         {
             this.running = false;
             this.complete = false;
             this.unmarkRunning( this );
-            this.token.ThrowIfCancellationRequested();
+            this.currThread.Abort();
         }
     }
-
-    protected bool IsKillRequested() => this.token.IsCancellationRequested;
 
     public new abstract int GetHashCode();
 }

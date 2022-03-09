@@ -1,6 +1,4 @@
-
 using System;
-using System.Threading;
 
 [System.Serializable]
 public class DiameterAlgorithm : Algorithm
@@ -9,7 +7,6 @@ public class DiameterAlgorithm : Algorithm
 
     public DiameterAlgorithm(
         Graph graph,
-        CancellationToken token,
         Action updateUI,
         Action updateCalc,
         Action< Algorithm > markRunning,
@@ -17,7 +14,6 @@ public class DiameterAlgorithm : Algorithm
         Action< Algorithm > unmarkRunning )
             : base(
                 graph,
-                token,
                 updateUI,
                 updateCalc,
                 markRunning,

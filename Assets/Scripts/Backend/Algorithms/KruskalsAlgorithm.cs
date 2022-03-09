@@ -2,14 +2,13 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 
 [System.Serializable]
 public class KruskalsAlgorithm : Algorithm
 {
     public List< Edge > Mst { get; private set; }
 
-    public KruskalsAlgorithm( Graph graph, CancellationToken token, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, token, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public KruskalsAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
 
     public override void Run()
     {
@@ -19,12 +18,8 @@ public class KruskalsAlgorithm : Algorithm
         this.Mst = new List< Edge >();
         List< Edge > edges = new List< Edge >( this.Graph.Adjacency.Values.OrderBy( edge => edge.Weight ) );
         HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
-        if ( this.IsKillRequested() )
-            this.Kill();
         foreach ( Vertex vert in this.Graph.Vertices )
             forest.Add( new HashSet< Vertex >() { vert } );
-        if ( this.IsKillRequested() )
-            this.Kill();
         foreach ( Edge edge in edges )
         {
             HashSet< Vertex > tree1 = KruskalsAlgorithm.GetComponentOf( forest, edge.vert1 );

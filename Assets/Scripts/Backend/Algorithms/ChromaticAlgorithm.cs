@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Threading;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,7 +12,7 @@ public class ChromaticAlgorithm : Algorithm
     public int ChromaticNumber { get; private set; }
     public int[] Coloring { get; private set; }
 
-    public ChromaticAlgorithm( Graph graph, CancellationToken token, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, token, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public ChromaticAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
 
     public override void Run()
     {
@@ -22,8 +21,6 @@ public class ChromaticAlgorithm : Algorithm
         this.Coloring = new int[ this.Graph.Order ];
         int chi = Math.Min( this.Graph.Order, 1 ); // TODO: get lower bound
         this.WaitUntil( () => ChromaticAlgorithm.HasMaxDegree( this.Graph ) );
-        if ( this.IsKillRequested() )
-            this.Kill();
         int upperBound = ChromaticAlgorithm.maxDegrees[ this.Graph ] + 1;
         while ( !this.IsProperColoring() )
         {
@@ -32,12 +29,15 @@ public class ChromaticAlgorithm : Algorithm
             if ( this.Coloring.Min() >= chi - 1 )
             {
                 chi++;
+                // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "increment chi to " + chi ) );
                 Array.Clear( this.Coloring, 0, this.Coloring.Length );
             }
+            // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "update color" ) );
             this.UpdateColoring( chi );
-            if ( this.IsKillRequested() )
-                this.Kill();
+            // foreach ( int c in this.Coloring )
+                // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( c ) );
         }
+        // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "finished coloring" ) );
         this.ChromaticNumber = chi;
 
         BipartiteAlgorithm.SetChromaticNumber( this.Graph, chi );
@@ -45,7 +45,7 @@ public class ChromaticAlgorithm : Algorithm
 
     private bool IsProperColoring()
     {
-        foreach ( Edge edge in this.Graph.Adjacency.Values.ToList() )
+        foreach ( Edge edge in this.Graph.Adjacency.Values )
         {
             if ( this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
                 return false;
@@ -77,15 +77,10 @@ public class ChromaticAlgorithm : Algorithm
 
     public static void SetMaxDegree( Graph graph, int maxDegree ) => ChromaticAlgorithm.maxDegrees[ graph ] = maxDegree;
 
-    public static void ClearMaxDegrees( Graph graph )
-    {
-        ChromaticAlgorithm.maxDegrees.TryRemove( graph, out _ );
-    }
-
-    protected override void Kill()
+    public override void Kill()
     {
         base.Kill();
-        BipartiteAlgorithm.ClearChromaticNumbers( this.Graph );
+        BipartiteAlgorithm.ClearChromaticNumber( this.Graph );
     }
 
     public static int GetHash() => typeof ( ChromaticAlgorithm ).GetHashCode();

@@ -1,6 +1,4 @@
-
 using System;
-using System.Threading;
 
 [System.Serializable]
 public class RadiusAlgorithm : Algorithm
@@ -9,7 +7,6 @@ public class RadiusAlgorithm : Algorithm
 
     public RadiusAlgorithm(
         Graph graph,
-        CancellationToken token,
         Action updateUI,
         Action updateCalc,
         Action< Algorithm > markRunning,
@@ -17,7 +14,6 @@ public class RadiusAlgorithm : Algorithm
         Action< Algorithm > unmarkRunning )
             : base(
                 graph,
-                token,
                 updateUI,
                 updateCalc,
                 markRunning,

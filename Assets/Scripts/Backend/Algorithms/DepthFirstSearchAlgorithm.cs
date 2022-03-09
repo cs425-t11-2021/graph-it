@@ -2,7 +2,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Threading;
 
 [System.Serializable]
 public class DepthFirstSearchAlgorithm : Algorithm
@@ -11,7 +10,7 @@ public class DepthFirstSearchAlgorithm : Algorithm
     public List< Edge > Tree { get; private set; }
     private Action< Edge, Vertex > action;
 
-    public DepthFirstSearchAlgorithm( Graph graph, Vertex root, Action< Edge, Vertex > action, CancellationToken token, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, token, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
+    public DepthFirstSearchAlgorithm( Graph graph, Vertex root, Action< Edge, Vertex > action, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
     {
         this.Root = root;
         this.action = action;
@@ -35,8 +34,6 @@ public class DepthFirstSearchAlgorithm : Algorithm
                 f( edge, edge.vert1 );
                 this.DepthFirstSearchHelper( edge.vert1, visited, f );
             }
-            if ( this.IsKillRequested() )
-                this.Kill();
             else if ( !visited.GetValue( edge.vert2 ) )
             {
                 this.Tree.Add( edge );
@@ -44,8 +41,6 @@ public class DepthFirstSearchAlgorithm : Algorithm
                 f( edge, edge.vert2 );
                 this.DepthFirstSearchHelper( edge.vert2, visited, f );
             }
-            if ( this.IsKillRequested() )
-                this.Kill();
         }
     }
 

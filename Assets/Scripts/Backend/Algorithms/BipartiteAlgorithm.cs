@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using System.Threading;
 
 [System.Serializable]
 public class BipartiteAlgorithm : Algorithm
@@ -13,7 +12,7 @@ public class BipartiteAlgorithm : Algorithm
     public HashSet< Vertex > Set1 { get; private set; }
     public HashSet< Vertex > Set2 { get; private set; }
 
-    public BipartiteAlgorithm( Graph graph, CancellationToken token, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, token, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public BipartiteAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
 
     public override void Run()
     {
@@ -41,8 +40,6 @@ public class BipartiteAlgorithm : Algorithm
 
         // temp
         this.WaitUntil( () => BipartiteAlgorithm.HasChromaticNumber( this.Graph ) );
-        if ( this.IsKillRequested() )
-            this.Kill();
         IsBipartite = BipartiteAlgorithm.chromaticNumbers[ this.Graph ] <= 2;
     }
 
@@ -55,8 +52,6 @@ public class BipartiteAlgorithm : Algorithm
         if ( homogenousNeighbors.Count > 0 )
             return false;
         neighbors = new HashSet< Vertex >( neighbors.Except( visited ) );
-        if ( this.IsKillRequested() )
-            this.Kill();
         foreach ( Vertex neighbor in neighbors )
         {
             if ( color )
@@ -88,7 +83,7 @@ public class BipartiteAlgorithm : Algorithm
 
     public static void SetChromaticNumber( Graph graph, int chromaticNumber ) => BipartiteAlgorithm.chromaticNumbers[ graph ] = chromaticNumber;
 
-    public static void ClearChromaticNumbers( Graph graph )
+    public static void ClearChromaticNumber( Graph graph )
     {
         BipartiteAlgorithm.chromaticNumbers.TryRemove( graph, out _ );
     }
