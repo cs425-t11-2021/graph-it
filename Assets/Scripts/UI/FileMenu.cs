@@ -26,11 +26,15 @@ public class FileMenu : MenuButton
         
         // TEMPOARY
         ResourceManager.Singleton.LoadVertexSprites();
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     //display pop-up with options users can choose from to create graphs from
     public void CreateFromPreset(){
         createFromPresetMenu.SetActive(true);
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the import from file button
@@ -52,8 +56,9 @@ public class FileMenu : MenuButton
             Controller.Singleton.CreateGraphInstance();
         }
         Controller.Singleton.Graph.Import(paths[0]);
-
         Controller.Singleton.CreateObjsFromGraph();
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the export to file button
@@ -67,6 +72,8 @@ public class FileMenu : MenuButton
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "Graph1", exportExtensions); //from UnityStandAloneFileBrowser Plugin
 
         Controller.Singleton.Graph.Export(path);
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the save as image button
@@ -78,7 +85,8 @@ public class FileMenu : MenuButton
         };
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "GraphImage1", imageSaveExtensions); //from UnityStandAloneFileBrowser Plugin
 
-        //ScreenshotManager.Singleton.TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/graph_img.png");
         ScreenshotManager.Singleton.TakeScreenshot(path);
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

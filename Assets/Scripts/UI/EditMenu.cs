@@ -38,5 +38,7 @@ public class EditMenu : MenuButton
     // Function called by the add edge button
     public void AddEdgeButtonFromEditMenu(){
         SelectionManager.Singleton.AddEdgeBetweenTwoSelectedVertices();
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }
