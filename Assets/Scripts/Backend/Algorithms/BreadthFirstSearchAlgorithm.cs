@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
 
 [System.Serializable]
 public class BreadthFirstSearchAlgorithm : Algorithm
@@ -10,7 +11,7 @@ public class BreadthFirstSearchAlgorithm : Algorithm
     public List< Edge > Tree { get; private set; }
     private Action< Edge, Vertex > action;
 
-    public BreadthFirstSearchAlgorithm( Graph graph, Vertex root, Action< Edge, Vertex > action, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
+    public BreadthFirstSearchAlgorithm( Graph graph, Vertex root, Action< Edge, Vertex > action, CancellationToken token, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, token, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
     {
         this.Root = root;
         this.action = action;
@@ -22,6 +23,8 @@ public class BreadthFirstSearchAlgorithm : Algorithm
         Dictionary< Vertex, bool > visited = new Dictionary< Vertex, bool >();
         Queue< Vertex > queue = new Queue< Vertex >();
         queue.Enqueue( this.Root );
+        if ( this.IsKillRequested() )
+            this.Kill();
         while ( queue.Count > 0 )
         {
             Vertex vert1 = queue.Dequeue();
@@ -35,6 +38,8 @@ public class BreadthFirstSearchAlgorithm : Algorithm
                     this.Tree.Add( edge );
                     this.action( edge, vert2 );
                 }
+                if ( this.IsKillRequested() )
+                    this.Kill();
             }
         }
     }

@@ -1,6 +1,7 @@
 
 using System;
 using System.Linq;
+using System.Threading;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,6 +29,15 @@ public class AlgorithmManager
     private Action kruskalsCalc;
     private Action depthFirstSearchCalc;
     private Action breadthFirstSearchCalc;
+    private CancellationTokenSource minDegreeCancellationTokenSource;
+    private CancellationTokenSource maxDegreeCancellationTokenSource;
+    private CancellationTokenSource chromaticCancellationTokenSource;
+    private CancellationTokenSource bipartiteCancellationTokenSource;
+    private CancellationTokenSource primsCancellationTokenSource;
+    private CancellationTokenSource kruskalsCancellationTokenSource;
+    private CancellationTokenSource depthFirstSearchCancellationTokenSource;
+    private CancellationTokenSource breadthFirstSearchCancellationTokenSource;
+
     private Dictionary< int, Algorithm > running = new Dictionary< int, Algorithm >(); 
     public List< Algorithm > Running
     {
@@ -72,20 +82,23 @@ public class AlgorithmManager
 
     public void RunMinDegree()
     {
-        new MinDegreeAlgorithm( this.graph, this.minDegreeUI, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        this.minDegreeCancellationTokenSource = new CancellationTokenSource();
+        new MinDegreeAlgorithm( this.graph, this.minDegreeCancellationTokenSource.Token, this.minDegreeUI, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunMaxDegree()
     {
-        new MaxDegreeAlgorithm( this.graph, this.maxDegreeUI, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        this.maxDegreeCancellationTokenSource = new CancellationTokenSource();
+        new MaxDegreeAlgorithm( this.graph, this.maxDegreeCancellationTokenSource.Token, this.maxDegreeUI, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunChromatic()
     {
-        this.EnsureMaxDegreeRunning();
         if (!IsComplete(ChromaticAlgorithm.GetHash()))
         {
-            new ChromaticAlgorithm( this.graph, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            this.EnsureMaxDegreeRunning();
+            this.chromaticCancellationTokenSource = new CancellationTokenSource();
+            new ChromaticAlgorithm( this.graph, this.chromaticCancellationTokenSource.Token, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
         }
         else
         {
@@ -106,8 +119,8 @@ public class AlgorithmManager
         if (!IsComplete(BipartiteAlgorithm.GetHash()))
         {
             this.EnsureChromaticRunning();
-            new BipartiteAlgorithm(this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning,
-                this.MarkComplete, this.UnmarkRunning).RunThread();
+            this.bipartiteCancellationTokenSource = new CancellationTokenSource();
+            new BipartiteAlgorithm(this.graph, this.bipartiteCancellationTokenSource.Token, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning).RunThread();
         }
         else
         {
@@ -124,31 +137,40 @@ public class AlgorithmManager
 
     public void RunKruskals()
     {
-        new KruskalsAlgorithm( this.graph, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        this.kruskalsCancellationTokenSource = new CancellationTokenSource();
+        new KruskalsAlgorithm( this.graph, this.kruskalsCancellationTokenSource.Token, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
     {
-        new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        this.depthFirstSearchCancellationTokenSource = new CancellationTokenSource();
+        new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchCancellationTokenSource.Token, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
     {
-        new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.breadthFirstSearchUI, this.breadthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        this.breadthFirstSearchCancellationTokenSource = new CancellationTokenSource();
+        new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.breadthFirstSearchCancellationTokenSource.Token, this.breadthFirstSearchUI, this.breadthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureMinDegreeRunning()
     {
         int hash = MinDegreeAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new MinDegreeAlgorithm( this.graph, this.minDegreeUI, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        {
+            this.minDegreeCancellationTokenSource = new CancellationTokenSource();
+            new MinDegreeAlgorithm( this.graph, this.minDegreeCancellationTokenSource.Token, this.minDegreeUI, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
     }
 
     public void EnsureMaxDegreeRunning()
     {
         int hash = MaxDegreeAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new MaxDegreeAlgorithm( this.graph, this.maxDegreeUI, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        {
+            this.maxDegreeCancellationTokenSource = new CancellationTokenSource();
+            new MaxDegreeAlgorithm( this.graph, this.maxDegreeCancellationTokenSource.Token, this.maxDegreeUI, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
     }
 
     public void EnsureChromaticRunning()
@@ -157,42 +179,59 @@ public class AlgorithmManager
 
         int hash = ChromaticAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new ChromaticAlgorithm( this.graph, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        {
+            this.chromaticCancellationTokenSource = new CancellationTokenSource();
+            new ChromaticAlgorithm( this.graph, this.chromaticCancellationTokenSource.Token, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
     }
 
     public void EnsureBipartiteRunning()
     {
         int hash = BipartiteAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        {
+            this.bipartiteCancellationTokenSource = new CancellationTokenSource();
+            new BipartiteAlgorithm(this.graph, this.bipartiteCancellationTokenSource.Token, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning).RunThread();
+        }
     }
 
     public void EnsurePrimsRunning( Vertex vert )
     {
         int hash = PrimsAlgorithm.GetHash( vert );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new PrimsAlgorithm( this.graph, vert, this.primsUI, this.primsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        {
+            // new PrimsAlgorithm( this.graph, vert, this.primsUI, this.primsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
     }
 
     public void EnsureKruskalsRunning()
     {
         int hash = KruskalsAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new KruskalsAlgorithm( this.graph, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        {
+            this.kruskalsCancellationTokenSource = new CancellationTokenSource();
+            new KruskalsAlgorithm( this.graph, this.kruskalsCancellationTokenSource.Token, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
     }
 
     public void EnsureDepthFirstSearchRunning( Vertex vert, Action< Edge, Vertex > action )
     {
         int hash = DepthFirstSearchAlgorithm.GetHash( vert );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        {
+            this.depthFirstSearchCancellationTokenSource = new CancellationTokenSource();
+            new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchCancellationTokenSource.Token, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
     }
 
     public void EnsureBreadthFirstSearchRunning( Vertex vert, Action< Edge, Vertex > action )
     {
         int hash = BreadthFirstSearchAlgorithm.GetHash( vert );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        {
+            this.breadthFirstSearchCancellationTokenSource = new CancellationTokenSource();
+            new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.breadthFirstSearchCancellationTokenSource.Token, this.breadthFirstSearchUI, this.breadthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
     }
 
     public int? GetMinDegree() => ( ( MinDegreeAlgorithm ) this.complete.GetValue( MinDegreeAlgorithm.GetHash() ) )?.MinDegree;
@@ -241,13 +280,21 @@ public class AlgorithmManager
     public void KillAll()
     {
         Logger.Log("Stopping all algorithms.", this, LogType.INFO);
-        foreach ( KeyValuePair< int, Algorithm > kvp in this.running.ToList() )
-            kvp.Value?.Kill();
+        // foreach ( KeyValuePair< int, Algorithm > kvp in this.running )
+        //     kvp.Value?.RequestKill();
+        this.minDegreeCancellationTokenSource?.Cancel();
+        this.maxDegreeCancellationTokenSource?.Cancel();
+        this.chromaticCancellationTokenSource?.Cancel();
+        this.bipartiteCancellationTokenSource?.Cancel();
+        this.primsCancellationTokenSource?.Cancel();
+        this.kruskalsCancellationTokenSource?.Cancel();
+        this.depthFirstSearchCancellationTokenSource?.Cancel();
+        this.breadthFirstSearchCancellationTokenSource?.Cancel();
     }
 
     ~AlgorithmManager()
     {
-        KillAll();
+        this.KillAll();
     }
 
     

@@ -2,6 +2,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Threading;
 
 [System.Serializable]
 public class PrimsAlgorithm : Algorithm
@@ -9,7 +10,7 @@ public class PrimsAlgorithm : Algorithm
     public Vertex Root { get; private set; }
     public List< Edge > Mst { get; private set; }
 
-    public PrimsAlgorithm( Graph graph, Vertex root, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
+    public PrimsAlgorithm( Graph graph, CancellationToken token, Vertex root, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, token, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
     {
         if ( !this.Graph.Vertices.Contains( root ) )
             throw new System.Exception( "Vertex for Prim's algorithm is not in graph." );
@@ -27,10 +28,14 @@ public class PrimsAlgorithm : Algorithm
         this.Mst = new List< Edge >();
         HashSet< Vertex > mstVertices = new HashSet< Vertex >() { this.Root };
         int mstVerticesPrevCount = -1;
+        if ( this.IsKillRequested() )
+            this.Kill();
         while ( mstVerticesPrevCount != mstVertices.Count )
         {
             mstVerticesPrevCount = mstVertices.Count;
             List< Edge > incidentEdges = new List< Edge >( this.Graph.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.Weight ) );
+            if ( this.IsKillRequested() )
+                this.Kill();
             foreach ( Edge edge in incidentEdges )
             {
                 if ( !mstVertices.Contains( edge.vert1 ) || !mstVertices.Contains( edge.vert2 ) )
@@ -40,6 +45,8 @@ public class PrimsAlgorithm : Algorithm
                     this.Mst.Add( edge );
                 }
             }
+            if ( this.IsKillRequested() )
+                this.Kill();
         }
     }
 
