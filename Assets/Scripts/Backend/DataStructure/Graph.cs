@@ -515,7 +515,10 @@ public class Graph
         Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
 
         foreach ( Vertex v in this.Vertices )
+        {
             dist[ v ] = double.PositiveInfinity;
+            prev[ v ] = null;
+        }
 
         dist[ src ] = 0;
 
