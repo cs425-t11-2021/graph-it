@@ -12,6 +12,8 @@ public class ViewMenu : MenuButton
     [SerializeField]
     private TMP_Text showGrpahLabelsText;
 
+    [SerializeField] private TMP_Text showToolbarText;
+
     [SerializeField] private GameObject toolbar;
 
     
@@ -19,10 +21,12 @@ public class ViewMenu : MenuButton
         //if active, set inactive
         if(toolbar.activeSelf){
             toolbar.SetActive(false);
+            this.showToolbarText.text = "Show Toolbar";
         }
         //otherwise inactive and needs to be set active
         else{
             toolbar.SetActive(true);
+            this.showToolbarText.text = "Hide Toolbar";
         }
     }
 
