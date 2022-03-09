@@ -9337,7 +9337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   girdLinesPrefab: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
   spacing: 0.5
-  gridLineCount: 100
+  gridLineCount: 225
 --- !u!4 &1039602332
 Transform:
   m_ObjectHideFlags: 0
