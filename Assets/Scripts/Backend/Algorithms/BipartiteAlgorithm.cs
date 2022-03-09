@@ -81,10 +81,7 @@ public class BipartiteAlgorithm : Algorithm
 
     private static bool HasChromaticNumber( Graph graph ) => BipartiteAlgorithm.chromaticNumbers.GetValue( graph, -1 ) != -1;
 
-    public static void SetChromaticNumber( Graph graph, int chromaticNumber )
-    {
-        BipartiteAlgorithm.chromaticNumbers[ graph ] = chromaticNumber;
-    }
+    public static void SetChromaticNumber( Graph graph, int chromaticNumber ) => BipartiteAlgorithm.chromaticNumbers[ graph ] = chromaticNumber;
 
     public static void ClearChromaticNumber( Graph graph )
     {

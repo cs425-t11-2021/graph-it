@@ -15,12 +15,14 @@ public class SelectionState : ManipulationState
         this.selectionRect.gameObject.SetActive(false);
         // Subscribe to appropriate input event
         InputManager.Singleton.OnMouseClickInPlace += OnClickInPlace;
+        InputManager.Singleton.OnDeleteKeyPress += OnDeleteKeyPress;
     }
 
     public override void OnStateExit()
     {
         this.selectionRect.gameObject.SetActive(false);
         InputManager.Singleton.OnMouseClickInPlace -= OnClickInPlace;
+        InputManager.Singleton.OnDeleteKeyPress -= OnDeleteKeyPress;
     }
 
     public override void OnClick()
@@ -83,5 +85,10 @@ public class SelectionState : ManipulationState
 
         Bounds worldBounds = new Bounds(middle, size);
         return worldBounds;
+    }
+    
+    // Delete current selection when the delete key is pressed
+    private void OnDeleteKeyPress() {
+        SelectionManager.Singleton.DeleteSelection();
     }
 }

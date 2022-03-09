@@ -22,15 +22,19 @@ public class FileMenu : MenuButton
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
-        Controller.Singleton.CreateGraphInstance();
+        Controller.Singleton.ClearCurrentInstance();
         
         // TEMPOARY
         ResourceManager.Singleton.LoadVertexSprites();
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     //display pop-up with options users can choose from to create graphs from
     public void CreateFromPreset(){
         createFromPresetMenu.SetActive(true);
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the import from file button
@@ -51,11 +55,10 @@ public class FileMenu : MenuButton
             // Clear existing graph
             Controller.Singleton.CreateGraphInstance();
         }
-        Debug.Log("Begin import at " + paths + ".csv");
-        //Debug.Log(paths[0]);
         Controller.Singleton.Graph.Import(paths[0]);
-
         Controller.Singleton.CreateObjsFromGraph();
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the export to file button
@@ -69,6 +72,8 @@ public class FileMenu : MenuButton
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "Graph1", exportExtensions); //from UnityStandAloneFileBrowser Plugin
 
         Controller.Singleton.Graph.Export(path);
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the save as image button
@@ -80,7 +85,8 @@ public class FileMenu : MenuButton
         };
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "GraphImage1", imageSaveExtensions); //from UnityStandAloneFileBrowser Plugin
 
-        //ScreenshotManager.Singleton.TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/graph_img.png");
-        ScreenshotManager.Singleton.SaveScrenshotToDesktop(path);
+        ScreenshotManager.Singleton.TakeScreenshot(path);
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

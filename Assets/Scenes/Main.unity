@@ -917,6 +917,93 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 120350379}
   m_CullTransparentMesh: 1
+--- !u!1 &120997378
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 120997379}
+  - component: {fileID: 120997382}
+  - component: {fileID: 120997380}
+  m_Layer: 0
+  m_Name: ScreenshotCam
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &120997379
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120997378}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &120997380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120997378}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f27b7b0028ae42e183a865e22085144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!20 &120997382
+Camera:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120997378}
+  m_Enabled: 0
+  serializedVersion: 2
+  m_ClearFlags: 1
+  m_BackGroundColor: {r: 1, g: 1, b: 1, a: 0}
+  m_projectionMatrixMode: 1
+  m_GateFitMode: 2
+  m_FOVAxisMode: 0
+  m_SensorSize: {x: 36, y: 24}
+  m_LensShift: {x: 0, y: 0}
+  m_FocalLength: 50
+  m_NormalizedViewPortRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: 1
+  near clip plane: 0.3
+  far clip plane: 1000
+  field of view: 60
+  orthographic: 1
+  orthographic size: 20
+  m_Depth: -1
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_RenderingPath: -1
+  m_TargetTexture: {fileID: 0}
+  m_TargetDisplay: 0
+  m_TargetEye: 3
+  m_HDR: 1
+  m_AllowMSAA: 0
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
+  m_OcclusionCulling: 0
+  m_StereoConvergence: 10
+  m_StereoSeparation: 0.022
 --- !u!1 &128261634
 GameObject:
   m_ObjectHideFlags: 0
@@ -1555,6 +1642,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   showGrpahLabelsText: {fileID: 455186629}
+  showToolbarText: {fileID: 1200656261}
   toolbar: {fileID: 1228080542}
 --- !u!1 &158619329
 GameObject:
@@ -4789,7 +4877,6 @@ GameObject:
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
   - component: {fileID: 519420033}
-  - component: {fileID: 519420034}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4890,18 +4977,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   panSpeed: 100
---- !u!114 &519420034
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f27b7b0028ae42e183a865e22085144, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &519618063
 GameObject:
   m_ObjectHideFlags: 0
@@ -5080,7 +5155,7 @@ RectTransform:
   - {fileID: 1228080543}
   - {fileID: 798761131}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -5255,8 +5330,8 @@ MonoBehaviour:
   bipartiteText: {fileID: 510125109}
   orderText: {fileID: 1553925998}
   sizeText: {fileID: 324383124}
-  MinDegreeText: {fileID: 1348371724}
-  MaxDegreeText: {fileID: 746479633}
+  minDegreeText: {fileID: 1348371724}
+  maxDegreeText: {fileID: 746479633}
   openPanel: {fileID: 684446429}
 --- !u!114 &579688379
 MonoBehaviour:
@@ -6097,7 +6172,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &667568384
 GameObject:
@@ -8307,7 +8382,7 @@ RectTransform:
   m_Children:
   - {fileID: 1035785019}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -9337,7 +9412,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   girdLinesPrefab: {fileID: 2356064399037404437, guid: 64ee573ba7e6e4e8cb00215928fd5c53, type: 3}
   spacing: 0.5
-  gridLineCount: 100
+  gridLineCount: 225
 --- !u!4 &1039602332
 Transform:
   m_ObjectHideFlags: 0
@@ -9350,7 +9425,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1064003695
 GameObject:
@@ -9569,7 +9644,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4782475346978306228}
         m_TargetAssemblyTypeName: SelectionManager, Assembly-CSharp
         m_MethodName: RunPrims
         m_Mode: 1
@@ -11357,7 +11432,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Show Toolbar
+  m_text: Hide Toolbar
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -13665,7 +13740,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4782475346978306228}
         m_TargetAssemblyTypeName: SelectionManager, Assembly-CSharp
         m_MethodName: RunDijkstra
         m_Mode: 1
@@ -18838,7 +18913,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 4782475346978306228}
         m_TargetAssemblyTypeName: SelectionManager, Assembly-CSharp
         m_MethodName: RunKruskal
         m_Mode: 1
@@ -20480,7 +20555,7 @@ MonoBehaviour:
   checkedChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1228080547}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: ToggleAddSubtractSubpanel
         m_Mode: 2
@@ -20617,7 +20692,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1228080547}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: ChangeEdgeThickness
         m_Mode: 3
@@ -20750,7 +20825,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1228080547}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: ChangeEdgeThickness
         m_Mode: 3
@@ -21553,14 +21628,14 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1228080547}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: ChangeEdgeCurvature
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 10
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -21982,7 +22057,7 @@ MonoBehaviour:
   checkedChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1228080547}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: ToggleAddSubtractSubpanel
         m_Mode: 2
@@ -22131,7 +22206,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1228080547}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: ChangeEdgeCurvature
         m_Mode: 3
@@ -22304,9 +22379,9 @@ GameObject:
   - component: {fileID: 4782475346978306234}
   - component: {fileID: 4782475346978306237}
   - component: {fileID: 4782475346978306236}
-  - component: {fileID: 4782475346978306231}
   - component: {fileID: 4782475346978306239}
   - component: {fileID: 4782475346978306238}
+  - component: {fileID: 4782475346978306225}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -22314,6 +22389,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &4782475346978306225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4782475346978306224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46e6ac06074fc4bf9a4eb8fd4ebfa9af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tabPrefab: {fileID: 3286621971729624603, guid: cf1658cdf7f8843799433224837c3618, type: 3}
 --- !u!114 &4782475346978306226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22383,18 +22471,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9e68742db1c86b0a6ab21cd5fb1c5de7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4782475346978306231
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4782475346978306224}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10d2ba2eda1af8fa094864d65f83c5dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &4782475346978306232

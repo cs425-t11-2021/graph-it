@@ -98,23 +98,6 @@ public class Graph
         get => this.Adjacency.GetValue( ( vert1, vert2 ) );
     }
 
-    private List< Edge > GetDirectedEdges()
-    {
-        List< Edge > edges = this.Adjacency.Values.ToList();
-        foreach ( Edge edge in edges )
-        {
-            if ( !edge.Directed )
-            {
-                // TODO: fix this, this will mess with this.Changes
-                edge.Reverse();
-                edges.Add( edge );
-                edge.Reverse();
-            }
-        }
-
-        return edges;
-    }
-
     // TODO: add more parameters
     public Vertex AddVertex( float x, float y, bool recordChange=true )
     {
@@ -159,6 +142,7 @@ public class Graph
     {
         this.RemoveEdges( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), recordChange );
         this.Vertices.Remove( vert );
+
         if ( recordChange )
             new GraphModification( this, Modification.REMOVE_VERTEX, vert );
     }
