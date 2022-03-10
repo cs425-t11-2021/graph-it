@@ -39,7 +39,7 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
         // Default configuration
         deleteButton.gameObject.SetActive(false);
-        edgeCreationModeButton.gameObject.SetActive(false);
+        // edgeCreationModeButton.gameObject.SetActive(false);
         addEdgeButton.gameObject.SetActive(false);
         changeTypeButton.gameObject.SetActive(false);
         edgeThicknessButton.gameObject.SetActive(false);
@@ -131,17 +131,17 @@ public class Toolbar : SingletonBehavior<Toolbar>
         // Enable delete button if any components are selected
         this.deleteButton.gameObject.SetActive(selectedVertexCount + selectedEdgeCount > 0);
 
-        // Enable the Edge Creation Mode button when one vertex is selected
-        if (selectedVertexCount == 1 && selectedEdgeCount == 0) {
-            this.edgeCreationModeButton.gameObject.SetActive(true);
-        }
-        else {
-            this.edgeCreationModeButton.Checked = false;
-            this.edgeCreationModeButton.gameObject.SetActive(false);
-        }
+        // // Enable the Edge Creation Mode button when nothing is selected
+        // if (selectedVertexCount == 0 && selectedEdgeCount == 0) {
+        //     this.edgeCreationModeButton.gameObject.SetActive(true);
+        // }
+        // else {
+        //     this.edgeCreationModeButton.Checked = false;
+        //     this.edgeCreationModeButton.gameObject.SetActive(false);
+        // }
 
         // Enable the Add Edge button when two vertices are selected
-        this.addEdgeButton.gameObject.SetActive(selectedVertexCount == 2 && selectedEdgeCount == 0);
+        // this.addEdgeButton.gameObject.SetActive(selectedVertexCount == 2 && selectedEdgeCount == 0);
         this.changeTypeButton.gameObject.SetActive(selectedVertexCount == 0 && selectedEdgeCount > 0);
         
         // Enable the thickness and curvature toggles when only edges are selected
