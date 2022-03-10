@@ -15,7 +15,10 @@ public class DijkstrasAlgorithm
         Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
 
         foreach ( Vertex v in graph.Vertices )
+        {
+            prev[ v ] = null;
             dist[ v ] = float.PositiveInfinity;
+        }
 
         dist[ src ] = 0;
 

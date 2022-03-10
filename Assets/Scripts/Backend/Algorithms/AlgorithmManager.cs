@@ -19,6 +19,7 @@ public class AlgorithmManager
     private Action diameterUI;
     private Action chromaticUI;
     private Action bipartiteUI;
+    private Action cyclicUI;
     private Action primsUI;
     private Action kruskalsUI;
     private Action depthFirstSearchUI;
@@ -29,6 +30,7 @@ public class AlgorithmManager
     private Action diameterCalc;
     private Action chromaticCalc;
     private Action bipartiteCalc;
+    private Action cyclicCalc;
     private Action primsCalc;
     private Action kruskalsCalc;
     private Action depthFirstSearchCalc;
@@ -44,7 +46,7 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
 
-    public void Initiate( Graph graph, Action minDegreeUI, Action maxDegreeUI, Action radiusUI, Action diameterUI, Action chromaticUI, Action bipartiteUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action minDegreeCalc, Action maxDegreeCalc, Action radiusCalc, Action diameterCalc, Action chromaticCalc, Action bipartiteCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
+    public void Initiate( Graph graph, Action minDegreeUI, Action maxDegreeUI, Action radiusUI, Action diameterUI, Action chromaticUI, Action bipartiteUI, Action cyclicUI, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action minDegreeCalc, Action maxDegreeCalc, Action radiusCalc, Action diameterCalc, Action chromaticCalc, Action bipartiteCalc, Action cyclicCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
     {
         Controller.Singleton.OnGraphModified += Clear;
         this.graph = graph;
@@ -54,6 +56,7 @@ public class AlgorithmManager
         this.diameterUI = diameterUI;
         this.chromaticUI = chromaticUI;
         this.bipartiteUI = bipartiteUI;
+        this.cyclicUI = cyclicUI;
         this.primsUI = primsUI;
         this.kruskalsUI = kruskalsUI;
         this.depthFirstSearchUI = depthFirstSearchUI;
@@ -64,6 +67,7 @@ public class AlgorithmManager
         this.diameterCalc = diameterCalc;
         this.chromaticCalc = chromaticCalc;
         this.bipartiteCalc = bipartiteCalc;
+        this.cyclicCalc = cyclicCalc;
         this.primsCalc = primsCalc;
         this.kruskalsCalc = kruskalsCalc;
         this.depthFirstSearchCalc = depthFirstSearchCalc;
@@ -76,6 +80,7 @@ public class AlgorithmManager
         this.RunMaxDegree();
         this.RunRadius();
         this.RunDiameter();
+        this.RunCyclic();
         this.RunChromatic();
         // this.RunPrims();
         this.RunKruskals();
@@ -135,6 +140,11 @@ public class AlgorithmManager
             this.chromaticUI.Invoke();
             this.bipartiteUI.Invoke();
         }
+    }
+
+    public void RunCyclic()
+    {
+        new CyclicAlgorithm( this.graph, this.cyclicUI, this.cyclicCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunPrims( Vertex vert ) // temp parameter
@@ -202,6 +212,13 @@ public class AlgorithmManager
             new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
+    public void EnsureCyclicRunning()
+    {
+        int hash = CyclicAlgorithm.GetHash();
+        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+            new CyclicAlgorithm( this.graph, this.cyclicUI, this.cyclicCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+    }
+
     public void EnsurePrimsRunning( Vertex vert )
     {
         int hash = PrimsAlgorithm.GetHash( vert );
@@ -241,6 +258,8 @@ public class AlgorithmManager
     public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;
 
     public bool? GetBipartite() => ( ( BipartiteAlgorithm ) this.complete.GetValue( BipartiteAlgorithm.GetHash() ) )?.IsBipartite;
+
+    public bool? GetCyclic() => ( ( CyclicAlgorithm ) this.complete.GetValue( CyclicAlgorithm.GetHash() ) )?.IsCyclic;
 
     public void MarkRunning( Algorithm algo )
     {

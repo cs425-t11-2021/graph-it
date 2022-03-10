@@ -3,10 +3,10 @@ using System.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class IsCyclicAlgorithm : Algorithm
+public class CyclicAlgorithm : Algorithm
 {
-    public bool isCyclic { get; private set; }
-    public IsCyclicAlgorithm(
+    public bool IsCyclic { get; private set; }
+    public CyclicAlgorithm(
         Graph graph,
         Action updateUI,
         Action updateCalc,
@@ -35,13 +35,13 @@ public class IsCyclicAlgorithm : Algorithm
             {
                 if (IsCyclicHelper(u, visited, null))
                 {
-                    isCyclic = true;
+                    this.IsCyclic = true;
                     return;
                 }
             }
         }
 
-        isCyclic = false;
+        this.IsCyclic = false;
     }
 
     private bool IsCyclicHelper( Vertex vert, Dictionary< Vertex, bool > visited, Vertex parent )
@@ -65,7 +65,7 @@ public class IsCyclicAlgorithm : Algorithm
         return false;
     }
 
-    public static int GetHash() => ( typeof ( IsCyclicAlgorithm ) ).GetHashCode();
+    public static int GetHash() => ( typeof ( CyclicAlgorithm ) ).GetHashCode();
 
-    public override int GetHashCode() => IsCyclicAlgorithm.GetHash();
+    public override int GetHashCode() => CyclicAlgorithm.GetHash();
 }

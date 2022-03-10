@@ -51,6 +51,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
             ( Action ) this.UpdateDiameterResult,
             ( Action ) this.UpdateChromaticResult,
             ( Action ) this.UpdateBipartiteResult,
+            ( Action ) this.UpdateCyclicResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
@@ -61,6 +62,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
             ( Action ) this.UpdateDiameterCalculating,
             ( Action ) this.UpdateChromaticCalculating,
             ( Action ) this.UpdateBipartiteCalculating,
+            ( Action ) this.UpdateCyclicCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
@@ -78,15 +80,17 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         // this.algorithmManager.RunChromatic();
         Controller.Singleton.AlgorithmManager.RunMinDegree();
         Controller.Singleton.AlgorithmManager.RunMaxDegree();
-        // Controller.Singleton.AlgorithmManager.RunRadius();
-        // Controller.Singleton.AlgorithmManager.RunDiameter();
+        Controller.Singleton.AlgorithmManager.RunRadius();
+        Controller.Singleton.AlgorithmManager.RunDiameter();
         Controller.Singleton.AlgorithmManager.RunBipartite(); //TEMPORARY FIX
+        Controller.Singleton.AlgorithmManager.RunCyclic();
     }
 
     public void DisplayGraphInfo()
     {
         UpdateChromaticResult();
         UpdateBipartiteResult();
+        UpdateCyclicResult();
         UpdateMinDegreeResult();
         UpdateMaxDegreeResult();
         UpdateRadiusResult();
@@ -123,6 +127,10 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
     }
 
+    public void UpdateCyclicResult() {
+        Debug.Log( "Cyclic: " + Controller.Singleton.AlgorithmManager.GetCyclic() );
+    }
+
     // public void UpdatePrimsResult() { }
 
     // public void UpdateKruskalsResult() { }
@@ -151,6 +159,10 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateBipartiteCalculating() {
         this.bipartiteText.text = "Bipartite: Calculating";
         // Debug.Log("Running UpdateBipartiteCalculating");
+    }
+
+    public void UpdateCyclicCalculating() {
+
     }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
