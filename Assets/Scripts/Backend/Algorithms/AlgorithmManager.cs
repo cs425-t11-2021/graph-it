@@ -98,12 +98,12 @@ public class AlgorithmManager
 
     public void RunRadius()
     {
-        new RadiusAlgorithm( this.graph, this.minDegreeUI, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new RadiusAlgorithm( this.graph, this.radiusUI, this.radiusCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunDiameter()
     {
-        new DiameterAlgorithm( this.graph, this.maxDegreeUI, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new DiameterAlgorithm( this.graph, this.diameterUI, this.diameterCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunChromatic()
