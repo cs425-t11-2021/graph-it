@@ -44,6 +44,13 @@ public class EdgeCreationState : ManipulationState
         }        
     }
 
+    public override void OnClick()
+    {
+        if (this.edgeTemplate != null && !InputManager.Singleton.CurrentHoveringVertex) {
+            this.edgeTemplate.Directed = !this.edgeTemplate.Directed;
+        }
+    }
+
     public void OnRightClick()
     {
         if (this.edgeTemplate != null) {
