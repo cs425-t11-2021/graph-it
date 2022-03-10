@@ -50,15 +50,18 @@ public class CyclicAlgorithm : Algorithm
 
         foreach ( Vertex u in this.Graph.Vertices )
         {
-            if (!visited[u])
+            if (this.Graph.IsAdjacent(vert, u))
             {
-                if (IsCyclicHelper(u, visited, vert))
+                if (!visited[u])
+                {
+                    if (IsCyclicHelper(u, visited, vert))
+                    {
+                        return true;
+                    }
+                } else if (!(parent is null) && u != parent)
                 {
                     return true;
                 }
-            } else if (!(parent is null) && u != parent)
-            {
-                return true;
             }
         }
 
