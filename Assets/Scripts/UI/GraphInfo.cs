@@ -146,6 +146,11 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     // public void UpdateBreadthFirstSearchResult() { }
 
+    public void UpdateBellmanFordResult()
+    {
+        
+    }
+
     public void UpdateMinDegreeCalculating() { }
 
     public void UpdateMaxDegreeCalculating() { }
