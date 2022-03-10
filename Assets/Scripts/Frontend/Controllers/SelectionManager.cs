@@ -225,10 +225,11 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             Debug.Log( ( new System.Exception( "Cannot start Dijkstra's algorithm." ) ).ToString() );
             throw new System.Exception( "Cannot start Dijkstra's algorithm." );
         }
-
+        
+        DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
+        dijkstra.Run(Controller.Singleton.Graph, selectedVertices[0].Vertex, selectedVertices[1].Vertex);
         List<Edge> dijkstraEdges = new List<Edge>();
-
-        List<Vertex> dijkstraVertices = Controller.Singleton.Graph.Dijkstra(selectedVertices[0].Vertex, selectedVertices[1].Vertex);
+        List<Vertex> dijkstraVertices = dijkstra.path;
         for (int i = 0; i < dijkstraVertices.Count - 1; i++) {
             HashSet<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges(dijkstraVertices[i]);
             foreach (Edge edge in incidentEdges) {
@@ -249,6 +250,36 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
             if (dijkstraVertices.Contains(vertexObj.Vertex))
                 SelectVertex(vertexObj);
         }
+    }
+    
+    // TEMORARY CODE
+    public void RunBellmanFord()
+    {
+        if (selectedVertices.Count != 1) {
+            Debug.Log( ( new System.Exception( "Cannot start Bellman Ford algorithm." ) ).ToString() );
+            throw new System.Exception( "Cannot start Bellman Ford algorithm." );
+        }
+
+        List<Edge> bellmanFordEdges = Controller.Singleton.Graph.BellmanFord(this.selectedVertices[0].Vertex);
+
+        List<Vertex> bellmanFordVertices = new List<Vertex>();
+        foreach (Edge e in bellmanFordEdges) {
+            bellmanFordVertices.Add(e.vert1);
+            bellmanFordVertices.Add(e.vert2);
+        }
+
+        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
+        {
+            if (bellmanFordEdges.Contains(edgeObj.Edge))
+                SelectEdge(edgeObj);
+        }
+
+        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
+        {
+            if (bellmanFordVertices.Contains(vertexObj.Vertex))
+                SelectVertex(vertexObj);
+        }
+
     }
 
     // Add a new edge between the first two selected vertices

@@ -25,6 +25,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // Reference to the text display of radius
     [SerializeField] private TMP_Text diameterText;
     // Reference to the text display of diameter
+    [SerializeField] private TMP_Text cyclicText;
+    // Reference to the text display of cyclic
 
     //[SerializeField] private Button closePanel;
     //Reference to the button to close the graph info panels
@@ -113,11 +115,11 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     public void UpdateRadiusResult() { 
-        Debug.Log( "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius() );
+        this.radiusText.text = "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius();
     }
 
     public void UpdateDiameterResult() { 
-        Debug.Log( "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter() );
+        this.diameterText.text = "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter();
     }
 
     public void UpdateChromaticResult() {
@@ -133,7 +135,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     public void UpdateCyclicResult() {
-        Debug.Log( "Cyclic: " + Controller.Singleton.AlgorithmManager.GetCyclic() );
+        this.cyclicText.text = "Cyclic: " + (Controller.Singleton.AlgorithmManager.GetCyclic() ?? false ? "Yes" : "No");
     }
 
     // public void UpdatePrimsResult() { }

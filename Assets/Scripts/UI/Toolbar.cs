@@ -42,8 +42,8 @@ public class Toolbar : SingletonBehavior<Toolbar>
         // edgeCreationModeButton.gameObject.SetActive(false);
         addEdgeButton.gameObject.SetActive(false);
         changeTypeButton.gameObject.SetActive(false);
-        edgeThicknessButton.gameObject.SetActive(false);
-        edgeCurvatureButton.gameObject.SetActive(false);
+        this.edgeThicknessButton.gameObject.SetActive(false);
+        this.edgeCurvatureButton.gameObject.SetActive(false);
         this.changeVertexStyleButton.gameObject.SetActive(false);
     }
 

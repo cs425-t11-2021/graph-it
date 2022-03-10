@@ -22,6 +22,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private Button kruskalButton;
     // Reference of the button of dijkstra
     [SerializeField] private Button dijkstraButton;
+    // Reference of the button of Bellman Ford
+    [SerializeField] private Button bellmanButton;
+    // Reference of the Eulerian circuit button
+    [SerializeField] private Button eulerianButton;
+    // Reference of the Maximum Indepdent Set button
+    [SerializeField] private Button maxIndSetButton;
+    // Reference of the Maximum Matching button
+    [SerializeField] private Button maxMatchingButton;
     //[SerializeField] private Button algClosePanel;
     //Reference to the button to close the algorithm info panels
     [SerializeField] private Button algOpenPanel;
@@ -42,6 +50,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     private void Awake() {
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
         this.primButton.interactable = false;
+        this.dijkstraButton.interactable = false;
     }
 
     // Function called when the selection is changed
@@ -50,6 +59,9 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         this.primButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
         // Only allow dijkstra if exactly two vertices are selected
         this.dijkstraButton.interactable = selectedVertexCount == 2 && selectedEdgeCount == 0;
+        // Only allow Bellman Ford if exactly one vertex is selected
+        this.bellmanButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
+        
     }
     
     /*public void UpdateGraphInfo() {
@@ -80,14 +92,6 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void UpdateDepthFirstSearchResult() { }
 
     public void UpdateBreadthFirstSearchResult() { }
-
-    public void UpdateChromaticCalculating() {
-        this.chromaticText.text = "Chromatic Number: Calculating";
-    }
-
-    public void UpdateBipartiteCalculating() {
-        this.bipartiteText.text = "Bipartite: Calculating";
-    }
 
     public void UpdatePrimsCalculating() { }
 
