@@ -17,7 +17,7 @@ public class FileMenu : MenuButton
     private GameObject exportFileMenu;
 
     [SerializeField] private GameObject fileDropDown; //TO DO - close immediately after selection of option
-    [SerializeField] private GameObject createFromPresetMenu;
+    [SerializeField] private CreateFromPresetMenu presetMenu; //no clue if this will work
 
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
@@ -30,9 +30,10 @@ public class FileMenu : MenuButton
         EventSystem.current.SetSelectedGameObject(null);
     }
 
+    
     //display pop-up with options users can choose from to create graphs from
     public void CreateFromPreset(){
-        createFromPresetMenu.SetActive(true);
+        presetMenu.openPresetMenu();
         
         EventSystem.current.SetSelectedGameObject(null);
     }
