@@ -51,6 +51,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
         this.primButton.interactable = false;
         this.dijkstraButton.interactable = false;
+        this.bellmanButton.interactable = false;
     }
 
     // Function called when the selection is changed

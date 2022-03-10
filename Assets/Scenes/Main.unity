@@ -10817,6 +10817,10 @@ MonoBehaviour:
   primButton: {fileID: 1072866586}
   kruskalButton: {fileID: 1937964947}
   dijkstraButton: {fileID: 1394906815}
+  bellmanButton: {fileID: 770796874}
+  eulerianButton: {fileID: 0}
+  maxIndSetButton: {fileID: 0}
+  maxMatchingButton: {fileID: 0}
   algOpenPanel: {fileID: 1689317852}
 --- !u!1 &1015921549
 GameObject:
