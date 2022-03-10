@@ -62,6 +62,7 @@ public class Controller : SingletonBehavior<Controller>
     // Main graph DS in the active graph instance
     public Graph Graph { 
         get => this.activeGraphInstance.graph;
+        set => this.activeGraphInstance.graph = value;
     }
 
     public AlgorithmManager AlgorithmManager

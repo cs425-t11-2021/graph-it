@@ -848,7 +848,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 70780318}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 798761132}
+        m_TargetAssemblyTypeName: CreateFromPresetMenu, Assembly-CSharp
+        m_MethodName: CreateCompleteBipartite
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &70780318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2257,7 +2269,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 253997065}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 798761132}
+        m_TargetAssemblyTypeName: CreateFromPresetMenu, Assembly-CSharp
+        m_MethodName: CreateComplete
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &253997065
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11703,7 +11727,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1075661440}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 798761132}
+        m_TargetAssemblyTypeName: CreateFromPresetMenu, Assembly-CSharp
+        m_MethodName: CreateCycle
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1075661440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12694,7 +12730,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1134244210}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 798761132}
+        m_TargetAssemblyTypeName: CreateFromPresetMenu, Assembly-CSharp
+        m_MethodName: CreatePath
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1134244210
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20620,7 +20668,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1732705918}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 798761132}
+        m_TargetAssemblyTypeName: CreateFromPresetMenu, Assembly-CSharp
+        m_MethodName: CreateStar
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1732705918
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25743,7 +25803,7 @@ MonoBehaviour:
   displayVertexLabels: 1
   snapVerticesToGrid: 1
   alwaysShowGridlines: 0
-  edgeVertexGap: 0.25
+  edgeVertexGap: 0
   vertexSprites:
   - {fileID: 21300000, guid: 892af439bbf6d458dad2f5f46ef2ef9d, type: 3}
   - {fileID: 21300000, guid: fad0d5feedf68374fb232715ba8978bc, type: 3}

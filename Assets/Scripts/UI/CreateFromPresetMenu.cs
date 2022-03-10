@@ -28,12 +28,46 @@ public class CreateFromPresetMenu : MonoBehaviour
         ManipulationStateManager.Singleton.SuspendManipulationState(false);
     }
     public void openPresetMenu(){
-        this.gameObject.SetActive(true);
         OnEnable();//not sure if this will work
-
+        this.gameObject.SetActive(true);
     }
     public void closePresetMenu(){
-        this.gameObject.SetActive(false);
         OnDisable();//also not sure if this will work
+        this.gameObject.SetActive(false);
+    }
+
+    public void CreateComplete()
+    {
+        Controller.Singleton.Graph = PresetGraph.Complete(5);
+        Controller.Singleton.CreateObjsFromGraph();
+        closePresetMenu();
+    }
+
+    public void CreateCompleteBipartite()
+    {
+        Controller.Singleton.Graph = PresetGraph.CompleteBipartite(5);
+        Controller.Singleton.CreateObjsFromGraph();
+        closePresetMenu();
+    }
+
+    public void CreateCycle()
+    {
+        Controller.Singleton.Graph = PresetGraph.Cycle(5);
+        Controller.Singleton.CreateObjsFromGraph();
+        closePresetMenu();
+    }
+
+    public void CreatePath()
+    {
+        Controller.Singleton.Graph = PresetGraph.Path(5);
+        Controller.Singleton.CreateObjsFromGraph();
+        closePresetMenu();
+    }
+
+    public void CreateStar()
+    {
+        Controller.Singleton.Graph = PresetGraph.Star(5);
+        Controller.Singleton.CreateObjsFromGraph();
+        closePresetMenu();
     }
 }
