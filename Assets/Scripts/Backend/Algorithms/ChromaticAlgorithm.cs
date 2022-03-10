@@ -47,6 +47,8 @@ public class ChromaticAlgorithm : Algorithm
     {
         foreach ( Edge edge in this.Graph.Adjacency.Values )
         {
+            if ( edge.vert1 == edge.vert2 ) // temp
+                continue;
             if ( this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
                 return false;
         }
