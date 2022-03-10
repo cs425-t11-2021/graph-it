@@ -23,6 +23,12 @@ public class RadiusAlgorithm : Algorithm
 
     public override void Run()
     {
+        if (this.Graph.Vertices.Count == 0)
+        {
+            this.Radius = 0;
+            return;
+        }
+
         DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
 
         float radius = float.PositiveInfinity;
