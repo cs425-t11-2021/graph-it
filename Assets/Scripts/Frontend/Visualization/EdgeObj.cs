@@ -52,11 +52,13 @@ public class EdgeObj : MonoBehaviour
                 this.shapeRenderer.color = new Color32(0, 125, 255, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
                 labelObj.MakeEditable();
+                shapeRenderer.sortingOrder = -1;
             }
             else {
                 this.shapeRenderer.color = new Color32(0, 0, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
                 labelObj.MakeUneditable();
+                shapeRenderer.sortingOrder = -2;
             }
         }
     }
