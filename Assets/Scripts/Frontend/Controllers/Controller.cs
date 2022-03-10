@@ -93,11 +93,12 @@ public class Controller : SingletonBehavior<Controller>
         SelectionManager.Singleton.DeSelectAll();
 
         // Iterate through each vertex in the graph data structure and create a corresponding vertexObj, do the same for edges
-        this.Graph.Vertices.ForEach(vertex => CreateVertexObj(vertex));
-        this.Graph.Adjacency.ForEach((vertices, edge) => CreateEdgeObj(edge));
+        this.Graph.Vertices.ForEach(vertex => CreateVertexObj(vertex, false));
+        this.Graph.Adjacency.ForEach((vertices, edge) => CreateEdgeObj(edge, false));
 
-        // Update the Grpah information UI
-        GraphInfo.Singleton.UpdateGraphInfo();
+        // Update the Grpah information UI]
+        OnGraphModified?.Invoke();
+        GraphInfo.Singleton.InitiateAlgorithmManager();
     }
 
     public void ClearCurrentInstance() {
@@ -145,11 +146,11 @@ public class Controller : SingletonBehavior<Controller>
 
         if (setAsActive)
         {
-            ChangeActiveInstance(newInstance);
+            ChangeActiveInstance(newInstance, false);
         }
     }
 
-    public void ChangeActiveInstance(GraphInstance instance)
+    public void ChangeActiveInstance(GraphInstance instance, bool initiateAlgorithms = true)
     {
         if (!this.instances.Contains(instance))
         {
@@ -162,7 +163,8 @@ public class Controller : SingletonBehavior<Controller>
         this.activeGraphInstance = instance;
         this.GraphObjContainer.gameObject.SetActive(true);
         
-        GraphInfo.Singleton.InitiateAlgorithmManager();
+        if (initiateAlgorithms)
+            GraphInfo.Singleton.InitiateAlgorithmManager();
     }
 
     // Add a new vertex at a given position
@@ -173,7 +175,7 @@ public class Controller : SingletonBehavior<Controller>
     }
 
     // Create a new vertex object to correspond to a passed in graph vertex
-    private void CreateVertexObj(Vertex vertex) {
+    private void CreateVertexObj(Vertex vertex, bool invokeEvents = true) {
         Vector2 pos = new Vector2( vertex.Pos.X, vertex.Pos.Y );
 
         // Instantiate a vertex object, set its parent to the graphObj, and call the initiation function
@@ -191,8 +193,11 @@ public class Controller : SingletonBehavior<Controller>
         }
 
         // Send the onVertexObjCreation event
-        this.OnVertexObjectCreation?.Invoke(vertexObj);
-        this.OnGraphModified?.Invoke();
+        if (invokeEvents)
+        {
+            this.OnVertexObjectCreation?.Invoke(vertexObj);
+            this.OnGraphModified?.Invoke();
+        }
     }
 
     public void RemoveVertex(VertexObj vertexObj) {
@@ -291,7 +296,7 @@ public class Controller : SingletonBehavior<Controller>
     }
 
         // Create a new edge object to correspond to a passed in graph edge
-    private void CreateEdgeObj(Edge edge) {
+    private void CreateEdgeObj(Edge edge, bool invokeEvents = true) {
         // Get the two vertex objects associated with the edge
         VertexObj fromVertexObj = GetVertexObj(edge.vert1);
         VertexObj toVertexObj = GetVertexObj(edge.vert2);
@@ -311,8 +316,11 @@ public class Controller : SingletonBehavior<Controller>
         this.activeGraphInstance.edgeObjs.Add(edgeObj);
 
         // Send the OnEdgeObjectCreation event
-        this.OnEdgeObjectCreation?.Invoke(edgeObj);
-        this.OnGraphModified?.Invoke();
+        if (invokeEvents)
+        {
+            this.OnEdgeObjectCreation?.Invoke(edgeObj);
+            this.OnGraphModified?.Invoke();
+        }
     }
 
     private void CreateCurvedEdgeObj(Edge curvedEdge, int curvature = 0) {

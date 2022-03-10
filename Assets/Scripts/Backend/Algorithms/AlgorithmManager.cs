@@ -108,9 +108,9 @@ public class AlgorithmManager
 
     public void RunChromatic()
     {
-        this.EnsureMaxDegreeRunning();
         if (!IsComplete(ChromaticAlgorithm.GetHash()))
         {
+            this.EnsureMaxDegreeRunning();
             new ChromaticAlgorithm( this.graph, this.chromaticUI, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
         }
         else
