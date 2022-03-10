@@ -3,7 +3,7 @@ using System;
 [System.Serializable]
 public class DiameterAlgorithm : Algorithm
 {
-    public float diameter { get; private set; }
+    public float Diameter { get; private set; }
 
     public DiameterAlgorithm(
         Graph graph,
@@ -25,18 +25,20 @@ public class DiameterAlgorithm : Algorithm
     {
         DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
 
-        this.diameter = 0;
+        float diameter = 0;
         foreach ( Vertex u in this.Graph.Vertices )
         {
             foreach ( Vertex v in this.Graph.Vertices )
             {
                 dijkstra.Run(this.Graph, u, v);
-                if (dijkstra.cost > this.diameter)
+                if (dijkstra.cost > diameter)
                 {
-                    this.diameter = dijkstra.cost;
+                    diameter = dijkstra.cost;
                 }
             }
         }
+
+        this.Diameter = diameter;
     }
 
     public static int GetHash() => typeof ( DiameterAlgorithm ).GetHashCode();

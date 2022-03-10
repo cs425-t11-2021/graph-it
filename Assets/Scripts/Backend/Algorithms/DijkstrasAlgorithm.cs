@@ -56,8 +56,10 @@ public class DijkstrasAlgorithm
             this.path.Add( curr );
             curr = prev[ curr ];
             if ( curr is null )
+            {
                 this.path = new List<Vertex>();
                 return;
+            }
         }
         this.path.Add( src );
         this.path.Reverse();

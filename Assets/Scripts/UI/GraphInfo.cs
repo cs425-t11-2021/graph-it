@@ -43,7 +43,29 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }*/
 
     public void InitiateAlgorithmManager() {
-        Controller.Singleton.AlgorithmManager.Initiate( Controller.Singleton.Graph, ( Action ) this.UpdateMinDegreeResult, ( Action ) this.UpdateMaxDegreeResult, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateMinDegreeCalculating, ( Action ) this.UpdateMaxDegreeCalculating, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating );
+        Controller.Singleton.AlgorithmManager.Initiate(
+            Controller.Singleton.Graph,
+            ( Action ) this.UpdateMinDegreeResult,
+            ( Action ) this.UpdateMaxDegreeResult,
+            ( Action ) this.UpdateRadiusResult,
+            ( Action ) this.UpdateDiameterResult,
+            ( Action ) this.UpdateChromaticResult,
+            ( Action ) this.UpdateBipartiteResult,
+            ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult,
+            ( Action ) this.UpdateMinDegreeCalculating,
+            ( Action ) this.UpdateMaxDegreeCalculating,
+            ( Action ) this.UpdateRadiusCalculating,
+            ( Action ) this.UpdateDiameterCalculating,
+            ( Action ) this.UpdateChromaticCalculating,
+            ( Action ) this.UpdateBipartiteCalculating,
+            ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating
+        );
         this.UpdateGraphInfo();
     }
     
@@ -56,6 +78,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         // this.algorithmManager.RunChromatic();
         Controller.Singleton.AlgorithmManager.RunMinDegree();
         Controller.Singleton.AlgorithmManager.RunMaxDegree();
+        // Controller.Singleton.AlgorithmManager.RunRadius();
+        // Controller.Singleton.AlgorithmManager.RunDiameter();
         Controller.Singleton.AlgorithmManager.RunBipartite(); //TEMPORARY FIX
     }
 
@@ -65,6 +89,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         UpdateBipartiteResult();
         UpdateMinDegreeResult();
         UpdateMaxDegreeResult();
+        UpdateRadiusResult();
+        UpdateDiameterResult();
     }
 
     public void UpdateMinDegreeResult() { 
@@ -75,6 +101,14 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateMaxDegreeResult() { 
         // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
         this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
+    }
+
+    public void UpdateRadiusResult() { 
+        Debug.Log( "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius() );
+    }
+
+    public void UpdateDiameterResult() { 
+        Debug.Log( "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter() );
     }
 
     public void UpdateChromaticResult() {
@@ -100,6 +134,14 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateMinDegreeCalculating() { }
 
     public void UpdateMaxDegreeCalculating() { }
+
+    public void UpdateRadiusCalculating() { 
+        
+    }
+
+    public void UpdateDiameterCalculating() { 
+        
+    }
 
     public void UpdateChromaticCalculating() {
         this.chromaticText.text = "Chromatic Number: Calculating";
