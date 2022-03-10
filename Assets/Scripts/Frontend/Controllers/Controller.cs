@@ -302,6 +302,22 @@ public class Controller : SingletonBehavior<Controller>
         VertexObj fromVertexObj = GetVertexObj(edge.vert1);
         VertexObj toVertexObj = GetVertexObj(edge.vert2);
 
+        if (!edge.Directed)
+        {
+            foreach (EdgeObj e in this.EdgeObjs)
+            {
+                if (e.Vertex1 == toVertexObj && e.Vertex2 == fromVertexObj)
+                {
+                    return;
+                }
+
+                if (e.Vertex2 == toVertexObj && e.Vertex1 == fromVertexObj)
+                {
+                    return;
+                }
+            }
+        }
+
         if (!fromVertexObj || !toVertexObj) {
             Logger.Log("Attempting add an edge between vertices that do not exist in the data structure.", this, LogType.ERROR);
             return;
