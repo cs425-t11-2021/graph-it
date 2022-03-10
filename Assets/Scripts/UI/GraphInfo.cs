@@ -115,11 +115,23 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     public void UpdateRadiusResult() { 
-        this.radiusText.text = "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius();
+        if (Controller.Singleton.AlgorithmManager.GetRadius() is null)
+        {
+            this.radiusText.text = "Radius: N/A";
+        } else
+        {
+            this.radiusText.text = "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius();
+        }
     }
 
     public void UpdateDiameterResult() { 
-        this.diameterText.text = "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter();
+        if (Controller.Singleton.AlgorithmManager.GetDiameter() is null)
+        {
+            this.diameterText.text = "Diameter: N/A";
+        } else
+        {
+            this.diameterText.text = "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter();
+        }
     }
 
     public void UpdateChromaticResult() {

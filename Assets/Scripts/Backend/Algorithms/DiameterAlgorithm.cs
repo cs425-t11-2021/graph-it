@@ -3,7 +3,7 @@ using System;
 [System.Serializable]
 public class DiameterAlgorithm : Algorithm
 {
-    public float Diameter { get; private set; }
+    public float? Diameter { get; private set; }
 
     public DiameterAlgorithm(
         Graph graph,
@@ -23,6 +23,12 @@ public class DiameterAlgorithm : Algorithm
 
     public override void Run()
     {
+        if (this.Graph.Directed)
+        {
+            this.Diameter = null;
+            return;
+        }
+
         DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
 
         float diameter = 0;

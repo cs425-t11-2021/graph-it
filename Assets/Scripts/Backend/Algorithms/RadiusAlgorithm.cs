@@ -3,7 +3,7 @@ using System;
 [System.Serializable]
 public class RadiusAlgorithm : Algorithm
 {
-    public float Radius { get; private set; }
+    public float? Radius { get; private set; }
 
     public RadiusAlgorithm(
         Graph graph,
@@ -23,6 +23,12 @@ public class RadiusAlgorithm : Algorithm
 
     public override void Run()
     {
+        if (this.Graph.Directed)
+        {
+            this.Radius = null;
+            return;
+        }
+
         if (this.Graph.Vertices.Count == 0)
         {
             this.Radius = 0;
