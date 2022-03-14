@@ -38,36 +38,36 @@ public class CreateFromPresetMenu : MonoBehaviour
 
     public void CreateComplete()
     {
-        Controller.Singleton.Graph = PresetGraph.Complete(5);
-        Controller.Singleton.CreateObjsFromGraph();
+        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.Complete(5));
+        Controller.Singleton.CreateObjsFromGraph(newInstance);
         closePresetMenu();
     }
 
     public void CreateCompleteBipartite()
     {
-        Controller.Singleton.Graph = PresetGraph.CompleteBipartite(5);
-        Controller.Singleton.CreateObjsFromGraph();
+        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.CompleteBipartite(5));
+        Controller.Singleton.CreateObjsFromGraph(newInstance);
         closePresetMenu();
     }
 
     public void CreateCycle()
     {
-        Controller.Singleton.Graph = PresetGraph.Cycle(5);
-        Controller.Singleton.CreateObjsFromGraph();
+        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.Cycle(5));
+        Controller.Singleton.CreateObjsFromGraph(newInstance);
         closePresetMenu();
     }
 
     public void CreatePath()
     {
-        Controller.Singleton.Graph = PresetGraph.Path(5);
-        Controller.Singleton.CreateObjsFromGraph();
+        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.Path(5));
+        Controller.Singleton.CreateObjsFromGraph(newInstance);
         closePresetMenu();
     }
 
     public void CreateStar()
     {
-        Controller.Singleton.Graph = PresetGraph.Star(5);
-        Controller.Singleton.CreateObjsFromGraph();
+        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.Star(5));
+        Controller.Singleton.CreateObjsFromGraph(newInstance);
         closePresetMenu();
     }
 }

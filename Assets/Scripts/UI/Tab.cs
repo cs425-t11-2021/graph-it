@@ -18,6 +18,12 @@ public class Tab : MonoBehaviour
         // Get component references
         this.tabLabel = GetComponentInChildren<TMP_Text>();
         this.toggle = GetComponent<ToggleButton>();
+        
+        // When the active instance changes, highlight the tab is the tab is associated with the new active instance
+        Controller.Singleton.OnInstanceChanged += (instance) =>
+        {
+            this.toggle.UpdateStatus(instance == this.graphInstance);
+        };
     }
 
     public void Initiate(string name, GraphInstance associatedInstance)
@@ -32,17 +38,17 @@ public class Tab : MonoBehaviour
         // Chance the current graph instance to the one associated with the tab
         Controller.Singleton.ChangeActiveInstance(this.graphInstance);
         
-        // Disable the toggle button of all other tabs except the one selected
-        foreach (Tab tab in TabBar.Singleton.TabsInScene)
-        {
-            if (tab == this)
-            {
-                tab.toggle.UpdateStatus(true);
-            }
-            else
-            {
-                tab.toggle.UpdateStatus(false);
-            }
-        }
+        // // Disable the toggle button of all other tabs except the one selected
+        // foreach (Tab tab in TabBar.Singleton.TabsInScene)
+        // {
+        //     if (tab == this)
+        //     {
+        //         tab.toggle.UpdateStatus(true);
+        //     }
+        //     else
+        //     {
+        //         tab.toggle.UpdateStatus(false);
+        //     }
+        // }
     }
 }

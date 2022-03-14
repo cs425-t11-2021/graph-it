@@ -49,8 +49,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         }
     }*/
 
-    public void InitiateAlgorithmManager() {
-        Controller.Singleton.AlgorithmManager.Initiate(
+    public void InitiateAlgorithmManager(AlgorithmManager algoManager) {
+        algoManager.Initiate(
             Controller.Singleton.Graph,
             ( Action ) this.UpdateMinDegreeResult,
             ( Action ) this.UpdateMaxDegreeResult,

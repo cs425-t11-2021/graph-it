@@ -54,11 +54,12 @@ public class FileMenu : MenuButton
         //if the user does not cancel the file import menu, clear the current graph to import the new one //IMPORT INTO A NEW TAB LATER TO NOT OVERWRITE CURRENT WORK
         if(paths.Length != 0){
             // Clear existing graph
-            Controller.Singleton.CreateGraphInstance(true);
+            GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true);
+            
+            Controller.Singleton.Graph.Import(paths[0]);
+            Controller.Singleton.CreateObjsFromGraph(newInstance);
         }
-        Controller.Singleton.Graph.Import(paths[0]);
-        Controller.Singleton.CreateObjsFromGraph();
-        
+
         EventSystem.current.SetSelectedGameObject(null);
     }
 

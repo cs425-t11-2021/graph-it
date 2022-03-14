@@ -40,15 +40,15 @@ public class ImportFile : MonoBehaviour
 
 
     public void ImportFromFile(){
-        // Clear existing graph
-        Controller.Singleton.CreateGraphInstance();
-        //string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
-        string[] paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
-        Debug.Log("Begin import at " + paths + ".csv");
-        Debug.Log(paths[0]);
-        //Controller.Singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
-
-        Controller.Singleton.CreateObjsFromGraph();
+        // // Clear existing graph
+        // Controller.Singleton.CreateGraphInstance();
+        // //string desktop = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop);
+        // string[] paths = StandaloneFileBrowser.OpenFilePanel("Open File", "", "", false);
+        // Debug.Log("Begin import at " + paths + ".csv");
+        // Debug.Log(paths[0]);
+        // //Controller.Singleton.Graph.Import(desktop + "/" + importFilenameInput.text + ".csv");
+        //
+        // Controller.Singleton.CreateObjsFromGraph();
 
     }
     // Function called by the confirm button
