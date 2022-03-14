@@ -36,7 +36,7 @@ public class Controller : SingletonBehavior<Controller>
     [SerializeField] private LayerMask clickableLayers;
     
     // List of currently available graph instances
-    public List<GraphInstance> instances = new List<GraphInstance>();
+    private List<GraphInstance> instances = new List<GraphInstance>();
     private uint newInstanceID = 0;
 
     // Graph instance active in the current tab
@@ -93,7 +93,7 @@ public class Controller : SingletonBehavior<Controller>
         this.Graph.Vertices.ForEach(vertex => CreateVertexObj(vertex, false));
         this.Graph.Adjacency.ForEach((vertices, edge) => CreateEdgeObj(edge, false));
 
-        // Update the Grpah information UI]
+        // Update the Grpah information UI
         OnGraphModified?.Invoke();
         GraphInfo.Singleton.InitiateAlgorithmManager();
     }
@@ -111,7 +111,7 @@ public class Controller : SingletonBehavior<Controller>
             Grid.Singleton.ClearGrid();
         }
 
-        var previousInstance = this.activeGraphInstance;
+        GraphInstance previousInstance = this.activeGraphInstance;
 
         // Destroy current graph objects and create a new instance
         CreateGraphInstance(true);
@@ -123,9 +123,6 @@ public class Controller : SingletonBehavior<Controller>
     public void CreateGraphInstance(bool setAsActive = false) {
         // Deselect All
         SelectionManager.Singleton.DeSelectAll();
-
-        // Reset toolbar toggles
-        Toolbar.Singleton.ResetAll();
 
         // If snap to grid is enabled, clear out the grid
         if (Grid.Singleton.GridEnabled)
@@ -139,7 +136,7 @@ public class Controller : SingletonBehavior<Controller>
         GraphInstance newInstance = new GraphInstance(Instantiate(new GameObject("GraphObjContainer"), Vector3.zero, Quaternion.identity).transform, this.newInstanceID++, new AlgorithmManager());
         this.instances.Add(newInstance);
         
-        TabManager.Singleton.CreateNewTab(newInstance, "Graph" + newInstance.id);
+        TabBar.Singleton.CreateNewTab("Graph" + newInstance.id, newInstance);
 
         if (setAsActive)
         {
