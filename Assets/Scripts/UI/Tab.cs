@@ -37,11 +37,11 @@ public class Tab : MonoBehaviour
         {
             if (tab == this)
             {
-                tab.toggle.Checked = true;
+                tab.toggle.UpdateStatus(true);
             }
             else
             {
-                tab.toggle.Checked = false;
+                tab.toggle.UpdateStatus(false);
             }
         }
     }

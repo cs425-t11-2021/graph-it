@@ -22,6 +22,12 @@ public class TabBar : SingletonBehavior<TabBar>
         Tab newTab = Instantiate(tabPrefab, this.transform).GetComponent<Tab>();
         newTab.Initiate(name, associatedInstance);
         
+        // If the tab created is associated with the first graph, highlight it
+        if (associatedInstance.id == 0)
+        {
+            newTab.gameObject.GetComponent<ToggleButton>().UpdateStatus(true);
+        }
+        
         this.TabsInScene.Add(newTab);
     }
 }
