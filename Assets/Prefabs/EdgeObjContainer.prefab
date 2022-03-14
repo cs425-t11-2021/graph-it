@@ -630,7 +630,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5202553422141084892}
   m_Layer: 0
-  m_Name: CurvedEdgeObjContainer
+  m_Name: EdgeObjContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -750,7 +750,7 @@ GameObject:
   - component: {fileID: 9056994100037127509}
   - component: {fileID: 9056994100037127508}
   m_Layer: 8
-  m_Name: CurvedEdgeObj
+  m_Name: EdgeObj
   m_TagString: Edge
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

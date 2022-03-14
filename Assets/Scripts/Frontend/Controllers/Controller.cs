@@ -2,7 +2,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // Struct which stores a instance of graph datastructure along with its associated Unity objects
@@ -32,10 +31,7 @@ public class Controller : SingletonBehavior<Controller>
     // Prefabs for the unity vertex and edge objects
     [SerializeField] private GameObject vertexObjPrefab;
     [SerializeField] private GameObject edgeObjPrefab;
-    [SerializeField] private GameObject curvedEdgePrefab;
     [SerializeField] public GameObject edgeTemplatePrefab;
-    // Prefab for the graph container object
-    [SerializeField] private GameObject graphObjContainerPrefab;
     // Mask of Collider Layers that should receive mouse input
     [SerializeField] private LayerMask clickableLayers;
     
@@ -140,7 +136,7 @@ public class Controller : SingletonBehavior<Controller>
         // Destroy current graph objects and create a new instance
         // Destroy(this.GraphObjContainer.gameObject);
         Logger.Log("Creating a new graph instance.", this, LogType.INFO);
-        GraphInstance newInstance = new GraphInstance(Instantiate(graphObjContainerPrefab, Vector3.zero, Quaternion.identity).transform, this.newInstanceID++, new AlgorithmManager());
+        GraphInstance newInstance = new GraphInstance(Instantiate(new GameObject("GraphObjContainer"), Vector3.zero, Quaternion.identity).transform, this.newInstanceID++, new AlgorithmManager());
         this.instances.Add(newInstance);
         
         TabManager.Singleton.CreateNewTab(newInstance, "Graph" + newInstance.id);
@@ -345,7 +341,7 @@ public class Controller : SingletonBehavior<Controller>
         VertexObj vertex2 = curvedEdge.vert2 == curvedEdge.vert1 ? vertex1 : GetVertexObj(curvedEdge.vert2);
 
         // Instantiate an edge object
-        EdgeObj edgeObj = Instantiate(this.curvedEdgePrefab, Vector2.zero, Quaternion.identity).transform.GetChild(0).GetComponent<EdgeObj>();
+        EdgeObj edgeObj = Instantiate(this.edgeObjPrefab, Vector2.zero, Quaternion.identity).transform.GetChild(0).GetComponent<EdgeObj>();
         // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
         edgeObj.transform.parent.SetParent(this.GraphObjContainer);
         edgeObj.Initiate(curvedEdge, vertex1, vertex2);
