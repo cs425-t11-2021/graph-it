@@ -50,7 +50,8 @@ public abstract class Algorithm
             this.running = false;
             this.complete = true;
             this.markComplete( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+            RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoResults(this));
+            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
         }
         catch ( ThreadAbortException e )
         {

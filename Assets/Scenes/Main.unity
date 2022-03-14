@@ -6169,6 +6169,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eaa084c87c61b49afac856fa0afe941c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  associations:
+  - algorithmClass: ChromaticAlgorithm
+    multiThreaded: 1
+    graphInfoText: {fileID: 823532443}
+    lead: Chromatic Number
+    nullValue: N/A
+    completedMethod: GetChromaticNumber
   chromaticText: {fileID: 823532443}
   bipartiteText: {fileID: 510125109}
   orderText: {fileID: 1553925998}

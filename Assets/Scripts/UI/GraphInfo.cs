@@ -3,11 +3,48 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using TMPro;
+using System.Reflection;
+
+[System.Serializable]
+public class GraphInfoAlgorithmAssociation
+{
+    public string algorithmClass = "";
+    public bool multiThreaded = false;
+    public TMP_Text graphInfoText;
+    public string lead = "";
+    public string nullValue = "N/A";
+    public string completedMethod = "";
+
+    public Action OnUICompleteAction
+    {
+        get
+        {
+            return () =>
+            {
+                object result = Type.GetType("AlgorithmManager").GetMethod(completedMethod)
+                    .Invoke(Controller.Singleton.AlgorithmManager, null);
+                
+                if (result == null)
+                {
+                    graphInfoText.text = lead + ": " + nullValue;
+                }
+                else
+                {
+                    graphInfoText.text = lead + ": " + (Convert.ToString(result));
+                }
+            };
+        }
+    }
+}
 
 public class GraphInfo : SingletonBehavior<GraphInfo>
 {
+
+    [SerializeField] private GraphInfoAlgorithmAssociation[] associations;
+    
     // Reference to the text display of chromatic number
     [SerializeField] private TMP_Text chromaticText;
     // Reference to the text display of bipartite
@@ -49,16 +86,30 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         }
     }*/
 
+    public void UpdateGraphInfoResults(Algorithm algorithm)
+    {
+        string algorithmName = algorithm.GetType().ToString();
+
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                association.OnUICompleteAction();
+                return;
+            }
+        }
+    }
+
     public void InitiateAlgorithmManager(AlgorithmManager algoManager) {
         algoManager.Initiate(
             Controller.Singleton.Graph,
-            ( Action ) this.UpdateMinDegreeResult,
-            ( Action ) this.UpdateMaxDegreeResult,
-            ( Action ) this.UpdateRadiusResult,
-            ( Action ) this.UpdateDiameterResult,
-            ( Action ) this.UpdateChromaticResult,
-            ( Action ) this.UpdateBipartiteResult,
-            ( Action ) this.UpdateCyclicResult,
+            // ( Action ) this.UpdateMinDegreeResult,
+            // ( Action ) this.UpdateMaxDegreeResult,
+            // ( Action ) this.UpdateRadiusResult,
+            // ( Action ) this.UpdateDiameterResult,
+            // ( Action ) this.UpdateChromaticResult,
+            // ( Action ) this.UpdateBipartiteResult,
+            // ( Action ) this.UpdateCyclicResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,

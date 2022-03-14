@@ -155,11 +155,14 @@ public class Controller : SingletonBehavior<Controller>
 
     public void ChangeActiveInstance(GraphInstance instance, bool initiateAlgorithms = true)
     {
+        // If the instances list dose not contain the instance being requested, something has gone wrong
         if (!this.instances.Contains(instance))
         {
             Logger.Log("Graph instance being requested does not exist.", this, LogType.ERROR);
+            throw new SystemException("Graph instance being requested does not exist.");
             return;
         }
+        
         Logger.Log("Changing active graph instance to " + instance.id + ".", this, LogType.INFO);
         if (this.activeGraphInstance != null)
             this.GraphObjContainer.gameObject.SetActive(false);
