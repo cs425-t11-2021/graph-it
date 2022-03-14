@@ -144,62 +144,62 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         Controller.Singleton.AlgorithmManager.RunCyclic();
     }
 
-    public void DisplayGraphInfo()
-    {
-        UpdateChromaticResult();
-        UpdateBipartiteResult();
-        UpdateCyclicResult();
-        UpdateMinDegreeResult();
-        UpdateMaxDegreeResult();
-        UpdateRadiusResult();
-        UpdateDiameterResult();
-    }
+    // public void DisplayGraphInfo()
+    // {
+    //     UpdateChromaticResult();
+    //     UpdateBipartiteResult();
+    //     UpdateCyclicResult();
+    //     UpdateMinDegreeResult();
+    //     UpdateMaxDegreeResult();
+    //     UpdateRadiusResult();
+    //     UpdateDiameterResult();
+    // }
 
-    public void UpdateMinDegreeResult() { 
-        // Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); 
-        this.minDegreeText.text = "Minimum Degree (δ): " + Controller.Singleton.AlgorithmManager.GetMinDegree();
-    }
-
-    public void UpdateMaxDegreeResult() { 
-        // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
-        this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
-    }
-
-    public void UpdateRadiusResult() { 
-        if (Controller.Singleton.AlgorithmManager.GetRadius() is null)
-        {
-            this.radiusText.text = "Radius: N/A";
-        } else
-        {
-            this.radiusText.text = "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius();
-        }
-    }
-
-    public void UpdateDiameterResult() { 
-        if (Controller.Singleton.AlgorithmManager.GetDiameter() is null)
-        {
-            this.diameterText.text = "Diameter: N/A";
-        } else
-        {
-            this.diameterText.text = "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter();
-        }
-    }
-
-    public void UpdateChromaticResult() {
-        int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
-        if ( chromaticNumber is null )
-            this.chromaticText.text = "Chromatic Number: Error";
-        else
-            this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
-    }
-
-    public void UpdateBipartiteResult() {
-        this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
-    }
-
-    public void UpdateCyclicResult() {
-        this.cyclicText.text = "Cyclic: " + (Controller.Singleton.AlgorithmManager.GetCyclic() ?? false ? "Yes" : "No");
-    }
+    // public void UpdateMinDegreeResult() { 
+    //     // Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); 
+    //     this.minDegreeText.text = "Minimum Degree (δ): " + Controller.Singleton.AlgorithmManager.GetMinDegree();
+    // }
+    //
+    // public void UpdateMaxDegreeResult() { 
+    //     // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
+    //     this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
+    // }
+    //
+    // public void UpdateRadiusResult() { 
+    //     if (Controller.Singleton.AlgorithmManager.GetRadius() is null)
+    //     {
+    //         this.radiusText.text = "Radius: N/A";
+    //     } else
+    //     {
+    //         this.radiusText.text = "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius();
+    //     }
+    // }
+    //
+    // public void UpdateDiameterResult() { 
+    //     if (Controller.Singleton.AlgorithmManager.GetDiameter() is null)
+    //     {
+    //         this.diameterText.text = "Diameter: N/A";
+    //     } else
+    //     {
+    //         this.diameterText.text = "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter();
+    //     }
+    // }
+    //
+    // public void UpdateChromaticResult() {
+    //     int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
+    //     if ( chromaticNumber is null )
+    //         this.chromaticText.text = "Chromatic Number: Error";
+    //     else
+    //         this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
+    // }
+    //
+    // public void UpdateBipartiteResult() {
+    //     this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
+    // }
+    //
+    // public void UpdateCyclicResult() {
+    //     this.cyclicText.text = "Cyclic: " + (Controller.Singleton.AlgorithmManager.GetCyclic() ?? false ? "Yes" : "No");
+    // }
 
     // public void UpdatePrimsResult() { }
 
