@@ -6173,9 +6173,45 @@ MonoBehaviour:
   - algorithmClass: ChromaticAlgorithm
     multiThreaded: 1
     graphInfoText: {fileID: 823532443}
-    lead: Chromatic Number
+    lead: "Chromatic Number (\u03C7)"
     nullValue: N/A
     completedMethod: GetChromaticNumber
+  - algorithmClass: BipartiteAlgorithm
+    multiThreaded: 1
+    graphInfoText: {fileID: 510125109}
+    lead: Bipartite
+    nullValue: N/A
+    completedMethod: GetBipartite
+  - algorithmClass: CyclicAlgorithm
+    multiThreaded: 1
+    graphInfoText: {fileID: 1933305732}
+    lead: Cyclic
+    nullValue: N/A
+    completedMethod: GetCyclic
+  - algorithmClass: RadiusAlgorithm
+    multiThreaded: 1
+    graphInfoText: {fileID: 475795022}
+    lead: Radius
+    nullValue: N/A
+    completedMethod: GetRadius
+  - algorithmClass: DiameterAlgorithm
+    multiThreaded: 1
+    graphInfoText: {fileID: 813178383}
+    lead: Diameter
+    nullValue: N/A
+    completedMethod: GetDiameter
+  - algorithmClass: MaxDegreeAlgorithm
+    multiThreaded: 1
+    graphInfoText: {fileID: 746479633}
+    lead: "Maximum Degree (\u0394)"
+    nullValue: N/A
+    completedMethod: GetMaxDegree
+  - algorithmClass: MinDegreeAlgorithm
+    multiThreaded: 1
+    graphInfoText: {fileID: 1348371724}
+    lead: "Minimum Degree (\u03B4)"
+    nullValue: N/A
+    completedMethod: GetMinDegree
   chromaticText: {fileID: 823532443}
   bipartiteText: {fileID: 510125109}
   orderText: {fileID: 1553925998}
@@ -25918,7 +25954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12301043cea9840819f36da364fc77cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loggingLevel: 2
+  loggingLevel: 3
 --- !u!114 &4782475346978306233
 MonoBehaviour:
   m_ObjectHideFlags: 0

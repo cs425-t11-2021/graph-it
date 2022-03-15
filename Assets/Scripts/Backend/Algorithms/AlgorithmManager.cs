@@ -13,24 +13,10 @@ using UnityEngine.Scripting;
 public class AlgorithmManager
 {
     private Graph graph;
-    // private Action minDegreeUI;
-    // private Action maxDegreeUI;
-    // private Action radiusUI;
-    // private Action diameterUI;
-    // private Action chromaticUI;
-    // private Action bipartiteUI;
-    // private Action cyclicUI;
     private Action primsUI;
     private Action kruskalsUI;
     private Action depthFirstSearchUI;
     private Action breadthFirstSearchUI;
-    private Action minDegreeCalc;
-    private Action maxDegreeCalc;
-    private Action radiusCalc;
-    private Action diameterCalc;
-    private Action chromaticCalc;
-    private Action bipartiteCalc;
-    private Action cyclicCalc;
     private Action primsCalc;
     private Action kruskalsCalc;
     private Action depthFirstSearchCalc;
@@ -46,28 +32,14 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
 
-    public void Initiate( Graph graph, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action minDegreeCalc, Action maxDegreeCalc, Action radiusCalc, Action diameterCalc, Action chromaticCalc, Action bipartiteCalc, Action cyclicCalc, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
+    public void Initiate( Graph graph, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
     {
         Controller.Singleton.OnGraphModified += Clear;
         this.graph = graph;
-        // this.minDegreeUI = minDegreeUI;
-        // this.maxDegreeUI = maxDegreeUI;
-        // this.radiusUI = radiusUI;
-        // this.diameterUI = diameterUI;
-        // this.chromaticUI = chromaticUI;
-        // this.bipartiteUI = bipartiteUI;
-        // this.cyclicUI = cyclicUI;
         this.primsUI = primsUI;
         this.kruskalsUI = kruskalsUI;
         this.depthFirstSearchUI = depthFirstSearchUI;
         this.breadthFirstSearchUI = breadthFirstSearchUI;
-        this.minDegreeCalc = minDegreeCalc;
-        this.maxDegreeCalc = maxDegreeCalc;
-        this.radiusCalc = radiusCalc;
-        this.diameterCalc = diameterCalc;
-        this.chromaticCalc = chromaticCalc;
-        this.bipartiteCalc = bipartiteCalc;
-        this.cyclicCalc = cyclicCalc;
         this.primsCalc = primsCalc;
         this.kruskalsCalc = kruskalsCalc;
         this.depthFirstSearchCalc = depthFirstSearchCalc;
@@ -88,22 +60,22 @@ public class AlgorithmManager
 
     public void RunMinDegree()
     {
-        new MinDegreeAlgorithm( this.graph, null, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new MinDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunMaxDegree()
     {
-        new MaxDegreeAlgorithm( this.graph, null, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new MaxDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunRadius()
     {
-        new RadiusAlgorithm( this.graph, null, this.radiusCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new RadiusAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunDiameter()
     {
-        new DiameterAlgorithm( this.graph, null, this.diameterCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new DiameterAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunChromatic()
@@ -111,7 +83,7 @@ public class AlgorithmManager
         if (!IsComplete(ChromaticAlgorithm.GetHash()))
         {
             this.EnsureMaxDegreeRunning();
-            new ChromaticAlgorithm( this.graph, null, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new ChromaticAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
         }
         else
         {
@@ -122,17 +94,10 @@ public class AlgorithmManager
 
     public void RunBipartite()
     {
-        // BipartiteAlgorithm ba = new BipartiteAlgorithm( this.graph, this.bipartiteUI, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning );
-        // foreach ( Vertex vert in this.graph.Vertices )
-        // {
-        //     EnsureBreadthFirstSearchRunning( vert, ba.  ); 
-        // }
-        // ba.RunThread();
-
         if (!IsComplete(BipartiteAlgorithm.GetHash()))
         {
             this.EnsureChromaticRunning();
-            new BipartiteAlgorithm(this.graph, null, this.bipartiteCalc, this.MarkRunning,
+            new BipartiteAlgorithm(this.graph, null, null, this.MarkRunning,
                 this.MarkComplete, this.UnmarkRunning).RunThread();
         }
         else
@@ -144,7 +109,7 @@ public class AlgorithmManager
 
     public void RunCyclic()
     {
-        new CyclicAlgorithm( this.graph, null, this.cyclicCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        new CyclicAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void RunPrims( Vertex vert ) // temp parameter
@@ -172,28 +137,28 @@ public class AlgorithmManager
     {
         int hash = MinDegreeAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new MinDegreeAlgorithm( this.graph, null, this.minDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new MinDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureMaxDegreeRunning()
     {
         int hash = MaxDegreeAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new MaxDegreeAlgorithm( this.graph, null, this.maxDegreeCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new MaxDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureRadiusRunning()
     {
         int hash = RadiusAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new RadiusAlgorithm( this.graph, null, this.radiusCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new RadiusAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureDiameterRunning()
     {
         int hash = DiameterAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new DiameterAlgorithm( this.graph, null, this.diameterCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new DiameterAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureChromaticRunning()
@@ -202,21 +167,21 @@ public class AlgorithmManager
 
         int hash = ChromaticAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new ChromaticAlgorithm( this.graph, null, this.chromaticCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new ChromaticAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureBipartiteRunning()
     {
         int hash = BipartiteAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new BipartiteAlgorithm( this.graph, null, this.bipartiteCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new BipartiteAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsureCyclicRunning()
     {
         int hash = CyclicAlgorithm.GetHash();
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new CyclicAlgorithm( this.graph, null, this.cyclicCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            new CyclicAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
     }
 
     public void EnsurePrimsRunning( Vertex vert )

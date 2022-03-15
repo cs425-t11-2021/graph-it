@@ -44,7 +44,8 @@ public abstract class Algorithm
         {
             this.running = true;
             this.markRunning( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
+            RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoCalculating(this));
+            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
             this.Run();
             Logger.Log("Finishing Thread.", this, LogType.DEBUG);
             this.running = false;

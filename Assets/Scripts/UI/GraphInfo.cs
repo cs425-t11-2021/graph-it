@@ -33,8 +33,19 @@ public class GraphInfoAlgorithmAssociation
                 }
                 else
                 {
-                    graphInfoText.text = lead + ": " + (Convert.ToString(result));
+                    graphInfoText.text = lead + ": " + Convert.ToString(result);
                 }
+            };
+        }
+    }
+
+    public Action OnUICalculatingAction
+    {
+        get
+        {
+            return () =>
+            {
+                graphInfoText.text = lead + ": ...";
             };
         }
     }
@@ -45,24 +56,24 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     [SerializeField] private GraphInfoAlgorithmAssociation[] associations;
     
-    // Reference to the text display of chromatic number
-    [SerializeField] private TMP_Text chromaticText;
-    // Reference to the text display of bipartite
-    [SerializeField] private TMP_Text bipartiteText;
+    // // Reference to the text display of chromatic number
+    // [SerializeField] private TMP_Text chromaticText;
+    // // Reference to the text display of bipartite
+    // [SerializeField] private TMP_Text bipartiteText;
     // Reference to the text display of the graph order
     [SerializeField] private TMP_Text orderText;
     // Reference of the text display of the graph size
     [SerializeField] private TMP_Text sizeText;
     // Reference of the text display of the graph size
-    [SerializeField] private TMP_Text minDegreeText;
-    // Reference of the text display of the minimum degree
-    [SerializeField] private TMP_Text maxDegreeText;
-    // Reference of the text display of the maximmum degree
-    [SerializeField] private TMP_Text radiusText;
-    // Reference to the text display of radius
-    [SerializeField] private TMP_Text diameterText;
-    // Reference to the text display of diameter
-    [SerializeField] private TMP_Text cyclicText;
+    // [SerializeField] private TMP_Text minDegreeText;
+    // // Reference of the text display of the minimum degree
+    // [SerializeField] private TMP_Text maxDegreeText;
+    // // Reference of the text display of the maximmum degree
+    // [SerializeField] private TMP_Text radiusText;
+    // // Reference to the text display of radius
+    // [SerializeField] private TMP_Text diameterText;
+    // // Reference to the text display of diameter
+    // [SerializeField] private TMP_Text cyclicText;
     // Reference to the text display of cyclic
 
     //[SerializeField] private Button closePanel;
@@ -100,27 +111,27 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         }
     }
 
+    public void UpdateGraphInfoCalculating(Algorithm algorithm)
+    {
+        string algorithmName = algorithm.GetType().ToString();
+
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                association.OnUICalculatingAction();
+                return;
+            }
+        }
+    }
+
     public void InitiateAlgorithmManager(AlgorithmManager algoManager) {
         algoManager.Initiate(
             Controller.Singleton.Graph,
-            // ( Action ) this.UpdateMinDegreeResult,
-            // ( Action ) this.UpdateMaxDegreeResult,
-            // ( Action ) this.UpdateRadiusResult,
-            // ( Action ) this.UpdateDiameterResult,
-            // ( Action ) this.UpdateChromaticResult,
-            // ( Action ) this.UpdateBipartiteResult,
-            // ( Action ) this.UpdateCyclicResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult,
-            ( Action ) this.UpdateMinDegreeCalculating,
-            ( Action ) this.UpdateMaxDegreeCalculating,
-            ( Action ) this.UpdateRadiusCalculating,
-            ( Action ) this.UpdateDiameterCalculating,
-            ( Action ) this.UpdateChromaticCalculating,
-            ( Action ) this.UpdateBipartiteCalculating,
-            ( Action ) this.UpdateCyclicCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
@@ -134,8 +145,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.sizeText.text = "Size: " + Controller.Singleton.Graph.Size;
 
         // Run multithreaded algorithms
-        // Controller.Singleton.AlgorithmManager.Clear();
-        // this.algorithmManager.RunChromatic();
         Controller.Singleton.AlgorithmManager.RunMinDegree();
         Controller.Singleton.AlgorithmManager.RunMaxDegree();
         Controller.Singleton.AlgorithmManager.RunRadius();
@@ -143,63 +152,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         Controller.Singleton.AlgorithmManager.RunBipartite(); //TEMPORARY FIX
         Controller.Singleton.AlgorithmManager.RunCyclic();
     }
-
-    // public void DisplayGraphInfo()
-    // {
-    //     UpdateChromaticResult();
-    //     UpdateBipartiteResult();
-    //     UpdateCyclicResult();
-    //     UpdateMinDegreeResult();
-    //     UpdateMaxDegreeResult();
-    //     UpdateRadiusResult();
-    //     UpdateDiameterResult();
-    // }
-
-    // public void UpdateMinDegreeResult() { 
-    //     // Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); 
-    //     this.minDegreeText.text = "Minimum Degree (δ): " + Controller.Singleton.AlgorithmManager.GetMinDegree();
-    // }
-    //
-    // public void UpdateMaxDegreeResult() { 
-    //     // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
-    //     this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
-    // }
-    //
-    // public void UpdateRadiusResult() { 
-    //     if (Controller.Singleton.AlgorithmManager.GetRadius() is null)
-    //     {
-    //         this.radiusText.text = "Radius: N/A";
-    //     } else
-    //     {
-    //         this.radiusText.text = "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius();
-    //     }
-    // }
-    //
-    // public void UpdateDiameterResult() { 
-    //     if (Controller.Singleton.AlgorithmManager.GetDiameter() is null)
-    //     {
-    //         this.diameterText.text = "Diameter: N/A";
-    //     } else
-    //     {
-    //         this.diameterText.text = "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter();
-    //     }
-    // }
-    //
-    // public void UpdateChromaticResult() {
-    //     int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
-    //     if ( chromaticNumber is null )
-    //         this.chromaticText.text = "Chromatic Number: Error";
-    //     else
-    //         this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
-    // }
-    //
-    // public void UpdateBipartiteResult() {
-    //     this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
-    // }
-    //
-    // public void UpdateCyclicResult() {
-    //     this.cyclicText.text = "Cyclic: " + (Controller.Singleton.AlgorithmManager.GetCyclic() ?? false ? "Yes" : "No");
-    // }
 
     // public void UpdatePrimsResult() { }
 
@@ -212,32 +164,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateBellmanFordResult()
     {
         
-    }
-
-    public void UpdateMinDegreeCalculating() { }
-
-    public void UpdateMaxDegreeCalculating() { }
-
-    public void UpdateRadiusCalculating() { 
-        
-    }
-
-    public void UpdateDiameterCalculating() { 
-        
-    }
-
-    public void UpdateChromaticCalculating() {
-        this.chromaticText.text = "Chromatic Number: ...";
-        // Debug.Log("Running UpdateChromaticCalculating");
-    }
-
-    public void UpdateBipartiteCalculating() {
-        this.bipartiteText.text = "Bipartite: ...";
-        // Debug.Log("Running UpdateBipartiteCalculating");
-    }
-
-    public void UpdateCyclicCalculating() {
-
     }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
