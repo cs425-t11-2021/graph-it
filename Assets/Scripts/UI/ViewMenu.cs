@@ -17,7 +17,7 @@ public class ViewMenu : MenuButton
     [SerializeField] private GameObject toolbar;
 
     
-    public void ToggleToolbar(){ //TO DO need to change the button text as appropiate
+    public void ToggleToolbar() {
         //if active, set inactive
         if(toolbar.activeSelf){
             toolbar.SetActive(false);

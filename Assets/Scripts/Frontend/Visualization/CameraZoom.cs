@@ -24,6 +24,8 @@ public class CameraZoom : MonoBehaviour
     }
 
     private void Update() {
+        if (UIManager.Singleton.CursorOnUI) return;
+        
         // Get the value of the scroll wheel multiplied by zoom speed
         float mouseScrollWheel = Input.GetAxis("Mouse ScrollWheel") * zoomSpeed * Time.deltaTime;
         // Use percentage values when zooming in and our rather than absolute values for more consistent speed

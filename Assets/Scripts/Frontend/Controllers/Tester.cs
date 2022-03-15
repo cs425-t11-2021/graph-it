@@ -13,15 +13,15 @@ public class Tester : SingletonBehavior<Tester>
             Controller.Singleton.CreateGraphInstance();
         }
 
-        if (Input.GetKeyDown(KeyCode.RightBracket))
-        {
-            Controller.Singleton.ChangeActiveInstance(Controller.Singleton.instances[1]);
-        }
-        
-        if (Input.GetKeyDown(KeyCode.LeftBracket))
-        {
-            Controller.Singleton.ChangeActiveInstance(Controller.Singleton.instances[0]);
-        }
+        // if (Input.GetKeyDown(KeyCode.RightBracket))
+        // {
+        //     Controller.Singleton.ChangeActiveInstance(Controller.Singleton.instances[1]);
+        // }
+        //
+        // if (Input.GetKeyDown(KeyCode.LeftBracket))
+        // {
+        //     Controller.Singleton.ChangeActiveInstance(Controller.Singleton.instances[0]);
+        // }
 
         if (Input.GetKeyDown(KeyCode.L))
         {

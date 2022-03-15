@@ -22,7 +22,6 @@ public abstract class MenuButton : MonoBehaviour
         set {
             if (value) {
                 Logger.Log("Opening dropdown.", this, LogType.DEBUG);
-                
             }
             // Update the toggle button status and enable/disable the dropdown accordingly
             this.toggleButton.UpdateStatus(value);

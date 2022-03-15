@@ -27,7 +27,10 @@ public class GraphViewState : ManipulationState
     {
         // Do not add new vertex if double clicking on an existing vertex
         if (InputManager.Singleton.CurrentHoveringVertex) {
+            VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
+
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.edgeDrawingState;
+            SelectionManager.Singleton.SelectVertex(vertex);
         }
         else {
             SelectionManager.Singleton.DeSelectAll();

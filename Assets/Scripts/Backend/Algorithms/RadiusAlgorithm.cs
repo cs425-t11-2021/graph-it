@@ -3,7 +3,7 @@ using System;
 [System.Serializable]
 public class RadiusAlgorithm : Algorithm
 {
-    public float radius { get; private set; }
+    public float? Radius { get; private set; }
 
     public RadiusAlgorithm(
         Graph graph,
@@ -23,9 +23,21 @@ public class RadiusAlgorithm : Algorithm
 
     public override void Run()
     {
+        if (this.Graph.Directed)
+        {
+            this.Radius = null;
+            return;
+        }
+
+        if (this.Graph.Vertices.Count == 0)
+        {
+            this.Radius = 0;
+            return;
+        }
+
         DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
 
-        this.radius = float.PositiveInfinity;
+        float radius = float.PositiveInfinity;
         foreach ( Vertex u in this.Graph.Vertices )
         {
             float max_dist = 0;
@@ -38,11 +50,13 @@ public class RadiusAlgorithm : Algorithm
                 }
             }
 
-            if (max_dist < this.radius)
+            if (max_dist < radius)
             {
-                this.radius = max_dist;
+                radius = max_dist;
             }
         }
+
+        this.Radius = radius;
     }
 
     public static int GetHash() => typeof ( RadiusAlgorithm ).GetHashCode();

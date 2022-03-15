@@ -33,7 +33,7 @@ public abstract class Algorithm
     public void RunThread()
     {
         this.Kill();
-
+        Logger.Log("Starting Thread.", this, LogType.DEBUG);
         this.currThread = new Thread( new ThreadStart( this.RunWrapper ) );
         this.currThread.Start();
     }
@@ -44,16 +44,19 @@ public abstract class Algorithm
         {
             this.running = true;
             this.markRunning( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
+            RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoCalculating(this));
+            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
             this.Run();
+            Logger.Log("Finishing Thread.", this, LogType.DEBUG);
             this.running = false;
             this.complete = true;
             this.markComplete( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+            RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoResults(this));
+            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
         }
         catch ( ThreadAbortException e )
         {
-            Logger.Log("Killing thread.", this, LogType.INFO);
+            Logger.Log("Killing thread.", this, LogType.DEBUG);
         }
     }
 
