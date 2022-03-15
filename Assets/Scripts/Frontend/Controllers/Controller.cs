@@ -14,10 +14,10 @@ public class GraphInstance
     public List<EdgeObj> edgeObjs;
     public AlgorithmManager algorithmManager;
 
-    public GraphInstance(Transform container, uint id, AlgorithmManager algoMan)
+    public GraphInstance(Transform container, uint id, AlgorithmManager algoMan, Graph existingGraph = null)
     {
         this.id = id;
-        this.graph = new Graph();
+        this.graph = existingGraph ?? new Graph();
         this.vertexObjs = new List<VertexObj>();
         this.edgeObjs = new List<EdgeObj>();
         this.container = container;
@@ -131,19 +131,13 @@ public class Controller : SingletonBehavior<Controller>
         }
         
         // Create a new graph instance
-        GraphInstance newInstance = new GraphInstance(Instantiate(new GameObject("GraphObjContainer"), Vector3.zero, Quaternion.identity).transform, this.newInstanceID++, new AlgorithmManager());
+        GraphInstance newInstance = new GraphInstance(Instantiate(new GameObject("GraphObjContainer"), Vector3.zero, Quaternion.identity).transform, this.newInstanceID++, new AlgorithmManager(), existingGraph);
         this.instances.Add(newInstance);
         Logger.Log("Creating a new graph instance with id " + newInstance.id + ".", this, LogType.INFO);
         
         // Create a new tab associated with this instance
         TabBar.Singleton.CreateNewTab("Graph" + newInstance.id, newInstance);
-        
-        // If an existing graph is given, associate it with the instance
-        if (existingGraph != null)
-        {
-            newInstance.graph = existingGraph;
-        }
-        
+
         // If set as active option is enabled, set the new instance as the active instance
         if (setAsActive)
         {
@@ -153,7 +147,7 @@ public class Controller : SingletonBehavior<Controller>
         return newInstance;
     }
 
-    public void ChangeActiveInstance(GraphInstance instance, bool initiateAlgorithms = true)
+    public void ChangeActiveInstance(GraphInstance instance, bool updateGraphInfo = true)
     {
         // If the instances list dose not contain the instance being requested, something has gone wrong
         if (!this.instances.Contains(instance))
@@ -170,9 +164,11 @@ public class Controller : SingletonBehavior<Controller>
         this.GraphObjContainer.gameObject.SetActive(true);
         
         OnInstanceChanged?.Invoke(instance);
-        
-        if (initiateAlgorithms)
+
+        if (updateGraphInfo)
+        {
             GraphInfo.Singleton.InitiateAlgorithmManager(instance.algorithmManager);
+        }
     }
 
     // Add a new vertex at a given position

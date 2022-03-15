@@ -60,22 +60,52 @@ public class AlgorithmManager
 
     public void RunMinDegree()
     {
-        new MinDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        if (!IsComplete(MinDegreeAlgorithm.GetHash()))
+        {
+            this.EnsureMaxDegreeRunning();
+            new MinDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
+        else
+        {
+            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[MinDegreeAlgorithm.GetHash()]);
+        }
     }
 
     public void RunMaxDegree()
     {
-        new MaxDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        if (!IsComplete(MaxDegreeAlgorithm.GetHash()))
+        {
+            this.EnsureMaxDegreeRunning();
+            new MaxDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        }
+        else
+        {
+            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[MaxDegreeAlgorithm.GetHash()]);
+        }
     }
 
     public void RunRadius()
     {
-        new RadiusAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        if (!IsComplete(RadiusAlgorithm.GetHash()))
+        {
+            new RadiusAlgorithm(this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning).RunThread();
+        }
+        else
+        {
+            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[RadiusAlgorithm.GetHash()]);
+        }
     }
 
     public void RunDiameter()
     {
-        new DiameterAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        if (!IsComplete(DiameterAlgorithm.GetHash()))
+        {
+            new DiameterAlgorithm(this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning).RunThread();
+        }
+        else
+        {
+            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[DiameterAlgorithm.GetHash()]);
+        }
     }
 
     public void RunChromatic()
@@ -89,7 +119,6 @@ public class AlgorithmManager
         {
             GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[ChromaticAlgorithm.GetHash()]);
         }
-        
     }
 
     public void RunBipartite()
@@ -109,7 +138,14 @@ public class AlgorithmManager
 
     public void RunCyclic()
     {
-        new CyclicAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+        if (!IsComplete(CyclicAlgorithm.GetHash()))
+        {
+            new CyclicAlgorithm(this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning).RunThread();
+        }
+        else
+        {
+            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[CyclicAlgorithm.GetHash()]);
+        }
     }
 
     public void RunPrims( Vertex vert ) // temp parameter

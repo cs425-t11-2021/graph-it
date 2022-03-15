@@ -36,19 +36,6 @@ public class Tab : MonoBehaviour
     public void SwitchToInstance()
     {
         // Chance the current graph instance to the one associated with the tab
-        Controller.Singleton.ChangeActiveInstance(this.graphInstance);
-        
-        // // Disable the toggle button of all other tabs except the one selected
-        // foreach (Tab tab in TabBar.Singleton.TabsInScene)
-        // {
-        //     if (tab == this)
-        //     {
-        //         tab.toggle.UpdateStatus(true);
-        //     }
-        //     else
-        //     {
-        //         tab.toggle.UpdateStatus(false);
-        //     }
-        // }
+        Controller.Singleton.ChangeActiveInstance(this.graphInstance, true);
     }
 }
