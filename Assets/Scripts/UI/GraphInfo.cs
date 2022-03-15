@@ -56,46 +56,13 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     [SerializeField] private GraphInfoAlgorithmAssociation[] associations;
     
-    // // Reference to the text display of chromatic number
-    // [SerializeField] private TMP_Text chromaticText;
-    // // Reference to the text display of bipartite
-    // [SerializeField] private TMP_Text bipartiteText;
     // Reference to the text display of the graph order
     [SerializeField] private TMP_Text orderText;
     // Reference of the text display of the graph size
     [SerializeField] private TMP_Text sizeText;
-    // Reference of the text display of the graph size
-    // [SerializeField] private TMP_Text minDegreeText;
-    // // Reference of the text display of the minimum degree
-    // [SerializeField] private TMP_Text maxDegreeText;
-    // // Reference of the text display of the maximmum degree
-    // [SerializeField] private TMP_Text radiusText;
-    // // Reference to the text display of radius
-    // [SerializeField] private TMP_Text diameterText;
-    // // Reference to the text display of diameter
-    // [SerializeField] private TMP_Text cyclicText;
-    // Reference to the text display of cyclic
-
-    //[SerializeField] private Button closePanel;
-    //Reference to the button to close the graph info panels
-    [SerializeField] private Button openPanel;
+    
     //Reference to the button to open the graph info panels
-
-    // Reference of the button of prim
-    //[SerializeField] private Button primButton;
-    // Reference of the kruskal button
-    //[SerializeField] private Button kruskalButton;
-    // Reference of the button of dijkstra
-    //[SerializeField] private Button dijkstraButton;
-
-    // Property for whether or not the algorithm buttons are enabled
-    /*public bool AlgorithmButtonsEnabled {
-        set {
-            primButton.enabled = value;
-            dijkstraButton.enabled = value;
-            kruskalButton.enabled = value;
-        }
-    }*/
+    [SerializeField] private Button openPanel;
 
     public void UpdateGraphInfoResults(Algorithm algorithm)
     {
