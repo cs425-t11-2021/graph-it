@@ -171,6 +171,41 @@ public class Controller : SingletonBehavior<Controller>
         }
     }
 
+    public void RemoveGraphInstance(GraphInstance instance)
+    {
+        // Deselect All
+        SelectionManager.Singleton.DeSelectAll();
+        // Reset toolbar toggles
+        Toolbar.Singleton.ResetAll();
+        // If snap to grid is enabled, clear out the grid
+        if (Grid.Singleton.GridEnabled)
+        {
+            Grid.Singleton.ClearGrid();
+        }
+
+        if (this.activeGraphInstance == instance)
+        {
+            int index = this.instances.IndexOf(this.activeGraphInstance);
+            if (this.instances.Count == 1)
+            {
+                CreateGraphInstance(true);
+            }
+            else if (index == this.instances.Count - 1)
+            {
+                ChangeActiveInstance(this.instances[index - 1]);
+            }
+            else
+            {
+                ChangeActiveInstance(this.instances[index + 1]);
+            }
+        }
+
+        this.instances.Remove(instance);
+        Destroy(instance.container.gameObject);
+        instance.container = null;
+        instance.algorithmManager.Clear();
+    }
+
     // Add a new vertex at a given position
     public void AddVertex(Vector2 pos) {
         Vertex vertex = this.Graph.AddVertex(pos.x, pos.y);
