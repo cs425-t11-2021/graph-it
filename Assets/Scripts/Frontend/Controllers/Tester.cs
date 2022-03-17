@@ -8,20 +8,9 @@ public class Tester : SingletonBehavior<Tester>
 {
     [SerializeField] private GameObject labelObjPrefab;
     
-    private void Update() {
-        if (Input.GetKeyDown(KeyCode.N)) {
-            Controller.Singleton.CreateGraphInstance();
-        }
-
-        // if (Input.GetKeyDown(KeyCode.RightBracket))
-        // {
-        //     Controller.Singleton.ChangeActiveInstance(Controller.Singleton.instances[1]);
-        // }
-        //
-        // if (Input.GetKeyDown(KeyCode.LeftBracket))
-        // {
-        //     Controller.Singleton.ChangeActiveInstance(Controller.Singleton.instances[0]);
-        // }
+    private void Update()
+    {
+        if (UIManager.Singleton.CursorOnUI) return;
 
         if (Input.GetKeyDown(KeyCode.L))
         {
