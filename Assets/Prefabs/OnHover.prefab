@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 5991872394988445798}
   - component: {fileID: 3472699292375877356}
   m_Layer: 5
-  m_Name: OnHoverDescription
+  m_Name: OnHover
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
