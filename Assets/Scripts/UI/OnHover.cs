@@ -10,14 +10,15 @@ public class OnHover : MonoBehaviour
     [SerializeField] private GameObject labelPrefab;
     
    public void OnHoverMouse(){
-        //OnHoverLabel newLabel = Instantiate(labelPrefab).GetComponent<OnHoverLabel>();
-        //newLabel.CreateLabel(this.transform.parent.gameObject);
         Debug.Log("On pointer enter called");
+        OnHoverLabel newLabel = Instantiate(labelPrefab, Input.mousePosition, Quaternion.identity).GetComponent<OnHoverLabel>();
+        newLabel.CreateLabel();
+        
    }
 
     public void OnHoverExit()
     {
         Debug.Log("On pointer exit called");
-     
+        
     }
 }

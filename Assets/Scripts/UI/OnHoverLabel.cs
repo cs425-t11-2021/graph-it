@@ -16,8 +16,8 @@ public class OnHoverLabel : MonoBehaviour
         this.label = GetComponent<TMP_Text>();
     }
 
-    public void CreateLabel(GameObject parentObject){
-        this.label.SetText(parentObject.GetComponent<TMP_Text>().text);
+    public void CreateLabel(){
+        this.label.text = "testing";//this.transform.parent.GetComponentInChildren<TMP_Text>().text;
     }
 
     public void OnNotHover(){
