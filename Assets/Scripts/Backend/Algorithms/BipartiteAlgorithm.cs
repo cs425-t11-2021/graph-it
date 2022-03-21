@@ -11,7 +11,7 @@ public class BipartiteAlgorithm : Algorithm
     public HashSet< Vertex > Set1 { get; private set; }
     public HashSet< Vertex > Set2 { get; private set; }
 
-    public BipartiteAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.bipartiteUI, algoManager.bipartiteCalc ) { }
+    public BipartiteAlgorithm( AlgorithmManager algoManager ) : base( algoManager, null, null ) { }
 
     public override void Run()
     {

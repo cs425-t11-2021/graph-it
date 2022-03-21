@@ -1,59 +1,60 @@
-// Modification of CodeMonkey Tutorial on Youtube
+// Help from the following tutorials:
 // https://youtu.be/lT-SRLKUe5k
+// https://forum.unity.com/threads/rendering-screenshot-larger-than-screen-resolution.254760/
 
 using System.IO;
 using UnityEngine;
+using System.Collections;
 
 // Class responsible for creating savable images from the current graph
 public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
 {
-    // Component references
+    // Reference to the screenshot camera
     private Camera cam;
-
-    // If true, take screenshot next frame
-    private bool takeScreenshotNextFrame;
-    // Filepath for the image
-    private string filepath;
-    // Current screen bounds of graph objects
-    private Bounds screenBounds;
 
     private void Awake()
     {
+        // Get reference to the SC camera
         this.cam = GetComponent<Camera>();
+        // Disable it as it is only used for taking screensthos
+        this.cam.enabled = false;
     }
 
-    // Screenshot code needs to be run in postrender
-    private void OnPostRender() {
-        if (this.takeScreenshotNextFrame) {
-            // Render the camera into a texture2d
-            RenderTexture renderTex = this.cam.targetTexture;
-            Texture2D renderResult = new Texture2D((int) (this.screenBounds.size.x), (int) (this.screenBounds.size.y), TextureFormat.ARGB32, false);
-            Rect rect = new Rect(this.screenBounds.min.x, this.screenBounds.min.y, this.screenBounds.size.x, this.screenBounds.size.y);
-            renderResult.ReadPixels(rect, 0, 0);
+    public void TakeScreenshot(string filepath) {
+        Bounds worldBounds = GetBoundsOfGraphObjects();
+        Bounds screenBounds = new Bounds();
+        screenBounds.SetMinMax(Camera.main.WorldToScreenPoint(worldBounds.min), Camera.main.WorldToScreenPoint(worldBounds.max));
 
-            // Write the texture data as a png
-            byte[] byteArray = renderResult.EncodeToPNG();
-            File.WriteAllBytes(filepath, byteArray);
-
-            RenderTexture.ReleaseTemporary(renderTex);
-            this.cam.targetTexture = null;
-
-            this.takeScreenshotNextFrame = false;
-            this.filepath = null;
-        }
+        StartCoroutine(RenderCameraView(worldBounds, screenBounds, filepath));
     }
 
-    // Tempoarty function for saving a screenshot to desktop
-    public void SaveScrenshotToDesktop(string filepath_temp) {
-        TakeScreenshot(filepath_temp);
-    }
+    private IEnumerator RenderCameraView(Bounds worldBounds, Bounds screenBounds, string filepath)
+    {
+        // Wait until everything is rendered
+        yield return new WaitForEndOfFrame();
 
-    private void TakeScreenshot(string filepath) {
-        this.screenBounds = GetBoundsOfGraphObjects();
-        this.takeScreenshotNextFrame = true;
-        Debug.Log(screenBounds.size.x + " " + screenBounds.size.y);
-        this.cam.targetTexture = RenderTexture.GetTemporary((int) (screenBounds.max.x + .5f), (int) (screenBounds.max.y + .5f), 16);
-        this.filepath = filepath;
+        // Render the camera into a texture2d
+        Logger.Log("Taking screenshot of scene.", this, LogType.INFO);
+
+        this.cam.targetTexture = RenderTexture.GetTemporary((int) (screenBounds.size.x + .5f), (int) (screenBounds.size.y + .5f), 24);
+        Texture2D renderResult = new Texture2D((int) (screenBounds.size.x + .5f), (int) (screenBounds.size.y + .5f), TextureFormat.ARGB32, false);
+
+        this.cam.orthographicSize = worldBounds.size.y / 2f;
+        this.cam.transform.position = worldBounds.center;
+        this.cam.aspect = screenBounds.size.x / screenBounds.size.y;
+        this.cam.Render();
+        RenderTexture.active = this.cam.targetTexture;
+
+        renderResult.ReadPixels(new Rect(0, 0, screenBounds.size.x, screenBounds.size.y), 0, 0);
+
+        // Write the texture data as a png
+        byte[] byteArray = renderResult.EncodeToPNG();
+        File.WriteAllBytes(filepath, byteArray);
+
+        RenderTexture.active = null;
+        RenderTexture.ReleaseTemporary(this.cam.targetTexture);
+        this.cam.targetTexture = null;
+
     }
 
     // Helper function for getting a bound around all graph objects active in the scene
@@ -83,20 +84,7 @@ public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
             }
         }
 
-        bounds.SetMinMax(cam.WorldToScreenPoint(new Vector3(xMin - 2, yMin - 2, cam.transform.position.z)), cam.WorldToScreenPoint(new Vector3(xMax + 2, yMax + 2, cam.transform.position.z)));
-        
-        // // Make sure the bounds doesn't exceed the camera's render texture
-        // if (bounds.min.x < 0)
-        // {
-        //     bounds.min = new Vector3(0f, bounds.min.y, bounds.min.z);
-        // }
-        // if (bounds.min.y < 0)
-        // {
-        //     bounds.min = new Vector3(bounds.min.x, 0, bounds.min.z);
-        // }
-        
-        Debug.Log(bounds.min + " " + bounds.max);
-        
+        bounds.SetMinMax(new Vector3(xMin - 3, yMin - 3 , this.cam.transform.position.z), new Vector3(xMax + 3 , yMax + 3, this.cam.transform.position.z));
         return bounds;
     }
 }

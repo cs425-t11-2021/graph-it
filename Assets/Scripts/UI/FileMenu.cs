@@ -17,20 +17,25 @@ public class FileMenu : MenuButton
     private GameObject exportFileMenu;
 
     [SerializeField] private GameObject fileDropDown; //TO DO - close immediately after selection of option
-    [SerializeField] private GameObject createFromPresetMenu;
+    [SerializeField] private CreateFromPresetMenu presetMenu; //no clue if this will work
 
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);
-        Controller.Singleton.ClearCurrentInstance();
+        Controller.Singleton.CreateGraphInstance();
         
         // TEMPOARY
         ResourceManager.Singleton.LoadVertexSprites();
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
+    
     //display pop-up with options users can choose from to create graphs from
     public void CreateFromPreset(){
-        createFromPresetMenu.SetActive(true);
+        presetMenu.openPresetMenu();
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the import from file button
@@ -49,13 +54,13 @@ public class FileMenu : MenuButton
         //if the user does not cancel the file import menu, clear the current graph to import the new one //IMPORT INTO A NEW TAB LATER TO NOT OVERWRITE CURRENT WORK
         if(paths.Length != 0){
             // Clear existing graph
-            Controller.Singleton.CreateGraphInstance();
+            GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true);
+            
+            Controller.Singleton.Graph.Import(paths[0]);
+            Controller.Singleton.CreateObjsFromGraph(newInstance);
         }
-        Debug.Log("Begin import at " + paths + ".csv");
-        //Debug.Log(paths[0]);
-        Controller.Singleton.Graph.Import(paths[0]);
 
-        Controller.Singleton.CreateObjsFromGraph();
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the export to file button
@@ -69,6 +74,8 @@ public class FileMenu : MenuButton
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "Graph1", exportExtensions); //from UnityStandAloneFileBrowser Plugin
 
         Controller.Singleton.Graph.Export(path);
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 
     // Function called by the save as image button
@@ -80,7 +87,8 @@ public class FileMenu : MenuButton
         };
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "GraphImage1", imageSaveExtensions); //from UnityStandAloneFileBrowser Plugin
 
-        //ScreenshotManager.Singleton.TakeScreenshot(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop) + "/graph_img.png");
-        ScreenshotManager.Singleton.SaveScrenshotToDesktop(path);
+        ScreenshotManager.Singleton.TakeScreenshot(path);
+        
+        EventSystem.current.SetSelectedGameObject(null);
     }
 }

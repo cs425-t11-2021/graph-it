@@ -15,12 +15,14 @@ public class SelectionState : ManipulationState
         this.selectionRect.gameObject.SetActive(false);
         // Subscribe to appropriate input event
         InputManager.Singleton.OnMouseClickInPlace += OnClickInPlace;
+        InputManager.Singleton.OnDeleteKeyPress += OnDeleteKeyPress;
     }
 
     public override void OnStateExit()
     {
         this.selectionRect.gameObject.SetActive(false);
         InputManager.Singleton.OnMouseClickInPlace -= OnClickInPlace;
+        InputManager.Singleton.OnDeleteKeyPress -= OnDeleteKeyPress;
     }
 
     public override void OnClick()
@@ -59,14 +61,17 @@ public class SelectionState : ManipulationState
         
         // When mouse is released, calcualte all objects that fall within the selection box and select them
         Bounds bounds = UpdateSelectionRect();
-        foreach (VertexObj v in Controller.Singleton.VertexObjs) {
-            if (bounds.Contains(v.transform.position))
+        Collider2D[] colliders = Physics2D.OverlapAreaAll(bounds.min, bounds.max, LayerMask.GetMask("Vertex", "Edge"));
+
+        foreach (Collider2D col in colliders)
+        {
+            VertexObj v = col.gameObject.GetComponent<VertexObj>();
+            EdgeObj e = col.gameObject.GetComponent<EdgeObj>();
+
+            if (v)
                 SelectionManager.Singleton.SelectVertex(v);
-        }
-        foreach (EdgeObj e in Controller.Singleton.EdgeObjs) {
-            if (bounds.Contains((Vector2) e.transform.position)) {
+            if (e)
                 SelectionManager.Singleton.SelectEdge(e);
-            }
         }
 
         this.selectionRect.gameObject.SetActive(false);
@@ -83,5 +88,10 @@ public class SelectionState : ManipulationState
 
         Bounds worldBounds = new Bounds(middle, size);
         return worldBounds;
+    }
+    
+    // Delete current selection when the delete key is pressed
+    private void OnDeleteKeyPress() {
+        SelectionManager.Singleton.DeleteSelection();
     }
 }

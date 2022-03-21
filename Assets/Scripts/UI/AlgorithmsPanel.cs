@@ -5,97 +5,174 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using Object = System.Object;
+
+[System.Serializable]
+public class GraphDisplayAlgorithmAssociation
+{
+    public string algorithmClass = "";
+    public bool multiThreaded = false;
+    public Button activationButton;
+    public int requiredVertices = 0;
+    public int requiredEdges = 0;
+    public string activationMethod = "";
+    public string completedMethod = "";
+    
+    public Action<Vertex[]> OnCompleteUpdateDisplay
+    {
+        get
+        {
+            return (vertexParms) =>
+            {
+                object result = Type.GetType("AlgorithmManager").GetMethod(completedMethod)
+                    .Invoke(Controller.Singleton.AlgorithmManager, (Object[]) vertexParms);
+                
+                if (result == null)
+                {
+                    Logger.Log("Graph display algorithm " + algorithmClass + " returned a null result.", this, LogType.ERROR);
+                }
+                else
+                {
+                    SelectionManager.Singleton.DeSelectAll();
+                    
+                    List<Edge> resultEdges = (List<Edge>) result;
+                    List<Vertex> resultVertices = new List<Vertex>();
+                    foreach (Edge e in resultEdges) {
+                        resultVertices.Add(e.vert1);
+                        resultVertices.Add(e.vert2);
+                    }
+                    
+                    foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
+                    {
+                        if (resultEdges.Contains(edgeObj.Edge))
+                            SelectionManager.Singleton.SelectEdge(edgeObj);
+                    }
+
+                    foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
+                    {
+                        if (resultVertices.Contains(vertexObj.Vertex))
+                            SelectionManager.Singleton.SelectVertex(vertexObj);
+                    }
+                }
+            };
+        }
+    }
+}
 
 public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 {
-    // Reference to the text display of chromatic number
-    [SerializeField] private TMP_Text chromaticText;
-    // Reference to the text display of bipartite
-    [SerializeField] private TMP_Text bipartiteText;
-    // Reference to the text display of the graph order
-    [SerializeField] private TMP_Text orderText;
-    // Reference of the text display of the graph size
-    [SerializeField] private TMP_Text sizeText;
-    // Reference of the button of prim
-    [SerializeField] private Button primButton;
-    // Reference of the kruskal button
-    [SerializeField] private Button kruskalButton;
-    // Reference of the button of dijkstra
-    [SerializeField] private Button dijkstraButton;
+    [SerializeField] private GraphDisplayAlgorithmAssociation[] associations;
+    
+    // // Reference of the button of prim
+    // [SerializeField] private Button primButton;
+    // // Reference of the kruskal button
+    // [SerializeField] private Button kruskalButton;
+    // // Reference of the button of dijkstra
+    // [SerializeField] private Button dijkstraButton;
+    // // Reference of the button of Bellman Ford
+    // [SerializeField] private Button bellmanButton;
+    // // Reference of the Eulerian circuit button
+    // [SerializeField] private Button eulerianButton;
+    // // Reference of the Maximum Indepdent Set button
+    // [SerializeField] private Button maxIndSetButton;
+    // // Reference of the Maximum Matching button
+    // [SerializeField] private Button maxMatchingButton;
     //[SerializeField] private Button algClosePanel;
     //Reference to the button to close the algorithm info panels
     [SerializeField] private Button algOpenPanel;
     //Reference to the button to open the algorithm info panels
-    // Start is called before the first frame update
 
-    // public AlgorithmManager algorithmManager;
-
-     // Property for whether or not the algorithm buttons are enabled
-    public bool AlgorithmButtonsEnabled {
-        set {
-            primButton.enabled = value;
-            dijkstraButton.enabled = value;
-            kruskalButton.enabled = value;
-        }
+    // Property for whether or not the algorithm buttons are enabled
+    public bool AlgorithmButtonsEnabled
+    {
+        get; set;
     }
 
     private void Awake() {
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
-        this.primButton.interactable = false;
+
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            association.activationButton.interactable = false;
+        }
     }
 
     // Function called when the selection is changed
     private void OnSelectionChange(int selectedVertexCount, int selectedEdgeCount) {
-        // Only allow the prim button to be pressed if there is exactly one vertex selected
-        this.primButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
-        // Only allow dijkstra if exactly two vertices are selected
-        this.dijkstraButton.interactable = selectedVertexCount == 2 && selectedEdgeCount == 0;
-    }
-    
-    /*public void UpdateGraphInfo() {
-        this.orderText.text = "Order: " + Controller.Singleton.Graph.Vertices.Count;
-        this.sizeText.text = "Size: " + Controller.Singleton.Graph.Adjacency.Count;
-
-        // Run multithreaded chromatic
-        // this.algorithmManager.RunChromatic();
-        this.algorithmManager.RunBipartite();
-    }*/
-
-    public void UpdateChromaticResult() {
-        int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
-        if ( chromaticNumber is null )
-            this.chromaticText.text = "Chromatic Number: Error";
-        else
-            this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
+        // // Only allow the prim button to be pressed if there is exactly one vertex selected
+        // this.primButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
+        // // Only allow dijkstra if exactly two vertices are selected
+        // this.dijkstraButton.interactable = selectedVertexCount == 2 && selectedEdgeCount == 0;
+        // // Only allow Bellman Ford if exactly one vertex is selected
+        // this.bellmanButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            if (association.requiredEdges != selectedEdgeCount || association.requiredVertices != selectedVertexCount)
+            {
+                association.activationButton.interactable = false;
+            }
+            else
+            {
+                association.activationButton.interactable = true;
+            }
+        }
     }
 
-    public void UpdateBipartiteResult() {
-        this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
+    public void UpdateGraphDisplayResults(Algorithm algorithm, Vertex[] vertexParms)
+    {
+        string algorithmName = algorithm.GetType().ToString();
+
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                association.OnCompleteUpdateDisplay(vertexParms);
+                return;
+            }
+        }
+        
+        Logger.Log("No algorithm association found for " + algorithmName + ".", this, LogType.ERROR);
     }
 
-    public void UpdatePrimsResult() { }
-
-    public void UpdateKruskalsResult() { }
-
-    public void UpdateDepthFirstSearchResult() { }
-
-    public void UpdateBreadthFirstSearchResult() { }
-
-    public void UpdateChromaticCalculating() {
-        this.chromaticText.text = "Chromatic Number: Calculating";
+    public void RunGraphDisplayAlgorithm(string algorithmName)
+    {
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                if (association.requiredVertices > 0)
+                {
+                    Object[] vertices = new Object[association.requiredVertices];
+                    for (int i = 0; i < association.requiredVertices; i++)
+                    {
+                        vertices[i] = SelectionManager.Singleton.SelectedVertices[i].Vertex;
+                    }
+                    Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, vertices);
+                }
+                else
+                {
+                    Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, null);
+                }
+                return;
+            }
+        }
     }
 
-    public void UpdateBipartiteCalculating() {
-        this.bipartiteText.text = "Bipartite: Calculating";
-    }
-
-    public void UpdatePrimsCalculating() { }
-
-    public void UpdateKruskalsCalculating() { }
-
-    public void UpdateDepthFirstSearchCalculating() { }
-
-    public void UpdateBreadthFirstSearchCalculating() { }
+    // public void UpdatePrimsResult() { }
+    //
+    // public void UpdateKruskalsResult() { }
+    //
+    // public void UpdateDepthFirstSearchResult() { }
+    //
+    // public void UpdateBreadthFirstSearchResult() { }
+    //
+    // public void UpdatePrimsCalculating() { }
+    //
+    // public void UpdateKruskalsCalculating() { }
+    //
+    // public void UpdateDepthFirstSearchCalculating() { }
+    //
+    // public void UpdateBreadthFirstSearchCalculating() { }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseAlgorithmInfoPanel(){

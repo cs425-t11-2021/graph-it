@@ -10,7 +10,7 @@ public class ChromaticAlgorithm : Algorithm
     public int ChromaticNumber { get; private set; }
     public int[] Coloring { get; private set; }
 
-    public ChromaticAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.chromaticUI, algoManager.chromaticCalc ) { }
+    public ChromaticAlgorithm( AlgorithmManager algoManager ) : base( algoManager, null, null ) { }
 
     public override void Run()
     {

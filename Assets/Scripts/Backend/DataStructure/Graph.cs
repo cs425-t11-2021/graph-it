@@ -49,6 +49,11 @@ public class Graph
         get => this.IsSimple();
     }
 
+    public bool HasLoops // true if a loop (an edge incident to only one vertex) exists
+    {
+        get => this.IsHasLoops();
+    }
+
     // TODO: need HasLoops and HasMultipleEdges
 
     public static void PrintStack( Stack< GraphModification > s ) // temp, for testing undo/redo
@@ -234,6 +239,16 @@ public class Graph
                 // return false;
         }
         return true;
+    }
+
+    private bool IsHasLoops()
+    {
+        foreach ( Vertex vert in this.Vertices )
+        {
+            if ( !( this[ vert, vert ] is null ) )
+                return true;
+        }
+        return false;
     }
 
 
@@ -518,7 +533,10 @@ public class Graph
         Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
 
         foreach ( Vertex v in this.Vertices )
+        {
             dist[ v ] = double.PositiveInfinity;
+            prev[ v ] = null;
+        }
 
         dist[ src ] = 0;
 
