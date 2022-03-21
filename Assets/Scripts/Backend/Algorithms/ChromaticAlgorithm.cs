@@ -3,7 +3,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using UnityEngine;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm

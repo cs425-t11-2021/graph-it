@@ -21,18 +21,18 @@ public class RadiusAlgorithm : Algorithm
             return;
         }
 
-        DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
-
-        this.radius = float.PositiveInfinity;
+        float radius = float.PositiveInfinity;
         foreach ( Vertex u in this.Graph.Vertices )
         {
             float max_dist = 0;
             foreach ( Vertex v in this.Graph.Vertices )
             {
-                dijkstra.Run(this.Graph, u, v);
-                if (dijkstra.cost > max_dist)
+                this.AlgoManager.RunDijkstras( u, v );
+                this.WaitUntilDijkstrasComplete( u, v );
+                float cost = ( float ) this.AlgoManager.GetDijkstrasCost( u, v );
+                if (cost > max_dist)
                 {
-                    max_dist = dijkstra.cost;
+                    max_dist = cost;
                 }
             }
 
@@ -41,6 +41,11 @@ public class RadiusAlgorithm : Algorithm
                 this.radius = max_dist;
             }
         }
+    }
+
+    private void WaitUntilDijkstrasComplete( Vertex src, Vertex dest )
+    {
+        this.WaitUntilAlgorithmComplete( DijkstrasAlgorithm.GetHash( src, dest ) );
     }
 
     public static int GetHash() => typeof ( RadiusAlgorithm ).GetHashCode();

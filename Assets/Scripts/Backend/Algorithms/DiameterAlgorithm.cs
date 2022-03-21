@@ -9,20 +9,29 @@ public class DiameterAlgorithm : Algorithm
 
     public override void Run()
     {
-        DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
+        if (this.Graph.Directed)
+        {
+            this.Diameter = null;
+            return;
+        }
 
-        this.diameter = 0;
+        float diameter = 0;
         foreach ( Vertex u in this.Graph.Vertices )
         {
             foreach ( Vertex v in this.Graph.Vertices )
             {
-                dijkstra.Run(this.Graph, u, v);
-                if (dijkstra.cost > this.diameter)
-                {
-                    this.diameter = dijkstra.cost;
-                }
+                this.AlgoManager.RunDijkstras( u, v );
+                this.WaitUntilDijkstrasComplete( u, v );
+                float cost = ( float ) this.AlgoManager.GetDijkstrasCost( u, v );
+                if (cost > diameter)
+                    diameter = cost;
             }
         }
+    }
+
+    private void WaitUntilDijkstrasComplete( Vertex src, Vertex dest )
+    {
+        this.WaitUntilAlgorithmComplete( DijkstrasAlgorithm.GetHash( src, dest ) );
     }
 
     public static int GetHash() => typeof ( DiameterAlgorithm ).GetHashCode();

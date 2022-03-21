@@ -21,7 +21,7 @@ public class CyclicAlgorithm : Algorithm
         {
             if (!visited[u])
             {
-                if (IsCyclicHelper(u, visited, null))
+                if (this.IsCyclicHelper(u, visited, null))
                 {
                     this.IsCyclic = true;
                     return;

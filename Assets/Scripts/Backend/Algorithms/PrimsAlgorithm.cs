@@ -6,6 +6,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class PrimsAlgorithm : Algorithm
 {
+    // TODO: root should be private
     public Vertex Root { get; private set; }
     public List< Edge > Mst { get; private set; }
 

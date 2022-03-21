@@ -65,6 +65,10 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
             ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
+            ( Action ) this.UpdateDijkstrasResult,
+            ( Action ) this.UpdateDijkstrasCalculating,
+            ( Action ) this.UpdateBellmanFordsResult,
+            ( Action ) this.UpdateBellmanFordsCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
             ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
             ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult,
@@ -127,11 +131,15 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     // public void UpdateKruskalsResult() { }
 
+    public void UpdateDijkstrasResult() { }
+
+    public void UpdateBellmanFordResult() { }
+
     // public void UpdateDepthFirstSearchResult() { }
 
     // public void UpdateBreadthFirstSearchResult() { }
 
-    public void UpdateBellmanFordResult() { }
+    public void UpdateBellmanFordsResult() { }
 
     public void UpdateMinDegreeCalculating() { }
 
@@ -158,6 +166,10 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     // public void UpdatePrimsCalculating() { }
 
     // public void UpdateKruskalsCalculating() { }
+
+    public void UpdateDijkstrasCalculating() { }
+
+    public void UpdateBellmanFordsCalculating() { }
 
     // public void UpdateDepthFirstSearchCalculating() { }
 

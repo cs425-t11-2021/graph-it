@@ -43,6 +43,10 @@ public class AlgorithmManager
     public Action primsCalc;
     public Action kruskalsUI;
     public Action kruskalsCalc;
+    public Action dijkstrasUI;
+    public Action dijkstrasCalc;
+    public Action bellmanFordsUI;
+    public Action bellmanFordsCalc;
     public Action depthFirstSearchUI;
     public Action depthFirstSearchCalc;
     public Action breadthFirstSearchUI;
@@ -70,6 +74,10 @@ public class AlgorithmManager
         Action primsCalc,
         Action kruskalsUI,
         Action kruskalsCalc,
+        Action dijkstrasUI,
+        Action dijkstrasCalc,
+        Action bellmanFordsUI,
+        Action bellmanFordsCalc,
         Action depthFirstSearchUI,
         Action depthFirstSearchCalc,
         Action breadthFirstSearchUI,
@@ -100,6 +108,10 @@ public class AlgorithmManager
         this.primsCalc = primsCalc;
         this.kruskalsUI = kruskalsUI;
         this.kruskalsCalc = kruskalsCalc;
+        this.dijkstrasUI = dijkstrasUI;
+        this.dijkstrasCalc = dijkstrasCalc;
+        this.bellmanFordsUI = bellmanFordsUI;
+        this.bellmanFordsCalc = bellmanFordsCalc;
         this.depthFirstSearchUI = depthFirstSearchUI;
         this.depthFirstSearchCalc = depthFirstSearchCalc;
         this.breadthFirstSearchUI = breadthFirstSearchUI;
@@ -150,6 +162,10 @@ public class AlgorithmManager
 
     public void RunKruskals() => this.EnsureRunning( typeof ( KruskalsAlgorithm ) );
 
+    public void RunDijkstras( Vertex src, Vertex dest ) => this.EnsureRunning( typeof ( DijkstrasAlgorithm ), src, dest );
+
+    public void RunBellmanFords( Vertex src, Vertex dest ) => this.EnsureRunning( typeof ( BellmanFordsAlgorithm ), src, dest );
+
     public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) => this.EnsureRunning( typeof ( DepthFirstSearchAlgorithm ), vert, action );
 
     public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), vert, action );
@@ -168,6 +184,22 @@ public class AlgorithmManager
 
     // TODO: rename this more appropriately
     public bool? GetFleurys() => ( ( FleurysAlgorithm ) this.complete.GetValue( FleurysAlgorithm.GetHash() ) )?.EulerianCircuitExists;
+
+    public List< Edge > GetPrimsMST( Vertex root ) => ( ( PrimsAlgorithm ) this.complete.GetValue( PrimsAlgorithm.GetHash( root ) ) )?.Mst;
+
+    public List< Edge > GetKruskalsMST() => ( ( KruskalsAlgorithm ) this.complete.GetValue( KruskalsAlgorithm.GetHash() ) )?.Mst;
+
+    public float? GetDijkstrasCost( Vertex src, Vertex dest ) => ( ( DijkstrasAlgorithm ) this.complete.GetValue( DijkstrasAlgorithm.GetHash( src, dest ) ) )?.Cost;
+
+    public List< Edge > GetDijkstrasPath( Vertex src, Vertex dest ) => ( ( DijkstrasAlgorithm ) this.complete.GetValue( DijkstrasAlgorithm.GetHash( src, dest ) ) )?.Path;
+
+    public float? GetBellmanFordsCost( Vertex src, Vertex dest ) => ( ( BellmanFordsAlgorithm ) this.complete.GetValue( BellmanFordsAlgorithm.GetHash( src, dest ) ) )?.Cost;
+
+    public List< Edge > GetBellmanFordsPath( Vertex src, Vertex dest ) => ( ( BellmanFordsAlgorithm ) this.complete.GetValue( BellmanFordsAlgorithm.GetHash( src, dest ) ) )?.Path;
+
+    public List< Edge > GetDepthFirstSearchTree( Vertex root ) => ( ( DepthFirstSearchAlgorithm ) this.complete.GetValue( DepthFirstSearchAlgorithm.GetHash( root ) ) )?.Tree;
+
+    public List< Edge > GetBreadthFirstSearchTree( Vertex root ) => ( ( BreadthFirstSearchAlgorithm ) this.complete.GetValue( BreadthFirstSearchAlgorithm.GetHash( root ) ) )?.Tree;
 
     public void MarkRunning( Algorithm algo )
     {
