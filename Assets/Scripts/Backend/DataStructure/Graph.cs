@@ -73,18 +73,21 @@ public class Graph
         this.Vertices = new List< Vertex >();
         this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
         this.Changes = new Stack< GraphModification >();
+        // TODO: add redoChanges
     }
 
     public Graph( Graph graph )
     {
         this.Vertices = new List< Vertex >( graph.Vertices );
         this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
+        // TODO: add Changes and redoChanges
     }
 
     public void Clear()
     {
         this.Vertices = new List< Vertex >();
         this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
+        // TODO: add Changes and redoChanges
     }
 
     // temp

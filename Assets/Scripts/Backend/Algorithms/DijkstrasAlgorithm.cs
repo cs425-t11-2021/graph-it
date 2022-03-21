@@ -1,26 +1,37 @@
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class DijkstrasAlgorithm
+public class DijkstrasAlgorithm : Algorithm
 {
-    public float cost { get; private set; }
-    public List< Vertex > path { get; private set; }
+    public float Cost { get; private set; }
+    public List< Edge > Path { get; private set; }
+    private Vertex src;
+    private Vertex dest;
 
-    public void Run( Graph graph, Vertex src, Vertex dest )
+    public DijkstrasAlgorithm( AlgorithmManager algoManager, Vertex src, Vertex dest ) : base( algoManager, algoManager.dijkstrasUI, algoManager.dijkstrasCalc )
     {
-        HashSet< Vertex > notVisited = new HashSet< Vertex >( graph.Vertices );
+        this.src = src;
+        this.dest = dest;
+    }
+
+    public override void Run()
+    {
+        List< Vertex > vertexPath = new List< Vertex >();
+        List< Edge > edgePath = new List< Edge >();
+        HashSet< Vertex > notVisited = new HashSet< Vertex >( this.Graph.Vertices );
         Dictionary< Vertex, float > dist = new Dictionary< Vertex, float >();
         Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
 
-        foreach ( Vertex v in graph.Vertices )
+        foreach ( Vertex v in this.Graph.Vertices )
         {
             prev[ v ] = null;
             dist[ v ] = float.PositiveInfinity;
         }
 
-        dist[ src ] = 0;
+        dist[ this.src ] = 0;
 
         while ( notVisited.Count > 0 )
         {
@@ -37,9 +48,9 @@ public class DijkstrasAlgorithm
             // update neighbors of u
             foreach ( Vertex v in notVisited )
             {
-                if ( graph.IsAdjacent( u, v ) )
+                if ( this.Graph.IsAdjacent( u, v ) )
                 {
-                    float tmp = dist[ u ] + graph[ u, v ].Weight;
+                    float tmp = dist[ u ] + this.Graph[ u, v ].Weight;
                     if ( tmp < dist[ v ] )
                     {
                         dist[ v ] = tmp;
@@ -49,23 +60,36 @@ public class DijkstrasAlgorithm
             }
         }
 
-        this.cost = dist[ dest ];
+        this.Cost = dist[ this.dest ];
 
         // put together final path 
-        this.path = new List< Vertex >();
-        Vertex curr = dest;
-        while ( curr != src )
+        Vertex curr = this.dest;
+        while ( curr != this.src )
         {
-            this.path.Add( curr );
+            vertexPath.Add( curr );
             curr = prev[ curr ];
             if ( curr is null )
             {
-                this.path = new List<Vertex>();
+                vertexPath = new List<Vertex>();
                 return;
             }
         }
-        this.path.Add( src );
-        this.path.Reverse();
+        vertexPath.Add( this.src );
+        vertexPath.Reverse();
+
+        for (int i = 0; i < vertexPath.Count - 1; i++) {
+            HashSet<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges( vertexPath[ i ] );
+            foreach (Edge edge in incidentEdges) {
+                if (edge.vert1 == vertexPath[i + 1] || edge.vert2 == vertexPath[i + 1]) {
+                    edgePath.Add(edge);
+                }
+            }
+        }
+
+        this.Path = edgePath;
     }
 
+    public static int GetHash( Vertex src, Vertex dest ) => ( typeof ( DijkstrasAlgorithm ), src, dest ).GetHashCode();
+
+    public override int GetHashCode() => DijkstrasAlgorithm.GetHash( this.src, this.dest );
 }

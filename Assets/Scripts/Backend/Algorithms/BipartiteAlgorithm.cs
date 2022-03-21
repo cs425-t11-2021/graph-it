@@ -7,12 +7,11 @@ using System.Collections.Concurrent;
 [System.Serializable]
 public class BipartiteAlgorithm : Algorithm
 {
-    private static ConcurrentDictionary< Graph, int > chromaticNumbers = new ConcurrentDictionary< Graph, int >();
     public bool IsBipartite { get; private set; }
     public HashSet< Vertex > Set1 { get; private set; }
     public HashSet< Vertex > Set2 { get; private set; }
 
-    public BipartiteAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public BipartiteAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.bipartiteUI, algoManager.bipartiteCalc ) { }
 
     public override void Run()
     {
@@ -39,8 +38,8 @@ public class BipartiteAlgorithm : Algorithm
         // }
 
         // temp
-        this.WaitUntil( () => BipartiteAlgorithm.HasChromaticNumber( this.Graph ) );
-        IsBipartite = BipartiteAlgorithm.chromaticNumbers[ this.Graph ] <= 2;
+        this.WaitUntilChromaticComplete();
+        this.IsBipartite = ( int ) this.AlgoManager.GetChromaticNumber() <= 2;
     }
 
     private bool TwoColorHelper( Vertex vert, bool color, HashSet< Vertex > visited )
@@ -67,25 +66,12 @@ public class BipartiteAlgorithm : Algorithm
 
     private HashSet< Vertex > GetNeighborhood( Vertex vert )
     {
-        // HashSet< Vertex > neighbors = new HashSet< Vertex >();
-        // foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.graph.Adjacency )
-        // {
-        //     if ( kvp.Key.Item1 == vert )
-        //         neighbors.Add( kvp.Key.Item2 );
-        //     else if ( kvp.Key.Item2 == vert )
-        //         neighbors.Add( kvp.Key.Item1 );
-        // }
-
         return new HashSet< Vertex >( this.Graph.GetIncidentEdges( vert ).Select( edge => edge.vert1 == vert ? edge.vert2 : edge.vert1 ) );
     }
 
-    private static bool HasChromaticNumber( Graph graph ) => BipartiteAlgorithm.chromaticNumbers.GetValue( graph, -1 ) != -1;
-
-    public static void SetChromaticNumber( Graph graph, int chromaticNumber ) => BipartiteAlgorithm.chromaticNumbers[ graph ] = chromaticNumber;
-
-    public static void ClearChromaticNumber( Graph graph )
+    private void WaitUntilChromaticComplete()
     {
-        BipartiteAlgorithm.chromaticNumbers.TryRemove( graph, out _ );
+        this.WaitUntilAlgorithmComplete( ChromaticAlgorithm.GetHash() );
     }
 
     public static int GetHash() => typeof ( BipartiteAlgorithm ).GetHashCode();

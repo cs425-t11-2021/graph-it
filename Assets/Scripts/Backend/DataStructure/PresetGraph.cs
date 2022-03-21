@@ -76,4 +76,6 @@ public static class PresetGraph
         }
         return graph;
     }
+
+    // TODO: hypercube
 }

@@ -6,20 +6,8 @@ using System.Collections.Generic;
 public class CyclicAlgorithm : Algorithm
 {
     public bool IsCyclic { get; private set; }
-    public CyclicAlgorithm(
-        Graph graph,
-        Action updateUI,
-        Action updateCalc,
-        Action< Algorithm > markRunning,
-        Action< Algorithm > markComplete,
-        Action< Algorithm > unmarkRunning )
-            : base(
-                graph,
-                updateUI,
-                updateCalc,
-                markRunning,
-                markComplete,
-                unmarkRunning ) {}
+
+    public CyclicAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.cyclicUI, algoManager.cyclicCalc ) { }
 
     public override void Run()
     {
@@ -33,7 +21,7 @@ public class CyclicAlgorithm : Algorithm
         {
             if (!visited[u])
             {
-                if (IsCyclicHelper(u, visited, null))
+                if (this.IsCyclicHelper(u, visited, null))
                 {
                     this.IsCyclic = true;
                     return;
@@ -68,7 +56,7 @@ public class CyclicAlgorithm : Algorithm
         return false;
     }
 
-    public static int GetHash() => ( typeof ( CyclicAlgorithm ) ).GetHashCode();
+    public static int GetHash() => typeof ( CyclicAlgorithm ).GetHashCode();
 
     public override int GetHashCode() => CyclicAlgorithm.GetHash();
 }
