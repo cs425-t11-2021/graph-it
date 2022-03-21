@@ -8,7 +8,7 @@ public class MaxDegreeAlgorithm : Algorithm
 {
     public int MaxDegree { get; private set; }
 
-    public MaxDegreeAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.maxDegreeUI, algoManager.maxDegreeCalc ) { }
+    public MaxDegreeAlgorithm( AlgorithmManager algoManager ) : base( algoManager, null, null ) { }
 
     public override void Run()
     {

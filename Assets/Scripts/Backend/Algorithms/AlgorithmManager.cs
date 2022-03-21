@@ -24,20 +24,20 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
 
-    public Action minDegreeUI;
-    public Action minDegreeCalc;
-    public Action maxDegreeUI;
-    public Action maxDegreeCalc;
-    public Action radiusUI;
-    public Action radiusCalc;
-    public Action diameterUI;
-    public Action diameterCalc;
-    public Action chromaticUI;
-    public Action chromaticCalc;
-    public Action bipartiteUI;
-    public Action bipartiteCalc;
-    public Action cyclicUI;
-    public Action cyclicCalc;
+    // public Action minDegreeUI;
+    // public Action minDegreeCalc;
+    // public Action maxDegreeUI;
+    // public Action maxDegreeCalc;
+    // public Action radiusUI;
+    // public Action radiusCalc;
+    // public Action diameterUI;
+    // public Action diameterCalc;
+    // public Action chromaticUI;
+    // public Action chromaticCalc;
+    // public Action bipartiteUI;
+    // public Action bipartiteCalc;
+    // public Action cyclicUI;
+    // public Action cyclicCalc;
     public Action fleurysUI;
     public Action fleurysCalc;
     public Action primsUI;
@@ -55,20 +55,20 @@ public class AlgorithmManager
 
     public void Initiate(
         Graph graph,
-        Action minDegreeUI,
-        Action minDegreeCalc,
-        Action maxDegreeUI,
-        Action maxDegreeCalc,
-        Action radiusUI,
-        Action radiusCalc,
-        Action diameterUI,
-        Action diameterCalc,
-        Action chromaticUI,
-        Action chromaticCalc,
-        Action bipartiteUI,
-        Action bipartiteCalc,
-        Action cyclicUI,
-        Action cyclicCalc,
+        // Action minDegreeUI,
+        // Action minDegreeCalc,
+        // Action maxDegreeUI,
+        // Action maxDegreeCalc,
+        // Action radiusUI,
+        // Action radiusCalc,
+        // Action diameterUI,
+        // Action diameterCalc,
+        // Action chromaticUI,
+        // Action chromaticCalc,
+        // Action bipartiteUI,
+        // Action bipartiteCalc,
+        // Action cyclicUI,
+        // Action cyclicCalc,
         Action fleurysUI,
         Action fleurysCalc,
         Action primsUI,
@@ -89,20 +89,20 @@ public class AlgorithmManager
         this.graph = graph;
         this.graphCopy = new Graph( graph );
 
-        this.minDegreeUI = minDegreeUI;
-        this.minDegreeCalc = minDegreeCalc;
-        this.maxDegreeUI = maxDegreeUI;
-        this.maxDegreeCalc = maxDegreeCalc;
-        this.radiusUI = radiusUI;
-        this.radiusCalc = radiusCalc;
-        this.diameterUI = diameterUI;
-        this.diameterCalc = diameterCalc;
-        this.chromaticUI = chromaticUI;
-        this.chromaticCalc = chromaticCalc;
-        this.bipartiteUI = bipartiteUI;
-        this.bipartiteCalc = bipartiteCalc;
-        this.cyclicUI = cyclicUI;
-        this.cyclicCalc = cyclicCalc;
+        // this.minDegreeUI = minDegreeUI;
+        // this.minDegreeCalc = minDegreeCalc;
+        // this.maxDegreeUI = maxDegreeUI;
+        // this.maxDegreeCalc = maxDegreeCalc;
+        // this.radiusUI = radiusUI;
+        // this.radiusCalc = radiusCalc;
+        // this.diameterUI = diameterUI;
+        // this.diameterCalc = diameterCalc;
+        // this.chromaticUI = chromaticUI;
+        // this.chromaticCalc = chromaticCalc;
+        // this.bipartiteUI = bipartiteUI;
+        // this.bipartiteCalc = bipartiteCalc;
+        // this.cyclicUI = cyclicUI;
+        // this.cyclicCalc = cyclicCalc;
         this.fleurysUI = fleurysUI;
         this.fleurysCalc = fleurysCalc;
         this.primsUI = primsUI;

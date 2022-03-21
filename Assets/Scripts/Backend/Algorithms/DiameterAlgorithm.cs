@@ -5,7 +5,7 @@ public class DiameterAlgorithm : Algorithm
 {
     public float? Diameter { get; private set; }
 
-    public DiameterAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.diameterUI, algoManager.diameterCalc ) { }
+    public DiameterAlgorithm( AlgorithmManager algoManager ) : base( algoManager, null, null) { }
 
     public override void Run()
     {

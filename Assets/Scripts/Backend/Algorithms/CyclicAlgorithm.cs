@@ -7,7 +7,7 @@ public class CyclicAlgorithm : Algorithm
 {
     public bool IsCyclic { get; private set; }
 
-    public CyclicAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.cyclicUI, algoManager.cyclicCalc ) { }
+    public CyclicAlgorithm( AlgorithmManager algoManager ) : base( algoManager, null, null ) { }
 
     public override void Run()
     {
