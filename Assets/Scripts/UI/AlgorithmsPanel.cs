@@ -63,39 +63,38 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 {
     [SerializeField] private GraphDisplayAlgorithmAssociation[] associations;
     
-    // Reference of the button of prim
-    [SerializeField] private Button primButton;
-    // Reference of the kruskal button
-    [SerializeField] private Button kruskalButton;
-    // Reference of the button of dijkstra
-    [SerializeField] private Button dijkstraButton;
-    // Reference of the button of Bellman Ford
-    [SerializeField] private Button bellmanButton;
-    // Reference of the Eulerian circuit button
-    [SerializeField] private Button eulerianButton;
-    // Reference of the Maximum Indepdent Set button
-    [SerializeField] private Button maxIndSetButton;
-    // Reference of the Maximum Matching button
-    [SerializeField] private Button maxMatchingButton;
+    // // Reference of the button of prim
+    // [SerializeField] private Button primButton;
+    // // Reference of the kruskal button
+    // [SerializeField] private Button kruskalButton;
+    // // Reference of the button of dijkstra
+    // [SerializeField] private Button dijkstraButton;
+    // // Reference of the button of Bellman Ford
+    // [SerializeField] private Button bellmanButton;
+    // // Reference of the Eulerian circuit button
+    // [SerializeField] private Button eulerianButton;
+    // // Reference of the Maximum Indepdent Set button
+    // [SerializeField] private Button maxIndSetButton;
+    // // Reference of the Maximum Matching button
+    // [SerializeField] private Button maxMatchingButton;
     //[SerializeField] private Button algClosePanel;
     //Reference to the button to close the algorithm info panels
     [SerializeField] private Button algOpenPanel;
     //Reference to the button to open the algorithm info panels
 
     // Property for whether or not the algorithm buttons are enabled
-    public bool AlgorithmButtonsEnabled {
-        set {
-            primButton.enabled = value;
-            dijkstraButton.enabled = value;
-            kruskalButton.enabled = value;
-        }
+    public bool AlgorithmButtonsEnabled
+    {
+        get; set;
     }
 
     private void Awake() {
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
-        this.primButton.interactable = false;
-        this.dijkstraButton.interactable = false;
-        this.bellmanButton.interactable = false;
+
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            association.activationButton.interactable = false;
+        }
     }
 
     // Function called when the selection is changed
@@ -159,21 +158,21 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
     }
 
-    public void UpdatePrimsResult() { }
-
-    public void UpdateKruskalsResult() { }
-
-    public void UpdateDepthFirstSearchResult() { }
-
-    public void UpdateBreadthFirstSearchResult() { }
-
-    public void UpdatePrimsCalculating() { }
-
-    public void UpdateKruskalsCalculating() { }
-
-    public void UpdateDepthFirstSearchCalculating() { }
-
-    public void UpdateBreadthFirstSearchCalculating() { }
+    // public void UpdatePrimsResult() { }
+    //
+    // public void UpdateKruskalsResult() { }
+    //
+    // public void UpdateDepthFirstSearchResult() { }
+    //
+    // public void UpdateBreadthFirstSearchResult() { }
+    //
+    // public void UpdatePrimsCalculating() { }
+    //
+    // public void UpdateKruskalsCalculating() { }
+    //
+    // public void UpdateDepthFirstSearchCalculating() { }
+    //
+    // public void UpdateBreadthFirstSearchCalculating() { }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseAlgorithmInfoPanel(){
