@@ -220,37 +220,37 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     }
 
     // TEMOPARY CODE
-    public void RunDijkstra() {
-        if (selectedVertices.Count != 2) {
-            Debug.Log( ( new System.Exception( "Cannot start Dijkstra's algorithm." ) ).ToString() );
-            throw new System.Exception( "Cannot start Dijkstra's algorithm." );
-        }
-        
-        DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
-        dijkstra.Run(Controller.Singleton.Graph, selectedVertices[0].Vertex, selectedVertices[1].Vertex);
-        List<Edge> dijkstraEdges = new List<Edge>();
-        List<Vertex> dijkstraVertices = dijkstra.path;
-        for (int i = 0; i < dijkstraVertices.Count - 1; i++) {
-            HashSet<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges(dijkstraVertices[i]);
-            foreach (Edge edge in incidentEdges) {
-                if (edge.vert1 == dijkstraVertices[i + 1] || edge.vert2 == dijkstraVertices[i + 1]) {
-                    dijkstraEdges.Add(edge);
-                }
-            }
-        }
-
-        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-        {
-            if (dijkstraEdges.Contains(edgeObj.Edge))
-                SelectEdge(edgeObj);
-        }
-
-        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
-        {
-            if (dijkstraVertices.Contains(vertexObj.Vertex))
-                SelectVertex(vertexObj);
-        }
-    }
+    // public void RunDijkstra() {
+    //     if (selectedVertices.Count != 2) {
+    //         Debug.Log( ( new System.Exception( "Cannot start Dijkstra's algorithm." ) ).ToString() );
+    //         throw new System.Exception( "Cannot start Dijkstra's algorithm." );
+    //     }
+    //     
+    //     DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
+    //     dijkstra.Run(Controller.Singleton.Graph, selectedVertices[0].Vertex, selectedVertices[1].Vertex);
+    //     List<Edge> dijkstraEdges = new List<Edge>();
+    //     List<Vertex> dijkstraVertices = dijkstra.path;
+    //     for (int i = 0; i < dijkstraVertices.Count - 1; i++) {
+    //         HashSet<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges(dijkstraVertices[i]);
+    //         foreach (Edge edge in incidentEdges) {
+    //             if (edge.vert1 == dijkstraVertices[i + 1] || edge.vert2 == dijkstraVertices[i + 1]) {
+    //                 dijkstraEdges.Add(edge);
+    //             }
+    //         }
+    //     }
+    //
+    //     foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
+    //     {
+    //         if (dijkstraEdges.Contains(edgeObj.Edge))
+    //             SelectEdge(edgeObj);
+    //     }
+    //
+    //     foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
+    //     {
+    //         if (dijkstraVertices.Contains(vertexObj.Vertex))
+    //             SelectVertex(vertexObj);
+    //     }
+    // }
     
     // TEMORARY CODE
     public void RunBellmanFord()
