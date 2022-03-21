@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -47,6 +48,8 @@ public class GraphDisplayAlgorithmAssociation
                         if (resultEdges.Contains(edgeObj.Edge))
                             SelectionManager.Singleton.SelectEdge(edgeObj);
                     }
+                    
+                    // ((List<EdgeObj>) Controller.Singleton.EdgeObjs.Where((e) => resultEdges.Contains(e.Edge))).ForEach(e => SelectionManager.Singleton.SelectEdge(e));
 
                     foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
                     {
