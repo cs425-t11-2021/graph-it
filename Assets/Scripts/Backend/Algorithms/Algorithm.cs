@@ -19,7 +19,7 @@ public abstract class Algorithm
     public Algorithm( AlgorithmManager algoManager, Action updateUI, Action updateCalc )
     {
         this.AlgoManager = algoManager;
-        this.Graph = algoManager.graph;
+        this.Graph = algoManager.graphCopy;
         this.currThread = null;
         this.markRunning = algoManager.MarkRunning;
         this.markComplete = algoManager.MarkComplete;

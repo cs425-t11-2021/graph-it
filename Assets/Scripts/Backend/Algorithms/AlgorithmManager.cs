@@ -10,7 +10,19 @@ using UnityEngine.Scripting;
 public class AlgorithmManager
 {
     public Graph graph;
-    // TODO: add read only copy of vertices and edges
+    public Graph graphCopy; // temp fix to prevent deadlocking
+
+    private ConcurrentDictionary< int, Algorithm > running = new ConcurrentDictionary< int, Algorithm >(); 
+    public List< Algorithm > Running
+    {
+        get => this.running.Values.ToList();
+    }
+    private ConcurrentDictionary< int, Algorithm > complete = new ConcurrentDictionary< int, Algorithm >();
+    public List< Algorithm > Complete
+    {
+        get => this.running.Values.ToList();
+    }
+
     public Action minDegreeUI;
     public Action minDegreeCalc;
     public Action maxDegreeUI;
@@ -35,16 +47,6 @@ public class AlgorithmManager
     public Action depthFirstSearchCalc;
     public Action breadthFirstSearchUI;
     public Action breadthFirstSearchCalc;
-    private ConcurrentDictionary< int, Algorithm > running = new ConcurrentDictionary< int, Algorithm >(); 
-    public List< Algorithm > Running
-    {
-        get => this.running.Values.ToList();
-    }
-    private Dictionary< int, Algorithm > complete = new Dictionary< int, Algorithm >();
-    public List< Algorithm > Complete
-    {
-        get => this.running.Values.ToList();
-    }
 
     public void Initiate(
         Graph graph,
@@ -76,6 +78,8 @@ public class AlgorithmManager
     {
         Controller.Singleton.OnGraphModified += Clear;
         this.graph = graph;
+        this.graphCopy = new Graph( graph );
+
         this.minDegreeUI = minDegreeUI;
         this.minDegreeCalc = minDegreeCalc;
         this.maxDegreeUI = maxDegreeUI;
@@ -194,7 +198,7 @@ public class AlgorithmManager
         this.KillAll();
         this.running.Clear();
         this.complete.Clear();
-        // TODO: clear copy of vertices and edges
+        this.graphCopy = new Graph( this.graph );
     }
 
     public void KillAll()
@@ -206,7 +210,7 @@ public class AlgorithmManager
 
     ~AlgorithmManager()
     {
-        KillAll();
+        this.KillAll();
     }
 
 }

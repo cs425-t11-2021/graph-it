@@ -17,15 +17,14 @@ public class ChromaticAlgorithm : Algorithm
     {
         // TODO: if HasLoops, then warn user
 
-        Debug.Log( "chromatic running" );
         this.AlgoManager.RunMaxDegree();
-        Debug.Log( "chromatic ran max degree" );
 
         this.Coloring = new int[ this.Graph.Order ];
         int chi = Math.Min( this.Graph.Order, 1 );
         this.WaitUntilMaxDegreeComplete();
         int upperBound = ( int ) this.AlgoManager.GetMaxDegree() + 1;
         // TODO: use clique number for lower bound
+
         while ( !this.IsProperColoring() )
         {
             if ( chi > upperBound ) // something really bad happended
@@ -69,9 +68,7 @@ public class ChromaticAlgorithm : Algorithm
 
     private void WaitUntilMaxDegreeComplete()
     {
-        Debug.Log( "chromatic waiting" );
         this.WaitUntilAlgorithmComplete( MaxDegreeAlgorithm.GetHash() );
-        Debug.Log( "chromatic finished waiting" );
     }
 
     public static int GetHash() => typeof ( ChromaticAlgorithm ).GetHashCode();

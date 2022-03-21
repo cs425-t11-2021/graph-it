@@ -9,6 +9,18 @@ public class RadiusAlgorithm : Algorithm
 
     public override void Run()
     {
+        if (this.Graph.Directed)
+        {
+            this.Radius = null;
+            return;
+        }
+
+        if (this.Graph.Order == 0)
+        {
+            this.Radius = 0;
+            return;
+        }
+
         DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
 
         this.radius = float.PositiveInfinity;
