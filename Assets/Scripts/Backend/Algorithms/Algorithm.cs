@@ -3,6 +3,8 @@ using System;
 using System.Threading;
 using UnityEngine;
 
+public enum AlgorithmType {INFO, DISPLAY, INTERNAL}
+
 public abstract class Algorithm
 {
     protected AlgorithmManager AlgoManager { get; private set; }
@@ -15,6 +17,12 @@ public abstract class Algorithm
     private Action updateCalc;
     protected bool running;
     protected bool complete;
+    
+    // Whether ths algorithm is an info or display algorithm
+    protected AlgorithmType type;
+    
+    // All the vertex parameters associated with an algorithm
+    protected Vertex[] vertexParms = null;
 
     public Algorithm( AlgorithmManager algoManager, Action updateUI, Action updateCalc )
     {
@@ -46,15 +54,20 @@ public abstract class Algorithm
         {
             this.running = true;
             this.markRunning( this );
-            RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoCalculating(this));
-            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
+            
+            if (this.type == AlgorithmType.INFO)
+                RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoCalculating(this));
+            
             this.Run();
             Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
             this.running = false;
             this.complete = true;
             this.markComplete( this );
-            RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoResults(this));
-            // RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+            
+            if (this.type == AlgorithmType.INFO)
+                RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoResults(this));
+            else if (this.type == AlgorithmType.DISPLAY)
+                RunInMain.Singleton.queuedTasks.Enqueue(() => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults(this, vertexParms));
         }
         catch ( ThreadAbortException )
         {

@@ -11,10 +11,15 @@ public class BellmanFordsAlgorithm : Algorithm
     private Vertex src;
     private Vertex dest;
 
-    public BellmanFordsAlgorithm( AlgorithmManager algoManager, Vertex src, Vertex dest ) : base( algoManager, algoManager.bellmanFordsUI, algoManager.bellmanFordsCalc )
+    public BellmanFordsAlgorithm( AlgorithmManager algoManager, Vertex src, Vertex dest ) : base( algoManager, null, null )
     {
         this.src = src;
         this.dest = dest;
+        
+        // Assign the type of the algorithm
+        this.type = AlgorithmType.DISPLAY;
+        // Add the root vertex to vertex parms array
+        vertexParms = new Vertex[] {this.src, this.dest};
     }
 
     public override void Run()

@@ -38,23 +38,23 @@ public class AlgorithmManager
     // public Action bipartiteCalc;
     // public Action cyclicUI;
     // public Action cyclicCalc;
-    public Action fleurysUI;
-    public Action fleurysCalc;
-    public Action primsUI;
-    public Action primsCalc;
-    public Action kruskalsUI;
-    public Action kruskalsCalc;
-    public Action dijkstrasUI;
-    public Action dijkstrasCalc;
-    public Action bellmanFordsUI;
-    public Action bellmanFordsCalc;
-    public Action depthFirstSearchUI;
-    public Action depthFirstSearchCalc;
-    public Action breadthFirstSearchUI;
-    public Action breadthFirstSearchCalc;
+    // public Action fleurysUI;
+    // public Action fleurysCalc;
+    // public Action primsUI;
+    // public Action primsCalc;
+    // public Action kruskalsUI;
+    // public Action kruskalsCalc;
+    // public Action dijkstrasUI;
+    // public Action dijkstrasCalc;
+    // public Action bellmanFordsUI;
+    // public Action bellmanFordsCalc;
+    // public Action depthFirstSearchUI;
+    // public Action depthFirstSearchCalc;
+    // public Action breadthFirstSearchUI;
+    // public Action breadthFirstSearchCalc;
 
     public void Initiate(
-        Graph graph,
+        Graph graph
         // Action minDegreeUI,
         // Action minDegreeCalc,
         // Action maxDegreeUI,
@@ -69,20 +69,20 @@ public class AlgorithmManager
         // Action bipartiteCalc,
         // Action cyclicUI,
         // Action cyclicCalc,
-        Action fleurysUI,
-        Action fleurysCalc,
-        Action primsUI,
-        Action primsCalc,
-        Action kruskalsUI,
-        Action kruskalsCalc,
-        Action dijkstrasUI,
-        Action dijkstrasCalc,
-        Action bellmanFordsUI,
-        Action bellmanFordsCalc,
-        Action depthFirstSearchUI,
-        Action depthFirstSearchCalc,
-        Action breadthFirstSearchUI,
-        Action breadthFirstSearchCalc
+        // Action fleurysUI,
+        // Action fleurysCalc,
+        // Action primsUI,
+        // Action primsCalc,
+        // Action kruskalsUI,
+        // Action kruskalsCalc,
+        // Action dijkstrasUI,
+        // Action dijkstrasCalc,
+        // Action bellmanFordsUI,
+        // Action bellmanFordsCalc,
+        // Action depthFirstSearchUI,
+        // Action depthFirstSearchCalc,
+        // Action breadthFirstSearchUI,
+        // Action breadthFirstSearchCalc
     )
     {
         Controller.Singleton.OnGraphModified += Clear;
@@ -103,20 +103,20 @@ public class AlgorithmManager
         // this.bipartiteCalc = bipartiteCalc;
         // this.cyclicUI = cyclicUI;
         // this.cyclicCalc = cyclicCalc;
-        this.fleurysUI = fleurysUI;
-        this.fleurysCalc = fleurysCalc;
-        this.primsUI = primsUI;
-        this.primsCalc = primsCalc;
-        this.kruskalsUI = kruskalsUI;
-        this.kruskalsCalc = kruskalsCalc;
-        this.dijkstrasUI = dijkstrasUI;
-        this.dijkstrasCalc = dijkstrasCalc;
-        this.bellmanFordsUI = bellmanFordsUI;
-        this.bellmanFordsCalc = bellmanFordsCalc;
-        this.depthFirstSearchUI = depthFirstSearchUI;
-        this.depthFirstSearchCalc = depthFirstSearchCalc;
-        this.breadthFirstSearchUI = breadthFirstSearchUI;
-        this.breadthFirstSearchCalc = breadthFirstSearchCalc;
+        // this.fleurysUI = fleurysUI;
+        // this.fleurysCalc = fleurysCalc;
+        // this.primsUI = primsUI;
+        // this.primsCalc = primsCalc;
+        // this.kruskalsUI = kruskalsUI;
+        // this.kruskalsCalc = kruskalsCalc;
+        // this.dijkstrasUI = dijkstrasUI;
+        // this.dijkstrasCalc = dijkstrasCalc;
+        // this.bellmanFordsUI = bellmanFordsUI;
+        // this.bellmanFordsCalc = bellmanFordsCalc;
+        // this.depthFirstSearchUI = depthFirstSearchUI;
+        // this.depthFirstSearchCalc = depthFirstSearchCalc;
+        // this.breadthFirstSearchUI = breadthFirstSearchUI;
+        // this.breadthFirstSearchCalc = breadthFirstSearchCalc;
     }
 
     public void RunAll()
