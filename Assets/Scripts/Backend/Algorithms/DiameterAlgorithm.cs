@@ -3,7 +3,7 @@ using System;
 [System.Serializable]
 public class DiameterAlgorithm : Algorithm
 {
-    public float diameter { get; private set; }
+    public float? Diameter { get; private set; }
 
     public DiameterAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.diameterUI, algoManager.diameterCalc ) { }
 
@@ -27,6 +27,7 @@ public class DiameterAlgorithm : Algorithm
                     diameter = cost;
             }
         }
+        this.Diameter = diameter;
     }
 
     private void WaitUntilDijkstrasComplete( Vertex src, Vertex dest )

@@ -3,9 +3,9 @@ using System;
 using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
 using UnityEngine.Scripting;
-
 
 public class AlgorithmManager
 {
@@ -214,7 +214,7 @@ public class AlgorithmManager
 
     public void UnmarkRunning( Algorithm algo )
     {
-        this.running.Remove( algo.GetHashCode() );
+        this.running.TryRemove( algo.GetHashCode(), out _ );
     }
 
     public bool IsRunning( Algorithm algo ) => this.IsRunning( algo.GetHashCode() );

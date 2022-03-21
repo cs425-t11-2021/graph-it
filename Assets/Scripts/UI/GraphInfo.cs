@@ -107,6 +107,10 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
     }
 
+    public void UpdateRadiusResult() { }
+
+    public void UpdateDiameterResult() { }
+
     public void UpdateChromaticResult() {
         Debug.Log("Running UpdateChromaticResult");
         int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
@@ -122,7 +126,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
 
     public void UpdateCyclicResult() {
-        this.cyclicText.text = "Cyclic: " + (Controller.Singleton.AlgorithmManager.GetCyclic() ?? false ? "Yes" : "No");
+        // this.cyclicText.text = "Cyclic: " + (Controller.Singleton.AlgorithmManager.GetCyclic() ?? false ? "Yes" : "No");
     }
 
     public void UpdateFleurysResult() { }
@@ -135,9 +139,9 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     public void UpdateBellmanFordResult() { }
 
-    // public void UpdateDepthFirstSearchResult() { }
+    public void UpdateDepthFirstSearchResult() { }
 
-    // public void UpdateBreadthFirstSearchResult() { }
+    public void UpdateBreadthFirstSearchResult() { }
 
     public void UpdateBellmanFordsResult() { }
 
@@ -171,9 +175,9 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     public void UpdateBellmanFordsCalculating() { }
 
-    // public void UpdateDepthFirstSearchCalculating() { }
+    public void UpdateDepthFirstSearchCalculating() { }
 
-    // public void UpdateBreadthFirstSearchCalculating() { }
+    public void UpdateBreadthFirstSearchCalculating() { }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseGraphInfoPanel(){

@@ -29,6 +29,7 @@ public class DijkstrasAlgorithm : Algorithm
         {
             prev[ v ] = null;
             dist[ v ] = float.PositiveInfinity;
+        }
 
         dist[ this.src ] = 0;
 
@@ -71,6 +72,7 @@ public class DijkstrasAlgorithm : Algorithm
             {
                 vertexPath = new List<Vertex>();
                 return;
+            }
         }
         vertexPath.Add( this.src );
         vertexPath.Reverse();

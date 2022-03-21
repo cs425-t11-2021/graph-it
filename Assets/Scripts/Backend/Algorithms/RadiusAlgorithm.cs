@@ -3,7 +3,7 @@ using System;
 [System.Serializable]
 public class RadiusAlgorithm : Algorithm
 {
-    public float radius { get; private set; }
+    public float? Radius { get; private set; }
 
     public RadiusAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.radiusUI, algoManager.radiusCalc ) { }
 
@@ -36,11 +36,12 @@ public class RadiusAlgorithm : Algorithm
                 }
             }
 
-            if (max_dist < this.radius)
+            if (max_dist < radius)
             {
-                this.radius = max_dist;
+                radius = max_dist;
             }
         }
+        this.Radius = radius;
     }
 
     private void WaitUntilDijkstrasComplete( Vertex src, Vertex dest )
