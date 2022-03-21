@@ -8,7 +8,7 @@ public class KruskalsAlgorithm : Algorithm
 {
     public List< Edge > Mst { get; private set; }
 
-    public KruskalsAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public KruskalsAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.kruskalsUI, algoManager.kruskalsCalc ) { }
 
     public override void Run()
     {

@@ -8,7 +8,7 @@ public class MinDegreeAlgorithm : Algorithm
 {
     public int MinDegree { get; private set; }
 
-    public MinDegreeAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public MinDegreeAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.minDegreeUI, algoManager.minDegreeCalc ) { }
 
     public override void Run()
     {

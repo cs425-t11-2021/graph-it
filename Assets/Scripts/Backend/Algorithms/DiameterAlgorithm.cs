@@ -5,21 +5,7 @@ public class DiameterAlgorithm : Algorithm
 {
     public float diameter { get; private set; }
 
-    public DiameterAlgorithm(
-        Graph graph,
-        Action updateUI,
-        Action updateCalc,
-        Action< Algorithm > markRunning,
-        Action< Algorithm > markComplete,
-        Action< Algorithm > unmarkRunning )
-            : base(
-                graph,
-                updateUI,
-                updateCalc,
-                markRunning,
-                markComplete,
-                unmarkRunning ) { }
-    
+    public DiameterAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.diameterUI, algoManager.diameterCalc ) { }
 
     public override void Run()
     {

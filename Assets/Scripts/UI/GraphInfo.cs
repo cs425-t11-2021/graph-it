@@ -43,7 +43,33 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }*/
 
     public void InitiateAlgorithmManager() {
-        Controller.Singleton.AlgorithmManager.Initiate( Controller.Singleton.Graph, ( Action ) this.UpdateMinDegreeResult, ( Action ) this.UpdateMaxDegreeResult, ( Action ) this.UpdateChromaticResult, ( Action ) this.UpdateBipartiteResult, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult, ( Action ) this.UpdateMinDegreeCalculating, ( Action ) this.UpdateMaxDegreeCalculating, ( Action ) this.UpdateChromaticCalculating, ( Action ) this.UpdateBipartiteCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating, ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating );
+        Controller.Singleton.AlgorithmManager.Initiate(
+            Controller.Singleton.Graph,
+            ( Action ) this.UpdateMinDegreeResult,
+            ( Action ) this.UpdateMinDegreeCalculating,
+            ( Action ) this.UpdateMaxDegreeResult,
+            ( Action ) this.UpdateMaxDegreeCalculating,
+            ( Action ) this.UpdateRadiusResult,
+            ( Action ) this.UpdateRadiusCalculating,
+            ( Action ) this.UpdateDiameterResult,
+            ( Action ) this.UpdateDiameterCalculating,
+            ( Action ) this.UpdateChromaticResult,
+            ( Action ) this.UpdateChromaticCalculating,
+            ( Action ) this.UpdateBipartiteResult,
+            ( Action ) this.UpdateBipartiteCalculating,
+            ( Action ) this.UpdateCyclicResult,
+            ( Action ) this.UpdateCyclicCalculating,
+            ( Action ) this.UpdateFleurysResult,
+            ( Action ) this.UpdateFleurysCalculating,
+            ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
+            ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult,
+            ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating
+        );
         this.UpdateGraphInfo();
     }
     
@@ -53,7 +79,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
         // Run multithreaded algorithms
         // Controller.Singleton.AlgorithmManager.Clear();
-        // this.algorithmManager.RunChromatic();
+        Controller.Singleton.AlgorithmManager.RunChromatic();
         Controller.Singleton.AlgorithmManager.RunMinDegree();
         Controller.Singleton.AlgorithmManager.RunMaxDegree();
         Controller.Singleton.AlgorithmManager.RunBipartite(); //TEMPORARY FIX
@@ -91,6 +117,12 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
     }
 
+    public void UpdateCyclicResult() {
+        this.cyclicText.text = "Cyclic: " + (Controller.Singleton.AlgorithmManager.GetCyclic() ?? false ? "Yes" : "No");
+    }
+
+    public void UpdateFleurysResult() { }
+
     // public void UpdatePrimsResult() { }
 
     // public void UpdateKruskalsResult() { }
@@ -99,9 +131,15 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     // public void UpdateBreadthFirstSearchResult() { }
 
+    public void UpdateBellmanFordResult() { }
+
     public void UpdateMinDegreeCalculating() { }
 
     public void UpdateMaxDegreeCalculating() { }
+
+    public void UpdateRadiusCalculating() { }
+
+    public void UpdateDiameterCalculating() { }
 
     public void UpdateChromaticCalculating() {
         this.chromaticText.text = "Chromatic Number: Calculating";
@@ -112,6 +150,18 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.bipartiteText.text = "Bipartite: Calculating";
         // Debug.Log("Running UpdateBipartiteCalculating");
     }
+
+    public void UpdateCyclicCalculating() { }
+
+    public void UpdateFleurysCalculating() { }
+
+    // public void UpdatePrimsCalculating() { }
+
+    // public void UpdateKruskalsCalculating() { }
+
+    // public void UpdateDepthFirstSearchCalculating() { }
+
+    // public void UpdateBreadthFirstSearchCalculating() { }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseGraphInfoPanel(){
@@ -128,11 +178,4 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         openPanel.gameObject.SetActive(false);
     }
 
-    // public void UpdatePrimsCalculating() { }
-
-    // public void UpdateKruskalsCalculating() { }
-
-    // public void UpdateDepthFirstSearchCalculating() { }
-
-    // public void UpdateBreadthFirstSearchCalculating() { }
 }

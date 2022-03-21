@@ -5,21 +5,7 @@ public class RadiusAlgorithm : Algorithm
 {
     public float radius { get; private set; }
 
-    public RadiusAlgorithm(
-        Graph graph,
-        Action updateUI,
-        Action updateCalc,
-        Action< Algorithm > markRunning,
-        Action< Algorithm > markComplete,
-        Action< Algorithm > unmarkRunning )
-            : base(
-                graph,
-                updateUI,
-                updateCalc,
-                markRunning,
-                markComplete,
-                unmarkRunning ) { }
-    
+    public RadiusAlgorithm( AlgorithmManager algoManager ) : base( algoManager, algoManager.radiusUI, algoManager.radiusCalc ) { }
 
     public override void Run()
     {

@@ -9,7 +9,7 @@ public class PrimsAlgorithm : Algorithm
     public Vertex Root { get; private set; }
     public List< Edge > Mst { get; private set; }
 
-    public PrimsAlgorithm( Graph graph, Vertex root, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
+    public PrimsAlgorithm( AlgorithmManager algoManager, Vertex root ) : base( algoManager, algoManager.primsUI, algoManager.primsCalc )
     {
         if ( !this.Graph.Vertices.Contains( root ) )
             throw new System.Exception( "Vertex for Prim's algorithm is not in graph." );
