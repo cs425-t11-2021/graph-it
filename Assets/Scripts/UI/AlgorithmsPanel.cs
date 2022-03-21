@@ -93,11 +93,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     private void Awake() {
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
-
-        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
-        {
-            association.activationButton.interactable = false;
-        }
+        Array.ForEach(this.associations, a => a.activationButton.interactable = false);
     }
 
     // Function called when the selection is changed
