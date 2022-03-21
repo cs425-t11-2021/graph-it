@@ -132,7 +132,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.sizeText.text = "Size: " + Controller.Singleton.Graph.Size;
 
         // Run multithreaded algorithms
-        // Controller.Singleton.AlgorithmManager.Clear();
         Controller.Singleton.AlgorithmManager.RunChromatic();
         Controller.Singleton.AlgorithmManager.RunMinDegree();
         Controller.Singleton.AlgorithmManager.RunMaxDegree();
@@ -151,12 +150,12 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     public void UpdateMinDegreeResult() { 
         // Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); 
-        this.minDegreeText.text = "Minimum Degree (δ): " + Controller.Singleton.AlgorithmManager.GetMinDegree();
+        // this.minDegreeText.text = "Minimum Degree (δ): " + Controller.Singleton.AlgorithmManager.GetMinDegree();
     }
 
     public void UpdateMaxDegreeResult() { 
         // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
-        this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
+        // this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
     }
 
     public void UpdateRadiusResult() { }
@@ -164,17 +163,17 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateDiameterResult() { }
 
     public void UpdateChromaticResult() {
-        Debug.Log("Running UpdateChromaticResult");
-        int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
-        if ( chromaticNumber is null )
-            this.chromaticText.text = "Chromatic Number: Error";
-        else
-            this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
+        // Debug.Log("Running UpdateChromaticResult");
+        // int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
+        // if ( chromaticNumber is null )
+        //     this.chromaticText.text = "Chromatic Number: Error";
+        // else
+        //     this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
     }
 
     public void UpdateBipartiteResult() {
-        Debug.Log("Running UpdateBipartiteResult");
-        this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
+        // Debug.Log("Running UpdateBipartiteResult");
+        // this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
     }
 
     public void UpdateCyclicResult() {
@@ -206,12 +205,12 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void UpdateDiameterCalculating() { }
 
     public void UpdateChromaticCalculating() {
-        this.chromaticText.text = "Chromatic Number: Calculating";
+        // this.chromaticText.text = "Chromatic Number: Calculating";
         // Debug.Log("Running UpdateChromaticCalculating");
     }
 
     public void UpdateBipartiteCalculating() {
-        this.bipartiteText.text = "Bipartite: Calculating";
+        // this.bipartiteText.text = "Bipartite: Calculating";
         // Debug.Log("Running UpdateBipartiteCalculating");
     }
 

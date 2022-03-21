@@ -143,7 +143,14 @@ public class AlgorithmManager
         int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             this.RunAlgorithm( algorithm, parms );
+        
         // TODO: check if this is needed, but if algorithm is not complete, then invoke ui delegate
+        // JIMSON: I ADDED CODE TO DO THIS BELOW
+        if (this.IsComplete(hash))
+        {
+            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[hash]);
+        }
+        
     }
 
     public void RunMinDegree() => this.EnsureRunning( typeof ( MinDegreeAlgorithm ) );
