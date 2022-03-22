@@ -127,9 +127,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 association.OnCompleteUpdateDisplay(vertexParms);
                 return;
             }
-        }
-        
-        Logger.Log("No algorithm association found for " + algorithmName + ".", this, LogType.ERROR);
+        }        
     }
 
     public void RunGraphDisplayAlgorithm(GraphDisplayAlgorithmAssociation association)

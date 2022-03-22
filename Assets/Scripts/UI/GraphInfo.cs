@@ -89,9 +89,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
                 association.OnCalculatingUpdateUI();
                 return;
             }
-        }
-        
-        Logger.Log("No algorithm association found for " + algorithmName + ".", this, LogType.ERROR);
+        }        
     }
 
     public void InitiateAlgorithmManager(AlgorithmManager algoManager) {
