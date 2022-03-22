@@ -95,34 +95,6 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     public void InitiateAlgorithmManager(AlgorithmManager algoManager) {
         algoManager.Initiate(
             Controller.Singleton.Graph
-            // ( Action ) this.UpdateMinDegreeResult,
-            // ( Action ) this.UpdateMinDegreeCalculating,
-            // ( Action ) this.UpdateMaxDegreeResult,
-            // ( Action ) this.UpdateMaxDegreeCalculating,
-            // ( Action ) this.UpdateRadiusResult,
-            // ( Action ) this.UpdateRadiusCalculating,
-            // ( Action ) this.UpdateDiameterResult,
-            // ( Action ) this.UpdateDiameterCalculating,
-            // ( Action ) this.UpdateChromaticResult,
-            // ( Action ) this.UpdateChromaticCalculating,
-            // ( Action ) this.UpdateBipartiteResult,
-            // ( Action ) this.UpdateBipartiteCalculating,
-            // ( Action ) this.UpdateCyclicResult,
-            // ( Action ) this.UpdateCyclicCalculating,
-            // ( Action ) this.UpdateFleurysResult,
-            // ( Action ) this.UpdateFleurysCalculating,
-            // ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
-            // ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
-            // ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
-            // ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
-            // ( Action ) this.UpdateDijkstrasResult,
-            // ( Action ) this.UpdateDijkstrasCalculating,
-            // ( Action ) this.UpdateBellmanFordsResult,
-            // ( Action ) this.UpdateBellmanFordsCalculating,
-            // ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
-            // ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
-            // ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult,
-            // ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating
         );
         this.UpdateGraphInfo();
     }
@@ -143,15 +115,12 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseGraphInfoPanel(){
-        //GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0); //moves the panel off the screen (TEMPORARY FIX) and shows the button to open the graph info panel
         this.gameObject.SetActive(false); 
         openPanel.gameObject.SetActive(true);
     }
 
     //activate the graphInfo panel and prevent access to the open panel button
     public void OpenGraphInfoPanel(){
-        //GetComponent<RectTransform>().position = new Vector3(500f,0,0); //moves the panel back onto the screen (TEMPORARY FIX) and make the open panel button not accessible
-        //this.transform.position = new Vector3 (0f,293.79f,0);
         this.gameObject.SetActive(true);
         openPanel.gameObject.SetActive(false);
     }
