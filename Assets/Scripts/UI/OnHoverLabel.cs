@@ -13,7 +13,7 @@ public class OnHoverLabel : MonoBehaviour
     private void Awake()
     {
         //getting component references
-        this.label = GetComponent<TMP_Text>();
+        this.label = GetComponentInChildren<TMP_Text>();
     }
 
     public void CreateLabel(){

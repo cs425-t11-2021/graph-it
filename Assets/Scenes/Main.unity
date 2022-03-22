@@ -6018,6 +6018,7 @@ MonoBehaviour:
   exportFileMenu: {fileID: 1983837607}
   importErrorDialog: {fileID: 2075901294}
   toolbar: {fileID: 1228080542}
+  mainCanvas: {fileID: 523876766}
   selectionRect: {fileID: 1035785018}
 --- !u!1 &553223908
 GameObject:
@@ -7601,7 +7602,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -10969,13 +10970,6 @@ MonoBehaviour:
     requiredEdges: 0
     activationMethod: RunBellmanFords
     completedMethod: GetBellmanFordsPath
-  primButton: {fileID: 1072866586}
-  kruskalButton: {fileID: 1937964947}
-  dijkstraButton: {fileID: 1394906815}
-  bellmanButton: {fileID: 770796874}
-  eulerianButton: {fileID: 0}
-  maxIndSetButton: {fileID: 0}
-  maxMatchingButton: {fileID: 0}
   algOpenPanel: {fileID: 1689317852}
 --- !u!1 &1015921549
 GameObject:
