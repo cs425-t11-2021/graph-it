@@ -128,7 +128,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     {
         if (association.requiredVertices > 0)
         {
-            Object[] vertices = new Object[association.requiredVertices];
+            Object[] vertices = new Object[association.requiredVertices + 1];
+            vertices[association.requiredVertices] = (Object) true;
             for (int i = 0; i < association.requiredVertices; i++)
             {
                 vertices[i] = SelectionManager.Singleton.SelectedVertices[i].Vertex;
@@ -137,7 +138,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
         else
         {
-            Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, null);
+            Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, new Object[] {true});
         }
 
         DeselectAllAlgorithms();
