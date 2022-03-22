@@ -16,7 +16,9 @@ public class UIManager : SingletonBehavior<UIManager>
     [SerializeField] private GameObject exportFileMenu;
     [SerializeField] private GameObject importErrorDialog;
     [SerializeField] private GameObject toolbar;
+    [SerializeField] public GameObject mainCanvas;
     [SerializeField] public GameObject selectionRect;
+    
 
     // Property for whether or not the cursor is currently over an UI element
     public bool CursorOnUI {

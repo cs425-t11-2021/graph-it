@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -47,6 +48,8 @@ public class GraphDisplayAlgorithmAssociation
                         if (resultEdges.Contains(edgeObj.Edge))
                             SelectionManager.Singleton.SelectEdge(edgeObj);
                     }
+                    
+                    // ((List<EdgeObj>) Controller.Singleton.EdgeObjs.Where((e) => resultEdges.Contains(e.Edge))).ForEach(e => SelectionManager.Singleton.SelectEdge(e));
 
                     foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
                     {
@@ -90,11 +93,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     private void Awake() {
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
-
-        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
-        {
-            association.activationButton.interactable = false;
-        }
+        Array.ForEach(this.associations, a => a.activationButton.interactable = false);
     }
 
     // Function called when the selection is changed
