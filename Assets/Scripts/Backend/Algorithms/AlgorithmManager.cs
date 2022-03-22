@@ -4,23 +4,15 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using UnityEngine;
 using UnityEngine.Scripting;
 
-// using UnityEngine;
-
-// TODO: algorithm manager needs to know when graph is updated so that it can kill all running algorithms and remove all completed
 public class AlgorithmManager
 {
-    private Graph graph;
-    private Action primsUI;
-    private Action kruskalsUI;
-    private Action depthFirstSearchUI;
-    private Action breadthFirstSearchUI;
-    private Action primsCalc;
-    private Action kruskalsCalc;
-    private Action depthFirstSearchCalc;
-    private Action breadthFirstSearchCalc;
+    public Graph graph;
+    public Graph graphCopy; // temp fix to prevent deadlocking
+
     private ConcurrentDictionary< int, Algorithm > running = new ConcurrentDictionary< int, Algorithm >(); 
     public List< Algorithm > Running
     {
@@ -32,18 +24,99 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
 
-    public void Initiate( Graph graph, Action primsUI, Action kruskalsUI, Action depthFirstSearchUI, Action breadthFirstSearchUI, Action primsCalc, Action kruskalsCalc, Action depthFirstSearchCalc, Action breadthFirstSearchCalc )
+    // public Action minDegreeUI;
+    // public Action minDegreeCalc;
+    // public Action maxDegreeUI;
+    // public Action maxDegreeCalc;
+    // public Action radiusUI;
+    // public Action radiusCalc;
+    // public Action diameterUI;
+    // public Action diameterCalc;
+    // public Action chromaticUI;
+    // public Action chromaticCalc;
+    // public Action bipartiteUI;
+    // public Action bipartiteCalc;
+    // public Action cyclicUI;
+    // public Action cyclicCalc;
+    // public Action fleurysUI;
+    // public Action fleurysCalc;
+    // public Action primsUI;
+    // public Action primsCalc;
+    // public Action kruskalsUI;
+    // public Action kruskalsCalc;
+    // public Action dijkstrasUI;
+    // public Action dijkstrasCalc;
+    // public Action bellmanFordsUI;
+    // public Action bellmanFordsCalc;
+    // public Action depthFirstSearchUI;
+    // public Action depthFirstSearchCalc;
+    // public Action breadthFirstSearchUI;
+    // public Action breadthFirstSearchCalc;
+
+    public void Initiate(
+        Graph graph
+        // Action minDegreeUI,
+        // Action minDegreeCalc,
+        // Action maxDegreeUI,
+        // Action maxDegreeCalc,
+        // Action radiusUI,
+        // Action radiusCalc,
+        // Action diameterUI,
+        // Action diameterCalc,
+        // Action chromaticUI,
+        // Action chromaticCalc,
+        // Action bipartiteUI,
+        // Action bipartiteCalc,
+        // Action cyclicUI,
+        // Action cyclicCalc,
+        // Action fleurysUI,
+        // Action fleurysCalc,
+        // Action primsUI,
+        // Action primsCalc,
+        // Action kruskalsUI,
+        // Action kruskalsCalc,
+        // Action dijkstrasUI,
+        // Action dijkstrasCalc,
+        // Action bellmanFordsUI,
+        // Action bellmanFordsCalc,
+        // Action depthFirstSearchUI,
+        // Action depthFirstSearchCalc,
+        // Action breadthFirstSearchUI,
+        // Action breadthFirstSearchCalc
+    )
     {
         Controller.Singleton.OnGraphModified += Clear;
         this.graph = graph;
-        this.primsUI = primsUI;
-        this.kruskalsUI = kruskalsUI;
-        this.depthFirstSearchUI = depthFirstSearchUI;
-        this.breadthFirstSearchUI = breadthFirstSearchUI;
-        this.primsCalc = primsCalc;
-        this.kruskalsCalc = kruskalsCalc;
-        this.depthFirstSearchCalc = depthFirstSearchCalc;
-        this.breadthFirstSearchCalc = breadthFirstSearchCalc;
+        this.graphCopy = new Graph( graph );
+
+        // this.minDegreeUI = minDegreeUI;
+        // this.minDegreeCalc = minDegreeCalc;
+        // this.maxDegreeUI = maxDegreeUI;
+        // this.maxDegreeCalc = maxDegreeCalc;
+        // this.radiusUI = radiusUI;
+        // this.radiusCalc = radiusCalc;
+        // this.diameterUI = diameterUI;
+        // this.diameterCalc = diameterCalc;
+        // this.chromaticUI = chromaticUI;
+        // this.chromaticCalc = chromaticCalc;
+        // this.bipartiteUI = bipartiteUI;
+        // this.bipartiteCalc = bipartiteCalc;
+        // this.cyclicUI = cyclicUI;
+        // this.cyclicCalc = cyclicCalc;
+        // this.fleurysUI = fleurysUI;
+        // this.fleurysCalc = fleurysCalc;
+        // this.primsUI = primsUI;
+        // this.primsCalc = primsCalc;
+        // this.kruskalsUI = kruskalsUI;
+        // this.kruskalsCalc = kruskalsCalc;
+        // this.dijkstrasUI = dijkstrasUI;
+        // this.dijkstrasCalc = dijkstrasCalc;
+        // this.bellmanFordsUI = bellmanFordsUI;
+        // this.bellmanFordsCalc = bellmanFordsCalc;
+        // this.depthFirstSearchUI = depthFirstSearchUI;
+        // this.depthFirstSearchCalc = depthFirstSearchCalc;
+        // this.breadthFirstSearchUI = breadthFirstSearchUI;
+        // this.breadthFirstSearchCalc = breadthFirstSearchCalc;
     }
 
     public void RunAll()
@@ -58,195 +131,55 @@ public class AlgorithmManager
         this.RunKruskals();
     }
 
-    public void RunMinDegree()
+    private void RunAlgorithm( Type algorithm, object[] parms )
     {
-        if (!IsComplete(MinDegreeAlgorithm.GetHash()))
-        {
-            this.EnsureMaxDegreeRunning();
-            new MinDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-        }
-        else
-        {
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[MinDegreeAlgorithm.GetHash()]);
-        }
+        Algorithm algorithmInstance = ( Algorithm ) Activator.CreateInstance( algorithm, parms.Prepend( this ).ToArray() );
+        algorithmInstance.RunThread();
     }
 
-    public void RunMaxDegree()
+    private void EnsureRunning( Type algorithm, params object[] parms )
     {
-        if (!IsComplete(MaxDegreeAlgorithm.GetHash()))
-        {
-            this.EnsureMaxDegreeRunning();
-            new MaxDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-        }
-        else
-        {
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[MaxDegreeAlgorithm.GetHash()]);
-        }
-    }
-
-    public void RunRadius()
-    {
-        if (!IsComplete(RadiusAlgorithm.GetHash()))
-        {
-            new RadiusAlgorithm(this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning).RunThread();
-        }
-        else
-        {
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[RadiusAlgorithm.GetHash()]);
-        }
-    }
-
-    public void RunDiameter()
-    {
-        if (!IsComplete(DiameterAlgorithm.GetHash()))
-        {
-            new DiameterAlgorithm(this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning).RunThread();
-        }
-        else
-        {
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[DiameterAlgorithm.GetHash()]);
-        }
-    }
-
-    public void RunChromatic()
-    {
-        if (!IsComplete(ChromaticAlgorithm.GetHash()))
-        {
-            this.EnsureMaxDegreeRunning();
-            new ChromaticAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-        }
-        else
-        {
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[ChromaticAlgorithm.GetHash()]);
-        }
-    }
-
-    public void RunBipartite()
-    {
-        if (!IsComplete(BipartiteAlgorithm.GetHash()))
-        {
-            this.EnsureChromaticRunning();
-            new BipartiteAlgorithm(this.graph, null, null, this.MarkRunning,
-                this.MarkComplete, this.UnmarkRunning).RunThread();
-        }
-        else
-        {
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[ChromaticAlgorithm.GetHash()]);
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[BipartiteAlgorithm.GetHash()]);
-        }
-    }
-
-    public void RunCyclic()
-    {
-        if (!IsComplete(CyclicAlgorithm.GetHash()))
-        {
-            new CyclicAlgorithm(this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning).RunThread();
-        }
-        else
-        {
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[CyclicAlgorithm.GetHash()]);
-        }
-    }
-
-    public void RunPrims( Vertex vert ) // temp parameter
-    {
-        // TODO: retrieve vert from selection manager and check if only a single vertex is selected, maybe subscribe to OnSelectionChange
-        // new PrimsAlgorithm( this.graph, vert, this.primsUI, this.primsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).Run();
-    }
-
-    public void RunKruskals()
-    {
-        new KruskalsAlgorithm( this.graph, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
-
-    public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
-    {
-        new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
-
-    public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) // temp parameters
-    {
-        new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.breadthFirstSearchUI, this.breadthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
-
-    public void EnsureMinDegreeRunning()
-    {
-        int hash = MinDegreeAlgorithm.GetHash();
+        // Debug.Log( algoParms.Length );
+        int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new MinDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
+            this.RunAlgorithm( algorithm, parms );
+        
+        // TODO: check if this is needed, but if algorithm is not complete, then invoke ui delegate
+        // JIMSON: I ADDED CODE TO DO THIS BELOW
+        if (this.IsComplete(hash))
+        {
+            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[hash]);
+        }
+        
     }
 
-    public void EnsureMaxDegreeRunning()
-    {
-        int hash = MaxDegreeAlgorithm.GetHash();
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new MaxDegreeAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunMinDegree() => this.EnsureRunning( typeof ( MinDegreeAlgorithm ) );
 
-    public void EnsureRadiusRunning()
-    {
-        int hash = RadiusAlgorithm.GetHash();
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new RadiusAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunMaxDegree() => this.EnsureRunning( typeof ( MaxDegreeAlgorithm ) );
 
-    public void EnsureDiameterRunning()
-    {
-        int hash = DiameterAlgorithm.GetHash();
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new DiameterAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunRadius() => this.EnsureRunning( typeof ( RadiusAlgorithm ) );
 
-    public void EnsureChromaticRunning()
-    {
-        this.EnsureMaxDegreeRunning();
+    public void RunDiameter() => this.EnsureRunning( typeof ( DiameterAlgorithm ) );
 
-        int hash = ChromaticAlgorithm.GetHash();
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new ChromaticAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunChromatic() => this.EnsureRunning( typeof ( ChromaticAlgorithm ) );
 
-    public void EnsureBipartiteRunning()
-    {
-        int hash = BipartiteAlgorithm.GetHash();
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new BipartiteAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunBipartite() => this.EnsureRunning( typeof ( BipartiteAlgorithm ) );
 
-    public void EnsureCyclicRunning()
-    {
-        int hash = CyclicAlgorithm.GetHash();
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new CyclicAlgorithm( this.graph, null, null, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunCyclic() => this.EnsureRunning( typeof ( CyclicAlgorithm ) );
 
-    public void EnsurePrimsRunning( Vertex vert )
-    {
-        int hash = PrimsAlgorithm.GetHash( vert );
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new PrimsAlgorithm( this.graph, vert, this.primsUI, this.primsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunFleurys() => this.EnsureRunning( typeof ( FleurysAlgorithm ) );
 
-    public void EnsureKruskalsRunning()
-    {
-        int hash = KruskalsAlgorithm.GetHash();
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new KruskalsAlgorithm( this.graph, this.kruskalsUI, this.kruskalsCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunPrims( Vertex vert ) => this.EnsureRunning( typeof ( PrimsAlgorithm ), vert );
 
-    public void EnsureDepthFirstSearchRunning( Vertex vert, Action< Edge, Vertex > action )
-    {
-        int hash = DepthFirstSearchAlgorithm.GetHash( vert );
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new DepthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunKruskals() => this.EnsureRunning( typeof ( KruskalsAlgorithm ) );
 
-    public void EnsureBreadthFirstSearchRunning( Vertex vert, Action< Edge, Vertex > action )
-    {
-        int hash = BreadthFirstSearchAlgorithm.GetHash( vert );
-        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            new BreadthFirstSearchAlgorithm( this.graph, vert, action, this.depthFirstSearchUI, this.depthFirstSearchCalc, this.MarkRunning, this.MarkComplete, this.UnmarkRunning ).RunThread();
-    }
+    public void RunDijkstras( Vertex src, Vertex dest ) => this.EnsureRunning( typeof ( DijkstrasAlgorithm ), src, dest );
+
+    public void RunBellmanFords( Vertex src, Vertex dest ) => this.EnsureRunning( typeof ( BellmanFordsAlgorithm ), src, dest );
+
+    public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) => this.EnsureRunning( typeof ( DepthFirstSearchAlgorithm ), vert, action );
+
+    public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), vert, action );
 
     public int? GetMinDegree() => ( ( MinDegreeAlgorithm ) this.complete.GetValue( MinDegreeAlgorithm.GetHash() ) )?.MinDegree;
 
@@ -258,9 +191,30 @@ public class AlgorithmManager
 
     public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;
 
+    // TODO: rename this more appropriately
     public bool? GetBipartite() => ( ( BipartiteAlgorithm ) this.complete.GetValue( BipartiteAlgorithm.GetHash() ) )?.IsBipartite;
 
+    // TODO: rename this more appropriately
     public bool? GetCyclic() => ( ( CyclicAlgorithm ) this.complete.GetValue( CyclicAlgorithm.GetHash() ) )?.IsCyclic;
+
+    // TODO: rename this more appropriately
+    public bool? GetFleurys() => ( ( FleurysAlgorithm ) this.complete.GetValue( FleurysAlgorithm.GetHash() ) )?.EulerianCircuitExists;
+
+    public List< Edge > GetPrimsMST( Vertex root ) => ( ( PrimsAlgorithm ) this.complete.GetValue( PrimsAlgorithm.GetHash( root ) ) )?.Mst;
+
+    public List< Edge > GetKruskalsMST() => ( ( KruskalsAlgorithm ) this.complete.GetValue( KruskalsAlgorithm.GetHash() ) )?.Mst;
+
+    public float? GetDijkstrasCost( Vertex src, Vertex dest ) => ( ( DijkstrasAlgorithm ) this.complete.GetValue( DijkstrasAlgorithm.GetHash( src, dest ) ) )?.Cost;
+
+    public List< Edge > GetDijkstrasPath( Vertex src, Vertex dest ) => ( ( DijkstrasAlgorithm ) this.complete.GetValue( DijkstrasAlgorithm.GetHash( src, dest ) ) )?.Path;
+
+    public float? GetBellmanFordsCost( Vertex src, Vertex dest ) => ( ( BellmanFordsAlgorithm ) this.complete.GetValue( BellmanFordsAlgorithm.GetHash( src, dest ) ) )?.Cost;
+
+    public List< Edge > GetBellmanFordsPath( Vertex src, Vertex dest ) => ( ( BellmanFordsAlgorithm ) this.complete.GetValue( BellmanFordsAlgorithm.GetHash( src, dest ) ) )?.Path;
+
+    public List< Edge > GetDepthFirstSearchTree( Vertex root ) => ( ( DepthFirstSearchAlgorithm ) this.complete.GetValue( DepthFirstSearchAlgorithm.GetHash( root ) ) )?.Tree;
+
+    public List< Edge > GetBreadthFirstSearchTree( Vertex root ) => ( ( BreadthFirstSearchAlgorithm ) this.complete.GetValue( BreadthFirstSearchAlgorithm.GetHash( root ) ) )?.Tree;
 
     public void MarkRunning( Algorithm algo )
     {
@@ -275,16 +229,12 @@ public class AlgorithmManager
 
     public void UnmarkRunning( Algorithm algo )
     {
-        this.running.TryRemove( algo.GetHashCode() , out _ );
+        this.running.TryRemove( algo.GetHashCode(), out _ );
     }
-
-    // public bool IsRunning( Type Algo ) => this.IsRunning( Algo.GetHash() );
 
     public bool IsRunning( Algorithm algo ) => this.IsRunning( algo.GetHashCode() );
 
     public bool IsRunning( int key ) => this.running.ContainsKey( key );
-
-    // public bool IsComplete( Type Algo ) => this.IsComplete( Algo.GetHash() );
 
     public bool IsComplete( Algorithm algo ) => this.IsComplete( algo.GetHashCode() );
 
@@ -295,19 +245,19 @@ public class AlgorithmManager
         this.KillAll();
         this.running.Clear();
         this.complete.Clear();
+        this.graphCopy = new Graph( this.graph );
     }
 
     public void KillAll()
     {
-        Logger.Log("Stopping all algorithms.", this, LogType.INFO);
+        Logger.Log( "Stopping all algorithms.", this, LogType.INFO );
         foreach ( KeyValuePair< int, Algorithm > kvp in this.running.ToList() )
             kvp.Value?.Kill();
     }
 
     ~AlgorithmManager()
     {
-        KillAll();
+        this.KillAll();
     }
 
-    
 }

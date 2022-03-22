@@ -18,7 +18,7 @@ public class GraphInfoAlgorithmAssociation
     public string nullValue = "N/A";
     public string completedMethod = "";
 
-    public Action OnUICompleteAction
+    public Action OnCompleteUpdateUI
     {
         get
         {
@@ -39,7 +39,7 @@ public class GraphInfoAlgorithmAssociation
         }
     }
 
-    public Action OnUICalculatingAction
+    public Action OnCalculatingUpdateUI
     {
         get
         {
@@ -72,7 +72,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         {
             if (association.algorithmClass == algorithmName)
             {
-                association.OnUICompleteAction();
+                association.OnCompleteUpdateUI();
                 return;
             }
         }
@@ -86,23 +86,45 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         {
             if (association.algorithmClass == algorithmName)
             {
-                association.OnUICalculatingAction();
+                association.OnCalculatingUpdateUI();
                 return;
             }
         }
+        
+        Logger.Log("No algorithm association found for " + algorithmName + ".", this, LogType.ERROR);
     }
 
     public void InitiateAlgorithmManager(AlgorithmManager algoManager) {
         algoManager.Initiate(
-            Controller.Singleton.Graph,
-            ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult,
-            ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating
+            Controller.Singleton.Graph
+            // ( Action ) this.UpdateMinDegreeResult,
+            // ( Action ) this.UpdateMinDegreeCalculating,
+            // ( Action ) this.UpdateMaxDegreeResult,
+            // ( Action ) this.UpdateMaxDegreeCalculating,
+            // ( Action ) this.UpdateRadiusResult,
+            // ( Action ) this.UpdateRadiusCalculating,
+            // ( Action ) this.UpdateDiameterResult,
+            // ( Action ) this.UpdateDiameterCalculating,
+            // ( Action ) this.UpdateChromaticResult,
+            // ( Action ) this.UpdateChromaticCalculating,
+            // ( Action ) this.UpdateBipartiteResult,
+            // ( Action ) this.UpdateBipartiteCalculating,
+            // ( Action ) this.UpdateCyclicResult,
+            // ( Action ) this.UpdateCyclicCalculating,
+            // ( Action ) this.UpdateFleurysResult,
+            // ( Action ) this.UpdateFleurysCalculating,
+            // ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
+            // ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
+            // ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
+            // ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
+            // ( Action ) this.UpdateDijkstrasResult,
+            // ( Action ) this.UpdateDijkstrasCalculating,
+            // ( Action ) this.UpdateBellmanFordsResult,
+            // ( Action ) this.UpdateBellmanFordsCalculating,
+            // ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
+            // ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
+            // ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult,
+            // ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating
         );
         this.UpdateGraphInfo();
     }
@@ -112,25 +134,13 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         this.sizeText.text = "Size: " + Controller.Singleton.Graph.Size;
 
         // Run multithreaded algorithms
+        Controller.Singleton.AlgorithmManager.RunChromatic();
         Controller.Singleton.AlgorithmManager.RunMinDegree();
         Controller.Singleton.AlgorithmManager.RunMaxDegree();
         Controller.Singleton.AlgorithmManager.RunRadius();
         Controller.Singleton.AlgorithmManager.RunDiameter();
-        Controller.Singleton.AlgorithmManager.RunBipartite(); //TEMPORARY FIX
+        Controller.Singleton.AlgorithmManager.RunBipartite();
         Controller.Singleton.AlgorithmManager.RunCyclic();
-    }
-
-    // public void UpdatePrimsResult() { }
-
-    // public void UpdateKruskalsResult() { }
-
-    // public void UpdateDepthFirstSearchResult() { }
-
-    // public void UpdateBreadthFirstSearchResult() { }
-
-    public void UpdateBellmanFordResult()
-    {
-        
     }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
@@ -148,11 +158,4 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         openPanel.gameObject.SetActive(false);
     }
 
-    // public void UpdatePrimsCalculating() { }
-
-    // public void UpdateKruskalsCalculating() { }
-
-    // public void UpdateDepthFirstSearchCalculating() { }
-
-    // public void UpdateBreadthFirstSearchCalculating() { }
 }

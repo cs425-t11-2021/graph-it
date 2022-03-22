@@ -6,14 +6,20 @@ using System.Collections.Generic;
 [System.Serializable]
 public class PrimsAlgorithm : Algorithm
 {
+    // TODO: root should be private
     public Vertex Root { get; private set; }
     public List< Edge > Mst { get; private set; }
 
-    public PrimsAlgorithm( Graph graph, Vertex root, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning )
+    public PrimsAlgorithm( AlgorithmManager algoManager, Vertex root ) : base( algoManager, null, null )
     {
         if ( !this.Graph.Vertices.Contains( root ) )
             throw new System.Exception( "Vertex for Prim's algorithm is not in graph." );
         this.Root = root;
+        
+        // Assign the type of the algorithm
+        this.type = AlgorithmType.DISPLAY;
+        // Add the root vertex to vertex parms array
+        vertexParms = new Vertex[] {this.Root};
     }
 
     public override void Run()

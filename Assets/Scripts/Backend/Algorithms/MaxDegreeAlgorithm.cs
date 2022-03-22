@@ -8,14 +8,12 @@ public class MaxDegreeAlgorithm : Algorithm
 {
     public int MaxDegree { get; private set; }
 
-    public MaxDegreeAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public MaxDegreeAlgorithm( AlgorithmManager algoManager ) : base( algoManager, null, null ) { }
 
     public override void Run()
     {
         IEnumerable< int > degrees = this.Graph.Vertices.Select( vert => this.Graph.GetVertexDegree( vert ) );
         this.MaxDegree = degrees.Count() > 0 ? degrees.Max() : 0;
-
-        ChromaticAlgorithm.SetMaxDegree( this.Graph, this.MaxDegree );
     }
 
     public static int GetHash() => typeof ( MaxDegreeAlgorithm ).GetHashCode();

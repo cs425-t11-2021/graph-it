@@ -3,25 +3,27 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Collections.Concurrent;
-using UnityEngine;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
-    private static ConcurrentDictionary< Graph, int > maxDegrees = new ConcurrentDictionary< Graph, int >();
     public int ChromaticNumber { get; private set; }
     public int[] Coloring { get; private set; }
 
-    public ChromaticAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public ChromaticAlgorithm( AlgorithmManager algoManager ) : base( algoManager, null, null ) { }
 
     public override void Run()
     {
-        // TODO: if HasLoops, then throw error
+        // TODO: if HasLoops, then warn user
+
+        this.AlgoManager.RunMaxDegree();
 
         this.Coloring = new int[ this.Graph.Order ];
-        int chi = Math.Min( this.Graph.Order, 1 ); // TODO: get lower bound
-        this.WaitUntil( () => ChromaticAlgorithm.HasMaxDegree( this.Graph ) );
-        int upperBound = ChromaticAlgorithm.maxDegrees[ this.Graph ] + 1;
+        int chi = Math.Min( this.Graph.Order, 1 );
+        this.WaitUntilMaxDegreeComplete();
+        int upperBound = ( int ) this.AlgoManager.GetMaxDegree() + 1;
+        // TODO: use clique number for lower bound
+
         while ( !this.IsProperColoring() )
         {
             if ( chi > upperBound ) // something really bad happended
@@ -29,25 +31,18 @@ public class ChromaticAlgorithm : Algorithm
             if ( this.Coloring.Min() >= chi - 1 )
             {
                 chi++;
-                // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "increment chi to " + chi ) );
                 Array.Clear( this.Coloring, 0, this.Coloring.Length );
             }
-            // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "update color" ) );
             this.UpdateColoring( chi );
-            // foreach ( int c in this.Coloring )
-                // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( c ) );
         }
-        // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "finished coloring" ) );
         this.ChromaticNumber = chi;
-
-        BipartiteAlgorithm.SetChromaticNumber( this.Graph, chi );
     }
 
     private bool IsProperColoring()
     {
         foreach ( Edge edge in this.Graph.Adjacency.Values )
         {
-            if ( edge.vert1 == edge.vert2 ) // temp
+            if ( edge.vert1 == edge.vert2 ) // temp, ignoring loops
                 continue;
             if ( this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
                 return false;
@@ -55,12 +50,7 @@ public class ChromaticAlgorithm : Algorithm
         return true;
     }
 
-    private void UpdateColoring( int colors )
-    {
-        this.UpdateColoringHelper( colors, 0 );
-    }
-
-    private void UpdateColoringHelper( int colors, int index )
+    private void UpdateColoring( int colors, int index=0 )
     {
         if ( index < this.Coloring.Length )
         {
@@ -71,18 +61,13 @@ public class ChromaticAlgorithm : Algorithm
                     this.Coloring[ i ] = 0;
             }
             else
-                this.UpdateColoringHelper( colors, ++index );
+                this.UpdateColoring( colors, ++index );
         }
     }
 
-    private static bool HasMaxDegree( Graph graph ) => ChromaticAlgorithm.maxDegrees.GetValue( graph, -1 ) != -1;
-
-    public static void SetMaxDegree( Graph graph, int maxDegree ) => ChromaticAlgorithm.maxDegrees[ graph ] = maxDegree;
-
-    public override void Kill()
+    private void WaitUntilMaxDegreeComplete()
     {
-        base.Kill();
-        BipartiteAlgorithm.ClearChromaticNumber( this.Graph );
+        this.WaitUntilAlgorithmComplete( MaxDegreeAlgorithm.GetHash() );
     }
 
     public static int GetHash() => typeof ( ChromaticAlgorithm ).GetHashCode();
