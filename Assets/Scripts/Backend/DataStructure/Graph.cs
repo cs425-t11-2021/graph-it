@@ -15,7 +15,7 @@ using UnityEngine;
 public class Graph
 {
     public List< Vertex > Vertices { get; private set; } // TODO: make concurrent
-    public ConcurrentDictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // not yet supporting multiple edges
+    public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // not yet supporting multiple edges
     public Stack< GraphModification > Changes { get; private set; } // logs all changes to graph
     private Stack< GraphModification > redoChanges; // logs all undone changes
 
@@ -71,7 +71,7 @@ public class Graph
     public Graph()
     {
         this.Vertices = new List< Vertex >();
-        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
+        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
         this.Changes = new Stack< GraphModification >();
         // TODO: add redoChanges
     }
@@ -79,14 +79,14 @@ public class Graph
     public Graph( Graph graph )
     {
         this.Vertices = new List< Vertex >( graph.Vertices );
-        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
+        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
         // TODO: add Changes and redoChanges
     }
 
     public void Clear()
     {
         this.Vertices = new List< Vertex >();
-        this.Adjacency = new ConcurrentDictionary< ( Vertex, Vertex ), Edge >();
+        this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
         // TODO: add Changes and redoChanges
     }
 
@@ -164,11 +164,11 @@ public class Graph
     public void RemoveEdge( Edge edge, bool recordChange=true )
     {
         if ( edge.Directed )
-            this.Adjacency.TryRemove( ( edge.vert1, edge.vert2 ), out _ );
+            this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
         else
         {
-            this.Adjacency.TryRemove( ( edge.vert1, edge.vert2 ), out _ );
-            this.Adjacency.TryRemove( ( edge.vert2, edge.vert1 ), out _ );
+            this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
+            this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) );
         }
 
         if ( recordChange )
@@ -271,7 +271,7 @@ public class Graph
         if ( edge != this[ edge.vert1, edge.vert2 ] )
             throw new System.Exception( "The provided edge to direct is not in the graph." );
 
-        this.Adjacency.TryRemove( ( edge.vert2, edge.vert1 ), out _ ); // TODO: record this change
+        this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) ); // TODO: record this change
     }
 
     public void MakeEdgeUndirectedAction( Edge edge )

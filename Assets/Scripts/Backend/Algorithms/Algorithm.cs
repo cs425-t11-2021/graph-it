@@ -13,8 +13,6 @@ public abstract class Algorithm
     private Action< Algorithm > markRunning;
     private Action< Algorithm > markComplete;
     private Action< Algorithm > unmarkRunning;
-    private Action updateUI;
-    private Action updateCalc;
     protected bool running;
     protected bool complete;
     
@@ -24,7 +22,7 @@ public abstract class Algorithm
     // All the vertex parameters associated with an algorithm
     protected Vertex[] vertexParms = null;
 
-    public Algorithm( AlgorithmManager algoManager, Action updateUI, Action updateCalc )
+    public Algorithm( AlgorithmManager algoManager )
     {
         this.AlgoManager = algoManager;
         this.Graph = algoManager.graphCopy;
@@ -32,8 +30,6 @@ public abstract class Algorithm
         this.markRunning = algoManager.MarkRunning;
         this.markComplete = algoManager.MarkComplete;
         this.unmarkRunning = algoManager.UnmarkRunning;
-        this.updateUI = updateUI;
-        this.updateCalc = updateCalc;
         this.running = false;
         this.complete = false;
     }
@@ -55,8 +51,8 @@ public abstract class Algorithm
             this.running = true;
             this.markRunning( this );
             
-            if (this.type == AlgorithmType.INFO)
-                RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoCalculating(this));
+            if ( this.type == AlgorithmType.INFO )
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this ) );
             
             this.Run();
             Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
@@ -64,10 +60,10 @@ public abstract class Algorithm
             this.complete = true;
             this.markComplete( this );
             
-            if (this.type == AlgorithmType.INFO)
-                RunInMain.Singleton.queuedTasks.Enqueue(() => GraphInfo.Singleton.UpdateGraphInfoResults(this));
+            if ( this.type == AlgorithmType.INFO )
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this ) );
             else if (this.type == AlgorithmType.DISPLAY)
-                RunInMain.Singleton.queuedTasks.Enqueue(() => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults(this, vertexParms));
+                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, vertexParms ) );
         }
         catch ( ThreadAbortException )
         {

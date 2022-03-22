@@ -11,7 +11,7 @@ public class DijkstrasAlgorithm : Algorithm
     private Vertex src;
     private Vertex dest;
 
-    public DijkstrasAlgorithm( AlgorithmManager algoManager, Vertex src, Vertex dest ) : base( algoManager, null, null )
+    public DijkstrasAlgorithm( AlgorithmManager algoManager, Vertex src, Vertex dest ) : base( algoManager )
     {
         this.src = src;
         this.dest = dest;

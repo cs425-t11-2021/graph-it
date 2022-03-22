@@ -5,7 +5,7 @@ public class RadiusAlgorithm : Algorithm
 {
     public float? Radius { get; private set; }
 
-    public RadiusAlgorithm( AlgorithmManager algoManager ) : base( algoManager, null, null ) { }
+    public RadiusAlgorithm( AlgorithmManager algoManager ) : base( algoManager ) { }
 
     public override void Run()
     {
