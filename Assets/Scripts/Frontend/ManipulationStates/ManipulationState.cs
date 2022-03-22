@@ -10,6 +10,7 @@ public abstract class ManipulationState
     public static ManipulationState edgeCreationState;
     public static ManipulationState edgeDrawingState;
     public static ManipulationState disabledState;
+    public static ManipulationState algorithmInitiationState;
 
     // Property for whether or not the state is active
     public bool Active {

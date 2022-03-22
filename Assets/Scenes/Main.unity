@@ -8314,6 +8314,7 @@ GameObject:
   - component: {fileID: 770796876}
   - component: {fileID: 770796875}
   - component: {fileID: 770796874}
+  - component: {fileID: 770796877}
   m_Layer: 5
   m_Name: Bellman Ford
   m_TagString: Untagged
@@ -8348,7 +8349,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770796872}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -8435,6 +8436,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 770796872}
   m_CullTransparentMesh: 1
+--- !u!114 &770796877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 770796872}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkedChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: SelectAlgorithm
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: BellmanFordsAlgorithm
+          m_BoolArgument: 0
+        m_CallState: 2
+  checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  highlightColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+  group: {fileID: 0}
 --- !u!1 &786696390
 GameObject:
   m_ObjectHideFlags: 0
@@ -10957,21 +10988,21 @@ MonoBehaviour:
   associations:
   - algorithmClass: PrimsAlgorithm
     multiThreaded: 1
-    activationButton: {fileID: 1072866586}
+    activationButton: {fileID: 1072866589}
     requiredVertices: 1
     requiredEdges: 0
     activationMethod: RunPrims
     completedMethod: GetPrimsMST
   - algorithmClass: KruskalsAlgorithm
     multiThreaded: 1
-    activationButton: {fileID: 1937964947}
+    activationButton: {fileID: 1937964950}
     requiredVertices: 0
     requiredEdges: 0
     activationMethod: RunKruskals
     completedMethod: GetKruskalsMST
   - algorithmClass: BellmanFordsAlgorithm
     multiThreaded: 1
-    activationButton: {fileID: 770796874}
+    activationButton: {fileID: 770796877}
     requiredVertices: 2
     requiredEdges: 0
     activationMethod: RunBellmanFords
@@ -11521,6 +11552,7 @@ GameObject:
   - component: {fileID: 1072866588}
   - component: {fileID: 1072866587}
   - component: {fileID: 1072866586}
+  - component: {fileID: 1072866589}
   m_Layer: 5
   m_Name: PrimsAlgorithm
   m_TagString: Untagged
@@ -11555,7 +11587,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1072866584}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -11642,6 +11674,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1072866584}
   m_CullTransparentMesh: 1
+--- !u!114 &1072866589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1072866584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkedChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: SelectAlgorithm
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: PrimsAlgorithm
+          m_BoolArgument: 0
+        m_CallState: 2
+  checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  highlightColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+  group: {fileID: 0}
 --- !u!1 &1074671284
 GameObject:
   m_ObjectHideFlags: 0
@@ -16848,6 +16910,7 @@ GameObject:
   - component: {fileID: 1394906817}
   - component: {fileID: 1394906816}
   - component: {fileID: 1394906815}
+  - component: {fileID: 1394906818}
   m_Layer: 5
   m_Name: DijkstraAlgorithm
   m_TagString: Untagged
@@ -16882,7 +16945,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1394906813}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -16969,6 +17032,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1394906813}
   m_CullTransparentMesh: 1
+--- !u!114 &1394906818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1394906813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkedChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: SelectAlgorithm
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: PrimsAlgorithm
+          m_BoolArgument: 0
+        m_CallState: 2
+  checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  highlightColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+  group: {fileID: 0}
 --- !u!1 &1433747548
 GameObject:
   m_ObjectHideFlags: 0
@@ -18851,7 +18944,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1581409055}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: StartAlgorithmInitiation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1581409055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22410,6 +22515,7 @@ GameObject:
   - component: {fileID: 1937964949}
   - component: {fileID: 1937964948}
   - component: {fileID: 1937964947}
+  - component: {fileID: 1937964950}
   m_Layer: 5
   m_Name: KruskalAlgorithm
   m_TagString: Untagged
@@ -22444,7 +22550,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1937964945}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -22531,6 +22637,36 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1937964945}
   m_CullTransparentMesh: 1
+--- !u!114 &1937964950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1937964945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkedChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: SelectAlgorithm
+        m_Mode: 5
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: KruskalsAlgorithm
+          m_BoolArgument: 0
+        m_CallState: 2
+  checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  highlightColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+  group: {fileID: 0}
 --- !u!1 &1938432809
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,7 +13,7 @@ public class GraphDisplayAlgorithmAssociation
 {
     public string algorithmClass = "";
     public bool multiThreaded = false;
-    public Button activationButton;
+    public ToggleButton activationButton;
     public int requiredVertices = 0;
     public int requiredEdges = 0;
     public string activationMethod = "";
@@ -85,6 +85,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private Button algOpenPanel;
     //Reference to the button to open the algorithm info panels
 
+    public GraphDisplayAlgorithmAssociation CurrentlySelectedAlgorithm {get; private set;}
+
     // Property for whether or not the algorithm buttons are enabled
     public bool AlgorithmButtonsEnabled
     {
@@ -93,7 +95,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     private void Awake() {
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
-        Array.ForEach(this.associations, a => a.activationButton.interactable = false);
+        Array.ForEach(this.associations, a => a.activationButton.UpdateStatus(false));
     }
 
     // Function called when the selection is changed
@@ -106,14 +108,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         // this.bellmanButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
         foreach (GraphDisplayAlgorithmAssociation association in this.associations)
         {
-            if (association.requiredEdges != selectedEdgeCount || association.requiredVertices != selectedVertexCount)
-            {
-                association.activationButton.interactable = false;
-            }
-            else
-            {
-                association.activationButton.interactable = true;
-            }
+            // if (association.requiredEdges != selectedEdgeCount || association.requiredVertices != selectedVertexCount)
+            // {
+            //     association.activationButton.interactable = false;
+            // }
+            // else
+            // {
+            //     association.activationButton.interactable = true;
+            // }
         }
     }
 
@@ -133,27 +135,55 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         Logger.Log("No algorithm association found for " + algorithmName + ".", this, LogType.ERROR);
     }
 
-    public void RunGraphDisplayAlgorithm(string algorithmName)
+    public void RunGraphDisplayAlgorithm(GraphDisplayAlgorithmAssociation association)
     {
+        if (association.requiredVertices > 0)
+        {
+            Object[] vertices = new Object[association.requiredVertices];
+            for (int i = 0; i < association.requiredVertices; i++)
+            {
+                vertices[i] = SelectionManager.Singleton.SelectedVertices[i].Vertex;
+            }
+            Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, vertices);
+        }
+        else
+        {
+            Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, null);
+        }
+
+        DeselectAllAlgorithms();
+    }
+
+    public void SelectAlgorithm(string algorithmName) {
         foreach (GraphDisplayAlgorithmAssociation association in this.associations)
         {
             if (association.algorithmClass == algorithmName)
             {
-                if (association.requiredVertices > 0)
-                {
-                    Object[] vertices = new Object[association.requiredVertices];
-                    for (int i = 0; i < association.requiredVertices; i++)
-                    {
-                        vertices[i] = SelectionManager.Singleton.SelectedVertices[i].Vertex;
-                    }
-                    Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, vertices);
+                if (this.CurrentlySelectedAlgorithm != association) {
+                    this.CurrentlySelectedAlgorithm = association;
+                    association.activationButton.UpdateStatus(true);
                 }
-                else
-                {
-                    Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, null);
+                else {
+                    this.CurrentlySelectedAlgorithm = null;
+                    association.activationButton.UpdateStatus(false);
                 }
-                return;
             }
+            else {
+                association.activationButton.UpdateStatus(false);
+            }
+        }
+    }
+
+    public void DeselectAllAlgorithms() {
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations) {
+            association.activationButton.UpdateStatus(false);
+        }
+        this.CurrentlySelectedAlgorithm = null;
+    }
+
+    public void StartAlgorithmInitiation() {
+        if (this.CurrentlySelectedAlgorithm != null) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmInitiationState;
         }
     }
 
