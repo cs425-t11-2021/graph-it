@@ -54,7 +54,5 @@ public class AlgorithmDisplayState : ManipulationState
                 vertexObj.IsAlgorithmResult = false;
         }
 
-        AlgorithmsPanel.Singleton.AlgorithmResult = null;
-        AlgorithmsPanel.Singleton.resultButton.interactable = false;
     }
 }

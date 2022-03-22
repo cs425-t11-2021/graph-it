@@ -36,9 +36,8 @@ public class GraphDisplayAlgorithmAssociation
                 {
                     SelectionManager.Singleton.DeSelectAll();
                     
-                    AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
-                    NotificationManager.Singleton.CreateNoficiation(algorithmClass + " finished.", 3);
-                    AlgorithmsPanel.Singleton.resultButton.interactable = true;
+                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, (List<Edge>) result);
+                    NotificationManager.Singleton.CreateNoficiation(this.algorithmClass + " finished.", 3);
                 }
             };
         }
@@ -74,6 +73,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public List<Edge> AlgorithmResult {get; set;}
 
+    public List<Edge>[] algorithmResults;
+
 
     // Property for whether or not the algorithm buttons are enabled
     public bool AlgorithmButtonsEnabled
@@ -85,6 +86,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
         Array.ForEach(this.associations, a => a.activationButton.UpdateStatus(false));
         this.resultButton.interactable = false;
+
+        algorithmResults = new List<Edge>[this.associations.Length];
     }
 
     // Function called when the selection is changed
@@ -157,9 +160,31 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                     this.CurrentlySelectedAlgorithm = null;
                     association.activationButton.UpdateStatus(false);
                 }
+
+                int index = Array.IndexOf(this.associations, association);
+                if (this.algorithmResults[index] != null) {
+                    this.resultButton.interactable = true;
+                    this.AlgorithmResult = this.algorithmResults[index];
+                }
+                else {
+                    this.resultButton.interactable = false;
+                    this.AlgorithmResult = null;
+                }
             }
             else {
                 association.activationButton.UpdateStatus(false);
+            }
+        }
+    }
+
+    public void StoreAlgorithmResult(string algorithmName, List<Edge> result) {
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                int index = Array.IndexOf(this.associations, association);
+                this.algorithmResults[index] = result;
+                return;
             }
         }
     }
