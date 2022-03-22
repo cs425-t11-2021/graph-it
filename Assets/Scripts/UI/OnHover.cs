@@ -8,19 +8,20 @@ public class OnHover : MonoBehaviour
 {
     //Prefab of UI label on hover
     [SerializeField] private GameObject labelPrefab;
-    OnHoverLabel newLabel;
+    [SerializeField] private string labelDescription;
+    [SerializeField] private Vector3 offset;
+    [SerializeField] private Vector2 size;
+    private OnHoverLabel newLabel;
     
    public void OnHoverMouse(){
-        Debug.Log("On pointer enter called");
-        newLabel = Instantiate(labelPrefab, UIManager.Singleton.mainCanvas.transform).GetComponent<OnHoverLabel>();
-        newLabel.CreateLabel();
-        newLabel.transform.SetAsLastSibling();
-        newLabel.transform.position = this.transform.position;
+        this.newLabel = Instantiate(labelPrefab, UIManager.Singleton.mainCanvas.transform).GetComponent<OnHoverLabel>();
+        this.newLabel.CreateLabel(this.labelDescription, this.size);
+        this.newLabel.transform.SetAsLastSibling();
+        this.newLabel.transform.position = this.transform.position + this.offset;
    }
 
     public void OnHoverExit()
     {
-        Debug.Log("On pointer exit called");
-        newLabel.OnNotHover();
+        this.newLabel.OnNotHover();
     }
 }
