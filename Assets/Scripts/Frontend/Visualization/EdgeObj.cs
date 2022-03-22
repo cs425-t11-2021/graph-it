@@ -62,6 +62,27 @@ public class EdgeObj : MonoBehaviour
             }
         }
     }
+
+    private bool isAlgorithmResult;
+    public bool IsAlgorithmResult {
+        get => this.isAlgorithmResult;
+        set {
+            if (this.selected)
+                SelectionManager.Singleton.DeselectEdge(this);
+
+            this.isAlgorithmResult = value;
+            // If the vertex object becomes selected, make its label editable
+            if (value) {
+                this.shapeRenderer.color = new Color32(0, 200, 0, 255);
+                this.arrowSpriteRenderer.color = new Color32(0, 200, 0, 255);;
+            }
+            else {
+                this.shapeRenderer.color = new Color32(0, 0, 0, 255);
+                this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
+            }
+        }
+    }
+
     // Reference to the spriteRenderer component of the object
     private SpriteRenderer spriteRenderer;
 
