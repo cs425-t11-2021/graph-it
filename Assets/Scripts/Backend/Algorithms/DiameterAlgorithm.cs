@@ -5,7 +5,7 @@ public class DiameterAlgorithm : Algorithm
 {
     public float? Diameter { get; private set; }
 
-    public DiameterAlgorithm( AlgorithmManager algoManager ) : base( algoManager ) { }
+    public DiameterAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
     public override void Run()
     {
@@ -20,7 +20,7 @@ public class DiameterAlgorithm : Algorithm
         {
             foreach ( Vertex v in this.Graph.Vertices )
             {
-                this.AlgoManager.RunDijkstras( u, v );
+                this.AlgoManager.RunDijkstras( u, v, false );
                 this.WaitUntilDijkstrasComplete( u, v );
                 float cost = ( float ) this.AlgoManager.GetDijkstrasCost( u, v );
                 if (cost > diameter)

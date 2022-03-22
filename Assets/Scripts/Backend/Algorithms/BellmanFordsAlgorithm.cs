@@ -11,7 +11,7 @@ public class BellmanFordsAlgorithm : Algorithm
     private Vertex src;
     private Vertex dest;
 
-    public BellmanFordsAlgorithm( AlgorithmManager algoManager, Vertex src, Vertex dest ) : base( algoManager )
+    public BellmanFordsAlgorithm( AlgorithmManager algoManager,  bool display, Vertex src, Vertex dest ) : base( algoManager )
     {
         this.src = src;
         this.dest = dest;

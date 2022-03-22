@@ -42,50 +42,52 @@ public class AlgorithmManager
         this.RunKruskals();
     }
 
-    private void RunAlgorithm( Type algorithm, object[] parms )
+    private void RunAlgorithm( Type algorithm, bool display, object[] parms )
     {
-        Algorithm algorithmInstance = ( Algorithm ) Activator.CreateInstance( algorithm, parms.Prepend( this ).ToArray() );
+        Algorithm algorithmInstance = ( Algorithm ) Activator.CreateInstance( algorithm, parms.Prepend( display ).Prepend( this ).ToArray() );
         algorithmInstance.RunThread();
     }
 
-    private void EnsureRunning( Type algorithm, params object[] parms )
+    private void EnsureRunning( Type algorithm, bool display, params object[] parms )
     {
         int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-            this.RunAlgorithm( algorithm, parms );
+            this.RunAlgorithm( algorithm, display, parms );
         
-        if ( this.IsComplete( hash ) )
+        if ( this.IsComplete( hash ) && display ) {
             GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ) );
+            AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms );
+        }
         
     }
 
-    public void RunMinDegree() => this.EnsureRunning( typeof ( MinDegreeAlgorithm ) );
+    public void RunMinDegree( bool display=true ) => this.EnsureRunning( typeof ( MinDegreeAlgorithm ), display );
 
-    public void RunMaxDegree() => this.EnsureRunning( typeof ( MaxDegreeAlgorithm ) );
+    public void RunMaxDegree( bool display=true ) => this.EnsureRunning( typeof ( MaxDegreeAlgorithm ), display );
 
-    public void RunRadius() => this.EnsureRunning( typeof ( RadiusAlgorithm ) );
+    public void RunRadius( bool display=true ) => this.EnsureRunning( typeof ( RadiusAlgorithm ), display );
 
-    public void RunDiameter() => this.EnsureRunning( typeof ( DiameterAlgorithm ) );
+    public void RunDiameter( bool display=true ) => this.EnsureRunning( typeof ( DiameterAlgorithm ), display );
 
-    public void RunChromatic() => this.EnsureRunning( typeof ( ChromaticAlgorithm ) );
+    public void RunChromatic( bool display=true ) => this.EnsureRunning( typeof ( ChromaticAlgorithm ), display );
 
-    public void RunBipartite() => this.EnsureRunning( typeof ( BipartiteAlgorithm ) );
+    public void RunBipartite( bool display=true ) => this.EnsureRunning( typeof ( BipartiteAlgorithm ), display );
 
-    public void RunCyclic() => this.EnsureRunning( typeof ( CyclicAlgorithm ) );
+    public void RunCyclic( bool display=true ) => this.EnsureRunning( typeof ( CyclicAlgorithm ), display );
 
-    public void RunFleurys() => this.EnsureRunning( typeof ( FleurysAlgorithm ) );
+    public void RunFleurys( bool display=true ) => this.EnsureRunning( typeof ( FleurysAlgorithm ), display );
 
-    public void RunPrims( Vertex vert ) => this.EnsureRunning( typeof ( PrimsAlgorithm ), vert );
+    public void RunPrims( Vertex vert, bool display=true ) => this.EnsureRunning( typeof ( PrimsAlgorithm ), display, vert );
 
-    public void RunKruskals() => this.EnsureRunning( typeof ( KruskalsAlgorithm ) );
+    public void RunKruskals( bool display=true ) => this.EnsureRunning( typeof ( KruskalsAlgorithm ), display );
 
-    public void RunDijkstras( Vertex src, Vertex dest ) => this.EnsureRunning( typeof ( DijkstrasAlgorithm ), src, dest );
+    public void RunDijkstras( Vertex src, Vertex dest, bool display=true ) => this.EnsureRunning( typeof ( DijkstrasAlgorithm ), display, src, dest );
 
-    public void RunBellmanFords( Vertex src, Vertex dest ) => this.EnsureRunning( typeof ( BellmanFordsAlgorithm ), src, dest );
+    public void RunBellmanFords( Vertex src, Vertex dest, bool display=true ) => this.EnsureRunning( typeof ( BellmanFordsAlgorithm ), display, src, dest );
 
-    public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) => this.EnsureRunning( typeof ( DepthFirstSearchAlgorithm ), vert, action );
+    public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( DepthFirstSearchAlgorithm ), display, vert, action );
 
-    public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), vert, action );
+    public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), display, vert, action );
 
     public int? GetMinDegree() => ( ( MinDegreeAlgorithm ) this.complete.GetValue( MinDegreeAlgorithm.GetHash() ) )?.MinDegree;
 

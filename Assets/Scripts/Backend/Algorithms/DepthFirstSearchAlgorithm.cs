@@ -10,7 +10,7 @@ public class DepthFirstSearchAlgorithm : Algorithm
     public List< Edge > Tree { get; private set; }
     private Action< Edge, Vertex > action;
 
-    public DepthFirstSearchAlgorithm( AlgorithmManager algoManager, Vertex root, Action< Edge, Vertex > action ) : base( algoManager )
+    public DepthFirstSearchAlgorithm( AlgorithmManager algoManager,  bool display, Vertex root, Action< Edge, Vertex > action ) : base( algoManager )
     {
         this.Root = root;
         this.action = action;

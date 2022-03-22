@@ -5,7 +5,13 @@ public class FleurysAlgorithm : Algorithm
 {
     public bool EulerianCircuitExists { get; private set; }
 
-    public FleurysAlgorithm( AlgorithmManager algoManager ) : base( algoManager ) { }
+    public FleurysAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager )
+    {
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
+    }
 
     public override void Run()
     {

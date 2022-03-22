@@ -10,14 +10,17 @@ public class PrimsAlgorithm : Algorithm
     public Vertex Root { get; private set; }
     public List< Edge > Mst { get; private set; }
 
-    public PrimsAlgorithm( AlgorithmManager algoManager, Vertex root ) : base( algoManager )
+    public PrimsAlgorithm( AlgorithmManager algoManager,  bool display, Vertex root ) : base( algoManager )
     {
         if ( !this.Graph.Vertices.Contains( root ) )
             throw new System.Exception( "Vertex for Prim's algorithm is not in graph." );
         this.Root = root;
         
         // Assign the type of the algorithm
-        this.type = AlgorithmType.DISPLAY;
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
         // Add the root vertex to vertex parms array
         vertexParms = new Vertex[] { this.Root };
     }

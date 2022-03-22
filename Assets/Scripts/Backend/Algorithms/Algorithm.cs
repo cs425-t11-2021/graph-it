@@ -3,7 +3,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 
-public enum AlgorithmType {INFO, DISPLAY, INTERNAL}
+public enum AlgorithmType { INFO, DISPLAY, INTERNAL }
 
 public abstract class Algorithm
 {
@@ -17,10 +17,10 @@ public abstract class Algorithm
     protected bool complete;
     
     // Whether ths algorithm is an info or display algorithm
-    protected AlgorithmType type;
+    public AlgorithmType type;
     
     // All the vertex parameters associated with an algorithm
-    protected Vertex[] vertexParms = null;
+    public Vertex[] vertexParms = null;
 
     public Algorithm( AlgorithmManager algoManager )
     {
@@ -62,8 +62,8 @@ public abstract class Algorithm
             
             if ( this.type == AlgorithmType.INFO )
                 RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this ) );
-            else if (this.type == AlgorithmType.DISPLAY)
-                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, vertexParms ) );
+            else if ( this.type == AlgorithmType.DISPLAY )
+                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms ) );
         }
         catch ( ThreadAbortException )
         {

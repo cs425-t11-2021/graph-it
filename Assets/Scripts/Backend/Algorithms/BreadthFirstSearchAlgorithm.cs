@@ -10,7 +10,7 @@ public class BreadthFirstSearchAlgorithm : Algorithm
     public List< Edge > Tree { get; private set; }
     private Action< Edge, Vertex > action;
 
-    public BreadthFirstSearchAlgorithm( AlgorithmManager algoManager, Vertex root, Action< Edge, Vertex > action ) : base( algoManager )
+    public BreadthFirstSearchAlgorithm( AlgorithmManager algoManager, bool display, Vertex root, Action< Edge, Vertex > action ) : base( algoManager )
     {
         this.Root = root;
         this.action = action;
