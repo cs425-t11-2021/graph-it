@@ -18,7 +18,7 @@ public class GraphDisplayAlgorithmAssociation
     public int requiredEdges = 0;
     public string activationMethod = "";
     public string completedMethod = "";
-    
+
     public Action<Vertex[]> OnCompleteUpdateDisplay
     {
         get
@@ -36,26 +36,9 @@ public class GraphDisplayAlgorithmAssociation
                 {
                     SelectionManager.Singleton.DeSelectAll();
                     
-                    List<Edge> resultEdges = (List<Edge>) result;
-                    List<Vertex> resultVertices = new List<Vertex>();
-                    foreach (Edge e in resultEdges) {
-                        resultVertices.Add(e.vert1);
-                        resultVertices.Add(e.vert2);
-                    }
-                    
-                    foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-                    {
-                        if (resultEdges.Contains(edgeObj.Edge))
-                            SelectionManager.Singleton.SelectEdge(edgeObj);
-                    }
-                    
-                    // ((List<EdgeObj>) Controller.Singleton.EdgeObjs.Where((e) => resultEdges.Contains(e.Edge))).ForEach(e => SelectionManager.Singleton.SelectEdge(e));
-
-                    foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
-                    {
-                        if (resultVertices.Contains(vertexObj.Vertex))
-                            SelectionManager.Singleton.SelectVertex(vertexObj);
-                    }
+                    AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
+                    NotificationManager.Singleton.CreateNoficiation(algorithmClass + " finished.", 3);
+                    AlgorithmsPanel.Singleton.resultButton.interactable = true;
                 }
             };
         }
@@ -85,7 +68,12 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private Button algOpenPanel;
     //Reference to the button to open the algorithm info panels
 
+    [SerializeField] public Button resultButton;
+
     public GraphDisplayAlgorithmAssociation CurrentlySelectedAlgorithm {get; private set;}
+
+    public List<Edge> AlgorithmResult {get; set;}
+
 
     // Property for whether or not the algorithm buttons are enabled
     public bool AlgorithmButtonsEnabled
@@ -96,6 +84,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     private void Awake() {
         SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
         Array.ForEach(this.associations, a => a.activationButton.UpdateStatus(false));
+        this.resultButton.interactable = false;
     }
 
     // Function called when the selection is changed
@@ -185,6 +174,10 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         if (this.CurrentlySelectedAlgorithm != null) {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmInitiationState;
         }
+    }
+
+    public void DisplayAlgorithmResult() {
+        ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
     }
 
     // public void UpdatePrimsResult() { }

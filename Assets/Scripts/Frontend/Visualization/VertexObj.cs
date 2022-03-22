@@ -21,6 +21,7 @@ public class VertexObj : MonoBehaviour
     
     private Color normalColor = Color.black;
     private Color selectedColor = new Color32(0, 125, 255, 255);
+    private Color resultColor = new Color32(0, 200, 0, 255);
 
     // Property for whether or not the vertex object is selected
     private bool selected;
@@ -39,6 +40,24 @@ public class VertexObj : MonoBehaviour
             }
             // Change the animator to show that the vertex is selected
             // this.animator.SetBool("Selected", value);
+        }
+    }
+
+    private bool isAlgorithmResult;
+    public bool IsAlgorithmResult {
+        get => this.isAlgorithmResult;
+        set {
+            if (this.selected)
+                SelectionManager.Singleton.DeselectVertex(this);
+
+            this.isAlgorithmResult = value;
+            // If the vertex object becomes selected, make its label editable
+            if (value) {
+                this.spriteRenderer.color = resultColor;
+            }
+            else {
+                this.spriteRenderer.color = normalColor;
+            }
         }
     }
 
