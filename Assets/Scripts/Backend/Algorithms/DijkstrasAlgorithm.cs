@@ -11,13 +11,16 @@ public class DijkstrasAlgorithm : Algorithm
     private Vertex src;
     private Vertex dest;
 
-    public DijkstrasAlgorithm( AlgorithmManager algoManager, Vertex src, Vertex dest ) : base( algoManager )
+    public DijkstrasAlgorithm( AlgorithmManager algoManager, bool display, Vertex src, Vertex dest ) : base( algoManager )
     {
         this.src = src;
         this.dest = dest;
         
         // Assign the type of the algorithm
-        this.type = AlgorithmType.INTERNAL;
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
         // Add the root vertex to vertex parms array
         vertexParms = new Vertex[] {this.src, this.dest};
     }

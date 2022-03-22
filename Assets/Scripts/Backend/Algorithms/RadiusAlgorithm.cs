@@ -5,7 +5,7 @@ public class RadiusAlgorithm : Algorithm
 {
     public float? Radius { get; private set; }
 
-    public RadiusAlgorithm( AlgorithmManager algoManager ) : base( algoManager ) { }
+    public RadiusAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
     public override void Run()
     {
@@ -27,7 +27,7 @@ public class RadiusAlgorithm : Algorithm
             float max_dist = 0;
             foreach ( Vertex v in this.Graph.Vertices )
             {
-                this.AlgoManager.RunDijkstras( u, v );
+                this.AlgoManager.RunDijkstras( u, v, false );
                 this.WaitUntilDijkstrasComplete( u, v );
                 float cost = ( float ) this.AlgoManager.GetDijkstrasCost( u, v );
                 if (cost > max_dist)
