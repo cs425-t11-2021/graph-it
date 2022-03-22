@@ -37,6 +37,11 @@ public class GraphDisplayAlgorithmAssociation
                     SelectionManager.Singleton.DeSelectAll();
                     
                     AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, (List<Edge>) result);
+                    if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
+                        AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
+                        AlgorithmsPanel.Singleton.resultButton.interactable = true;
+                    }
+
                     NotificationManager.Singleton.CreateNoficiation(this.algorithmClass + " finished.", 3);
                 }
             };
@@ -143,8 +148,6 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         {
             Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, new Object[] {true});
         }
-
-        DeselectAllAlgorithms();
     }
 
     public void SelectAlgorithm(string algorithmName) {

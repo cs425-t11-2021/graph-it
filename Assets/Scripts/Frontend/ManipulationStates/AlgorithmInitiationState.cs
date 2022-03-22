@@ -33,13 +33,12 @@ public class AlgorithmInitiationState : ManipulationState
 
         if (this.selectedVertices == this.currentAssociation.requiredVertices) {
             AlgorithmsPanel.Singleton.RunGraphDisplayAlgorithm(this.currentAssociation);
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
-            SelectionManager.Singleton.DeSelectAll();           
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;        
         }
     }
 
     public override void OnStateExit()
     {
-        
+        SelectionManager.Singleton.DeSelectAll();
     }
 }

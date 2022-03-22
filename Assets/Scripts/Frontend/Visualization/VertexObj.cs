@@ -181,9 +181,5 @@ public class VertexObj : MonoBehaviour
             this.collider = this.gameObject.AddComponent<CircleCollider2D>().CopyFromCollider(newCol);
             Destroy(newCol);
         }
-
-        
-        
-
     }
 }
