@@ -8,7 +8,7 @@ public class KruskalsAlgorithm : Algorithm
 {
     public List< Edge > Mst { get; private set; }
 
-    public KruskalsAlgorithm(AlgorithmManager algoManager) : base(algoManager, null, null)
+    public KruskalsAlgorithm( AlgorithmManager algoManager ) : base( algoManager )
     {
         // Assign the type of the algorithm
         this.type = AlgorithmType.DISPLAY;

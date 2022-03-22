@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using UnityEngine;
 using UnityEngine.Scripting;
 
@@ -24,99 +23,11 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
 
-    // public Action minDegreeUI;
-    // public Action minDegreeCalc;
-    // public Action maxDegreeUI;
-    // public Action maxDegreeCalc;
-    // public Action radiusUI;
-    // public Action radiusCalc;
-    // public Action diameterUI;
-    // public Action diameterCalc;
-    // public Action chromaticUI;
-    // public Action chromaticCalc;
-    // public Action bipartiteUI;
-    // public Action bipartiteCalc;
-    // public Action cyclicUI;
-    // public Action cyclicCalc;
-    // public Action fleurysUI;
-    // public Action fleurysCalc;
-    // public Action primsUI;
-    // public Action primsCalc;
-    // public Action kruskalsUI;
-    // public Action kruskalsCalc;
-    // public Action dijkstrasUI;
-    // public Action dijkstrasCalc;
-    // public Action bellmanFordsUI;
-    // public Action bellmanFordsCalc;
-    // public Action depthFirstSearchUI;
-    // public Action depthFirstSearchCalc;
-    // public Action breadthFirstSearchUI;
-    // public Action breadthFirstSearchCalc;
-
-    public void Initiate(
-        Graph graph
-        // Action minDegreeUI,
-        // Action minDegreeCalc,
-        // Action maxDegreeUI,
-        // Action maxDegreeCalc,
-        // Action radiusUI,
-        // Action radiusCalc,
-        // Action diameterUI,
-        // Action diameterCalc,
-        // Action chromaticUI,
-        // Action chromaticCalc,
-        // Action bipartiteUI,
-        // Action bipartiteCalc,
-        // Action cyclicUI,
-        // Action cyclicCalc,
-        // Action fleurysUI,
-        // Action fleurysCalc,
-        // Action primsUI,
-        // Action primsCalc,
-        // Action kruskalsUI,
-        // Action kruskalsCalc,
-        // Action dijkstrasUI,
-        // Action dijkstrasCalc,
-        // Action bellmanFordsUI,
-        // Action bellmanFordsCalc,
-        // Action depthFirstSearchUI,
-        // Action depthFirstSearchCalc,
-        // Action breadthFirstSearchUI,
-        // Action breadthFirstSearchCalc
-    )
+    public void Initiate( Graph graph )
     {
         Controller.Singleton.OnGraphModified += Clear;
         this.graph = graph;
         this.graphCopy = new Graph( graph );
-
-        // this.minDegreeUI = minDegreeUI;
-        // this.minDegreeCalc = minDegreeCalc;
-        // this.maxDegreeUI = maxDegreeUI;
-        // this.maxDegreeCalc = maxDegreeCalc;
-        // this.radiusUI = radiusUI;
-        // this.radiusCalc = radiusCalc;
-        // this.diameterUI = diameterUI;
-        // this.diameterCalc = diameterCalc;
-        // this.chromaticUI = chromaticUI;
-        // this.chromaticCalc = chromaticCalc;
-        // this.bipartiteUI = bipartiteUI;
-        // this.bipartiteCalc = bipartiteCalc;
-        // this.cyclicUI = cyclicUI;
-        // this.cyclicCalc = cyclicCalc;
-        // this.fleurysUI = fleurysUI;
-        // this.fleurysCalc = fleurysCalc;
-        // this.primsUI = primsUI;
-        // this.primsCalc = primsCalc;
-        // this.kruskalsUI = kruskalsUI;
-        // this.kruskalsCalc = kruskalsCalc;
-        // this.dijkstrasUI = dijkstrasUI;
-        // this.dijkstrasCalc = dijkstrasCalc;
-        // this.bellmanFordsUI = bellmanFordsUI;
-        // this.bellmanFordsCalc = bellmanFordsCalc;
-        // this.depthFirstSearchUI = depthFirstSearchUI;
-        // this.depthFirstSearchCalc = depthFirstSearchCalc;
-        // this.breadthFirstSearchUI = breadthFirstSearchUI;
-        // this.breadthFirstSearchCalc = breadthFirstSearchCalc;
     }
 
     public void RunAll()
@@ -139,17 +50,12 @@ public class AlgorithmManager
 
     private void EnsureRunning( Type algorithm, params object[] parms )
     {
-        // Debug.Log( algoParms.Length );
         int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
             this.RunAlgorithm( algorithm, parms );
         
-        // TODO: check if this is needed, but if algorithm is not complete, then invoke ui delegate
-        // JIMSON: I ADDED CODE TO DO THIS BELOW
-        if (this.IsComplete(hash))
-        {
-            GraphInfo.Singleton.UpdateGraphInfoResults(this.complete[hash]);
-        }
+        if ( this.IsComplete( hash ) )
+            GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ) );
         
     }
 

@@ -51,7 +51,7 @@ public class AdjacencyMatrix : MonoBehaviour
             this.table.UpdateRowHeight(120f, i);
         }
 
-        ConcurrentDictionary<(Vertex, Vertex), Edge> adjacency = Controller.Singleton.Graph.Adjacency;
+        Dictionary<(Vertex, Vertex), Edge> adjacency = Controller.Singleton.Graph.Adjacency;
         List<Vertex> vertices = Controller.Singleton.Graph.Vertices;
 
         this.table.GetCell(0, 0).text = "";
