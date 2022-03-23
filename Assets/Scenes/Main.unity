@@ -7286,7 +7286,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1076611919}
   m_HandleRect: {fileID: 1076611918}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -25364,7 +25364,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1228080547}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: ChangeVertexStyle
         m_Mode: 1

@@ -133,7 +133,7 @@ public class GraphModification
         styleData.Item1.SetStyle( styleData.Item2, false );
         
         // Update front end
-        // TODO: NEED SOME CHANGES TO FRONT END CODE
+        Controller.Singleton.GetVertexObj( styleData.Item1 ).SetStyle(styleData.Item2, false);
     }
 
     private void UndoVertexSize()
@@ -330,6 +330,9 @@ public class GraphModification
     {
         ( Vertex, uint, uint ) styleData = ( ( Vertex, uint, uint ) ) this.Modified;
         styleData.Item1.SetStyle( styleData.Item3, false );
+
+        // Update front end
+        Controller.Singleton.GetVertexObj( styleData.Item1 ).SetStyle(styleData.Item3, false);
     }
 
     private void RedoVertexSize()
