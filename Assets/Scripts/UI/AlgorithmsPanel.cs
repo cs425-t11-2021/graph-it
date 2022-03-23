@@ -36,9 +36,13 @@ public class GraphDisplayAlgorithmAssociation
                 {
                     SelectionManager.Singleton.DeSelectAll();
                     
-                    AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
-                    NotificationManager.Singleton.CreateNoficiation(algorithmClass + " finished.", 3);
-                    AlgorithmsPanel.Singleton.resultButton.interactable = true;
+                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, (List<Edge>) result);
+                    if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
+                        AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
+                        AlgorithmsPanel.Singleton.resultButton.interactable = true;
+                    }
+
+                    NotificationManager.Singleton.CreateNoficiation(this.algorithmClass + " finished.", 3);
                 }
             };
         }
@@ -74,6 +78,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public List<Edge> AlgorithmResult {get; set;}
 
+    public List<Edge>[] algorithmResults;
+
 
     // Property for whether or not the algorithm buttons are enabled
     public bool AlgorithmButtonsEnabled
@@ -82,30 +88,10 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     private void Awake() {
-        SelectionManager.Singleton.OnSelectionChange += OnSelectionChange;
         Array.ForEach(this.associations, a => a.activationButton.UpdateStatus(false));
         this.resultButton.interactable = false;
-    }
 
-    // Function called when the selection is changed
-    private void OnSelectionChange(int selectedVertexCount, int selectedEdgeCount) {
-        // // Only allow the prim button to be pressed if there is exactly one vertex selected
-        // this.primButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
-        // // Only allow dijkstra if exactly two vertices are selected
-        // this.dijkstraButton.interactable = selectedVertexCount == 2 && selectedEdgeCount == 0;
-        // // Only allow Bellman Ford if exactly one vertex is selected
-        // this.bellmanButton.interactable = selectedVertexCount == 1 && selectedEdgeCount == 0;
-        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
-        {
-            // if (association.requiredEdges != selectedEdgeCount || association.requiredVertices != selectedVertexCount)
-            // {
-            //     association.activationButton.interactable = false;
-            // }
-            // else
-            // {
-            //     association.activationButton.interactable = true;
-            // }
-        }
+        algorithmResults = new List<Edge>[this.associations.Length];
     }
 
     public void UpdateGraphDisplayResults(Algorithm algorithm, Vertex[] vertexParms)
@@ -119,16 +105,15 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 association.OnCompleteUpdateDisplay(vertexParms);
                 return;
             }
-        }
-        
-        Logger.Log("No algorithm association found for " + algorithmName + ".", this, LogType.ERROR);
+        }        
     }
 
     public void RunGraphDisplayAlgorithm(GraphDisplayAlgorithmAssociation association)
     {
         if (association.requiredVertices > 0)
         {
-            Object[] vertices = new Object[association.requiredVertices];
+            Object[] vertices = new Object[association.requiredVertices + 1];
+            vertices[association.requiredVertices] = (Object) true;
             for (int i = 0; i < association.requiredVertices; i++)
             {
                 vertices[i] = SelectionManager.Singleton.SelectedVertices[i].Vertex;
@@ -137,10 +122,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
         else
         {
-            Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, null);
+            Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, new Object[] {true});
         }
-
-        DeselectAllAlgorithms();
     }
 
     public void SelectAlgorithm(string algorithmName) {
@@ -156,9 +139,31 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                     this.CurrentlySelectedAlgorithm = null;
                     association.activationButton.UpdateStatus(false);
                 }
+
+                int index = Array.IndexOf(this.associations, association);
+                if (this.algorithmResults[index] != null) {
+                    this.resultButton.interactable = true;
+                    this.AlgorithmResult = this.algorithmResults[index];
+                }
+                else {
+                    this.resultButton.interactable = false;
+                    this.AlgorithmResult = null;
+                }
             }
             else {
                 association.activationButton.UpdateStatus(false);
+            }
+        }
+    }
+
+    public void StoreAlgorithmResult(string algorithmName, List<Edge> result) {
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                int index = Array.IndexOf(this.associations, association);
+                this.algorithmResults[index] = result;
+                return;
             }
         }
     }
@@ -180,33 +185,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
     }
 
-    // public void UpdatePrimsResult() { }
-    //
-    // public void UpdateKruskalsResult() { }
-    //
-    // public void UpdateDepthFirstSearchResult() { }
-    //
-    // public void UpdateBreadthFirstSearchResult() { }
-    //
-    // public void UpdatePrimsCalculating() { }
-    //
-    // public void UpdateKruskalsCalculating() { }
-    //
-    // public void UpdateDepthFirstSearchCalculating() { }
-    //
-    // public void UpdateBreadthFirstSearchCalculating() { }
-
     //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseAlgorithmInfoPanel(){
-        //GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0); //moves the panel off the screen (TEMPORARY FIX) and shows the button to open the graph info panel
         this.gameObject.SetActive(false); 
         algOpenPanel.gameObject.SetActive(true);
     }
 
     //activate the graphInfo panel and prevent access to the open panel button
     public void OpenAlgorithmInfoPanel(){
-        //GetComponent<RectTransform>().position = new Vector3(500f,0,0); //moves the panel back onto the screen (TEMPORARY FIX) and make the open panel button not accessible
-        //this.transform.position = new Vector3 (0f,293.79f,0);
         this.gameObject.SetActive(true);
         algOpenPanel.gameObject.SetActive(false);
     }
