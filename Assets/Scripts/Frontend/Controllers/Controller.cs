@@ -249,7 +249,7 @@ public class Controller : SingletonBehavior<Controller>
         }
 
         // Update the graph ds
-        Controller.Singleton.Graph.RemoveVertex(vertexObj.Vertex);
+        Controller.Singleton.Graph.Remove(vertexObj.Vertex);
         this.activeGraphInstance.vertexObjs.Remove(vertexObj);
         Destroy(vertexObj.gameObject);
         Logger.Log("Removed a vertex from the current graph instance.", this, LogType.INFO);
@@ -258,7 +258,7 @@ public class Controller : SingletonBehavior<Controller>
     }
 
     public void RemoveEdge(EdgeObj edgeObj) {
-        Controller.Singleton.Graph.RemoveEdge(edgeObj.Edge);
+        Controller.Singleton.Graph.Remove(edgeObj.Edge);
         this.activeGraphInstance.edgeObjs.Remove(edgeObj);
         Destroy(edgeObj.transform.parent.gameObject);
         Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);

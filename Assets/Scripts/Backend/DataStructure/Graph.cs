@@ -14,10 +14,14 @@ using UnityEngine;
 [System.Serializable]
 public class Graph
 {
-    public List< Vertex > Vertices { get; private set; } // TODO: make concurrent
-    public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // not yet supporting multiple edges
-    public Stack< GraphModification > Changes { get; private set; } // logs all changes to graph
-    private Stack< GraphModification > redoChanges; // logs all undone changes
+    public List< Vertex > Vertices { get; private set; }
+    // not yet supporting multiple edges
+    public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; }
+
+    // logs all changes to graph
+    public Stack< GraphModification > Changes { get; private set; }
+    // logs all undone changes
+    private Stack< GraphModification > undoneChanges;
 
     // parameters
     public int Order // number of vertices
@@ -73,21 +77,23 @@ public class Graph
         this.Vertices = new List< Vertex >();
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
         this.Changes = new Stack< GraphModification >();
-        // TODO: add redoChanges
+        this.undoneChanges = new Stack< GraphModification >();
     }
 
     public Graph( Graph graph )
     {
         this.Vertices = new List< Vertex >( graph.Vertices );
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
-        // TODO: add Changes and redoChanges
+        this.Changes = new Stack< GraphModification >();
+        this.undoneChanges = new Stack< GraphModification >();
     }
 
     public void Clear()
     {
         this.Vertices = new List< Vertex >();
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
-        // TODO: add Changes and redoChanges
+        this.Changes = new Stack< GraphModification >();
+        this.undoneChanges = new Stack< GraphModification >();
     }
 
     // temp
@@ -146,22 +152,91 @@ public class Graph
         return edge;
     }
 
-    public void RemoveVertex( Vertex vert, bool recordChange=true )
+    public void Remove( List< Vertex > vertices, List< Edge > edges, bool recordChange=true )
     {
-        this.RemoveEdges( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), recordChange );
+        this.Remove( vertices, false );
+        this.Remove( edges, false );
+
+        if ( recordChange )
+        {
+            HashSet< Vertex > vertexSet = new HashSet< Vertex >( vertices );
+            HashSet< Edge > edgeSet = this.GetIncidentEdges( vertexSet );
+            edgeSet.UnionWith( edges );
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( vertexSet, edgeSet ) );
+        }
+    }
+
+    public void Remove( List< Vertex > vertices, Edge edge, bool recordChange=true )
+    {
+        this.Remove( vertices, false );
+        this.Remove( edge, false );
+
+        if ( recordChange )
+        {
+            HashSet< Vertex > vertexSet = new HashSet< Vertex >( vertices );
+            HashSet< Edge > edgeSet = this.GetIncidentEdges( vertexSet );
+            edgeSet.Add( edge );
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( vertexSet, edgeSet ) );
+        }
+    }
+
+    public void Remove( Vertex vert, List< Edge > edges, bool recordChange=true )
+    {
+        this.Remove( vert, false );
+        this.Remove( edges, false );
+
+        if ( recordChange )
+        {
+            HashSet< Edge > edgeSet = this.GetIncidentEdges( vert );
+            edgeSet.UnionWith( edges );
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( new HashSet< Vertex >() { vert }, edgeSet ) );
+        }
+    }
+
+    public void Remove( List< Vertex > vertices, bool recordChange=true )
+    {
+        foreach ( Vertex vert in vertices )
+            this.Remove( vert, false );
+
+        if ( recordChange )
+        {
+            HashSet< Vertex > vertexSet = new HashSet< Vertex >( vertices );
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( vertexSet, this.GetIncidentEdges( vertexSet ) ) );
+        }
+    }
+
+    public void Remove( List< Edge > edges, bool recordChange=true )
+    {
+        foreach ( Edge edge in edges )
+            this.Remove( edge, false );
+
+        if ( recordChange )
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( ( HashSet< Edge > ) null, new HashSet< Edge >( edges ) ) );
+    }
+
+    public void Remove( Vertex vert, Edge edge, bool recordChange=true )
+    {
+        this.Remove( vert, false );
+        this.Remove( edge, false );
+
+        if ( recordChange )
+        {
+            HashSet< Edge > edgeSet = this.GetIncidentEdges( vert );
+            edgeSet.Add( edge );
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( new HashSet< Vertex >() { vert }, edgeSet ) );
+        }
+    }
+
+    public void Remove( Vertex vert, bool recordChange=true )
+    {
+        this.Remove( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), recordChange );
         this.Vertices.Remove( vert );
 
         if ( recordChange )
-            new GraphModification( this, Modification.REMOVE_VERTEX, vert );
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( new HashSet< Vertex >() { vert }, this.GetIncidentEdges( vert ) ) );
     }
 
-    public void RemoveVertices( List< Vertex > verts, bool recordChange=true )
-    {
-        foreach ( Vertex vert in verts )
-            this.RemoveVertex( vert, recordChange );
-    }
-
-    public void RemoveEdge( Edge edge, bool recordChange=true )
+    public void Remove( Edge edge, bool recordChange=true )
     {
         if ( edge.Directed )
             this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
@@ -172,23 +247,21 @@ public class Graph
         }
 
         if ( recordChange )
-            new GraphModification( this, Modification.REMOVE_EDGE, edge );
-    }
-
-    public void RemoveEdges( List< Edge > edges, bool recordChange=true )
-    {
-        foreach ( Edge edge in edges )
-            this.RemoveEdge( edge, recordChange );
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( ( HashSet< Vertex > ) null, new HashSet< Edge >() { edge } ) );
     }
 
     public void Undo()
     {
-
+        GraphModification mod = this.Changes.Pop();
+        mod.Undo();
+        this.undoneChanges.Push( mod );
     }
 
     public void Redo()
     {
-
+        GraphModification mod = this.undoneChanges.Pop();
+        mod.Redo();
+        this.Changes.Push( mod );
     }
 
     public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.Adjacency.ContainsKey( ( vert1, vert2 ) ) || this.Adjacency.ContainsKey( ( vert2, vert1 ) );
@@ -261,7 +334,7 @@ public class Graph
 
         if ( edge.Directed )
         {
-            this.RemoveEdge( edge, false );
+            this.Remove( edge, false );
             this.Adjacency[ ( edge.vert2, edge.vert1 ) ] = edge;
         }
     }
@@ -418,33 +491,7 @@ public class Graph
     }
 
 
-    // algorithms /////////////////////////////////////////////////////
-
-    // temp
-    // public List< Edge > Prim( Vertex vert )
-    // {
-    //     if ( this.Directed )
-    //         throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
-
-    //     List< Edge > mst = new List< Edge >();
-    //     HashSet< Vertex > mstVertices = new HashSet< Vertex >() { vert };
-    //     int mstVerticesPrevCount = -1;
-    //     while ( mstVerticesPrevCount != mstVertices.Count )
-    //     {
-    //         mstVerticesPrevCount = mstVertices.Count;
-    //         List< Edge > incidentEdges = new List< Edge >( this.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.Weight ) );
-    //         foreach ( Edge edge in incidentEdges )
-    //         {
-    //             if ( !mstVertices.Contains( edge.vert1 ) || !mstVertices.Contains( edge.vert2 ) )
-    //             {
-    //                 mstVertices.Add( edge.vert1 );
-    //                 mstVertices.Add( edge.vert2 );
-    //                 mst.Add( edge );
-    //             }
-    //         }
-    //     }
-    //     return mst;
-    // }
+    // default algorithms /////////////////////////////////////////////////////
 
     public HashSet< Edge > GetIncidentEdges( Vertex vert )
     {
@@ -478,148 +525,4 @@ public class Graph
 
         return degree - undirected / 2;
     }
-
-    // temp
-    // public List< Edge > Kruskal()
-    // {
-    //     if ( this.Directed )
-    //         throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
-
-    //     List< Edge > mst = new List< Edge >();
-    //     List< Edge > edges = new List< Edge >( this.Adjacency.Values.OrderBy( edge => edge.Weight ) );
-    //     HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
-    //     foreach ( Vertex vert in this.Vertices )
-    //         forest.Add( new HashSet< Vertex >() { vert } );
-    //     foreach ( Edge edge in edges )
-    //     {
-    //         HashSet< Vertex > tree1 = Graph.GetComponentOf( forest, edge.vert1 );
-    //         HashSet< Vertex > tree2 = Graph.GetComponentOf( forest, edge.vert2 );
-    //         if ( tree1 != tree2 )
-    //         {
-    //             forest.Remove( tree1 );
-    //             tree2.UnionWith( tree1 );
-    //             mst.Add( edge );
-    //         }
-    //     }
-    //     return mst;
-    // }
-
-    // temp
-    // private static HashSet< Vertex > GetComponentOf( HashSet< HashSet< Vertex > > components, Vertex vert )
-    // {
-    //     foreach ( HashSet< Vertex > component in components )
-    //     {
-    //         if ( component.Contains( vert ) )
-    //             return component;
-    //     }
-    //     throw new System.Exception( "Vertex could not be found in collection of components." );
-    // }
-
-    // public int GetNumComponents()
-    // {
-
-    // }
-
-    // public void CountComponents( Edge edge, Vertex vert )
-    // {
-
-    // }
-
-    // temp
-    // public List< Vertex > Dijkstra( Vertex src, Vertex dest )
-    // {
-    //     HashSet< Vertex > notVisited = new HashSet< Vertex >( this.Vertices );
-    //     Dictionary< Vertex, double > dist = new Dictionary< Vertex, double >();
-    //     Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
-
-    //     foreach ( Vertex v in this.Vertices )
-    //     {
-    //         dist[ v ] = double.PositiveInfinity;
-    //         prev[ v ] = null;
-    //     }
-
-    //     dist[ src ] = 0;
-
-    //     while ( notVisited.Count() > 0 )
-    //     {
-    //         // find u in notVisited such that dist[u] is minimal
-    //         Vertex u = notVisited.First();
-    //         foreach ( Vertex v in notVisited )
-    //         {
-    //             if ( dist[ v ] < dist[ u ] )
-    //                 u = v;
-    //         }
-
-    //         notVisited.Remove( u );
-
-    //         // update neighbors of u
-    //         foreach ( Vertex v in notVisited )
-    //         {
-    //             if ( this.IsAdjacent( u, v ) )
-    //             {
-    //                 double tmp = dist[ u ] + this[ u, v ].Weight;
-    //                 if ( tmp < dist[ v ] )
-    //                 {
-    //                     dist[ v ] = tmp;
-    //                     prev[ v ] = u;
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     // put together final path 
-    //     List< Vertex > result = new List< Vertex >();
-    //     Vertex curr = dest;
-    //     while ( curr != src )
-    //     {
-    //         result.Add( curr );
-    //         curr = prev[ curr ];
-    //         if ( curr is null )
-    //             return new List<Vertex>();
-    //     }
-    //     result.Add( src );
-    //     result.Reverse();
-
-    //     return result;
-    // }
-
-    // temp
-    // TODO: return weights
-    // no partial weights
-    // returns minimum spanning tree when provided a source
-    // public List< Edge > BellmanFord( Vertex src )
-    // {
-    //     if ( this.Weighted && !this.FullyWeighted )
-    //         throw new System.Exception( "Graph is not fully weighted." );
-
-    //     // initialize data
-    //     List< Edge > edges = this.Adjacency.Values.ToList();
-    //     Dictionary< Vertex, double > dist = new Dictionary< Vertex, double >();
-    //     Dictionary< Vertex, Edge > prev = new Dictionary< Vertex, Edge >();
-    //     foreach ( Vertex vert in this.Vertices )
-    //         dist[ vert ] = Double.PositiveInfinity;
-    //     dist[ src ] = 0;
-
-    //     // relax edges
-    //     for ( int i = 0; i < this.Vertices.Count - 1; i++ )
-    //     {
-    //         foreach ( Edge edge in edges )
-    //         {
-    //             if ( dist[ edge.vert1 ] + edge.Weight < dist[ edge.vert2 ] )
-    //             {
-    //                 dist[ edge.vert2 ] = dist[ edge.vert1 ] + edge.Weight;
-    //                 prev[ edge.vert2 ] = edge;
-    //             }
-    //         }
-    //     }
-
-    //     // check for negative cycles
-    //     foreach ( Edge edge in edges )
-    //     {
-    //         if ( dist[ edge.vert1 ] + edge.Weight < dist[ edge.vert2 ] )
-    //             throw new System.Exception( "Negative weight cycle found." );
-    //     }
-
-    //     return prev.Values.ToList();
-    // }
 }
