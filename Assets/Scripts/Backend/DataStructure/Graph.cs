@@ -14,10 +14,14 @@ using UnityEngine;
 [System.Serializable]
 public class Graph
 {
-    public List< Vertex > Vertices { get; private set; } // TODO: make concurrent
-    public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; } // not yet supporting multiple edges
-    public Stack< GraphModification > Changes { get; private set; } // logs all changes to graph
-    private Stack< GraphModification > redoChanges; // logs all undone changes
+    public List< Vertex > Vertices { get; private set; }
+    // not yet supporting multiple edges
+    public Dictionary< ( Vertex, Vertex ), Edge > Adjacency { get; private set; }
+
+    // logs all changes to graph
+    public Stack< GraphModification > Changes { get; private set; }
+    // logs all undone changes
+    private Stack< GraphModification > undoneChanges;
 
     // parameters
     public int Order // number of vertices
@@ -73,21 +77,23 @@ public class Graph
         this.Vertices = new List< Vertex >();
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
         this.Changes = new Stack< GraphModification >();
-        // TODO: add redoChanges
+        this.undoneChanges = new Stack< GraphModification >();
     }
 
     public Graph( Graph graph )
     {
         this.Vertices = new List< Vertex >( graph.Vertices );
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
-        // TODO: add Changes and redoChanges
+        this.Changes = new Stack< GraphModification >();
+        this.undoneChanges = new Stack< GraphModification >();
     }
 
     public void Clear()
     {
         this.Vertices = new List< Vertex >();
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
-        // TODO: add Changes and redoChanges
+        this.Changes = new Stack< GraphModification >();
+        this.undoneChanges = new Stack< GraphModification >();
     }
 
     // temp
@@ -246,12 +252,16 @@ public class Graph
 
     public void Undo()
     {
-
+        GraphModification mod = this.Changes.Pop();
+        mod.Undo();
+        this.undoneChanges.Push( mod );
     }
 
     public void Redo()
     {
-
+        GraphModification mod = this.undoneChanges.Pop();
+        mod.Redo();
+        this.Changes.Push( mod );
     }
 
     public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.Adjacency.ContainsKey( ( vert1, vert2 ) ) || this.Adjacency.ContainsKey( ( vert2, vert1 ) );
