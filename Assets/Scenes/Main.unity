@@ -5216,7 +5216,7 @@ MonoBehaviour:
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Select
   offset: {x: 50, y: -50, z: 0}
-  size: {x: 0, y: 0}
+  size: {x: 100, y: 40}
 --- !u!114 &499060056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11747,7 +11747,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
-    m_DisabledColor: {r: 0.8627451, g: 0.8627451, b: 0.8627451, a: 0.9019608}
+    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
