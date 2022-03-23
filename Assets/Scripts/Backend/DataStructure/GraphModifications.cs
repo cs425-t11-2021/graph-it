@@ -103,88 +103,115 @@ public class GraphModification
     private void UndoAddVertex()
     {
         this.graph.Remove( ( Vertex ) this.Modified, false );
+        
+        // Update front end
+        Controller.Singleton.RemoveVertex(Controller.Singleton.GetVertexObj( ( Vertex ) this.Modified), false );
     }
 
     private void UndoVertexLabel()
     {
-        Tuple< Vertex, string, string > labelData = ( Tuple< Vertex, string, string > ) this.Modified;
+        ( Vertex, string, string ) labelData = ( ( Vertex, string, string ) ) this.Modified;
         labelData.Item1.SetLabel( labelData.Item2, false );
+        
+        // Update front end
+        Controller.Singleton.GetVertexObj( labelData.Item1 ).labelObj.UpdateVertexLabel(labelData.Item2, false);
     }
 
     private void UndoVertexPos()
     {
-        Tuple< Vertex, System.Numerics.Vector2, System.Numerics.Vector2 > posData = ( Tuple< Vertex, System.Numerics.Vector2, System.Numerics.Vector2 > ) this.Modified;
+        ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) posData = ( ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) ) this.Modified;
         posData.Item1.SetPos( posData.Item2, false );
+        
+        // Update front end
+        Controller.Singleton.GetVertexObj( posData.Item1 ).transform.position =
+            new Vector3(posData.Item2.X, posData.Item2.Y, 0);
     }
 
     private void UndoVertexStyle()
     {
-        Tuple< Vertex, uint, uint > styleData = ( Tuple< Vertex, uint, uint > ) this.Modified;
+        ( Vertex, uint, uint ) styleData = ( ( Vertex, uint, uint ) ) this.Modified;
         styleData.Item1.SetStyle( styleData.Item2, false );
+        
+        // Update front end
+        // TODO: NEED SOME CHANGES TO FRONT END CODE
     }
 
     private void UndoVertexSize()
     {
-        Tuple< Vertex, uint, uint > sizeData = ( Tuple< Vertex, uint, uint > ) this.Modified;
+        ( Vertex, uint, uint ) sizeData = ( ( Vertex, uint, uint ) ) this.Modified;
         sizeData.Item1.SetSize( sizeData.Item2, false );
+        
+        // Update front end
+        // TODO: FRONT END NOT IMPLEMENTED
     }
 
     private void UndoVertexColor()
     {
-        Tuple< Vertex, uint, uint > colorData = ( Tuple< Vertex, uint, uint > ) this.Modified;
+        ( Vertex, uint, uint ) colorData = ( ( Vertex, uint, uint ) ) this.Modified;
         colorData.Item1.SetColor( colorData.Item2, false );
+        
+        // Update front end
+        // TODO: FRONT END NOT IMPLEMENTED
     }
 
     private void UndoAddEdge()
     {
         this.graph.Remove( ( Edge ) this.Modified, false );
+        
+        // Update front end
+        Controller.Singleton.RemoveEdge(Controller.Singleton.GetEdgeObj( ( Edge ) this.Modified), false );
     }
 
     private void UndoEdgeDirected()
     {
-        Tuple< Edge, bool > directedData = ( Tuple< Edge, bool > ) this.Modified;
+        ( Edge, bool ) directedData = ( ( Edge, bool ) ) this.Modified;
         directedData.Item1.SetDirected( directedData.Item2, false );
+        
+        // Update front end
+        // TODO: NEED SOME CHANGES TO FRONT END CODE
     }
 
     private void UndoEdgeLabel()
     {
-        Tuple< Edge, string, string > labelData = ( Tuple< Edge, string, string > ) this.Modified;
+        ( Edge, string, string ) labelData = ( ( Edge, string, string ) ) this.Modified;
         labelData.Item1.SetLabel( labelData.Item2, false );
+        
+        
     }
 
     private void UndoEdgeStyle()
     {
-        Tuple< Edge, uint, uint > styleData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) styleData = ( ( Edge, uint, uint ) ) this.Modified;
         styleData.Item1.SetStyle( styleData.Item2, false );
     }
 
     private void UndoEdgeColor()
     {
-        Tuple< Edge, uint, uint > colorData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) colorData = ( ( Edge, uint, uint ) ) this.Modified;
         colorData.Item1.SetColor( colorData.Item2, false );
     }
 
     private void UndoEdgeThickness()
     {
-        Tuple< Edge, uint, uint > thicknessData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) thicknessData = ( ( Edge, uint, uint ) ) this.Modified;
         thicknessData.Item1.SetThickness( thicknessData.Item2, false );
     }
 
     private void UndoEdgeCurvature()
     {
-        Tuple< Edge, int, int > curveData = ( Tuple< Edge, int, int > ) this.Modified;
+        ( Edge, int, int ) curveData = ( ( Edge, int, int ) ) this.Modified;
         curveData.Item1.SetCurvature( curveData.Item2, false );
     }
 
     private void UndoEdgeTailStyle()
     {
-        Tuple< Edge, uint, uint > tailStyleData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) tailStyleData = ( ( Edge, uint, uint ) ) this.Modified;
         tailStyleData.Item1.SetTailStyle( tailStyleData.Item2, false );
     }
 
     private void UndoEdgeHeadStyle()
     {
-        Tuple< Edge, uint, uint > headStyleData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) headStyleData = ( ( Edge, uint, uint ) ) this.Modified;
         headStyleData.Item1.SetHeadStyle( headStyleData.Item2, false );
     }
 
@@ -195,7 +222,7 @@ public class GraphModification
 
     private void UndoRemoveCollection()
     {
-        Tuple< HashSet< Vertex >, HashSet< Edge > > collection = ( Tuple< HashSet< Vertex >, HashSet< Edge > > ) this.Modified;
+        ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
         if ( !( collection.Item1 is null ) )
         {
             foreach ( Vertex vert in collection.Item1 )
@@ -273,31 +300,31 @@ public class GraphModification
 
     private void RedoVertexLabel()
     {
-        Tuple< Vertex, string, string > labelData = ( Tuple< Vertex, string, string > ) this.Modified;
+        ( Vertex, string, string ) labelData = ( ( Vertex, string, string ) ) this.Modified;
         labelData.Item1.SetLabel( labelData.Item3, false );
     }
 
     private void RedoVertexPos()
     {
-        Tuple< Vertex, System.Numerics.Vector2, System.Numerics.Vector2 > posData = ( Tuple< Vertex, System.Numerics.Vector2, System.Numerics.Vector2 > ) this.Modified;
+        ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) posData = ( ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) ) this.Modified;
         posData.Item1.SetPos( posData.Item3, false );
     }
 
     private void RedoVertexStyle()
     {
-        Tuple< Vertex, uint, uint > styleData = ( Tuple< Vertex, uint, uint > ) this.Modified;
+        ( Vertex, uint, uint ) styleData = ( ( Vertex, uint, uint ) ) this.Modified;
         styleData.Item1.SetStyle( styleData.Item3, false );
     }
 
     private void RedoVertexSize()
     {
-        Tuple< Vertex, uint, uint > sizeData = ( Tuple< Vertex, uint, uint > ) this.Modified;
+        ( Vertex, uint, uint ) sizeData = ( ( Vertex, uint, uint ) ) this.Modified;
         sizeData.Item1.SetSize( sizeData.Item3, false );
     }
 
     private void RedoVertexColor()
     {
-        Tuple< Vertex, uint, uint > colorData = ( Tuple< Vertex, uint, uint > ) this.Modified;
+        ( Vertex, uint, uint ) colorData = ( ( Vertex, uint, uint ) ) this.Modified;
         colorData.Item1.SetColor( colorData.Item3, false );
     }
 
@@ -308,49 +335,49 @@ public class GraphModification
 
     private void RedoEdgeDirected()
     {
-        Tuple< Edge, bool > directedData = ( Tuple< Edge, bool > ) this.Modified;
+        ( Edge, bool ) directedData = ( ( Edge, bool ) ) this.Modified;
         directedData.Item1.SetDirected( !directedData.Item2, false );
     }
 
     private void RedoEdgeLabel()
     {
-        Tuple< Edge, string, string > labelData = ( Tuple< Edge, string, string > ) this.Modified;
+        ( Edge, string, string ) labelData = ( ( Edge, string, string ) ) this.Modified;
         labelData.Item1.SetLabel( labelData.Item3, false );
     }
 
     private void RedoEdgeStyle()
     {
-        Tuple< Edge, uint, uint > styleData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) styleData = ( ( Edge, uint, uint ) ) this.Modified;
         styleData.Item1.SetStyle( styleData.Item3, false );
     }
 
     private void RedoEdgeColor()
     {
-        Tuple< Edge, uint, uint > colorData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) colorData = ( ( Edge, uint, uint ) ) this.Modified;
         colorData.Item1.SetColor( colorData.Item3, false );
     }
 
     private void RedoEdgeThickness()
     {
-        Tuple< Edge, uint, uint > thicknessData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) thicknessData = ( ( Edge, uint, uint ) ) this.Modified;
         thicknessData.Item1.SetThickness( thicknessData.Item3, false );
     }
 
     private void RedoEdgeCurvature()
     {
-        Tuple< Edge, int, int > curveData = ( Tuple< Edge, int, int > ) this.Modified;
+        ( Edge, int, int ) curveData = ( ( Edge, int, int ) ) this.Modified;
         curveData.Item1.SetCurvature( curveData.Item3, false );
     }
 
     private void RedoEdgeTailStyle()
     {
-        Tuple< Edge, uint, uint > tailStyleData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) tailStyleData = ( ( Edge, uint, uint ) ) this.Modified;
         tailStyleData.Item1.SetTailStyle( tailStyleData.Item3, false );
     }
 
     private void RedoEdgeHeadStyle()
     {
-        Tuple< Edge, uint, uint > headStyleData = ( Tuple< Edge, uint, uint > ) this.Modified;
+        ( Edge, uint, uint ) headStyleData = ( ( Edge, uint, uint ) ) this.Modified;
         headStyleData.Item1.SetHeadStyle( headStyleData.Item3, false );
     }
 
@@ -361,7 +388,7 @@ public class GraphModification
 
     private void RedoRemoveCollection()
     {
-        Tuple< HashSet< Vertex >, HashSet< Edge > > collection = ( Tuple< HashSet< Vertex >, HashSet< Edge > > ) this.Modified;
+        ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
         if ( !( collection.Item1 is null ) )
             this.graph.Remove( new List< Vertex >( collection.Item1 ) );
         if ( !( collection.Item2 is null ) )

@@ -41,4 +41,14 @@ public class EditMenu : MenuButton
         
         EventSystem.current.SetSelectedGameObject(null);
     }
+
+    public void Undo()
+    {
+        Controller.Singleton.Graph.Undo();
+    }
+
+    public void Redo()
+    {
+        Controller.Singleton.Graph.Redo();
+    }
 }
