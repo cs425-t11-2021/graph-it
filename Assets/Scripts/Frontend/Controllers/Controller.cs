@@ -239,17 +239,18 @@ public class Controller : SingletonBehavior<Controller>
         }
     }
 
-    public void RemoveVertex(VertexObj vertexObj) {
+    public void RemoveVertex(VertexObj vertexObj, bool updateDS = true) {
         for (int i = this.activeGraphInstance.edgeObjs.Count - 1; i >= 0; i--)
         {
             if (this.activeGraphInstance.edgeObjs[i].Vertex1 == vertexObj || this.activeGraphInstance.edgeObjs[i].Vertex2 == vertexObj)
             {
-                RemoveEdge(this.activeGraphInstance.edgeObjs[i]);
+                RemoveEdge(this.activeGraphInstance.edgeObjs[i], updateDS);
             }
         }
 
         // Update the graph ds
-        Controller.Singleton.Graph.Remove(vertexObj.Vertex);
+        if (updateDS)
+            Controller.Singleton.Graph.Remove(vertexObj.Vertex);
         this.activeGraphInstance.vertexObjs.Remove(vertexObj);
         Destroy(vertexObj.gameObject);
         Logger.Log("Removed a vertex from the current graph instance.", this, LogType.INFO);
@@ -257,8 +258,9 @@ public class Controller : SingletonBehavior<Controller>
         this.OnGraphModified?.Invoke();
     }
 
-    public void RemoveEdge(EdgeObj edgeObj) {
-        Controller.Singleton.Graph.Remove(edgeObj.Edge);
+    public void RemoveEdge(EdgeObj edgeObj, bool updateDS = true) {
+        if (updateDS)
+            Controller.Singleton.Graph.Remove(edgeObj.Edge);
         this.activeGraphInstance.edgeObjs.Remove(edgeObj);
         Destroy(edgeObj.transform.parent.gameObject);
         Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);
@@ -398,7 +400,7 @@ public class Controller : SingletonBehavior<Controller>
     }
 
     // Get a vertex object in the current graph instance given a vertex
-    private VertexObj GetVertexObj(Vertex v) {
+    public VertexObj GetVertexObj(Vertex v) {
         foreach (VertexObj vertexObj in this.activeGraphInstance.vertexObjs) {
             if (vertexObj.Vertex == v) return vertexObj;
         }
@@ -406,7 +408,7 @@ public class Controller : SingletonBehavior<Controller>
     }
     
     // Get a edge object in the current graph instance given a edge
-    private EdgeObj GetEdgeObj(Edge e)
+    public EdgeObj GetEdgeObj(Edge e)
     {
         foreach (EdgeObj edgeObj in this.activeGraphInstance.edgeObjs)
         {

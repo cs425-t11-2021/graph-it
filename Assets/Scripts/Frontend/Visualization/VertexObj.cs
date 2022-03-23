@@ -66,7 +66,7 @@ public class VertexObj : MonoBehaviour
     // Reference to the animator component
     private Animator animator;
     // Reference to the labelObj attached to the vertexObj
-    private VertexLabelObj labelObj;
+    public VertexLabelObj labelObj;
     private Collider2D collider;
 
     public float spriteRadius;
