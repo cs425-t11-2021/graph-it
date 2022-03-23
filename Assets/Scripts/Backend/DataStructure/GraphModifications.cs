@@ -225,13 +225,21 @@ public class GraphModification
         ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
         if ( !( collection.Item1 is null ) )
         {
-            foreach ( Vertex vert in collection.Item1 )
+            foreach ( Vertex vert in collection.Item1 ) {
                 this.graph.AddVertex( vert, false );
+
+                // Update front end
+                Controller.Singleton.CreateVertexObj( vert );
+            }
         }
         if ( !( collection.Item2 is null ) )
         {
-            foreach ( Edge edge in collection.Item2 )
+            foreach ( Edge edge in collection.Item2 ) {
                 this.graph.AddEdge( edge, false );
+
+                // Update front end
+                Controller.Singleton.CreateEdgeObj( edge );
+            }
         }
     }
 
@@ -296,18 +304,26 @@ public class GraphModification
     private void RedoAddVertex()
     {
         this.graph.AddVertex( ( Vertex ) this.Modified, false );
+        
+        // Update front end
+        Controller.Singleton.CreateVertexObj((Vertex) this.Modified);
     }
 
     private void RedoVertexLabel()
     {
         ( Vertex, string, string ) labelData = ( ( Vertex, string, string ) ) this.Modified;
         labelData.Item1.SetLabel( labelData.Item3, false );
+        
     }
 
     private void RedoVertexPos()
     {
         ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) posData = ( ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) ) this.Modified;
         posData.Item1.SetPos( posData.Item3, false );
+
+        // Update front end
+        Controller.Singleton.GetVertexObj( posData.Item1 ).transform.position =
+            new Vector3(posData.Item3.X, posData.Item3.Y, 0);
     }
 
     private void RedoVertexStyle()
@@ -331,6 +347,9 @@ public class GraphModification
     private void RedoAddEdge()
     {
         this.graph.AddEdge( ( Edge ) this.Modified, false );
+
+        // Update front end
+        Controller.Singleton.CreateEdgeObj((Edge) this.Modified);
     }
 
     private void RedoEdgeDirected()

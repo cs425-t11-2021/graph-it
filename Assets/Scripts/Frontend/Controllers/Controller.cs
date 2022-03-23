@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 // Struct which stores a instance of graph datastructure along with its associated Unity objects
 public class GraphInstance
@@ -214,7 +215,7 @@ public class Controller : SingletonBehavior<Controller>
     }
 
     // Create a new vertex object to correspond to a passed in graph vertex
-    private void CreateVertexObj(Vertex vertex, bool invokeEvents = true) {
+    public void CreateVertexObj(Vertex vertex, bool invokeEvents = true) {
         Vector2 pos = new Vector2( vertex.Pos.X, vertex.Pos.Y );
 
         // Instantiate a vertex object, set its parent to the graphObj, and call the initiation function
@@ -266,6 +267,19 @@ public class Controller : SingletonBehavior<Controller>
         Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);
         
         this.OnGraphModified?.Invoke();
+    }
+
+    public void RemoveCollection(List<VertexObj> vertices, List<EdgeObj> edges, bool updateDS = true) {
+        foreach (EdgeObj e in edges) {
+            RemoveEdge(e, false);
+        }
+
+        foreach (VertexObj v in vertices) {
+            RemoveVertex(v, false);
+        }
+
+        if (updateDS)
+            Controller.Singleton.Graph.Remove(vertices.Select(v => v.Vertex).ToList(), edges.Select(e => e.Edge).ToList());
     }
 
     public void RemoveEdge(Edge edge)
@@ -337,7 +351,7 @@ public class Controller : SingletonBehavior<Controller>
     }
 
         // Create a new edge object to correspond to a passed in graph edge
-    private void CreateEdgeObj(Edge edge, bool invokeEvents = true) {
+    public void CreateEdgeObj(Edge edge, bool invokeEvents = true) {
         // Get the two vertex objects associated with the edge
         VertexObj fromVertexObj = GetVertexObj(edge.vert1);
         VertexObj toVertexObj = GetVertexObj(edge.vert2);

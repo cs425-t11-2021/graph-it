@@ -53,22 +53,6 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 {
     [SerializeField] private GraphDisplayAlgorithmAssociation[] associations;
     
-    // // Reference of the button of prim
-    // [SerializeField] private Button primButton;
-    // // Reference of the kruskal button
-    // [SerializeField] private Button kruskalButton;
-    // // Reference of the button of dijkstra
-    // [SerializeField] private Button dijkstraButton;
-    // // Reference of the button of Bellman Ford
-    // [SerializeField] private Button bellmanButton;
-    // // Reference of the Eulerian circuit button
-    // [SerializeField] private Button eulerianButton;
-    // // Reference of the Maximum Indepdent Set button
-    // [SerializeField] private Button maxIndSetButton;
-    // // Reference of the Maximum Matching button
-    // [SerializeField] private Button maxMatchingButton;
-    //[SerializeField] private Button algClosePanel;
-    //Reference to the button to close the algorithm info panels
     [SerializeField] private Button algOpenPanel;
     //Reference to the button to open the algorithm info panels
 
