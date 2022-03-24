@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 // Class for hosting functions called by buttons of the Edit dropdown menu, inherits from MenuButton
 public class EditMenu : MenuButton
@@ -43,6 +44,7 @@ public class EditMenu : MenuButton
             undoButton.interactable = false;
         }
         else {
+            undoButton.GetComponentInChildren<TMP_Text>().text = "Undo " + Controller.Singleton.Graph.Changes.Peek().Mod.ToString();
             undoButton.interactable = true;
         }
 
@@ -50,6 +52,7 @@ public class EditMenu : MenuButton
             redoButton.interactable = false;
         }
         else {
+            redoButton.GetComponentInChildren<TMP_Text>().text = "Redo " + Controller.Singleton.Graph.UndoneChanges.Peek().Mod.ToString();
             redoButton.interactable = true;
         }
     }
