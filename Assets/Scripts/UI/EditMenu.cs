@@ -12,6 +12,9 @@ public class EditMenu : MenuButton
     [SerializeField]
     private Button addEdgeButton;
 
+    [SerializeField] private Button undoButton;
+    [SerializeField] private Button redoButton;
+
     private void Start() {
         SelectionManager.Singleton.OnSelectionChange += (selectedVertexCount, selectedEdgeCount) => {
             if (selectedVertexCount == 2 && selectedEdgeCount == 0) {
@@ -34,6 +37,20 @@ public class EditMenu : MenuButton
             if (Input.GetKeyDown(KeyCode.X)) {
                 Redo();
             }
+        }
+
+        if (Controller.Singleton.Graph.Changes.Count == 0) {
+            undoButton.interactable = false;
+        }
+        else {
+            undoButton.interactable = true;
+        }
+
+        if (Controller.Singleton.Graph.UndoneChanges.Count == 0) {
+            redoButton.interactable = false;
+        }
+        else {
+            redoButton.interactable = true;
         }
     }
 
@@ -58,11 +75,13 @@ public class EditMenu : MenuButton
 
     public void Undo()
     {
-        Controller.Singleton.Graph.Undo();
+        if (Controller.Singleton.Graph.Changes.Count > 0)
+            Controller.Singleton.Graph.Undo();
     }
 
     public void Redo()
     {
-        Controller.Singleton.Graph.Redo();
+        if (Controller.Singleton.Graph.UndoneChanges.Count > 0)
+            Controller.Singleton.Graph.Redo();
     }
 }

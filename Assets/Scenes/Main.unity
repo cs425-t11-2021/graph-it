@@ -8934,6 +8934,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addEdgeButton: {fileID: 1126108517}
+  undoButton: {fileID: 1594624843}
+  redoButton: {fileID: 257698108}
 --- !u!1 &798761128
 GameObject:
   m_ObjectHideFlags: 0
@@ -17385,7 +17387,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.00012207031, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 500, y: 200}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1435593966
