@@ -42,6 +42,7 @@ public class EditMenu : MenuButton
 
         if (Controller.Singleton.Graph.Changes.Count == 0) {
             undoButton.interactable = false;
+            undoButton.GetComponentInChildren<TMP_Text>().text = "Undo";
         }
         else {
             undoButton.GetComponentInChildren<TMP_Text>().text = "Undo " + Controller.Singleton.Graph.Changes.Peek().Mod.ToString();
@@ -50,6 +51,7 @@ public class EditMenu : MenuButton
 
         if (Controller.Singleton.Graph.UndoneChanges.Count == 0) {
             redoButton.interactable = false;
+            undoButton.GetComponentInChildren<TMP_Text>().text = "Redo";
         }
         else {
             redoButton.GetComponentInChildren<TMP_Text>().text = "Redo " + Controller.Singleton.Graph.UndoneChanges.Peek().Mod.ToString();
