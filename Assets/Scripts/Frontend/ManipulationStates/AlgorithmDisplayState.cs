@@ -30,10 +30,6 @@ public class AlgorithmDisplayState : ManipulationState
         }
     }
 
-    public override void OnDoubleClick() {
-        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
-    }
-
     public override void OnStateExit()
     {
         List<Vertex> resultVertices = new List<Vertex>();

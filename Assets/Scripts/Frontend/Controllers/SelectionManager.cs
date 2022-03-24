@@ -21,6 +21,8 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         // Initialize data structures
         this.selectedVertices = new List<VertexObj>();
         this.selectedEdges = new List<EdgeObj>();
+
+        Controller.Singleton.OnInstanceChanged += (newInstance) => DeSelectAll();
     }
 
     private void Update() {
