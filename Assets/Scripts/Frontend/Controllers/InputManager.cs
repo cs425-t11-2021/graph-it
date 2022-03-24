@@ -35,6 +35,13 @@ public class InputManager : SingletonBehavior<InputManager>
         }
     }
 
+    // Property for whether or not Control/Command key is being held
+    public bool ControlCommandKeyHeld {
+        get {
+            return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand);
+        }
+    }
+
     // Property for getting the vertex object the cursor is currently hovering
     public GameObject CurrentHoveringVertex {
         get {

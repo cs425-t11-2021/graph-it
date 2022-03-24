@@ -55,7 +55,7 @@ public class UIManager : SingletonBehavior<UIManager>
 
     private void Awake() {
         // Get references
-        this.menuButtons = this.menuBar.GetComponentsInChildren<MenuButton>();
+        this.menuButtons = this.menuBar.GetComponentsInChildren<MenuButton>(true);
         this.algorithmsPanel = this.algPanel.GetComponentInChildren<AlgorithmsPanel>();
     }
 

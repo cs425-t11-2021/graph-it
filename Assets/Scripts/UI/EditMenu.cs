@@ -12,15 +12,29 @@ public class EditMenu : MenuButton
     [SerializeField]
     private Button addEdgeButton;
 
+    private void Start() {
+        SelectionManager.Singleton.OnSelectionChange += (selectedVertexCount, selectedEdgeCount) => {
+            if (selectedVertexCount == 2 && selectedEdgeCount == 0) {
+                this.addEdgeButton.interactable = true;
+            }
+            else {
+                this.addEdgeButton.interactable = false;
+            }
+        };
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (SelectionManager.Singleton.SelectedVertexCount() == 2 && SelectionManager.Singleton.SelectedEdgeCount() == 0) {
-            this.addEdgeButton.interactable = true;
+        if (InputManager.Singleton.ControlCommandKeyHeld) {
+            if (Input.GetKeyDown(KeyCode.Z)) {
+                Undo();
+            }
+
+            if (Input.GetKeyDown(KeyCode.X)) {
+                Redo();
+            }
         }
-        else {
-            this.addEdgeButton.interactable = false;
-        }       
     }
 
     // Function called by select all button
