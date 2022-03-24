@@ -336,7 +336,7 @@ public class Controller : SingletonBehavior<Controller>
                 Logger.Log("Mismatch between graph data structure and graph objects in the instance.", this, LogType.ERROR);
                 return;
             }
-            foundEdge.Curvature = 8;
+            foundEdge.Edge.Curvature = 8;
             
             Edge curvedEdge = this.Graph.AddEdge(vertex1, vertex2, directed);
             CreateCurvedEdgeObj(curvedEdge, 8);
@@ -403,7 +403,7 @@ public class Controller : SingletonBehavior<Controller>
         // Find the child index of the from and to vertices and set the from vertex as the parent of edge object, then initiate the edge object
         edgeObj.transform.parent.SetParent(this.GraphObjContainer);
         edgeObj.Initiate(curvedEdge, vertex1, vertex2);
-        edgeObj.Curvature = curvature;
+        edgeObj.Edge.Curvature = curvature;
         Logger.Log("Creating new edge in the current graph instance.", this, LogType.INFO);
         // Add edge to the list of edges in instance
         this.activeGraphInstance.edgeObjs.Add(edgeObj);

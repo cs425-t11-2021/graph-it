@@ -168,7 +168,7 @@ public class GraphModification
         directedData.Item1.SetDirected( directedData.Item2, false );
         
         // Update front end
-        // TODO: NEED SOME CHANGES TO FRONT END CODE
+        Controller.Singleton.GetEdgeObj( directedData.Item1 ).SetDirectedness(directedData.Item2, false);
     }
 
     private void UndoEdgeLabel()
@@ -176,7 +176,8 @@ public class GraphModification
         ( Edge, string, string ) labelData = ( ( Edge, string, string ) ) this.Modified;
         labelData.Item1.SetLabel( labelData.Item2, false );
         
-        
+        // Update front end
+        Controller.Singleton.GetEdgeObj( labelData.Item1 ).labelObj.UpdateEdgeLabel(labelData.Item2, false);
     }
 
     private void UndoEdgeStyle()
@@ -195,12 +196,18 @@ public class GraphModification
     {
         ( Edge, uint, uint ) thicknessData = ( ( Edge, uint, uint ) ) this.Modified;
         thicknessData.Item1.SetThickness( thicknessData.Item2, false );
+
+        // Update front end
+        Controller.Singleton.GetEdgeObj( thicknessData.Item1 ).SetThickness(thicknessData.Item2, false);
     }
 
     private void UndoEdgeCurvature()
     {
         ( Edge, int, int ) curveData = ( ( Edge, int, int ) ) this.Modified;
         curveData.Item1.SetCurvature( curveData.Item2, false );
+
+        // Update front end
+        Controller.Singleton.GetEdgeObj( curveData.Item1 ).SetCurvature(curveData.Item2, false);
     }
 
     private void UndoEdgeTailStyle()
@@ -218,6 +225,9 @@ public class GraphModification
     private void UndoEdgeReverse()
     {
         ( ( Edge ) this.Modified ).Reverse( false );
+
+        // Update front end
+        Controller.Singleton.GetEdgeObj( ( Edge ) this.Modified ).ReverseEdge(false);
     }
 
     private void UndoRemoveCollection()
@@ -359,12 +369,18 @@ public class GraphModification
     {
         ( Edge, bool ) directedData = ( ( Edge, bool ) ) this.Modified;
         directedData.Item1.SetDirected( !directedData.Item2, false );
+
+        // Update front end
+        Controller.Singleton.GetEdgeObj( directedData.Item1 ).SetDirectedness(directedData.Item2, false);
     }
 
     private void RedoEdgeLabel()
     {
         ( Edge, string, string ) labelData = ( ( Edge, string, string ) ) this.Modified;
         labelData.Item1.SetLabel( labelData.Item3, false );
+
+        // Update front end
+        Controller.Singleton.GetEdgeObj( labelData.Item1 ).labelObj.UpdateEdgeLabel(labelData.Item3, false);
     }
 
     private void RedoEdgeStyle()
@@ -383,12 +399,18 @@ public class GraphModification
     {
         ( Edge, uint, uint ) thicknessData = ( ( Edge, uint, uint ) ) this.Modified;
         thicknessData.Item1.SetThickness( thicknessData.Item3, false );
+
+        // Update front end
+        Controller.Singleton.GetEdgeObj( thicknessData.Item1 ).SetThickness(thicknessData.Item3, false);
     }
 
     private void RedoEdgeCurvature()
     {
         ( Edge, int, int ) curveData = ( ( Edge, int, int ) ) this.Modified;
         curveData.Item1.SetCurvature( curveData.Item3, false );
+
+        // Update front end
+        Controller.Singleton.GetEdgeObj( curveData.Item1 ).SetCurvature(curveData.Item3, false);
     }
 
     private void RedoEdgeTailStyle()
