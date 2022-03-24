@@ -103,11 +103,7 @@ public class EdgeObj : MonoBehaviour
 
         if (edge.vert1 == edge.vert2)
         {
-            this.Edge.Curvature = int.MaxValue;
-        }
-        else
-        {
-            this.Edge.Curvature = 0;
+            this.Edge.SetCurvature(int.MaxValue, false);
         }
 
         this.direction = edge.Directed ? 1 : 0;

@@ -51,7 +51,7 @@ public class EditMenu : MenuButton
 
         if (Controller.Singleton.Graph.UndoneChanges.Count == 0) {
             redoButton.interactable = false;
-            undoButton.GetComponentInChildren<TMP_Text>().text = "Redo";
+            redoButton.GetComponentInChildren<TMP_Text>().text = "Redo";
         }
         else {
             redoButton.GetComponentInChildren<TMP_Text>().text = "Redo " + Controller.Singleton.Graph.UndoneChanges.Peek().Mod.ToString();
