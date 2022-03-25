@@ -4606,7 +4606,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 474698783}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 798110308}
+        m_TargetAssemblyTypeName: EditMenu, Assembly-CSharp
+        m_MethodName: Copy
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &474698783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14336,7 +14348,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1143309900}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 798110308}
+        m_TargetAssemblyTypeName: EditMenu, Assembly-CSharp
+        m_MethodName: Paste
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1143309900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27752,6 +27776,7 @@ GameObject:
   - component: {fileID: 4782475346978306236}
   - component: {fileID: 4782475346978306239}
   - component: {fileID: 4782475346978306238}
+  - component: {fileID: 4782475346978306225}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -27759,6 +27784,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &4782475346978306225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4782475346978306224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a49cea310a20447e6a510ef24b05b9e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &4782475346978306226
 MonoBehaviour:
   m_ObjectHideFlags: 0

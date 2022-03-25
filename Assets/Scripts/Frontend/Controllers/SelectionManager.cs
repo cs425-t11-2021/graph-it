@@ -68,7 +68,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
 
         if (callEvent)
             // Call selection changed event
-            this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+            this.OnSelectionChange?.Invoke(this.selectedVertices.Count, this.selectedEdges.Count);
 
         Logger.Log(String.Format("{0} vertex: {1}.", select ? "Selecting" : "Deselecting", vertexObj.name), this, LogType.INFO);
     }

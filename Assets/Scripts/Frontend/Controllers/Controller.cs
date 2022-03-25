@@ -42,6 +42,7 @@ public class Controller : SingletonBehavior<Controller>
 
     // Graph instance active in the current tab
     private GraphInstance activeGraphInstance;
+    public GraphInstance ActiveGraphInstance { get => this.activeGraphInstance; }
 
     // Readonly property for the graph container in the current graph instance
     public Transform GraphObjContainer { get => this.activeGraphInstance.container; }
@@ -170,8 +171,9 @@ public class Controller : SingletonBehavior<Controller>
                 newGraph.AddEdge(newEdge, false);
             }
         }
-
+    
         GraphInstance newInstance = CreateGraphInstance(true, newGraph);
+        OnGraphModified?.Invoke();
         CreateObjsFromGraph(newInstance);
     }
 

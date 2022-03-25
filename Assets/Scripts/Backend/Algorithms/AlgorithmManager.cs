@@ -155,7 +155,7 @@ public class AlgorithmManager
         this.complete.Clear();
     }
 
-    private void OnGraphModified()
+    public void OnGraphModified()
     {
         Clear();
         

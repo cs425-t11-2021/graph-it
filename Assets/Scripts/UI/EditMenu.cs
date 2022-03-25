@@ -90,6 +90,16 @@ public class EditMenu : MenuButton
             Controller.Singleton.Graph.Redo();
     }
 
+    public void Copy()
+    {
+        CopyManager.Singleton.CopyCurrentSelection();
+    }
+
+    public void Paste()
+    {
+        CopyManager.Singleton.Paste();
+    }
+
     public void ClearAlgorithmResults()
     {
         AlgorithmsPanel.Singleton.ClearAlgorithmResults();
