@@ -433,9 +433,27 @@ public class GraphModification
     private void RedoRemoveCollection()
     {
         ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
-        if ( !( collection.Item1 is null ) )
-            this.graph.Remove( new List< Vertex >( collection.Item1 ) );
-        if ( !( collection.Item2 is null ) )
-            this.graph.Remove( new List< Edge >( collection.Item2 ) );
+        
+        if (!(collection.Item2 is null))
+        {
+            this.graph.Remove(new List<Edge>(collection.Item2));
+            
+            // Update front end
+            foreach (Edge e in collection.Item2)
+            {
+                Controller.Singleton.RemoveEdge(Controller.Singleton.GetEdgeObj( e ), false );
+            }
+        }
+        
+        if (!(collection.Item1 is null))
+        {
+            this.graph.Remove(new List<Vertex>(collection.Item1));
+            
+            // Update front end
+            foreach (Vertex v in collection.Item1)
+            {
+                Controller.Singleton.RemoveVertex(Controller.Singleton.GetVertexObj( v ), false );
+            }
+        }
     }
 }
