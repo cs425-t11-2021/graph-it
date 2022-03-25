@@ -240,12 +240,12 @@ public class Controller : SingletonBehavior<Controller>
         }
     }
 
-    public void RemoveVertex(VertexObj vertexObj, bool updateDS = true) {
+    public void RemoveVertex(VertexObj vertexObj, bool updateDS = true, bool invokeEvents = true) {
         for (int i = this.activeGraphInstance.edgeObjs.Count - 1; i >= 0; i--)
         {
             if (this.activeGraphInstance.edgeObjs[i].Vertex1 == vertexObj || this.activeGraphInstance.edgeObjs[i].Vertex2 == vertexObj)
             {
-                RemoveEdge(this.activeGraphInstance.edgeObjs[i], updateDS);
+                RemoveEdge(this.activeGraphInstance.edgeObjs[i], updateDS, false);
             }
         }
 
@@ -256,17 +256,19 @@ public class Controller : SingletonBehavior<Controller>
         Destroy(vertexObj.gameObject);
         Logger.Log("Removed a vertex from the current graph instance.", this, LogType.INFO);
         
-        this.OnGraphModified?.Invoke();
+        if (invokeEvents)
+            this.OnGraphModified?.Invoke();
     }
 
-    public void RemoveEdge(EdgeObj edgeObj, bool updateDS = true) {
+    public void RemoveEdge(EdgeObj edgeObj, bool updateDS = true, bool invokeEvents = true) {
         if (updateDS)
             Controller.Singleton.Graph.Remove(edgeObj.Edge);
         this.activeGraphInstance.edgeObjs.Remove(edgeObj);
         Destroy(edgeObj.transform.parent.gameObject);
         Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);
         
-        this.OnGraphModified?.Invoke();
+        if (invokeEvents)
+            this.OnGraphModified?.Invoke();
     }
 
     public void RemoveCollection(List<VertexObj> vertices, List<EdgeObj> edges, bool updateDS = true) {
@@ -280,6 +282,8 @@ public class Controller : SingletonBehavior<Controller>
 
         if (updateDS)
             Controller.Singleton.Graph.Remove(vertices.Select(v => v.Vertex).ToList(), edges.Select(e => e.Edge).ToList());
+        
+        this.OnGraphModified?.Invoke();
     }
 
     public void RemoveEdge(Edge edge)

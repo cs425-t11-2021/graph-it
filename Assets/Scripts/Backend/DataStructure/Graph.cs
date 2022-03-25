@@ -154,8 +154,8 @@ public class Graph
 
     public void Remove( List< Vertex > vertices, List< Edge > edges, bool recordChange=true )
     {
-        this.Remove( vertices, false );
         this.Remove( edges, false );
+        this.Remove( vertices, false );
 
         if ( recordChange )
         {
@@ -242,8 +242,8 @@ public class Graph
             this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
         else
         {
-            this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
-            this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) );
+            Debug.Log(this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) ));
+            Debug.Log(this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) ));
         }
 
         if ( recordChange )

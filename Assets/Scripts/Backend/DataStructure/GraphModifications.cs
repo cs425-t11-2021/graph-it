@@ -99,6 +99,9 @@ public class GraphModification
                 this.UndoRemoveCollection();
                 break;
         }
+        
+        // Update Algorithm Manager
+        GraphInfo.Singleton.UpdateGraphInfo();
     }
 
     private void UndoAddVertex()
@@ -309,6 +312,9 @@ public class GraphModification
                 this.RedoRemoveCollection();
                 break;
         }
+        
+        // Update Algorithm Manager
+        GraphInfo.Singleton.UpdateGraphInfo();
     }
 
     private void RedoAddVertex()

@@ -126,7 +126,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         GraphInfo.Singleton.UpdateGraphInfo();
 
         // Call selection changed event
-        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+        this.OnSelectionChange?.Invoke(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Method called to remove all selections

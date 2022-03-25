@@ -153,6 +153,8 @@ public class AlgorithmManager
         this.KillAll();
         this.running.Clear();
         this.complete.Clear();
+        
+        Logger.Log("Copying Graph DS.", this, LogType.INFO);
         this.graphCopy = new Graph( this.graph );
     }
 
