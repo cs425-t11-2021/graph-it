@@ -19,7 +19,11 @@ public class AlgorithmInitiationState : ManipulationState
         this.selectedVertices = 0;
 
         if (currentAssociation.requiredVertices == 0) {
+            AlgorithmsPanel.Singleton.runButton.UpdateStatus(false);
+            SelectionManager.Singleton.DeSelectAll();
             AlgorithmsPanel.Singleton.RunGraphDisplayAlgorithm(this.currentAssociation);
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            return;
         }
 
         NotificationManager.Singleton.CreateNotification(string.Format("Please select <#0000FF> {0} </color> vertices for <#0000FF> {1}</color>.", this.currentAssociation.requiredVertices, this.currentAssociation.algorithmClass), 3);
@@ -33,6 +37,7 @@ public class AlgorithmInitiationState : ManipulationState
 
         if (this.selectedVertices == this.currentAssociation.requiredVertices) {
             AlgorithmsPanel.Singleton.RunGraphDisplayAlgorithm(this.currentAssociation);
+            AlgorithmsPanel.Singleton.runButton.UpdateStatus(false);
             
             SelectionManager.Singleton.DeSelectAll();
             SelectionManager.Singleton.SelectVertex(vertexObj);

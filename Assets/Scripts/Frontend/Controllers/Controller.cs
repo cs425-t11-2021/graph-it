@@ -445,6 +445,12 @@ public class Controller : SingletonBehavior<Controller>
         this.OnEdgeObjectCreation?.Invoke(edgeObj);
         this.OnGraphModified?.Invoke();
     }
+    
+    // TODO: Find a better solution
+    public void ForceInvokeModificationEvent()
+    {
+        this.OnGraphModified?.Invoke();
+    }
 
     // Get a vertex object in the current graph instance given a vertex
     public VertexObj GetVertexObj(Vertex v) {

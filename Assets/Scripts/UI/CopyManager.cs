@@ -81,7 +81,7 @@ public class CopyManager : SingletonBehavior<CopyManager>
             Controller.Singleton.CreateEdgeObj(newEdge, false);
         }
         
-        Controller.Singleton.AlgorithmManager.OnGraphModified();
+        Controller.Singleton.ForceInvokeModificationEvent();
         GraphInfo.Singleton.UpdateGraphInfo();
     }
 }

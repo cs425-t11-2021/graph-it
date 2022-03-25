@@ -31,6 +31,7 @@ public class GraphDisplayAlgorithmAssociation
                 if (result == null)
                 {
                     Logger.Log("Graph display algorithm " + algorithmClass + " returned a null result.", this, LogType.ERROR);
+                    NotificationManager.Singleton.CreateNotification(string.Format("<color=red>{0} returned a null result.</color>", algorithmClass), 3);
                 }
                 else
                 {                    
@@ -54,10 +55,13 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     //Reference to the button to open the algorithm info panels
 
     [SerializeField] public ToggleButton resultButton;
+    [SerializeField] public ToggleButton runButton;
     [SerializeField] private Color deafultColor;
     [SerializeField] private Color selectedColor;
     [SerializeField] private Color defaultFinishedColor;
     [SerializeField] private Color selectedFinishedColor;
+
+    public bool stepByStep = true;
 
     public GraphDisplayAlgorithmAssociation CurrentlySelectedAlgorithm {get; private set;}
 
@@ -178,7 +182,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public void StartAlgorithmInitiation() {
         if (this.CurrentlySelectedAlgorithm != null) {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmInitiationState;
+            if (runButton.Checked)
+            {
+                ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmInitiationState;
+            }
+            else
+            {
+                ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            }
         }
     }
 
@@ -210,6 +221,11 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         else {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
         }
+    }
+
+    public void SetStepByStep(bool enabled)
+    {
+        this.stepByStep = enabled;
     }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access

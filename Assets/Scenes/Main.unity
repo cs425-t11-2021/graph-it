@@ -6740,7 +6740,19 @@ MonoBehaviour:
   m_Group: {fileID: 0}
   onValueChanged:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: SetStepByStep
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_IsOn: 1
 --- !u!1 &618572880
 GameObject:
@@ -11746,10 +11758,12 @@ MonoBehaviour:
     completedMethod: GetDijkstrasPath
   algOpenPanel: {fileID: 1689317852}
   resultButton: {fileID: 468119564}
+  runButton: {fileID: 1581409057}
   deafultColor: {r: 0.9019608, g: 0.98039216, b: 0.98039216, a: 1}
   selectedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   defaultFinishedColor: {r: 0.5801887, g: 1, b: 0.60011256, a: 1}
   selectedFinishedColor: {r: 0, g: 0.78431374, b: 0, a: 1}
+  stepByStep: 1
 --- !u!1 &1015921549
 GameObject:
   m_ObjectHideFlags: 0
@@ -15605,8 +15619,8 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4294967295
-  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+    rgba: 4278190080
+  m_fontColor: {r: 0, g: 0, b: 0, a: 1}
   m_enableVertexGradient: 0
   m_colorMode: 3
   m_fontColorGradient:
@@ -20209,6 +20223,7 @@ GameObject:
   - component: {fileID: 1581409056}
   - component: {fileID: 1581409055}
   - component: {fileID: 1581409054}
+  - component: {fileID: 1581409057}
   m_Layer: 5
   m_Name: Button
   m_TagString: Untagged
@@ -20243,7 +20258,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1581409052}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -20330,6 +20345,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1581409052}
   m_CullTransparentMesh: 1
+--- !u!114 &1581409057
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581409052}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkedChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: StartAlgorithmInitiation
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  originalColor: {r: 1, g: 1, b: 1, a: 1}
+  checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  highlightColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  group: {fileID: 0}
 --- !u!1 &1581936131
 GameObject:
   m_ObjectHideFlags: 0
