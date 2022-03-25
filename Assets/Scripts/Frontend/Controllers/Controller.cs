@@ -148,6 +148,33 @@ public class Controller : SingletonBehavior<Controller>
         return newInstance;
     }
 
+    public void CreateInstanceFromSelection()
+    {
+        Graph newGraph = new Graph();
+        Dictionary<Vertex, Vertex> vertexCorrespondanceDict = new Dictionary<Vertex, Vertex>();
+        foreach (VertexObj vertexObj in SelectionManager.Singleton.SelectedVertices)
+        {
+            Vertex newVertex = new Vertex(vertexObj.Vertex);
+            newGraph.AddVertex(newVertex, false);
+            vertexCorrespondanceDict[vertexObj.Vertex] = newVertex;
+        }
+
+        foreach (EdgeObj edgeObj in SelectionManager.Singleton.SelectedEdges)
+        {
+            if (SelectionManager.Singleton.SelectedVertices.Contains(edgeObj.Vertex1) &&
+                SelectionManager.Singleton.SelectedVertices.Contains(edgeObj.Vertex2))
+            {
+                Edge newEdge = new Edge(edgeObj.Edge);
+                newEdge.vert1 = vertexCorrespondanceDict[newEdge.vert1];
+                newEdge.vert2 = vertexCorrespondanceDict[newEdge.vert2];
+                newGraph.AddEdge(newEdge, false);
+            }
+        }
+
+        GraphInstance newInstance = CreateGraphInstance(true, newGraph);
+        CreateObjsFromGraph(newInstance);
+    }
+
     public void ChangeActiveInstance(GraphInstance instance, bool updateGraphInfo = true)
     {
         // If the instances list dose not contain the instance being requested, something has gone wrong

@@ -92,11 +92,15 @@ public class EditMenu : MenuButton
 
     public void ClearAlgorithmResults()
     {
-        
+        AlgorithmsPanel.Singleton.ClearAlgorithmResults();
     }
 
     public void CreateGraphFromSelection()
     {
-        
+        if (SelectionManager.Singleton.SelectedVertices.Count > 0)
+        {
+            Controller.Singleton.CreateInstanceFromSelection();
+            NotificationManager.Singleton.CreateNotification("Creating a new graph from selection.", 3);
+        }
     }
 }
