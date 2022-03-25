@@ -228,6 +228,21 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         this.stepByStep = enabled;
     }
 
+    public void Search(string term)
+    {
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass.ToLower().Contains(term.ToLower()))
+            {
+                association.activationButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                association.activationButton.gameObject.SetActive(false);
+            }
+        }
+    }
+
     //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseAlgorithmInfoPanel(){
         this.gameObject.SetActive(false); 
