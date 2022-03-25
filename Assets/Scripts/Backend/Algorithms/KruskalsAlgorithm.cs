@@ -19,8 +19,11 @@ public class KruskalsAlgorithm : Algorithm
 
     public override void Run()
     {
-        if ( this.Graph.Directed )
-            throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
+        if (this.Graph.Directed)
+        {
+            RunInMain.Singleton.queuedTasks.Enqueue(() => NotificationManager.Singleton.CreateNotification("<color=red>Kruskal's algorithm is unsupported on directed graphs.</color>", 3));
+            throw new System.Exception("Kruskal's algorithm is unsupported on directed graphs.");
+        }
 
         this.Mst = new List< Edge >();
         List< Edge > edges = new List< Edge >( this.Graph.Adjacency.Values.OrderBy( edge => edge.Weight ) );

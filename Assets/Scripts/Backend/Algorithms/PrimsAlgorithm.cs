@@ -30,6 +30,7 @@ public class PrimsAlgorithm : Algorithm
         if ( this.Graph.Directed )
         {
             // Debug.Log( ( new System.Exception( "Prim's algorithm is unsupported on directed graphs." ) ).ToString() ); // for testing purposes
+            RunInMain.Singleton.queuedTasks.Enqueue(() => NotificationManager.Singleton.CreateNotification("<color=red>Prim's algorithm is unsupported on directed graphs.</color>", 3));
             throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
         }
 

@@ -100,7 +100,7 @@ public class FileMenu : MenuButton
         ExtensionFilter[] imageSaveExtensions = new [] {
             new ExtensionFilter("Image Files", "png")//from UnityStandAloneFileBrowser Plugin
         };
-        string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "GraphImage1", imageSaveExtensions); //from UnityStandAloneFileBrowser Plugin
+        string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", TabBar.Singleton.ActiveTab.TabName, imageSaveExtensions); //from UnityStandAloneFileBrowser Plugin
 
         if (!string.IsNullOrEmpty(path))
         {
