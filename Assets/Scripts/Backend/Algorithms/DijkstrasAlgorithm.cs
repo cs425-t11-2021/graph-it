@@ -22,7 +22,7 @@ public class DijkstrasAlgorithm : Algorithm
         else
             this.type = AlgorithmType.INTERNAL;
         // Add the root vertex to vertex parms array
-        vertexParms = new Vertex[] {this.src, this.dest};
+        vertexParms = new Vertex[] { this.src, this.dest };
     }
 
     public override void Run()
@@ -86,7 +86,7 @@ public class DijkstrasAlgorithm : Algorithm
         vertexPath.Reverse();
 
         for (int i = 0; i < vertexPath.Count - 1; i++) {
-            HashSet<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges( vertexPath[ i ] );
+            HashSet<Edge> incidentEdges = this.Graph.GetIncidentEdges( vertexPath[ i ] );
             foreach (Edge edge in incidentEdges) {
                 if (edge.vert1 == vertexPath[i + 1] || edge.vert2 == vertexPath[i + 1]) {
                     edgePath.Add(edge);
