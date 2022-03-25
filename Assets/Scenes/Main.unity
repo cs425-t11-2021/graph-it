@@ -15840,7 +15840,6 @@ MonoBehaviour:
   createVertexModeButton: {fileID: 1723796977}
   deleteButton: {fileID: 1147743073}
   edgeCreationModeButton: {fileID: 606668070}
-  addEdgeButton: {fileID: 1639705717}
   changeTypeButton: {fileID: 1136272508}
   edgeThicknessButton: {fileID: 359608985734554706}
   edgeCurvatureButton: {fileID: 3832231448021805302}
