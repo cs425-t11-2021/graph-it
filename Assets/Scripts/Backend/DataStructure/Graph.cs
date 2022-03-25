@@ -242,8 +242,8 @@ public class Graph
             this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
         else
         {
-            Debug.Log(this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) ));
-            Debug.Log(this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) ));
+            this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
+            this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) );
         }
 
         if ( recordChange )
