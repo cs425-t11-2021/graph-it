@@ -33,13 +33,10 @@ public class GraphDisplayAlgorithmAssociation
                     Logger.Log("Graph display algorithm " + algorithmClass + " returned a null result.", this, LogType.ERROR);
                 }
                 else
-                {
-                    SelectionManager.Singleton.DeSelectAll();
-                    
+                {                    
                     AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, (List<Edge>) result);
                     if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
                         AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
-                        // AlgorithmsPanel.Singleton.resultButton.enabled = true;
                     }
 
                     NotificationManager.Singleton.CreateNoficiation(this.algorithmClass + " finished.", 3);

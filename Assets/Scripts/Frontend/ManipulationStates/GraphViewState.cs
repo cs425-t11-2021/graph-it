@@ -1,13 +1,19 @@
-using System.Numerics;
+using UnityEngine;
 
 // Default viewing state, double click to add vertex, left click to select, shift + left click to select multiple
 public class GraphViewState : ManipulationState
 {
     // Whether or not graph objects are current being moved
     private bool graphMovementInProgress = false;
+    private bool firstFrame = false;
 
     // Subscribe to appropriate input events on state enter
     public override void OnStateEnter() {
+        GameObject cursorVertex = InputManager.Singleton.CurrentHoveringVertex;
+        if (cursorVertex) {
+            // SelectionManager.Singleton.SelectVertex(cursorVertex.GetComponent<VertexObj>());
+        }
+
         InputManager.Singleton.OnMouseDragStart += OnDragStart;
         InputManager.Singleton.OnMouseDragEnd += OnDragEnd;
         InputManager.Singleton.OnMouseClickInPlace += OnClickInPlace;
@@ -125,7 +131,7 @@ public class GraphViewState : ManipulationState
             }
 
             // Update the stored position info in the verterices
-            selectedVertex.Vertex.Pos = new Vector2( selectedVertex.transform.position.x, selectedVertex.transform.position.y );
+            selectedVertex.Vertex.Pos = new System.Numerics.Vector2( selectedVertex.transform.position.x, selectedVertex.transform.position.y );
         }
 
         this.graphMovementInProgress = false;
