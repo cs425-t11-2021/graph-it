@@ -2,6 +2,7 @@
 ////The file system (for importing, exporting, and saving)uses the UnityStandAloneFileBrowser Plugin found here: https://github.com/gkngkc/UnityStandaloneFileBrowser
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -26,7 +27,7 @@ public class FileMenu : MenuButton
         
         // TEMPOARY
         ResourceManager.Singleton.LoadVertexSprites();
-        NotificationManager.Singleton.CreateNoficiation("Creating a new graph.", 3);
+        NotificationManager.Singleton.CreateNoficiation("Creating a new graph.", 2);
 
         EventSystem.current.SetSelectedGameObject(null);
     }
@@ -59,6 +60,9 @@ public class FileMenu : MenuButton
             
             Controller.Singleton.Graph.Import(paths[0]);
             Controller.Singleton.CreateObjsFromGraph(newInstance);
+            
+            // Change tab name to exported file name
+            TabBar.Singleton.ActiveTab.TabName = Path.GetFileNameWithoutExtension(paths[0]);
         }
 
         EventSystem.current.SetSelectedGameObject(null);
@@ -72,10 +76,16 @@ public class FileMenu : MenuButton
         ExtensionFilter[] exportExtensions = new [] {
             new ExtensionFilter("Comma Seperated Lists", "csv")//from UnityStandAloneFileBrowser Plugin
         };
-        string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "Graph1", exportExtensions); //from UnityStandAloneFileBrowser Plugin
+        string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", TabBar.Singleton.ActiveTab.TabName, exportExtensions); //from UnityStandAloneFileBrowser Plugin
 
-        Controller.Singleton.Graph.Export(path);
-        
+        if (!string.IsNullOrEmpty(path))
+        {
+            Controller.Singleton.Graph.Export(path);
+
+            // Change tab name to exported file name
+            TabBar.Singleton.ActiveTab.TabName = Path.GetFileNameWithoutExtension(path);
+        }
+
         EventSystem.current.SetSelectedGameObject(null);
     }
 
@@ -88,8 +98,11 @@ public class FileMenu : MenuButton
         };
         string path = StandaloneFileBrowser.SaveFilePanel("Export to File", "", "GraphImage1", imageSaveExtensions); //from UnityStandAloneFileBrowser Plugin
 
-        ScreenshotManager.Singleton.TakeScreenshot(path);
-        
+        if (!string.IsNullOrEmpty(path))
+        {
+            ScreenshotManager.Singleton.TakeScreenshot(path);
+        }
+
         EventSystem.current.SetSelectedGameObject(null);
     }
 }

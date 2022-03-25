@@ -10,6 +10,8 @@ public class TabBar : SingletonBehavior<TabBar>
     
     // List of tabs currently in the scene
     public List<Tab> TabsInScene { get; private set; }
+    
+    public Tab ActiveTab { get; set; }
 
     private void Awake()
     {

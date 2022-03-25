@@ -13,6 +13,13 @@ public class Tab : MonoBehaviour, IPointerClickHandler
     private ToggleButton toggle;
     // TMP text component for the tab label
     private TMP_Text tabLabel;
+    
+    // Name of the tab
+    public string TabName
+    {
+        get => this.tabLabel.text;
+        set => this.tabLabel.text = value;
+    }
 
     private void Awake()
     {
@@ -27,6 +34,8 @@ public class Tab : MonoBehaviour, IPointerClickHandler
     private void OnInstanceChanged(GraphInstance instance)
     {
         this.toggle.UpdateStatus(instance == this.graphInstance);
+
+        if (instance == this.graphInstance) TabBar.Singleton.ActiveTab = this;
     }
 
     public void Initiate(string name, GraphInstance associatedInstance)
@@ -40,11 +49,6 @@ public class Tab : MonoBehaviour, IPointerClickHandler
     {
         // Chance the current graph instance to the one associated with the tab
         Controller.Singleton.ChangeActiveInstance(this.graphInstance, true);
-    }
-
-    public void Rename(string newName)
-    {
-        this.tabLabel.text = newName;
     }
 
     public void Close()
