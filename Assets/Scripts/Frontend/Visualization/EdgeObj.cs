@@ -30,19 +30,6 @@ public class EdgeObj : MonoBehaviour
     // Whether edge is currently being hovered over
     [SerializeField] private bool hovering = false;
 
-    private int curvature;
-    public int Curvature
-    {
-        get => this.curvature;
-        set
-        {
-            this.curvature = value;
-            if (curvature == 0) UpdateStraightSpline();
-            else if (this.curvature == int.MaxValue) UpdateCircularSpline(0.7f, 45f);
-            else UpdateCurvedSpline(this.curvature * 0.1f);
-        }
-    }
-
     // Property for getting and setting whether or not the edge is selected, and edit the edge's color to match
     public bool Selected {
         get => this.selected;
@@ -94,7 +81,7 @@ public class EdgeObj : MonoBehaviour
     private SpriteRenderer arrowSpriteRenderer;
     // private int direction;
     // Edge weights/labels
-    [SerializeField] private EdgeLabelObj labelObj;
+    public EdgeLabelObj labelObj;
 
     private void Awake() {
         // Edge objects starts non active
@@ -116,11 +103,7 @@ public class EdgeObj : MonoBehaviour
 
         if (edge.vert1 == edge.vert2)
         {
-            this.curvature = int.MaxValue;
-        }
-        else
-        {
-            this.curvature = 0;
+            this.Edge.SetCurvature(int.MaxValue, false);
         }
 
         this.direction = edge.Directed ? 1 : 0;
@@ -142,15 +125,15 @@ public class EdgeObj : MonoBehaviour
     private void UpdateSpline()
     {
         this.transform.parent.position = this.Vertex1.transform.position + new Vector3(0f, 0f, 1f);
-        if (this.curvature == int.MaxValue) {
+        if (this.Edge.Curvature == int.MaxValue) {
             UpdateCircularSpline(0.7f, FindBestAngleForLoop());
         }
-        else if (this.curvature == 0) {
+        else if (this.Edge.Curvature == 0) {
             UpdateStraightSpline();
         }
         else
         {
-            UpdateCurvedSpline(this.curvature * 0.1f);
+            UpdateCurvedSpline(this.Edge.Curvature * 0.1f);
         }
 
         this.shapeController.BakeMesh();
@@ -357,34 +340,31 @@ public class EdgeObj : MonoBehaviour
         
         if (this.direction == 0)
         {
-            this.direction = 1;
-            this.Edge.Directed = true;
+            SetDirectedness(true);
         }
         else if (this.direction == 1)
         {
-            this.direction = -1;
-            this.Edge.Reverse();
-            (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
+            ReverseEdge();
         }
         else
         {
-            this.Edge.Reverse();
-            (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
-
-            // if (Controller.Singleton.Graph.Adjacency.ContainsKey( (this.Edge.vert2, this.Edge.vert1) ))
-            // {
-            //     Edge parallelDirectedEdge = Controller.Singleton.Graph.Adjacency[(this.Edge.vert2, this.Edge.vert1)];
-            //     Controller.Singleton.RemoveEdge(parallelDirectedEdge);
-            // }
-            
-            this.direction = 0;
-            this.Edge.Directed = false;
-            this.curvature = 0;
+            SetDirectedness(false);
         }
+    }
 
+    public void SetDirectedness(bool directed, bool updateDS = true) {
+        if (updateDS) this.Edge.Directed = directed;
+        if (directed) this.direction = 1;
+        else this.direction = 0;
         UpdateSpline();
     }
 
+    public void ReverseEdge(bool updateDS = true) {
+        if (updateDS) this.Edge.Reverse();
+        this.direction *= -1;
+        (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
+        UpdateSpline();
+    }
     // When Cursor enters a edge obj, increase its sprite object size by 33%
     // TODO: Change this to be controlled by an animator later
     private void OnMouseOver()
@@ -401,45 +381,57 @@ public class EdgeObj : MonoBehaviour
 
     public void ChangeThickness(int change)
     {
+        uint newThickness = this.Edge.Thickness;
         if (change > 0)
         {
-            this.Edge.Thickness += 1;
-            if (this.Edge.Thickness > 5)
+            newThickness = this.Edge.Thickness + 1;
+            if (newThickness > 5)
             {
-                this.Edge.Thickness = 5;
+                newThickness = 5;
             }
         }
         else
         {
             if (this.Edge.Thickness != 0)
             {
-                this.Edge.Thickness -= 1;
+                newThickness = this.Edge.Thickness - 1;
             }
         }
         
-        Logger.Log("Edge thickness changed to " + this.Edge.Thickness, this, LogType.INFO);
+        Logger.Log("Edge thickness changed to " + newThickness, this, LogType.INFO);
+        SetThickness(newThickness);
+    }
+
+    public void SetThickness(uint thickness, bool updateDS = true) {
+        if (updateDS) this.Edge.Thickness = thickness;
         UpdateSpline();
     }
 
     public void ChangeCurvature(int change)
     {
+        int newCurvature = this.Edge.Curvature;
         if (change > 0)
         {
-            this.Curvature += 1;
-            if (this.Curvature > 12)
+            newCurvature += 1;
+            if (newCurvature > 12)
             {
-                this.Curvature = 12;
+                newCurvature = 12;
             }
         }
         else
         {
-            if (this.Curvature != 0)
+            if (newCurvature != 0)
             {
-                this.Curvature -= 1;
+                newCurvature -= 1;
             }
         }
         
-        Logger.Log("Edge curvature changed to " + this.Curvature, this, LogType.INFO);
+        Logger.Log("Edge curvature changed to " + this.Edge.Curvature, this, LogType.INFO);
+        SetCurvature(newCurvature);
+    }
+
+    public void SetCurvature(int curvature, bool updateDS = true) {
+        if (updateDS) this.Edge.Curvature = curvature;
         UpdateSpline();
     }
 

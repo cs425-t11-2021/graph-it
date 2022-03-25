@@ -21,7 +21,7 @@ public class Graph
     // logs all changes to graph
     public Stack< GraphModification > Changes { get; private set; }
     // logs all undone changes
-    private Stack< GraphModification > undoneChanges;
+    public Stack< GraphModification > UndoneChanges { get; private set; }
 
     // parameters
     public int Order // number of vertices
@@ -77,7 +77,7 @@ public class Graph
         this.Vertices = new List< Vertex >();
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
         this.Changes = new Stack< GraphModification >();
-        this.undoneChanges = new Stack< GraphModification >();
+        this.UndoneChanges = new Stack< GraphModification >();
     }
 
     public Graph( Graph graph )
@@ -85,7 +85,7 @@ public class Graph
         this.Vertices = new List< Vertex >( graph.Vertices );
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >( graph.Adjacency );
         this.Changes = new Stack< GraphModification >();
-        this.undoneChanges = new Stack< GraphModification >();
+        this.UndoneChanges = new Stack< GraphModification >();
     }
 
     public void Clear()
@@ -93,7 +93,7 @@ public class Graph
         this.Vertices = new List< Vertex >();
         this.Adjacency = new Dictionary< ( Vertex, Vertex ), Edge >();
         this.Changes = new Stack< GraphModification >();
-        this.undoneChanges = new Stack< GraphModification >();
+        this.UndoneChanges = new Stack< GraphModification >();
     }
 
     // temp
@@ -254,12 +254,12 @@ public class Graph
     {
         GraphModification mod = this.Changes.Pop();
         mod.Undo();
-        this.undoneChanges.Push( mod );
+        this.UndoneChanges.Push( mod );
     }
 
     public void Redo()
     {
-        GraphModification mod = this.undoneChanges.Pop();
+        GraphModification mod = this.UndoneChanges.Pop();
         mod.Redo();
         this.Changes.Push( mod );
     }

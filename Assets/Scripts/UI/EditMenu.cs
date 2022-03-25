@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 // Class for hosting functions called by buttons of the Edit dropdown menu, inherits from MenuButton
 public class EditMenu : MenuButton
@@ -12,15 +13,50 @@ public class EditMenu : MenuButton
     [SerializeField]
     private Button addEdgeButton;
 
+    [SerializeField] private Button undoButton;
+    [SerializeField] private Button redoButton;
+
+    private void Start() {
+        SelectionManager.Singleton.OnSelectionChange += (selectedVertexCount, selectedEdgeCount) => {
+            if (selectedVertexCount == 2 && selectedEdgeCount == 0) {
+                this.addEdgeButton.interactable = true;
+            }
+            else {
+                this.addEdgeButton.interactable = false;
+            }
+        };
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (SelectionManager.Singleton.SelectedVertexCount() == 2 && SelectionManager.Singleton.SelectedEdgeCount() == 0) {
-            this.addEdgeButton.interactable = true;
+        if (InputManager.Singleton.ControlCommandKeyHeld) {
+            if (Input.GetKeyDown(KeyCode.Z)) {
+                Undo();
+            }
+
+            if (Input.GetKeyDown(KeyCode.X)) {
+                Redo();
+            }
+        }
+
+        if (Controller.Singleton.Graph.Changes.Count == 0) {
+            undoButton.interactable = false;
+            undoButton.GetComponentInChildren<TMP_Text>().text = "Undo";
         }
         else {
-            this.addEdgeButton.interactable = false;
-        }       
+            undoButton.GetComponentInChildren<TMP_Text>().text = "Undo " + Controller.Singleton.Graph.Changes.Peek().Mod.ToString();
+            undoButton.interactable = true;
+        }
+
+        if (Controller.Singleton.Graph.UndoneChanges.Count == 0) {
+            redoButton.interactable = false;
+            redoButton.GetComponentInChildren<TMP_Text>().text = "Redo";
+        }
+        else {
+            redoButton.GetComponentInChildren<TMP_Text>().text = "Redo " + Controller.Singleton.Graph.UndoneChanges.Peek().Mod.ToString();
+            redoButton.interactable = true;
+        }
     }
 
     // Function called by select all button
@@ -44,11 +80,13 @@ public class EditMenu : MenuButton
 
     public void Undo()
     {
-        Controller.Singleton.Graph.Undo();
+        if (Controller.Singleton.Graph.Changes.Count > 0)
+            Controller.Singleton.Graph.Undo();
     }
 
     public void Redo()
     {
-        Controller.Singleton.Graph.Redo();
+        if (Controller.Singleton.Graph.UndoneChanges.Count > 0)
+            Controller.Singleton.Graph.Redo();
     }
 }

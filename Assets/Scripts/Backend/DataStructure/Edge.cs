@@ -138,9 +138,9 @@ public class Edge
         if ( recordChange )
         {
             if ( this.CreateMod is null )
-                // throw new System.Exception( "Edge label change cannot be recorded." );
-                Debug.Log( "Edge label change cannot be recorded." );
-            // this.CreateMod( Modification.EDGE_LABEL, ( this, this.label, label ) );
+                throw new System.Exception( "Edge label change cannot be recorded." );
+                // Debug.Log( "Edge label change cannot be recorded." );
+            this.CreateMod( Modification.EDGE_LABEL, ( this, this.label, label ) );
         }
 
         this.label = label;

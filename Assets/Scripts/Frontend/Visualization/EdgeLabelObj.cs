@@ -21,12 +21,7 @@ public class EdgeLabelObj : MonoBehaviour
     public void Initiate(EdgeObj edgeObject)
     {
         this.edgeObject = edgeObject;
-        if (this.edgeObject.Edge.Weighted) {
-            this.inputField.text = this.edgeObject.Edge.ToString();
-        }
-        else {
-            this.inputField.text = "";
-        }
+        UpdateEdgeLabel(edgeObject.Edge.Label, false);
         
         this.gameObject.SetActive(true);
 
@@ -110,7 +105,12 @@ public class EdgeLabelObj : MonoBehaviour
     // Update the content field with a new label
     public void UpdateLabel(string newLabel)
     {
-        this.edgeObject.Edge.Label = newLabel;
+        UpdateEdgeLabel(newLabel);
+    }
+
+    public void UpdateEdgeLabel(string newLabel, bool updateDS = true) {
+        if (updateDS)
+            this.edgeObject.Edge.Label = newLabel;
 
         if (this.edgeObject.Edge.Weighted)
         {
@@ -120,6 +120,7 @@ public class EdgeLabelObj : MonoBehaviour
         {
             inputField.text = this.edgeObject.Edge.Label;
         }
+
         Logger.Log(string.Format("Edge {0} set to {1}.", this.edgeObject.Edge.Weighted ? "weight" : "label", inputField.text), this, LogType.INFO);
     }
 }

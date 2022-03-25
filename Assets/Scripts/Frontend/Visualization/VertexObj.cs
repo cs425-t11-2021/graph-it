@@ -139,21 +139,25 @@ public class VertexObj : MonoBehaviour
 
     public void ChangeStyle()
     {
-        uint spriteIndex = (uint) (this.Vertex.Style + 1);
-        if (spriteIndex >= ResourceManager.Singleton.vertexSprites.Length)
-        {
-            spriteIndex = 0;
+        
+        if (this.Vertex.Style == ResourceManager.Singleton.vertexSprites.Length - 1) {
+            SetStyle(0);
         }
-        this.Vertex.Style = spriteIndex;
+        else {
+            SetStyle(this.Vertex.Style + 1);
+        }
+    }
 
-        Sprite sprite = ResourceManager.Singleton.vertexSprites[spriteIndex];
+    public void SetStyle(uint style, bool updateDS = true) {
+        if (updateDS)
+            this.Vertex.Style = style;
 
+        Sprite sprite = ResourceManager.Singleton.vertexSprites[style];
         this.spriteRenderer.sprite = sprite;
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
-        // this.collider.radius = this.spriteRadius;
-        
         Destroy(this.collider);
-        if (this.Vertex.Style == 1) {
+
+        if (style == 1) {
             this.labelObj.CenteredLabel = true;
             AddColliderBasedOnSprite(true);
             this.labelObj.UpdatePosition();
@@ -164,7 +168,7 @@ public class VertexObj : MonoBehaviour
             this.labelObj.UpdatePosition();
         }
         
-        this.normalColor = this.Vertex.Style < 2 ? Color.black  : Color.white;
+        this.normalColor = style < 2 ? Color.black  : Color.white;
     }
 
     private void AddColliderBasedOnSprite(bool poly)

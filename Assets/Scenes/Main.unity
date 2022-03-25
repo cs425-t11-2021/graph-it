@@ -1685,6 +1685,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -4199,6 +4200,7 @@ GameObject:
   - component: {fileID: 468119562}
   - component: {fileID: 468119561}
   - component: {fileID: 468119560}
+  - component: {fileID: 468119564}
   m_Layer: 5
   m_Name: ResultButton
   m_TagString: Untagged
@@ -4213,7 +4215,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 468119559}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
@@ -4320,6 +4322,37 @@ RectTransform:
   m_AnchoredPosition: {x: -86.2, y: -4}
   m_SizeDelta: {x: 89.2395, y: 63.236}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &468119564
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468119559}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9f9c0f78ad5b4d058cf1d65e59217c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkedChanged:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1012987120}
+        m_TargetAssemblyTypeName: AlgorithmsPanel, Assembly-CSharp
+        m_MethodName: ToggleAlgorithmResultDisplay
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  originalColor: {r: 1, g: 1, b: 1, a: 1}
+  checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  highlightColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  group: {fileID: 0}
 --- !u!1 &473582876
 GameObject:
   m_ObjectHideFlags: 0
@@ -5294,6 +5327,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -6514,6 +6548,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -7286,7 +7321,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1076611919}
   m_HandleRect: {fileID: 1076611918}
   m_Direction: 0
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -8609,6 +8644,7 @@ MonoBehaviour:
           m_StringArgument: BellmanFordsAlgorithm
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
   group: {fileID: 0}
@@ -8836,6 +8872,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -8934,6 +8971,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   addEdgeButton: {fileID: 1126108517}
+  undoButton: {fileID: 1594624843}
+  redoButton: {fileID: 257698108}
 --- !u!1 &798761128
 GameObject:
   m_ObjectHideFlags: 0
@@ -11161,7 +11200,11 @@ MonoBehaviour:
     activationMethod: RunDijkstras
     completedMethod: GetDijkstrasPath
   algOpenPanel: {fileID: 1689317852}
-  resultButton: {fileID: 468119560}
+  resultButton: {fileID: 468119564}
+  deafultColor: {r: 0.9019608, g: 0.98039216, b: 0.98039216, a: 1}
+  selectedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
+  defaultFinishedColor: {r: 0.5801887, g: 1, b: 0.60011256, a: 1}
+  selectedFinishedColor: {r: 0, g: 0.78431374, b: 0, a: 1}
 --- !u!1 &1015921549
 GameObject:
   m_ObjectHideFlags: 0
@@ -11855,6 +11898,7 @@ MonoBehaviour:
           m_StringArgument: PrimsAlgorithm
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
   group: {fileID: 0}
@@ -12609,6 +12653,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -17213,6 +17258,7 @@ MonoBehaviour:
           m_StringArgument: DijkstrasAlgorithm
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
   group: {fileID: 0}
@@ -17385,7 +17431,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -0.00012207031, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 500, y: 200}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1435593966
@@ -19637,8 +19683,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 288.57, y: -173.1377}
-  m_SizeDelta: {x: 1556.2, y: 116.8754}
+  m_AnchoredPosition: {x: 379.28, y: -57.02}
+  m_SizeDelta: {x: 1374.8, y: 114.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1646532293
 MonoBehaviour:
@@ -19699,12 +19745,12 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2cc351d6e67ca4649a3ebc541c7d2879, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: b2f3a3d34814e6640ba028c67a3a4aad, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
+  m_FillMethod: 0
+  m_FillAmount: 0.005
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
@@ -20769,6 +20815,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -22830,6 +22877,7 @@ MonoBehaviour:
           m_StringArgument: KruskalsAlgorithm
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
   group: {fileID: 0}
@@ -23477,6 +23525,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -24619,6 +24668,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0, g: 0.5411765, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -25364,7 +25414,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1228080547}
         m_TargetAssemblyTypeName: Toolbar, Assembly-CSharp
         m_MethodName: ChangeVertexStyle
         m_Mode: 1
@@ -26145,6 +26195,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0, g: 0.5411765, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}

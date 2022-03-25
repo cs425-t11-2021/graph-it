@@ -21,6 +21,17 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         // Initialize data structures
         this.selectedVertices = new List<VertexObj>();
         this.selectedEdges = new List<EdgeObj>();
+
+        Controller.Singleton.OnInstanceChanged += (newInstance) => DeSelectAll();
+    }
+
+    private void Update() {
+        // Control + A to select all
+        if (InputManager.Singleton.ControlCommandKeyHeld) {
+            if (Input.GetKeyDown(KeyCode.A)) {
+                SelectAll();
+            }
+        }
     }
 
     // Select a vertex if it's not selected
@@ -105,18 +116,10 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     {
         // Destroy the graph objects corresponding to the currently selected vertices and edges
         // Destroy the gameObjects for edges in selectedEdges
-        foreach (EdgeObj edgeObj in this.selectedEdges)
-        {
-            Controller.Singleton.RemoveEdge(edgeObj);
-        }
+
+        Controller.Singleton.RemoveCollection(this.selectedVertices, this.selectedEdges);
 
         this.selectedEdges = new List<EdgeObj>();
-
-        // For each vertex to be deleted, find all edges connecting to the vertex, then destroy the vertex object
-        foreach (VertexObj vertexObj in this.selectedVertices)
-        {
-            Controller.Singleton.RemoveVertex(vertexObj);
-        }
         this.selectedVertices = new List<VertexObj>();
 
         // Update the Grpah information UI

@@ -12,11 +12,11 @@ public class ToggleButton : MonoBehaviour, IPointerClickHandler
     public ToggleEvent checkedChanged = new ToggleEvent();
 
     private Image image;
-    private Color originalColor;
+    public Color originalColor;
 
     private bool @checked;
-    [SerializeField] private Color checkedColor;
-    [SerializeField] private Color highlightColor;
+    [SerializeField] public Color checkedColor;
+    [SerializeField] public Color highlightColor;
     [SerializeField] private ToggleButtonGroup group;
 
 

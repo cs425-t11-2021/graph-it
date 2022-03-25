@@ -39,7 +39,7 @@ public class GraphDisplayAlgorithmAssociation
                     AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, (List<Edge>) result);
                     if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
                         AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
-                        AlgorithmsPanel.Singleton.resultButton.interactable = true;
+                        // AlgorithmsPanel.Singleton.resultButton.enabled = true;
                     }
 
                     NotificationManager.Singleton.CreateNoficiation(this.algorithmClass + " finished.", 3);
@@ -53,26 +53,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 {
     [SerializeField] private GraphDisplayAlgorithmAssociation[] associations;
     
-    // // Reference of the button of prim
-    // [SerializeField] private Button primButton;
-    // // Reference of the kruskal button
-    // [SerializeField] private Button kruskalButton;
-    // // Reference of the button of dijkstra
-    // [SerializeField] private Button dijkstraButton;
-    // // Reference of the button of Bellman Ford
-    // [SerializeField] private Button bellmanButton;
-    // // Reference of the Eulerian circuit button
-    // [SerializeField] private Button eulerianButton;
-    // // Reference of the Maximum Indepdent Set button
-    // [SerializeField] private Button maxIndSetButton;
-    // // Reference of the Maximum Matching button
-    // [SerializeField] private Button maxMatchingButton;
-    //[SerializeField] private Button algClosePanel;
-    //Reference to the button to close the algorithm info panels
     [SerializeField] private Button algOpenPanel;
     //Reference to the button to open the algorithm info panels
 
-    [SerializeField] public Button resultButton;
+    [SerializeField] public ToggleButton resultButton;
+    [SerializeField] private Color deafultColor;
+    [SerializeField] private Color selectedColor;
+    [SerializeField] private Color defaultFinishedColor;
+    [SerializeField] private Color selectedFinishedColor;
 
     public GraphDisplayAlgorithmAssociation CurrentlySelectedAlgorithm {get; private set;}
 
@@ -89,9 +77,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     private void Awake() {
         Array.ForEach(this.associations, a => a.activationButton.UpdateStatus(false));
-        this.resultButton.interactable = false;
+        this.resultButton.gameObject.SetActive(false);
 
         algorithmResults = new List<Edge>[this.associations.Length];
+
+        Controller.Singleton.OnGraphModified += ClearAlgorithmResults;
+        Controller.Singleton.OnInstanceChanged += (newInstance) => ClearAlgorithmResults();
+
+        this.resultButton.gameObject.SetActive(false);
     }
 
     public void UpdateGraphDisplayResults(Algorithm algorithm, Vertex[] vertexParms)
@@ -142,11 +135,11 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
                 int index = Array.IndexOf(this.associations, association);
                 if (this.algorithmResults[index] != null) {
-                    this.resultButton.interactable = true;
+                    this.resultButton.gameObject.SetActive(true);
                     this.AlgorithmResult = this.algorithmResults[index];
                 }
                 else {
-                    this.resultButton.interactable = false;
+                    this.resultButton.gameObject.SetActive(false);
                     this.AlgorithmResult = null;
                 }
             }
@@ -163,6 +156,15 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             {
                 int index = Array.IndexOf(this.associations, association);
                 this.algorithmResults[index] = result;
+                association.activationButton.checkedColor = this.selectedFinishedColor;
+                association.activationButton.originalColor = this.defaultFinishedColor;
+                association.activationButton.GetComponent<Image>().color = this.defaultFinishedColor;
+                association.activationButton.UpdateStatus(association.activationButton.Checked);
+
+                if (CurrentlySelectedAlgorithm == association) {
+                    this.resultButton.gameObject.SetActive(true);
+                }
+
                 return;
             }
         }
@@ -183,6 +185,32 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public void DisplayAlgorithmResult() {
         ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
+    }
+
+    public void ClearAlgorithmResults() {
+        this.algorithmResults = new List<Edge>[this.associations.Length];
+        this.AlgorithmResult = null;
+        this.resultButton.gameObject.SetActive(false);
+
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations) {
+            association.activationButton.checkedColor = this.selectedColor;
+            association.activationButton.originalColor = this.deafultColor;
+            association.activationButton.GetComponent<Image>().color = this.deafultColor;
+            association.activationButton.UpdateStatus(association.activationButton.Checked);
+        }
+
+        if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        }
+    }
+
+    public void ToggleAlgorithmResultDisplay() {
+        if (this.resultButton.Checked) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
+        }
+        else {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        }
     }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
