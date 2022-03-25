@@ -5314,8 +5314,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Select
-  offset: {x: 50, y: -50, z: 0}
-  size: {x: 100, y: 40}
+  offset: {x: 40, y: -45, z: 0}
+  size: {x: 90, y: 40}
 --- !u!114 &499060056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6547,6 +6547,8 @@ GameObject:
   - component: {fileID: 606668072}
   - component: {fileID: 606668071}
   - component: {fileID: 606668070}
+  - component: {fileID: 606668074}
+  - component: {fileID: 606668073}
   m_Layer: 5
   m_Name: EdgeCreationMode
   m_TagString: Untagged
@@ -6644,6 +6646,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 606668068}
   m_CullTransparentMesh: 1
+--- !u!114 &606668073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606668068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  labelDescription: Create Edge
+  offset: {x: 70, y: -45, z: 0}
+  size: {x: 165, y: 40}
+--- !u!114 &606668074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 606668068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 606668073}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 606668073}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &608032728
 GameObject:
   m_ObjectHideFlags: 0
@@ -11471,6 +11534,7 @@ GameObject:
   - component: {fileID: 1003453694}
   - component: {fileID: 1003453693}
   - component: {fileID: 1003453692}
+  - component: {fileID: 1003453696}
   - component: {fileID: 1003453695}
   m_Layer: 5
   m_Name: ClosePanelButton
@@ -11606,10 +11670,55 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  labelPrefab: {fileID: 0}
-  labelDescription: 
-  offset: {x: 0, y: 0, z: 0}
-  size: {x: 0, y: 0}
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  labelDescription: Close
+  offset: {x: 65, y: -160, z: 0}
+  size: {x: 90, y: 40}
+--- !u!114 &1003453696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003453690}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1003453695}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: 
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1003453695}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: 
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1012987116
 GameObject:
   m_ObjectHideFlags: 0
@@ -14133,6 +14242,8 @@ GameObject:
   - component: {fileID: 1136272510}
   - component: {fileID: 1136272509}
   - component: {fileID: 1136272508}
+  - component: {fileID: 1136272512}
+  - component: {fileID: 1136272511}
   m_Layer: 5
   m_Name: ChangeTypeButton
   m_TagString: Untagged
@@ -14254,6 +14365,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136272506}
   m_CullTransparentMesh: 1
+--- !u!114 &1136272511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136272506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  labelDescription: Edge Type
+  offset: {x: 60, y: -45, z: 0}
+  size: {x: 150, y: 40}
+--- !u!114 &1136272512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136272506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1136272511}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1136272511}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1143309897
 GameObject:
   m_ObjectHideFlags: 0
@@ -14387,6 +14559,8 @@ GameObject:
   - component: {fileID: 1147743075}
   - component: {fileID: 1147743074}
   - component: {fileID: 1147743073}
+  - component: {fileID: 1147743077}
+  - component: {fileID: 1147743076}
   m_Layer: 5
   m_Name: Delete
   m_TagString: Untagged
@@ -14509,6 +14683,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1147743071}
   m_CullTransparentMesh: 1
+--- !u!114 &1147743076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147743071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  labelDescription: Delete
+  offset: {x: 40, y: -45, z: 0}
+  size: {x: 90, y: 40}
+--- !u!114 &1147743077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1147743071}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1147743076}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1147743076}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1159227430
 GameObject:
   m_ObjectHideFlags: 0
@@ -20637,6 +20872,8 @@ GameObject:
   - component: {fileID: 1639705719}
   - component: {fileID: 1639705718}
   - component: {fileID: 1639705717}
+  - component: {fileID: 1639705721}
+  - component: {fileID: 1639705720}
   m_Layer: 5
   m_Name: AddEdgeButton
   m_TagString: Untagged
@@ -20758,6 +20995,67 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1639705715}
   m_CullTransparentMesh: 1
+--- !u!114 &1639705720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639705715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  labelDescription: Select
+  offset: {x: 50, y: -50, z: 0}
+  size: {x: 100, y: 40}
+--- !u!114 &1639705721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1639705715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 499060055}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 499060055}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1646532291
 GameObject:
   m_ObjectHideFlags: 0
@@ -21870,6 +22168,7 @@ GameObject:
   - component: {fileID: 1723796979}
   - component: {fileID: 1723796978}
   - component: {fileID: 1723796977}
+  - component: {fileID: 1723796981}
   - component: {fileID: 1723796980}
   m_Layer: 5
   m_Name: CreateVertexMode
@@ -21981,9 +22280,54 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
-  labelDescription: Select
-  offset: {x: 50, y: -50, z: 0}
-  size: {x: 0, y: 0}
+  labelDescription: Create Vertices
+  offset: {x: 80, y: -45, z: 0}
+  size: {x: 175, y: 40}
+--- !u!114 &1723796981
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1723796975}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1723796980}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1723796980}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1728325255
 GameObject:
   m_ObjectHideFlags: 0
@@ -25854,6 +26198,8 @@ GameObject:
   - component: {fileID: 359608985734554708}
   - component: {fileID: 359608985734554709}
   - component: {fileID: 359608985734554706}
+  - component: {fileID: 359608985734554710}
+  - component: {fileID: 359608985734554705}
   m_Layer: 5
   m_Name: EdgeThicknessButton
   m_TagString: Untagged
@@ -25861,6 +26207,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &359608985734554705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359608985734554704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  labelDescription: Thickness
+  offset: {x: 60, y: -45, z: 0}
+  size: {x: 140, y: 40}
 --- !u!114 &359608985734554706
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -25975,6 +26337,51 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &359608985734554710
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 359608985734554704}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 359608985734554705}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 359608985734554705}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &359608985986664470
 GameObject:
   m_ObjectHideFlags: 0
@@ -26712,6 +27119,8 @@ GameObject:
   - component: {fileID: 2027812034803370334}
   - component: {fileID: 2027812034803370401}
   - component: {fileID: 2027812034803370400}
+  - component: {fileID: 2027812034803370405}
+  - component: {fileID: 2027812034803370404}
   m_Layer: 5
   m_Name: ChangeVertexStyle
   m_TagString: Untagged
@@ -26719,6 +27128,67 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &2027812034803370404
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027812034803370403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  labelDescription: Vertex Style
+  offset: {x: 70, y: -45, z: 0}
+  size: {x: 150, y: 40}
+--- !u!114 &2027812034803370405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2027812034803370403}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2027812034803370404}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 2027812034803370404}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!222 &2027812035465538512
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -27381,6 +27851,8 @@ GameObject:
   - component: {fileID: 3832231448021805296}
   - component: {fileID: 3832231448021805297}
   - component: {fileID: 3832231448021805302}
+  - component: {fileID: 3832231448021805304}
+  - component: {fileID: 3832231448021805301}
   m_Layer: 5
   m_Name: EdgeCurvatureButton
   m_TagString: Untagged
@@ -27388,6 +27860,22 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
+--- !u!114 &3832231448021805301
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3832231448021805300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  labelDescription: Curvature
+  offset: {x: 60, y: -45, z: 0}
+  size: {x: 140, y: 40}
 --- !u!114 &3832231448021805302
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -27464,6 +27952,51 @@ RectTransform:
   m_AnchoredPosition: {x: 396.5345, y: -30.383}
   m_SizeDelta: {x: 70.279, y: 51.067}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &3832231448021805304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3832231448021805300}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3832231448021805301}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 3832231448021805301}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!224 &3832231448129531122
 RectTransform:
   m_ObjectHideFlags: 0
