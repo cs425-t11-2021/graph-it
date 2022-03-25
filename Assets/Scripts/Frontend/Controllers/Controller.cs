@@ -132,7 +132,7 @@ public class Controller : SingletonBehavior<Controller>
         }
         
         // Create a new graph instance
-        GraphInstance newInstance = new GraphInstance(Instantiate(new GameObject("GraphObjContainer"), Vector3.zero, Quaternion.identity).transform, this.newInstanceID++, new AlgorithmManager(), existingGraph);
+        GraphInstance newInstance = new GraphInstance(new GameObject("GraphObjContainer" + this.newInstanceID).transform, this.newInstanceID++, new AlgorithmManager(), existingGraph);
         this.instances.Add(newInstance);
         Logger.Log("Creating a new graph instance with id " + newInstance.id + ".", this, LogType.INFO);
         
@@ -143,8 +143,9 @@ public class Controller : SingletonBehavior<Controller>
         if (setAsActive)
         {
             ChangeActiveInstance(newInstance, false);
+            NotificationManager.Singleton.CreateNoficiation("Creating a new graph.", 2);
         }
-
+        
         return newInstance;
     }
 

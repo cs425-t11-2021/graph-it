@@ -25,7 +25,7 @@ public class AlgorithmManager
 
     public void Initiate( Graph graph )
     {
-        Controller.Singleton.OnGraphModified += Clear;
+        Controller.Singleton.OnGraphModified += OnGraphModified;
         this.graph = graph;
         this.graphCopy = new Graph( graph );
     }
@@ -153,6 +153,11 @@ public class AlgorithmManager
         this.KillAll();
         this.running.Clear();
         this.complete.Clear();
+    }
+
+    private void OnGraphModified()
+    {
+        Clear();
         
         Logger.Log("Copying Graph DS.", this, LogType.INFO);
         this.graphCopy = new Graph( this.graph );
@@ -168,6 +173,7 @@ public class AlgorithmManager
     ~AlgorithmManager()
     {
         this.KillAll();
+        Controller.Singleton.OnGraphModified -= OnGraphModified;
     }
 
 }

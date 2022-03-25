@@ -144,6 +144,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 association.activationButton.UpdateStatus(false);
             }
         }
+
+        this.resultButton.Checked = false;
     }
 
     public void StoreAlgorithmResult(string algorithmName, List<Edge> result) {
