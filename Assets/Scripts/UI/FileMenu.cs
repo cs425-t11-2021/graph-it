@@ -27,7 +27,8 @@ public class FileMenu : MenuButton
         
         // TEMPOARY
         ResourceManager.Singleton.LoadVertexSprites();
-
+        
+        NotificationManager.Singleton.CreateNotification("Creating a new graph.", 3);
         EventSystem.current.SetSelectedGameObject(null);
     }
 
@@ -53,7 +54,7 @@ public class FileMenu : MenuButton
         string[] paths = StandaloneFileBrowser.OpenFilePanel("Import from File", "", importExtension, false); //from UnityStandAloneFileBrowser Plugin
         
         //if the user does not cancel the file import menu, clear the current graph to import the new one //IMPORT INTO A NEW TAB LATER TO NOT OVERWRITE CURRENT WORK
-        if(paths.Length != 0){
+        if(paths.Length != 0 && !string.IsNullOrEmpty(paths[0])){
             // Clear existing graph
             GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true);
             
@@ -62,6 +63,8 @@ public class FileMenu : MenuButton
             
             // Change tab name to exported file name
             TabBar.Singleton.ActiveTab.TabName = Path.GetFileNameWithoutExtension(paths[0]);
+            
+            NotificationManager.Singleton.CreateNotification(string.Format("Imported <#0000FF>{0}</color>", Path.GetFileName(paths[0])), 3);
         }
 
         EventSystem.current.SetSelectedGameObject(null);
@@ -83,6 +86,8 @@ public class FileMenu : MenuButton
 
             // Change tab name to exported file name
             TabBar.Singleton.ActiveTab.TabName = Path.GetFileNameWithoutExtension(path);
+            
+            NotificationManager.Singleton.CreateNotification(string.Format("Exported to <#0000FF>{0}</color>", Path.GetFileName(path)), 3);
         }
 
         EventSystem.current.SetSelectedGameObject(null);
@@ -100,6 +105,8 @@ public class FileMenu : MenuButton
         if (!string.IsNullOrEmpty(path))
         {
             ScreenshotManager.Singleton.TakeScreenshot(path);
+            
+            NotificationManager.Singleton.CreateNotification(string.Format("Exported to <#0000FF>{0}</color>", Path.GetFileName(path)), 3);
         }
 
         EventSystem.current.SetSelectedGameObject(null);

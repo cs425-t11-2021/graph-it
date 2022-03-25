@@ -22,7 +22,7 @@ public class AlgorithmInitiationState : ManipulationState
             AlgorithmsPanel.Singleton.RunGraphDisplayAlgorithm(this.currentAssociation);
         }
 
-        NotificationManager.Singleton.CreateNoficiation(string.Format("Please select {0} vertices for {1}.", this.currentAssociation.requiredVertices, this.currentAssociation.algorithmClass), 3);
+        NotificationManager.Singleton.CreateNotification(string.Format("Please select <#0000FF> {0} </color> vertices for <#0000FF> {1}</color>.", this.currentAssociation.requiredVertices, this.currentAssociation.algorithmClass), 3);
     }
 
     public override void OnVertexClick(GameObject clicked)

@@ -39,7 +39,7 @@ public class GraphDisplayAlgorithmAssociation
                         AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
                     }
 
-                    NotificationManager.Singleton.CreateNoficiation(this.algorithmClass + " finished.", 3);
+                    NotificationManager.Singleton.CreateNotification("<#0000FF>" + this.algorithmClass + "</color> finished.", 3);
                 }
             };
         }

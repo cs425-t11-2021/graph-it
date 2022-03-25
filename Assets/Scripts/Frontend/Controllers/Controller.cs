@@ -143,7 +143,6 @@ public class Controller : SingletonBehavior<Controller>
         if (setAsActive)
         {
             ChangeActiveInstance(newInstance, false);
-            NotificationManager.Singleton.CreateNoficiation("Creating a new graph.", 2);
         }
         
         return newInstance;
