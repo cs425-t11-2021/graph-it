@@ -38,6 +38,7 @@ public class GraphModification
         this.Mod = mod;
         this.Modified = modified;
         this.graph.Changes.Push( this );
+        this.graph.UndoneChanges.Clear();
         // Graph.PrintStack( this.graph.Changes );
         // Debug.Log( "" );
     }
