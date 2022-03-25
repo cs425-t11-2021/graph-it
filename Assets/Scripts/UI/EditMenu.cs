@@ -89,4 +89,14 @@ public class EditMenu : MenuButton
         if (Controller.Singleton.Graph.UndoneChanges.Count > 0)
             Controller.Singleton.Graph.Redo();
     }
+
+    public void ClearAlgorithmResults()
+    {
+        
+    }
+
+    public void CreateGraphFromSelection()
+    {
+        
+    }
 }
