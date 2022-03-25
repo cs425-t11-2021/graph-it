@@ -143,7 +143,7 @@ public class Controller : SingletonBehavior<Controller>
         // If set as active option is enabled, set the new instance as the active instance
         if (setAsActive)
         {
-            ChangeActiveInstance(newInstance, false);
+            ChangeActiveInstance(newInstance, true);
         }
         
         return newInstance;
