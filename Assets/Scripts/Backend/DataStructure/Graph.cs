@@ -229,7 +229,7 @@ public class Graph
 
     public void Remove( Vertex vert, bool recordChange=true )
     {
-        this.Remove( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), recordChange );
+        this.Remove( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), false );
         this.Vertices.Remove( vert );
 
         if ( recordChange )

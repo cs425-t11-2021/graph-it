@@ -123,8 +123,7 @@ public class GraphModification
         posData.Item1.SetPos( posData.Item2, false );
         
         // Update front end
-        Controller.Singleton.GetVertexObj( posData.Item1 ).transform.position =
-            new Vector3(posData.Item2.X, posData.Item2.Y, 0);
+        Controller.Singleton.GetVertexObj( posData.Item1 ).transform.position = new Vector3(posData.Item2.X, posData.Item2.Y, 0);
     }
 
     private void UndoVertexStyle()
