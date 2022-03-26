@@ -7,12 +7,13 @@ public class NotificationManager : SingletonBehavior<NotificationManager>
 {
     [SerializeField] private GameObject notificationPrefab;
 
-    public void CreateNoficiation(string content, float duration) {
+    public void CreateNotification(string content, float duration) {
+        Logger.Log("Creating new notification", this, LogType.INFO);
         Notification newNotification = Instantiate(notificationPrefab, this.transform).GetComponent<Notification>();
         newNotification.Initiate(content, duration);
     }
 
-    public void CreateNoficiation(string content, Func<bool> predicate) {
+    public void CreateNotification(string content, Func<bool> predicate) {
         Notification newNotification = Instantiate(notificationPrefab, this.transform).GetComponent<Notification>();
         newNotification.Initiate(content, predicate);
     }

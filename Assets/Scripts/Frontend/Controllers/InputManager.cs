@@ -41,6 +41,15 @@ public class InputManager : SingletonBehavior<InputManager>
             return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand);
         }
     }
+    
+    // Whether or not the left mouse button is held
+    public bool LeftMouseButtonHeld
+    {
+        get
+        {
+            return Input.GetMouseButton(0);
+        }
+    }
 
     // Property for getting the vertex object the cursor is currently hovering
     public GameObject CurrentHoveringVertex {
