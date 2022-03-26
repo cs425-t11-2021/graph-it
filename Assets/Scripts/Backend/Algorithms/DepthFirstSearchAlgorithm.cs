@@ -8,21 +8,29 @@ using System.Collections.Generic;
 [System.Serializable]
 public class DepthFirstSearchAlgorithm : Algorithm
 {
-    public Vertex Root { get; private set; }
     public List< Edge > Tree { get; private set; }
+    private Vertex root;
     private Action< Edge, Vertex > action;
 
     public DepthFirstSearchAlgorithm( AlgorithmManager algoManager,  bool display, Vertex root, Action< Edge, Vertex > action ) : base( algoManager )
     {
-        this.Root = root;
+        this.root = root;
         this.action = action;
+
+        // Assign the type of the algorithm
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
+        // Add the root vertex to vertex parms array
+        vertexParms = new Vertex[] { this.root };
     }
 
     public override void Run()
     {
         this.Tree = new List< Edge >();
         Dictionary< Vertex, bool > visited = new Dictionary< Vertex, bool >();
-        this.DepthFirstSearchHelper( this.Root, visited, this.action );
+        this.DepthFirstSearchHelper( this.root, visited, this.action );
     }
 
     private void DepthFirstSearchHelper( Vertex vert, Dictionary< Vertex, bool > visited, Action< Edge, Vertex > f )
@@ -46,7 +54,7 @@ public class DepthFirstSearchAlgorithm : Algorithm
         }
     }
 
-    public static int GetHash( Vertex vert ) => ( typeof ( DepthFirstSearchAlgorithm ), vert ).GetHashCode();
+    public static int GetHash( Vertex vert, Action< Edge, Vertex > action ) => ( typeof ( DepthFirstSearchAlgorithm ), vert, action ).GetHashCode();
 
-    public override int GetHashCode() => DepthFirstSearchAlgorithm.GetHash( this.Root );
+    public override int GetHashCode() => DepthFirstSearchAlgorithm.GetHash( this.root, this.action );
 }
