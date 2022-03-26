@@ -22,6 +22,8 @@ public class GraphViewState : ManipulationState
 
     // Unsubscribe to input events on state exit
     public override void OnStateExit() {
+        OnDragEnd();
+        
         InputManager.Singleton.OnMouseDragStart -= OnDragStart;
         InputManager.Singleton.OnMouseDragEnd -= OnDragEnd;
         InputManager.Singleton.OnMouseClickInPlace -= OnClickInPlace;

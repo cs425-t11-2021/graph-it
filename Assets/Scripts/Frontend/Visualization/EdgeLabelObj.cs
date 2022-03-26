@@ -49,7 +49,7 @@ public class EdgeLabelObj : MonoBehaviour
         }
         else
         {
-            inputField.gameObject.SetActive(false);
+            this.inputField.gameObject.SetActive(false);
         }
     }
 
