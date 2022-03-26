@@ -20,7 +20,10 @@ public class BellmanFordsAlgorithm : Algorithm
         this.dest = dest;
         
         // Assign the type of the algorithm
-        this.type = AlgorithmType.DISPLAY;
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
         // Add the root vertex to vertex parms array
         this.vertexParms = new Vertex[] { this.src, this.dest };
     }

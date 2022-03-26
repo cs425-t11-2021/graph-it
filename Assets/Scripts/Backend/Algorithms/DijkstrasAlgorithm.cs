@@ -58,7 +58,7 @@ public class DijkstrasAlgorithm : Algorithm
             // update neighbors of u
             foreach ( Vertex v in notVisited )
             {
-                if ( this.Graph.IsAdjacent( u, v ) )
+                if ( this.Graph.IsAdjacentDirected( u, v ) )
                 {
                     float tmp = dist[ u ] + this.Graph[ u, v ].Weight;
                     if ( tmp < dist[ v ] )
