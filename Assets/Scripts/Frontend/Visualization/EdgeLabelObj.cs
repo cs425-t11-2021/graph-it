@@ -111,7 +111,11 @@ public class EdgeLabelObj : MonoBehaviour
 
     public void UpdateEdgeLabel(string newLabel, bool updateDS = true) {
         if (updateDS)
+        {
             this.edgeObject.Edge.Label = newLabel;
+            Controller.Singleton.ForceInvokeModificationEvent();
+            GraphInfo.Singleton.UpdateGraphInfo();
+        }
 
         if (this.edgeObject.Edge.Weighted)
         {
