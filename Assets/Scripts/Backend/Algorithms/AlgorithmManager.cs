@@ -56,11 +56,21 @@ public class AlgorithmManager
     {
         int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+        {
             this.RunAlgorithm( algorithm, display, parms );
-        
-        if ( this.IsComplete( hash ) && display ) {
-            RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ), this ) );
-            RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms, this ) );
+            return;
+        }
+
+        if (display) {
+            if ( this.IsComplete( hash ) ) {
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ), this ) );
+                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms, this ) );
+            }
+            else if (this.IsRunning( hash ) )
+            {
+                Logger.Log(algorithm.ToString(), this, LogType.INFO);
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this.running.GetValue( hash ), this ) );
+            }
         }
         
     }
