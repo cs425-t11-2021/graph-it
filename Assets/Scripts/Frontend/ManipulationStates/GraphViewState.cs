@@ -59,7 +59,7 @@ public class GraphViewState : ManipulationState
             SelectionManager.Singleton.ToggleVertexSelection(vertex);
         }
         else if (InputManager.Singleton.CurrentHoveringEdge) {
-            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponent<EdgeObj>();
+            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponentInParent<EdgeObj>();
 
             if (!edge.Selected && !InputManager.Singleton.HoldSelectionKeyHeld) {
                 SelectionManager.Singleton.DeSelectAll();
@@ -89,7 +89,7 @@ public class GraphViewState : ManipulationState
         }
         else if (InputManager.Singleton.CurrentHoveringEdge)
         {
-            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponent<EdgeObj>();
+            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponentInParent<EdgeObj>();
             if (edge.Selected)
             {
                 this.graphMovementInProgress = true;

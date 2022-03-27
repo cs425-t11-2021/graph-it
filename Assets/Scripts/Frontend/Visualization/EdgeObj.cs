@@ -9,27 +9,42 @@ using UnityEngine.U2D;
 
 public class EdgeObj : MonoBehaviour
 {
-    // Property refernce of edge associated with the edge object
+    // Property reference of edge associated with the edge object
     public Edge Edge { get; private set; }
 
-    // Label of the edge
-    private string label;
-    
     // Int representing the direction of the label, 0 being undirected, 1 being the direction given at creation, and -1 being reversed
     private int direction;
 
     public VertexObj Vertex1 {get; private set;}
     public VertexObj Vertex2 {get; private set;}
-
+    
+    // Curved Visuals
+    [SerializeField] private GameObject curvedVisuals;
     private SpriteShapeController shapeController;
     private SpriteShapeRenderer shapeRenderer;
-
-    // TODO: Remove once animations are implemented
+    
+    // Straight Visuals
+    [SerializeField] private GameObject straightVisuals;
+    private SpriteRenderer spriteRenderer;
+    
+    // Directed Edge Visuals
+    [SerializeField] private Transform arrow;
+    private SpriteRenderer arrowSpriteRenderer;
+    
+    // State variables
     // Whether edge is selected in the SelectionManager
     private bool selected = false;
     // Whether edge is currently being hovered over
-    [SerializeField] private bool hovering = false;
-
+    private bool hovering = false;
+    // Whether edge is the result of an algorithm
+    private bool isAlgorithmResult;
+    
+    // Other visual things
+    // Width scale factor for edge thickness increse of 1
+    [SerializeField] private float edgeWidthScaleFactor = 0.05f;
+    // Edge weights/labels
+    public EdgeLabelObj labelObj;
+    
     // Property for getting and setting whether or not the edge is selected, and edit the edge's color to match
     public bool Selected {
         get => this.selected;
@@ -38,19 +53,20 @@ public class EdgeObj : MonoBehaviour
             if (value) {
                 this.shapeRenderer.color = new Color32(0, 125, 255, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
+                this.spriteRenderer.color = new Color32(0, 125, 255, 255);
                 labelObj.MakeEditable();
                 shapeRenderer.sortingOrder = -1;
             }
             else {
                 this.shapeRenderer.color = new Color32(0, 0, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
+                this.spriteRenderer.color = new Color32(0, 0, 0, 255);
                 labelObj.MakeUneditable();
                 shapeRenderer.sortingOrder = -2;
             }
         }
     }
 
-    private bool isAlgorithmResult;
     public bool IsAlgorithmResult {
         get => this.isAlgorithmResult;
         set {
@@ -62,37 +78,26 @@ public class EdgeObj : MonoBehaviour
             if (value) {
                 this.shapeRenderer.color = new Color32(0, 200, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 200, 0, 255);;
+                this.spriteRenderer.color = new Color32(0, 200, 0, 255);;
             }
             else {
                 this.shapeRenderer.color = new Color32(0, 0, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
+                this.spriteRenderer.color = new Color32(0, 0, 0, 255);
             }
         }
     }
-
-    // Reference to the spriteRenderer component of the object
-    private SpriteRenderer spriteRenderer;
-
-    // Width scale factor for edge thickness increse of 1
-    [SerializeField] private float edgeWidthScaleFactor = 0.05f;
-
-    // Directed edge variables
-    [SerializeField] private Transform arrow;
-    private SpriteRenderer arrowSpriteRenderer;
-    // private int direction;
-    // Edge weights/labels
-    public EdgeLabelObj labelObj;
 
     private void Awake() {
         // Edge objects starts non active
         this.gameObject.SetActive(false);
 
-        this.spriteRenderer = GetComponent<SpriteRenderer>();
+        this.spriteRenderer = this.straightVisuals.GetComponent<SpriteRenderer>();
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
-        
+        this.shapeController = this.curvedVisuals.GetComponent<SpriteShapeController>();
+        this.shapeRenderer = this.curvedVisuals.GetComponent<SpriteShapeRenderer>();
     }
 
-    // TODO: Modify this initialize code to not involve passing around a Unity GameObject
     public void Initiate(Edge edge, VertexObj vertex1, VertexObj vertex2) {
         this.Edge = edge;
 
@@ -107,13 +112,7 @@ public class EdgeObj : MonoBehaviour
         }
 
         this.direction = edge.Directed ? 1 : 0;
-        
-        // Fix for edge temporarily appearing in the wrong place when getting added
-        if (spriteRenderer) spriteRenderer.enabled = false;
 
-        this.shapeController = GetComponent<SpriteShapeController>();
-        this.shapeRenderer = GetComponent<SpriteShapeRenderer>();
-        
         this.labelObj.Initiate(this);
 
         this.Vertex1.OnVertexObjMove += UpdateSpline;
@@ -135,19 +134,11 @@ public class EdgeObj : MonoBehaviour
         {
             UpdateCurvedSpline(this.Edge.Curvature * 0.1f);
         }
-
-        this.shapeController.BakeMesh();
-    }
-
-    private void OnPreRender()
-    {
-        this.shapeController.BakeMesh();
     }
 
     private float FindBestAngleForLoop()
     {
         List<float> connectedEdgeAngles = new List<float>();
-        Vertex vertex = this.Edge.vert1;
         foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
         {
             if (edgeObj.Vertex1 == edgeObj.Vertex2) continue;
@@ -189,6 +180,9 @@ public class EdgeObj : MonoBehaviour
 
     // TODO: Find a way not to hard code this
     private void UpdateCircularSpline(float largeRadius, float angle) {
+        this.straightVisuals.SetActive(false);
+        this.curvedVisuals.SetActive(true);
+        
         Vector3[] pointsOnCurve = {new Vector3(largeRadius, 0f, 0f), new Vector3(0f, largeRadius, 0f), new Vector3(-largeRadius, 0f, 0f), new Vector3(0f, -largeRadius, 0f)};
 
         this.shapeController.spline.Clear();
@@ -244,7 +238,7 @@ public class EdgeObj : MonoBehaviour
         this.shapeController.spline.SetLeftTangent(9, Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(0f, smallArm, 0f));
         this.shapeController.spline.SetRightTangent(9, Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(smallArm, 0f, 0f));
 
-        this.transform.localPosition = Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(largeRadius * .9f, 0f, 0f);
+        this.curvedVisuals.transform.localPosition = Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(largeRadius * .9f, 0f, 0f);
 
         if (this.Edge.Directed) {
             Vector3 dir =  (Quaternion.AngleAxis(angle - 20, Vector3.forward) * pointsOnCurve[1]).normalized;
@@ -258,23 +252,19 @@ public class EdgeObj : MonoBehaviour
         }
     }
 
-    private void UpdateStraightSpline() {
-        Vector3 distance = this.Vertex2.transform.position - this.Vertex1.transform.position;
-        Vector3[] pointsOnCurve = {Vector3.zero + distance.normalized * (Vertex1.spriteRadius + SettingsManager.Singleton.EdgeVertexGap), distance - distance.normalized * (this.Vertex2.spriteRadius + SettingsManager.Singleton.EdgeVertexGap + (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f))};
-        Vector3 normal = Vector2.Perpendicular(distance).normalized;
-
-        this.shapeController.spline.Clear();
-        this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
-        this.shapeController.spline.SetTangentMode(0, ShapeTangentMode.Linear);
-        this.shapeController.spline.InsertPointAt(1,  pointsOnCurve[1] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
-        this.shapeController.spline.SetTangentMode(1, ShapeTangentMode.Linear);
-        this.shapeController.spline.InsertPointAt(2,  pointsOnCurve[1] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
-        this.shapeController.spline.SetTangentMode(2, ShapeTangentMode.Linear);
-        this.shapeController.spline.InsertPointAt(3,  pointsOnCurve[0] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
-        this.shapeController.spline.SetTangentMode(3, ShapeTangentMode.Linear);
+    private void UpdateStraightSpline()
+    {
+        this.curvedVisuals.SetActive(false);
+        this.straightVisuals.SetActive(true);
+        
+        Vector2 distance = this.Vertex2.transform.position - this.Vertex1.transform.position;
+        this.straightVisuals.transform.localScale = new Vector3(distance.magnitude * 2 - 4 * (Vertex2.spriteRadius + SettingsManager.Singleton.EdgeVertexGap) - 2 * (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f), (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor * 2f * (this.hovering ? 1.33f : 1f), 1);
+        this.straightVisuals.transform.localPosition = distance.normalized * (Vertex1.spriteRadius + SettingsManager.Singleton.EdgeVertexGap);
+        
+        float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
+        this.straightVisuals.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         if (this.Edge.Directed) {
-            float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.arrow.localPosition = distance * (1f - (this.arrowSpriteRenderer.size.x + this.Vertex2.spriteRadius) / distance.magnitude) - distance.normalized * SettingsManager.Singleton.EdgeVertexGap;
             this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
@@ -286,11 +276,14 @@ public class EdgeObj : MonoBehaviour
     }
 
     private void UpdateCurvedSpline(float radius) {
+        this.straightVisuals.SetActive(false);
+        this.curvedVisuals.SetActive(true);
+
         Vector3 distance = this.Vertex2.transform.position - this.Vertex1.transform.position;
         Vector3 normal = Vector2.Perpendicular(distance).normalized;
 
         Vector3[] pointsOnCurve = {Vector3.zero + distance.normalized * (this.Vertex1.spriteRadius + SettingsManager.Singleton.EdgeVertexGap), distance / 2f + (radius * normal), distance - distance.normalized * (this.Vertex2.spriteRadius + SettingsManager.Singleton.EdgeVertexGap + (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f))};
-
+        
         this.shapeController.spline.Clear();
         
         this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
