@@ -65,6 +65,10 @@ public class AlgorithmManager
         
     }
 
+    public void RunAdjacencyMatrix( bool display=true ) => this.EnsureRunning( typeof ( AdjacencyMatrixAlgorithm ), display );
+
+    public void RunWeightMatrix( bool display=true ) => this.EnsureRunning( typeof ( WeightMatrixAlgorithm ), display );
+
     public void RunMinDegree( bool display=true ) => this.EnsureRunning( typeof ( MinDegreeAlgorithm ), display );
 
     public void RunMaxDegree( bool display=true ) => this.EnsureRunning( typeof ( MaxDegreeAlgorithm ), display );
@@ -97,6 +101,10 @@ public class AlgorithmManager
 
     public void RunBreadthFirstSearchWithAction( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), display, vert, action );
 
+
+    public bool[,] GetAdjacencyMatrix() => ( ( AdjacencyMatrixAlgorithm ) this.complete.GetValue( AdjacencyMatrixAlgorithm.GetHash() ) )?.Matrix;
+
+    public float[,] GetWeightMatrix() => ( ( WeightMatrixAlgorithm ) this.complete.GetValue( WeightMatrixAlgorithm.GetHash() ) )?.Matrix;
 
     public int? GetMinDegree() => ( ( MinDegreeAlgorithm ) this.complete.GetValue( MinDegreeAlgorithm.GetHash() ) )?.MinDegree;
 
