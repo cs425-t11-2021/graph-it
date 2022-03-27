@@ -3427,8 +3427,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 685930021}
   m_HandleRect: {fileID: 685930020}
   m_Direction: 2
-  m_Value: 0.9999992
-  m_Size: 0.7052553
+  m_Value: 0.9999996
+  m_Size: 0.73857963
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4133,7 +4133,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3fbba66ee220e1b4b845788a0eff4665, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3cec58fd15ea07149b00417c3195afa4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4550,8 +4550,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -86.2, y: -4}
-  m_SizeDelta: {x: 89.2395, y: 63.236}
+  m_AnchoredPosition: {x: -76.565796, y: -4}
+  m_SizeDelta: {x: 108, y: 63.236}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &468119564
 MonoBehaviour:
@@ -20832,7 +20832,7 @@ GameObject:
   - component: {fileID: 1581409054}
   - component: {fileID: 1581409057}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Run Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20855,8 +20855,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 180}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -181, y: -4}
-  m_SizeDelta: {x: 89.2395, y: 63.236}
+  m_AnchoredPosition: {x: -192.2, y: -4}
+  m_SizeDelta: {x: 108, y: 63.236}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1581409054
 MonoBehaviour:
@@ -26384,8 +26384,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.1348169}
   m_AnchorMax: {x: 0.887, y: 0.8467324}
-  m_AnchoredPosition: {x: 5.7683105, y: -29.817192}
-  m_SizeDelta: {x: -11.537, y: -107.6221}
+  m_AnchoredPosition: {x: 5.7683105, y: -38.814}
+  m_SizeDelta: {x: -11.537, y: -89.627}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2062597086
 MonoBehaviour:
@@ -26437,8 +26437,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Type: 1
+  m_Sprite: {fileID: 21300000, guid: 3cec58fd15ea07149b00417c3195afa4, type: 3}
+  m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
