@@ -88,8 +88,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         this.resultButton.gameObject.SetActive(false);
     }
 
-    public void UpdateGraphDisplayResults(Algorithm algorithm, Vertex[] vertexParms)
+    public void UpdateGraphDisplayResults(Algorithm algorithm, Vertex[] vertexParms, AlgorithmManager algoMan)
     {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
         string algorithmName = algorithm.GetType().ToString();
 
         foreach (GraphDisplayAlgorithmAssociation association in this.associations)

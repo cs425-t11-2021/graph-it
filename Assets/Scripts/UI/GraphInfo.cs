@@ -66,8 +66,14 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     //Reference to the button to open the graph info panels
     [SerializeField] private Button openPanel;
 
-    public void UpdateGraphInfoResults(Algorithm algorithm)
+    public void UpdateGraphInfoResults(Algorithm algorithm, AlgorithmManager algoMan)
     {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
         string algorithmName = algorithm.GetType().ToString();
 
         foreach (GraphInfoAlgorithmAssociation association in this.associations)
@@ -80,8 +86,14 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         }
     }
 
-    public void UpdateGraphInfoCalculating(Algorithm algorithm)
+    public void UpdateGraphInfoCalculating(Algorithm algorithm, AlgorithmManager algoMan)
     {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
         string algorithmName = algorithm.GetType().ToString();
 
         foreach (GraphInfoAlgorithmAssociation association in this.associations)

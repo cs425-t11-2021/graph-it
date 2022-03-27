@@ -59,8 +59,8 @@ public class AlgorithmManager
             this.RunAlgorithm( algorithm, display, parms );
         
         if ( this.IsComplete( hash ) && display ) {
-            RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ) ) );
-            RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms ) );
+            RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ), this ) );
+            RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms, this ) );
         }
         
     }
