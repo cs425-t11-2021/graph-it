@@ -268,6 +268,8 @@ public class Graph
 
     public bool IsAdjacentDirected( Vertex vert1, Vertex vert2 ) => this.Adjacency.ContainsKey( ( vert1, vert2 ) );
 
+    public bool IsIncident( Edge edge1, Edge edge2 ) => edge1.IncidentOn( edge2.vert1 ) || edge1.IncidentOn( edge2.vert2 );
+
     private bool IsDirected()
     {
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )

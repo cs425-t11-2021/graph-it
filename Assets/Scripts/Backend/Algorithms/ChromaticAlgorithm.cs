@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
@@ -16,54 +15,57 @@ public class ChromaticAlgorithm : Algorithm
 
     public override void Run()
     {
-        // TODO: if HasLoops, then warn user
+        // TODO: if HasLoops, then return +inf
 
         this.AlgoManager.RunMaxDegree();
 
-        this.Coloring = new int[ this.Graph.Order ];
+        int[] coloring = new int[ this.Graph.Order ];
         int chi = Math.Min( this.Graph.Order, 1 );
         this.WaitUntilMaxDegreeComplete();
         int upperBound = ( int ) this.AlgoManager.GetMaxDegree() + 1;
         // TODO: use clique number for lower bound
 
-        while ( !this.IsProperColoring() )
+        while ( !this.IsProperColoring( coloring ) )
         {
             if ( chi > upperBound ) // something really bad happended
                 throw new System.Exception( "Coloring could not be computed." );
-            if ( this.Coloring.Min() >= chi - 1 )
+            if ( coloring.Min() >= chi - 1 )
             {
                 chi++;
-                Array.Clear( this.Coloring, 0, this.Coloring.Length );
+                Array.Clear( coloring, 0, coloring.Length );
             }
-            this.UpdateColoring( chi );
+            this.UpdateColoring( coloring, chi );
         }
+        this.Coloring = coloring;
         this.ChromaticNumber = chi;
     }
 
-    private bool IsProperColoring()
+    private bool IsProperColoring( int[] coloring )
     {
-        foreach ( Edge edge in this.Graph.Adjacency.Values )
+        for ( int i = 0; i < this.Graph.Order; ++i )
         {
-            if ( edge.vert1 == edge.vert2 ) // temp, ignoring loops
-                continue;
-            if ( this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
-                return false;
+            for ( int j = 0; j < this.Graph.Order; ++j )
+            {
+                // temp i != j ignoring loops
+                if ( i != j && coloring[ i ] == coloring[ j ] && this.Graph.IsAdjacent( this.Graph.Vertices[ i ], this.Graph.Vertices[ j ] ) )
+                    return false;
+            }
         }
         return true;
     }
 
-    private void UpdateColoring( int colors, int index=0 )
+    private void UpdateColoring( int[] coloring, int colors, int index=0 )
     {
-        if ( index < this.Coloring.Length )
+        if ( index < coloring.Length )
         {
-            if ( this.Coloring[ index ] < colors - 1 )
+            if ( coloring[ index ] < colors - 1 )
             {
-                this.Coloring[ index ]++;
+                coloring[ index ]++;
                 for ( int i = 0; i < index; ++i )
-                    this.Coloring[ i ] = 0;
+                    coloring[ i ] = 0;
             }
             else
-                this.UpdateColoring( colors, ++index );
+                this.UpdateColoring( coloring, colors, ++index );
         }
     }
 
