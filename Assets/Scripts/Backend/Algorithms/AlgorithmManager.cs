@@ -29,7 +29,7 @@ public class AlgorithmManager
 
     public void Initiate( Graph graph )
     {
-        Controller.Singleton.OnGraphModified += Clear;
+        Controller.Singleton.OnGraphModified += OnGraphModified;
         this.graph = graph;
         this.graphCopy = new Graph( graph );
     }
@@ -56,11 +56,20 @@ public class AlgorithmManager
     {
         int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+        {
             this.RunAlgorithm( algorithm, display, parms );
-        
-        if ( this.IsComplete( hash ) && display ) {
-            RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ) ) );
-            RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms ) );
+            return;
+        }
+
+        if (display) {
+            if ( this.IsComplete( hash ) ) {
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ), this ) );
+                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms, this ) );
+            }
+            else if (this.IsRunning( hash ) )
+            {
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this.running.GetValue( hash ), this ) );
+            }
         }
         
     }
@@ -194,6 +203,13 @@ public class AlgorithmManager
         this.KillAll();
         this.running.Clear();
         this.complete.Clear();
+    }
+
+    private void OnGraphModified()
+    {
+        Clear();
+        
+        Logger.Log("Copying Graph DS.", this, LogType.INFO);
         this.graphCopy = new Graph( this.graph );
     }
 
@@ -207,6 +223,7 @@ public class AlgorithmManager
     ~AlgorithmManager()
     {
         this.KillAll();
+        Controller.Singleton.OnGraphModified -= OnGraphModified;
     }
 
 }

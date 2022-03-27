@@ -3,21 +3,23 @@
 
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UI;
 using TMPro;
 using System.Reflection;
+using Object = System.Object;
 
 [System.Serializable]
 public class GraphInfoAlgorithmAssociation
 {
     public string algorithmClass = "";
-    public bool multiThreaded = false;
-    public TMP_Text graphInfoText;
+    public bool enabled = false;
     public string lead = "";
     public string nullValue = "N/A";
+    public string activationMethod = "";
     public string completedMethod = "";
 
     public Action OnCompleteUpdateUI
@@ -31,11 +33,11 @@ public class GraphInfoAlgorithmAssociation
                 
                 if (result == null)
                 {
-                    graphInfoText.text = lead + ": " + nullValue;
+                    GraphInfo.Singleton.SetInfoAlgorithmResult(this, lead + ": " + nullValue);
                 }
                 else
                 {
-                    graphInfoText.text = lead + ": " + Convert.ToString(result);
+                    GraphInfo.Singleton.SetInfoAlgorithmResult( this, lead + ": " + Convert.ToString(result));
                 }
             };
         }
@@ -47,7 +49,7 @@ public class GraphInfoAlgorithmAssociation
         {
             return () =>
             {
-                graphInfoText.text = lead + ": ...";
+                GraphInfo.Singleton.SetInfoAlgorithmResult(this, lead + ": ...");
             };
         }
     }
@@ -58,16 +60,34 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 
     [SerializeField] private GraphInfoAlgorithmAssociation[] associations;
     
-    // Reference to the text display of the graph order
-    [SerializeField] private TMP_Text orderText;
-    // Reference of the text display of the graph size
-    [SerializeField] private TMP_Text sizeText;
+    // // Reference to the text display of the graph order
+    // [SerializeField] private TMP_InputField orderText;
+    // // Reference of the text display of the graph size
+    // [SerializeField] private TMP_InputField sizeText;
     
     //Reference to the button to open the graph info panels
     [SerializeField] private Button openPanel;
+    [SerializeField] private TMP_InputField graphInfoField;
+    private ConcurrentDictionary<GraphInfoAlgorithmAssociation, string> infoAlgorithmResults;
 
-    public void UpdateGraphInfoResults(Algorithm algorithm)
+    private void Awake()
     {
+        this.infoAlgorithmResults = new ConcurrentDictionary<GraphInfoAlgorithmAssociation, string>();
+
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            this.infoAlgorithmResults[association] = association.lead + ":";
+        }
+    }
+
+    public void UpdateGraphInfoResults(Algorithm algorithm, AlgorithmManager algoMan)
+    {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
         string algorithmName = algorithm.GetType().ToString();
 
         foreach (GraphInfoAlgorithmAssociation association in this.associations)
@@ -75,13 +95,23 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
             if (association.algorithmClass == algorithmName)
             {
                 association.OnCompleteUpdateUI();
+                RefreshGraphInfoUI();
                 return;
             }
         }
     }
 
-    public void UpdateGraphInfoCalculating(Algorithm algorithm)
+    public void UpdateGraphInfoCalculating(Algorithm algorithm, AlgorithmManager algoMan)
     {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
+        // Fix strange race condition
+        if (algorithm == null) return;
+        
         string algorithmName = algorithm.GetType().ToString();
 
         foreach (GraphInfoAlgorithmAssociation association in this.associations)
@@ -89,9 +119,15 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
             if (association.algorithmClass == algorithmName)
             {
                 association.OnCalculatingUpdateUI();
+                RefreshGraphInfoUI();
                 return;
             }
         }        
+    }
+
+    public void SetInfoAlgorithmResult(GraphInfoAlgorithmAssociation association, string result)
+    {
+        this.infoAlgorithmResults[association] = result;
     }
 
     public void InitiateAlgorithmManager(AlgorithmManager algoManager) {
@@ -102,17 +138,32 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     }
     
     public void UpdateGraphInfo() {
-        this.orderText.text = "Order: " + Controller.Singleton.Graph.Order;
-        this.sizeText.text = "Size: " + Controller.Singleton.Graph.Size;
-
         // Run multithreaded algorithms
-        Controller.Singleton.AlgorithmManager.RunChromatic();
-        Controller.Singleton.AlgorithmManager.RunMinDegree();
-        Controller.Singleton.AlgorithmManager.RunMaxDegree();
-        Controller.Singleton.AlgorithmManager.RunRadius();
-        Controller.Singleton.AlgorithmManager.RunDiameter();
-        Controller.Singleton.AlgorithmManager.RunBipartite();
-        Controller.Singleton.AlgorithmManager.RunCyclic();
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            this.infoAlgorithmResults[association] = association.lead + ":";
+            if (association.enabled)
+            {
+                Type.GetType("AlgorithmManager").GetMethod(association.activationMethod)
+                    .Invoke(Controller.Singleton.AlgorithmManager, new Object[] {true});
+            }
+        }
+    }
+
+    private void RefreshGraphInfoUI()
+    {
+        string output = "";
+        output += "Order: " + Controller.Singleton.Graph.Order + "\n";
+        output += "Size: " + Controller.Singleton.Graph.Size + "\n";
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            if (association.enabled)
+            {
+                output += this.infoAlgorithmResults[association] + "\n";
+            }
+        }
+
+        graphInfoField.text = output;
     }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access

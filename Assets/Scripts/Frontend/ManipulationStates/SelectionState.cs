@@ -42,7 +42,7 @@ public class SelectionState : ManipulationState
             SelectionManager.Singleton.ToggleVertexSelection(vertex);
         }
         else if (InputManager.Singleton.CurrentHoveringEdge) {
-            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponent<EdgeObj>();
+            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponentInParent<EdgeObj>();
             SelectionManager.Singleton.ToggleEdgeSelection(edge);
         }
     }
@@ -66,7 +66,7 @@ public class SelectionState : ManipulationState
         foreach (Collider2D col in colliders)
         {
             VertexObj v = col.gameObject.GetComponent<VertexObj>();
-            EdgeObj e = col.gameObject.GetComponent<EdgeObj>();
+            EdgeObj e = col.gameObject.GetComponentInParent<EdgeObj>();
 
             if (v)
                 SelectionManager.Singleton.SelectVertex(v);

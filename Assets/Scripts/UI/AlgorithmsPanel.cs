@@ -31,18 +31,16 @@ public class GraphDisplayAlgorithmAssociation
                 if (result == null)
                 {
                     Logger.Log("Graph display algorithm " + algorithmClass + " returned a null result.", this, LogType.ERROR);
+                    NotificationManager.Singleton.CreateNotification(string.Format("<color=red>{0} returned a null result.</color>", algorithmClass), 3);
                 }
                 else
-                {
-                    SelectionManager.Singleton.DeSelectAll();
-                    
+                {                    
                     AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, (List<Edge>) result);
                     if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
                         AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
-                        // AlgorithmsPanel.Singleton.resultButton.enabled = true;
                     }
 
-                    NotificationManager.Singleton.CreateNoficiation(this.algorithmClass + " finished.", 3);
+                    NotificationManager.Singleton.CreateNotification("<#0000FF>" + this.algorithmClass + "</color> finished.", 3);
                 }
             };
         }
@@ -57,10 +55,13 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     //Reference to the button to open the algorithm info panels
 
     [SerializeField] public ToggleButton resultButton;
+    [SerializeField] public ToggleButton runButton;
     [SerializeField] private Color deafultColor;
     [SerializeField] private Color selectedColor;
     [SerializeField] private Color defaultFinishedColor;
     [SerializeField] private Color selectedFinishedColor;
+
+    public bool stepByStep = true;
 
     public GraphDisplayAlgorithmAssociation CurrentlySelectedAlgorithm {get; private set;}
 
@@ -87,8 +88,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         this.resultButton.gameObject.SetActive(false);
     }
 
-    public void UpdateGraphDisplayResults(Algorithm algorithm, Vertex[] vertexParms)
+    public void UpdateGraphDisplayResults(Algorithm algorithm, Vertex[] vertexParms, AlgorithmManager algoMan)
     {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
         string algorithmName = algorithm.GetType().ToString();
 
         foreach (GraphDisplayAlgorithmAssociation association in this.associations)
@@ -147,6 +154,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 association.activationButton.UpdateStatus(false);
             }
         }
+
+        this.resultButton.Checked = false;
     }
 
     public void StoreAlgorithmResult(string algorithmName, List<Edge> result) {
@@ -179,7 +188,18 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public void StartAlgorithmInitiation() {
         if (this.CurrentlySelectedAlgorithm != null) {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmInitiationState;
+            if (this.runButton.Checked)
+            {
+                ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmInitiationState;
+            }
+            else
+            {
+                ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            }
+        }
+        else
+        {
+            this.runButton.UpdateStatus(false);
         }
     }
 
@@ -210,6 +230,26 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
         else {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        }
+    }
+
+    public void SetStepByStep(bool enabled)
+    {
+        this.stepByStep = enabled;
+    }
+
+    public void Search(string term)
+    {
+        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass.ToLower().Contains(term.ToLower()))
+            {
+                association.activationButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                association.activationButton.gameObject.SetActive(false);
+            }
         }
     }
 

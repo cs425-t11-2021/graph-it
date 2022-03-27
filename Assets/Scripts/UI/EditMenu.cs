@@ -89,4 +89,28 @@ public class EditMenu : MenuButton
         if (Controller.Singleton.Graph.UndoneChanges.Count > 0)
             Controller.Singleton.Graph.Redo();
     }
+
+    public void Copy()
+    {
+        CopyManager.Singleton.CopyCurrentSelection();
+    }
+
+    public void Paste()
+    {
+        CopyManager.Singleton.Paste();
+    }
+
+    public void ClearAlgorithmResults()
+    {
+        AlgorithmsPanel.Singleton.ClearAlgorithmResults();
+    }
+
+    public void CreateGraphFromSelection()
+    {
+        if (SelectionManager.Singleton.SelectedVertices.Count > 0)
+        {
+            Controller.Singleton.CreateInstanceFromSelection();
+            NotificationManager.Singleton.CreateNotification("Creating a new graph from selection.", 3);
+        }
+    }
 }

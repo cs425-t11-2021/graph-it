@@ -154,8 +154,8 @@ public class Graph
 
     public void Remove( List< Vertex > vertices, List< Edge > edges, bool recordChange=true )
     {
-        this.Remove( vertices, false );
         this.Remove( edges, false );
+        this.Remove( vertices, false );
 
         if ( recordChange )
         {

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class VertexLabelObj : MonoBehaviour
 {
@@ -140,7 +141,7 @@ public class VertexLabelObj : MonoBehaviour
     {
         if (displayEnabled)
         {
-            inputField.interactable = false;
+            if (!EventSystem.current.alreadySelecting) inputField.interactable = false;
             if (string.IsNullOrEmpty(inputField.text))
             {
                 inputField.gameObject.SetActive(false);

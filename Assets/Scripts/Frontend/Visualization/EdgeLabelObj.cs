@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class EdgeLabelObj : MonoBehaviour
 {
@@ -48,7 +49,7 @@ public class EdgeLabelObj : MonoBehaviour
         }
         else
         {
-            inputField.gameObject.SetActive(false);
+            this.inputField.gameObject.SetActive(false);
         }
     }
 
@@ -89,7 +90,7 @@ public class EdgeLabelObj : MonoBehaviour
     {
         if (displayEnabled)
         {
-            inputField.interactable = false;
+            if (!EventSystem.current.alreadySelecting) inputField.interactable = false;
             if (string.IsNullOrEmpty(inputField.text))
             {
                 inputField.gameObject.SetActive(false);
@@ -110,7 +111,11 @@ public class EdgeLabelObj : MonoBehaviour
 
     public void UpdateEdgeLabel(string newLabel, bool updateDS = true) {
         if (updateDS)
+        {
             this.edgeObject.Edge.Label = newLabel;
+            Controller.Singleton.ForceInvokeModificationEvent();
+            GraphInfo.Singleton.UpdateGraphInfo();
+        }
 
         if (this.edgeObject.Edge.Weighted)
         {
@@ -120,7 +125,9 @@ public class EdgeLabelObj : MonoBehaviour
         {
             inputField.text = this.edgeObject.Edge.Label;
         }
-
+        
+        if (!EventSystem.current.alreadySelecting) EventSystem.current.SetSelectedGameObject(null);
+        MakeUneditable();
         Logger.Log(string.Format("Edge {0} set to {1}.", this.edgeObject.Edge.Weighted ? "weight" : "label", inputField.text), this, LogType.INFO);
     }
 }
