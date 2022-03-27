@@ -353,14 +353,23 @@ public class EdgeObj : MonoBehaviour
     }
 
     public void SetDirectedness(bool directed, bool updateDS = true) {
-        if (updateDS) this.Edge.Directed = directed;
+        if (updateDS)
+        {
+            this.Edge.Directed = directed;
+            Controller.Singleton.ForceInvokeModificationEvent();
+        }
+        
         if (directed) this.direction = 1;
         else this.direction = 0;
         UpdateSpline();
     }
 
     public void ReverseEdge(bool updateDS = true) {
-        if (updateDS) this.Edge.Reverse();
+        if (updateDS)
+        {
+            this.Edge.Reverse();
+            Controller.Singleton.ForceInvokeModificationEvent();
+        }
         this.direction *= -1;
         (this.Vertex1, this.Vertex2) = (this.Vertex2, this.Vertex1);
         UpdateSpline();
