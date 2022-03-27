@@ -264,7 +264,9 @@ public class Graph
         this.Changes.Push( mod );
     }
 
-    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.Adjacency.ContainsKey( ( vert1, vert2 ) ) || this.Adjacency.ContainsKey( ( vert2, vert1 ) );
+    public bool IsAdjacent( Vertex vert1, Vertex vert2 ) => this.IsAdjacentDirected( vert1, vert2 ) || this.IsAdjacentDirected( vert2, vert1 );
+
+    public bool IsAdjacentDirected( Vertex vert1, Vertex vert2 ) => this.Adjacency.ContainsKey( ( vert1, vert2 ) );
 
     private bool IsDirected()
     {

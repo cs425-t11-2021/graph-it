@@ -20,7 +20,10 @@ public class BellmanFordsAlgorithm : Algorithm
         this.dest = dest;
         
         // Assign the type of the algorithm
-        this.type = AlgorithmType.DISPLAY;
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
         // Add the root vertex to vertex parms array
         this.vertexParms = new Vertex[] { this.src, this.dest };
     }
@@ -31,58 +34,59 @@ public class BellmanFordsAlgorithm : Algorithm
             throw new System.Exception( "Graph is not fully weighted." );
 
         // initialize data
-        List< Edge > edges = this.Graph.Adjacency.Values.ToList();
-        Dictionary< Vertex, double > dist = new Dictionary< Vertex, double >();
+        Dictionary< Vertex, float > dist = new Dictionary< Vertex, float >();
         Dictionary< Vertex, Edge > prev = new Dictionary< Vertex, Edge >();
         List< Edge > path = new List< Edge >();
         foreach ( Vertex vert in this.Graph.Vertices )
-            dist[ vert ] = Double.PositiveInfinity;
+            dist[ vert ] = Single.PositiveInfinity;
         dist[ src ] = 0;
 
         // relax edges
-        for ( int i = 0; i < this.Graph.Order - 1; i++ )
+        for ( int i = 1; i < this.Graph.Order; i++ )
         {
-            foreach ( Edge edge in edges )
+            foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Graph.Adjacency )
             {
-                if ( dist[ edge.vert1 ] + edge.Weight < dist[ edge.vert2 ] )
+                if ( dist[ kvp.Key.Item1 ] + kvp.Value.Weight < dist[ kvp.Key.Item2 ] )
                 {
-                    dist[ edge.vert2 ] = dist[ edge.vert1 ] + edge.Weight;
-                    prev[ edge.vert2 ] = edge;
+                    dist[ kvp.Key.Item2 ] = dist[ kvp.Key.Item1 ] + kvp.Value.Weight;
+                    prev[ kvp.Key.Item2 ] = kvp.Value;
                 }
             }
         }
 
         // check for negative cycles
-        foreach ( Edge edge in edges )
+        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Graph.Adjacency )
         {
-            if ( dist[ edge.vert1 ] + edge.Weight < dist[ edge.vert2 ] )
+            if ( dist[ kvp.Key.Item1 ] + kvp.Value.Weight < dist[ kvp.Key.Item2 ] )
                 throw new System.Exception( "Negative weight cycle found." );
         }
 
-        // foreach ( KeyValuePair< Vertex, Edge > kvp in prev )
-        // {
-        //     Logger.Log( "", this, LogType.INFO );
-        //     Logger.Log( kvp.Key.Label, this, LogType.INFO );
-        //     Logger.Log( kvp.Value.Label, this, LogType.INFO );
-        // }
-        // Logger.Log( "", this, LogType.INFO );
-
         // get path from tree
+        float cost = 0;
         Vertex prevVert = this.dest;
-        // Logger.Log(prevVert.ToString(), this, LogType.INFO);
         while ( !( prevVert is null ) && prevVert != this.src )
         {
             Edge prevEdge = prev.GetValue( prevVert );
-            // Logger.Log((bool) prevEdge?.IncidentOn( prevVert ) ? "true" : "false", this, LogType.INFO);
-            // Logger.Log(prevEdge?.Label, this, LogType.INFO);
-            path.Add( prevEdge );
-            prevVert = prevEdge?.vert1;
+            if ( prevEdge is null )
+                throw new System.Exception( "Path could not be found." );
+            else
+            {
+                if ( path.Contains( prevEdge ) )
+                    throw new System.Exception( "Path could not be found." );
+                path.Add( prevEdge );
+                prevVert = prevEdge.vert1 == prevVert ? prevEdge.vert2 : prevEdge.vert1;
+                cost += prevEdge.Weight;
+            }
         }
 
         if ( prevVert is null )
-            this.Path = null;
+            throw new System.Exception( "Path could not be found." );
         else
+        {
+            path.Reverse();
             this.Path = path;
+            this.Cost = cost;
+        }
     }
 
     public static int GetHash( Vertex src, Vertex dest ) => ( typeof ( BellmanFordsAlgorithm ), src, dest ).GetHashCode();

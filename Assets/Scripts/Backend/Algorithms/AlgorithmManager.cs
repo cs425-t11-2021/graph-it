@@ -25,6 +25,8 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
 
+    private Action< Edge, Vertex > nothing = ( e, v ) => { };
+
     public void Initiate( Graph graph )
     {
         Controller.Singleton.OnGraphModified += OnGraphModified;
@@ -63,6 +65,10 @@ public class AlgorithmManager
         
     }
 
+    public void RunAdjacencyMatrix( bool display=true ) => this.EnsureRunning( typeof ( AdjacencyMatrixAlgorithm ), display );
+
+    public void RunWeightMatrix( bool display=true ) => this.EnsureRunning( typeof ( WeightMatrixAlgorithm ), display );
+
     public void RunMinDegree( bool display=true ) => this.EnsureRunning( typeof ( MinDegreeAlgorithm ), display );
 
     public void RunMaxDegree( bool display=true ) => this.EnsureRunning( typeof ( MaxDegreeAlgorithm ), display );
@@ -87,9 +93,18 @@ public class AlgorithmManager
 
     public void RunBellmanFords( Vertex src, Vertex dest, bool display=true ) => this.EnsureRunning( typeof ( BellmanFordsAlgorithm ), display, src, dest );
 
-    public void RunDepthFirstSearch( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( DepthFirstSearchAlgorithm ), display, vert, action );
+    public void RunDepthFirstSearch( Vertex vert, bool display=true ) => this.RunDepthFirstSearchWithAction( vert, this.nothing, display );
 
-    public void RunBreadthFirstSearch( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), display, vert, action );
+    public void RunDepthFirstSearchWithAction( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( DepthFirstSearchAlgorithm ), display, vert, action );
+
+    public void RunBreadthFirstSearch( Vertex vert, bool display=true ) => this.RunBreadthFirstSearchWithAction( vert, this.nothing, display );
+
+    public void RunBreadthFirstSearchWithAction( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), display, vert, action );
+
+
+    public bool[,] GetAdjacencyMatrix() => ( ( AdjacencyMatrixAlgorithm ) this.complete.GetValue( AdjacencyMatrixAlgorithm.GetHash() ) )?.Matrix;
+
+    public float[,] GetWeightMatrix() => ( ( WeightMatrixAlgorithm ) this.complete.GetValue( WeightMatrixAlgorithm.GetHash() ) )?.Matrix;
 
     public int? GetMinDegree() => ( ( MinDegreeAlgorithm ) this.complete.GetValue( MinDegreeAlgorithm.GetHash() ) )?.MinDegree;
 
@@ -122,9 +137,13 @@ public class AlgorithmManager
 
     public List< Edge > GetBellmanFordsPath( Vertex src, Vertex dest ) => ( ( BellmanFordsAlgorithm ) this.complete.GetValue( BellmanFordsAlgorithm.GetHash( src, dest ) ) )?.Path;
 
-    public List< Edge > GetDepthFirstSearchTree( Vertex root ) => ( ( DepthFirstSearchAlgorithm ) this.complete.GetValue( DepthFirstSearchAlgorithm.GetHash( root ) ) )?.Tree;
+    public List< Edge > GetDepthFirstSearchTree( Vertex root ) => this.GetDepthFirstSearchTreeWithAction( root, this.nothing );
 
-    public List< Edge > GetBreadthFirstSearchTree( Vertex root ) => ( ( BreadthFirstSearchAlgorithm ) this.complete.GetValue( BreadthFirstSearchAlgorithm.GetHash( root ) ) )?.Tree;
+    public List< Edge > GetDepthFirstSearchTreeWithAction( Vertex root, Action< Edge, Vertex > action ) => ( ( DepthFirstSearchAlgorithm ) this.complete.GetValue( DepthFirstSearchAlgorithm.GetHash( root, action ) ) )?.Tree;
+
+    public List< Edge > GetBreadthFirstSearchTree( Vertex root ) => this.GetBreadthFirstSearchTreeWithAction( root, this.nothing );
+
+    public List< Edge > GetBreadthFirstSearchTreeWithAction( Vertex root, Action< Edge, Vertex > action ) => ( ( BreadthFirstSearchAlgorithm ) this.complete.GetValue( BreadthFirstSearchAlgorithm.GetHash( root, action ) ) )?.Tree;
 
     public void MarkRunning( Algorithm algo )
     {
