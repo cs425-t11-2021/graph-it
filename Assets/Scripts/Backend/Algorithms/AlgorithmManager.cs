@@ -68,7 +68,6 @@ public class AlgorithmManager
             }
             else if (this.IsRunning( hash ) )
             {
-                Logger.Log(algorithm.ToString(), this, LogType.INFO);
                 RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this.running.GetValue( hash ), this ) );
             }
         }

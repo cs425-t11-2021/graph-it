@@ -109,6 +109,9 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
             return;
         }
         
+        // Fix strange race condition
+        if (algorithm == null) return;
+        
         string algorithmName = algorithm.GetType().ToString();
 
         foreach (GraphInfoAlgorithmAssociation association in this.associations)
