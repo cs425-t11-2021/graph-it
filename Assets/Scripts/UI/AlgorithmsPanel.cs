@@ -182,7 +182,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public void StartAlgorithmInitiation() {
         if (this.CurrentlySelectedAlgorithm != null) {
-            if (runButton.Checked)
+            if (this.runButton.Checked)
             {
                 ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmInitiationState;
             }
@@ -190,6 +190,10 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             {
                 ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
             }
+        }
+        else
+        {
+            this.runButton.UpdateStatus(false);
         }
     }
 
