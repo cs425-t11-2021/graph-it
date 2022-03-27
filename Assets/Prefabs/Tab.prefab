@@ -65,6 +65,7 @@ MonoBehaviour:
   checkedChanged:
     m_PersistentCalls:
       m_Calls: []
+  originalColor: {r: 0, g: 0, b: 0, a: 0}
   checkedColor: {r: 0.59607846, g: 0.9372549, b: 1, a: 1}
   highlightColor: {r: 0, g: 0, b: 0, a: 0}
   group: {fileID: 0}
@@ -88,7 +89,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 3fbba66ee220e1b4b845788a0eff4665, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fc9d4c58b3eecf648822e88ef34adf4e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
