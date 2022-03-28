@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -55,9 +56,8 @@ public class FileMenu : MenuButton
         
         //if the user does not cancel the file import menu, clear the current graph to import the new one //IMPORT INTO A NEW TAB LATER TO NOT OVERWRITE CURRENT WORK
         if(paths.Length != 0 && !string.IsNullOrEmpty(paths[0])){
-            // Clear existing graph
-            GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true);
-            
+            // Create a new instance if current graph instance is not empty
+            GraphInstance newInstance = Controller.Singleton.VertexObjs.Count != 0 || Controller.Singleton.Graph.Changes.Count != 0 ? Controller.Singleton.CreateGraphInstance(true) : Controller.Singleton.ActiveGraphInstance;
             Controller.Singleton.Graph.Import(paths[0]);
             Controller.Singleton.CreateObjsFromGraph(newInstance);
             

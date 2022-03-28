@@ -54,7 +54,7 @@ public abstract class Algorithm
             this.markRunning( this );
             
             if ( this.type == AlgorithmType.INFO )
-                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this ) );
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this, this.AlgoManager ) );
             
             this.Run();
             Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
@@ -63,9 +63,9 @@ public abstract class Algorithm
             this.markComplete( this );
             
             if ( this.type == AlgorithmType.INFO )
-                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this ) );
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this, this.AlgoManager ) );
             else if ( this.type == AlgorithmType.DISPLAY )
-                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms ) );
+                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
         }
         catch ( ThreadAbortException )
         {

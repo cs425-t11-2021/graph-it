@@ -35,40 +35,80 @@ public class Graph
 
     public bool Directed // true if any edge is directed
     {
-        get => this.IsDirected();
+        get
+        {
+            foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
+            {
+                if ( kvp.Value.Directed )
+                    return true;
+            }
+            return false;
+        }
     }
 
     public bool Weighted // true if any edge is weighted
     {
-        get => this.IsWeighted();
+        get
+        {
+            foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
+            {
+                if ( kvp.Value.Weighted )
+                    return true;
+            }
+            return false;
+        }
     }
 
     public bool FullyWeighted // true when all edges are weighted
     {
-        get => this.IsFullyWeighted();
+        get
+        {
+            foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
+            {
+                if ( !kvp.Value.Weighted )
+                    return false;
+            }
+            return true;
+        }
     }
 
     public bool Simple // false if multiple edges. false if loops on vertices (unless directed)
     {
-        get => this.IsSimple();
+        get
+        {
+            if ( !this.Directed )
+            {
+                foreach ( Vertex vert in this.Vertices )
+                {
+                    if ( !( this[ vert, vert ] is null ) )
+                       return false;
+                }
+            }
+            foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
+            {
+                // if ( kvp.Value.Count > 0 )
+                    // return false;
+            }
+            return true;
+        }
     }
 
     public bool HasLoops // true if a loop (an edge incident to only one vertex) exists
     {
-        get => this.IsHasLoops();
+        get
+        {
+            foreach ( Vertex vert in this.Vertices )
+            {
+                if ( !( this[ vert, vert ] is null ) )
+                    return true;
+            }
+            return false;
+        }
     }
 
-    // TODO: need HasLoops and HasMultipleEdges
-
-    public static void PrintStack( Stack< GraphModification > s ) // temp, for testing undo/redo
+    public bool HasMultipleEdges // true if there are multiple edges between vertices (not parallel directed edges)
     {
-        if (s.Count == 0)
-            return;
-        GraphModification x = s.Peek();
-        s.Pop();
-        PrintStack(s);
-        Debug.Log(x.Mod);
-        s.Push(x);
+        get => false;
     }
 
 
@@ -268,63 +308,7 @@ public class Graph
 
     public bool IsAdjacentDirected( Vertex vert1, Vertex vert2 ) => this.Adjacency.ContainsKey( ( vert1, vert2 ) );
 
-    private bool IsDirected()
-    {
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
-        {
-            if ( kvp.Value.Directed )
-                return true;
-        }
-        return false;
-    }
-
-    private bool IsWeighted()
-    {
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
-        {
-            if ( kvp.Value.Weighted )
-                return true;
-        }
-        return false;
-    }
-
-    private bool IsFullyWeighted()
-    {
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
-        {
-            if ( !kvp.Value.Weighted )
-                return false;
-        }
-        return true;
-    }
-
-    private bool IsSimple()
-    {
-        if ( !this.Directed )
-        {
-            foreach ( Vertex vert in this.Vertices )
-            {
-                if ( !( this[ vert, vert ] is null ) )
-                   return false;
-            }
-        }
-        foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
-        {
-            // if ( kvp.Value.Count > 0 )
-                // return false;
-        }
-        return true;
-    }
-
-    private bool IsHasLoops()
-    {
-        foreach ( Vertex vert in this.Vertices )
-        {
-            if ( !( this[ vert, vert ] is null ) )
-                return true;
-        }
-        return false;
-    }
+    public bool IsIncident( Edge edge1, Edge edge2 ) => edge1.IncidentOn( edge2.vert1 ) || edge1.IncidentOn( edge2.vert2 );
 
 
     // actions from other classes /////////////////////////////////////
@@ -403,9 +387,9 @@ public class Graph
     private void ParseLine( string line, bool flag, Dictionary< uint, uint > indices )
     {
         if ( flag )
-            this.AddVertex( this.ParseVertex( line, indices ) );
+            this.AddVertex( this.ParseVertex( line, indices ), false );
         else
-            this.AddEdge( this.ParseEdge( line, indices ) );
+            this.AddEdge( this.ParseEdge( line, indices ), false );
     }
 
     private Vertex ParseVertex( string line, Dictionary< uint, uint > indices )

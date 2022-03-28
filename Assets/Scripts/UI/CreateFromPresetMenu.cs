@@ -1,4 +1,6 @@
 //All code developed by Team 11
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -54,48 +56,46 @@ public class CreateFromPresetMenu : MonoBehaviour
         }
     }
 
+    public void CreatePresetGraph(Func<int, Graph> generator, string name)
+    {
+        GraphInstance instance;
+        if (Controller.Singleton.VertexObjs.Count != 0 || Controller.Singleton.Graph.Changes.Count != 0)
+        {
+            instance = Controller.Singleton.CreateGraphInstance(true, generator(this.parameter));
+        }
+        else
+        {
+            Controller.Singleton.ReplaceGraph(generator(this.parameter));
+            instance = Controller.Singleton.ActiveGraphInstance;
+        }
+        Controller.Singleton.CreateObjsFromGraph(instance);
+        
+        closePresetMenu();
+        NotificationManager.Singleton.CreateNotification(string.Format("Creating a {1} graph with n = <#0000FF>{0}</color>.", this.parameter, name), 3);
+    }
+
     public void CreateComplete()
     {
-        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.Complete(this.parameter));
-        Controller.Singleton.CreateObjsFromGraph(newInstance);
-        closePresetMenu();
-        
-        NotificationManager.Singleton.CreateNotification(string.Format("Creating a complete graph with n = <#0000FF>{0}</color>.", this.parameter), 3);
+        CreatePresetGraph(PresetGraph.Complete, "Complete");
     }
 
     public void CreateCompleteBipartite()
     {
-        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.CompleteBipartite(this.parameter));
-        Controller.Singleton.CreateObjsFromGraph(newInstance);
-        closePresetMenu();
-        
-        NotificationManager.Singleton.CreateNotification(string.Format("Creating a complete bipartite graph with n = <#0000FF>{0}</color>.", this.parameter), 3);
+        CreatePresetGraph(PresetGraph.CompleteBipartite, "Complete");
     }
 
     public void CreateCycle()
     {
-        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.Cycle(this.parameter));
-        Controller.Singleton.CreateObjsFromGraph(newInstance);
-        closePresetMenu();
-        
-        NotificationManager.Singleton.CreateNotification(string.Format("Creating a cycle graph with n = <#0000FF>{0}</color>.", this.parameter), 3);
+        CreatePresetGraph(PresetGraph.Cycle, "Complete");
     }
 
     public void CreatePath()
     {
-        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.Path(this.parameter));
-        Controller.Singleton.CreateObjsFromGraph(newInstance);
-        closePresetMenu();
-        
-        NotificationManager.Singleton.CreateNotification(string.Format("Creating a path graph with n = <#0000FF>{0}</color>.", this.parameter), 3);
+        CreatePresetGraph(PresetGraph.Path, "Complete");
     }
 
     public void CreateStar()
     {
-        GraphInstance newInstance = Controller.Singleton.CreateGraphInstance(true, PresetGraph.Star(this.parameter));
-        Controller.Singleton.CreateObjsFromGraph(newInstance);
-        closePresetMenu();
-        
-        NotificationManager.Singleton.CreateNotification(string.Format("Creating a star graph with n = <#0000FF>{0}</color>.", this.parameter), 3);
+        CreatePresetGraph(PresetGraph.Star, "Complete");
     }
 }

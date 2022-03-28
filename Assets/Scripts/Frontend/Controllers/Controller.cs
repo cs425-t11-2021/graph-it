@@ -100,24 +100,9 @@ public class Controller : SingletonBehavior<Controller>
         GraphInfo.Singleton.InitiateAlgorithmManager(instance.algorithmManager);
     }
 
-    public void ClearCurrentInstance() {
-        // Deselect All
-        SelectionManager.Singleton.DeSelectAll();
-
-        // Reset toolbar toggles
-        Toolbar.Singleton.ResetAll();
-
-        // If snap to grid is enabled, clear out the grid
-        if (Grid.Singleton.GridEnabled)
-        {
-            Grid.Singleton.ClearGrid();
-        }
-
-        GraphInstance previousInstance = this.activeGraphInstance;
-
-        // Destroy current graph objects and create a new instance
-        CreateGraphInstance(true);
-        Destroy(previousInstance.container.gameObject);
+    public void ReplaceGraph(Graph graph)
+    {
+        this.ActiveGraphInstance.graph = graph;
     }
 
     // Create a new graph instance, optional parameters to set the new instance as the active instance or create an 
