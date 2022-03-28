@@ -8,16 +8,28 @@ using UnityEngine.UI;
 using TMPro;
 using Object = System.Object;
 
-[System.Serializable]
+public enum ResultType { EdgeList, VertexList }
+
+[Serializable]
+public struct DisplayAlgorithmExtraInfo
+{
+    public string lead;
+    public string getInfoMethod;
+}
+
+[Serializable]
 public class GraphDisplayAlgorithmAssociation
 {
     public string algorithmClass = "";
-    public bool multiThreaded = false;
-    public ToggleButton activationButton;
+    public string displayName = "";
+    public bool enabled = false;
     public int requiredVertices = 0;
-    public int requiredEdges = 0;
     public string activationMethod = "";
     public string completedMethod = "";
+    public ResultType resultType;
+    public DisplayAlgorithmExtraInfo[] extraInfo;
+    
+    [HideInInspector] public ToggleButton activationButton;
 
     public Action<Vertex[]> OnCompleteUpdateDisplay
     {
@@ -35,9 +47,9 @@ public class GraphDisplayAlgorithmAssociation
                 }
                 else
                 {                    
-                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, (List<Edge>) result);
+                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, result);
                     if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
-                        AlgorithmsPanel.Singleton.AlgorithmResult = (List<Edge>) result;
+                        AlgorithmsPanel.Singleton.AlgorithmResult = result;
                     }
 
                     NotificationManager.Singleton.CreateNotification("<#0000FF>" + this.algorithmClass + "</color> finished.", 3);
@@ -60,14 +72,19 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private Color selectedColor;
     [SerializeField] private Color defaultFinishedColor;
     [SerializeField] private Color selectedFinishedColor;
+    [SerializeField] private Transform algorithmButtonHolder;
+    [SerializeField] private GameObject algorithmToggleButtonPrefab;
+    
+    // TODO: get rid of Eventaully
+    [SerializeField] private GameObject deprecationWarning;
 
-    public bool stepByStep = true;
+    public bool StepByStep { get; set; } = true;
 
     public GraphDisplayAlgorithmAssociation CurrentlySelectedAlgorithm {get; private set;}
 
-    public List<Edge> AlgorithmResult {get; set;}
+    public object AlgorithmResult {get; set;}
 
-    public List<Edge>[] algorithmResults;
+    public object[] algorithmResults;
 
 
     // Property for whether or not the algorithm buttons are enabled
@@ -77,10 +94,25 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     private void Awake() {
-        Array.ForEach(this.associations, a => a.activationButton.UpdateStatus(false));
+        this.deprecationWarning?.SetActive(false);
+        
+        Array.ForEach(this.associations, a =>
+        {
+            // Create a new toggle button for each association
+            ToggleButton newAlgoButton = Instantiate(algorithmToggleButtonPrefab, algorithmButtonHolder).GetComponent<ToggleButton>();
+            newAlgoButton.checkedColor = this.selectedColor;
+            newAlgoButton.originalColor = this.deafultColor;
+            newAlgoButton.GetComponent<Image>().color = this.deafultColor;
+            newAlgoButton.checkedChanged.AddListener(delegate { SelectAlgorithm(a.algorithmClass); });
+            newAlgoButton.GetComponentInChildren<TMP_Text>(true).text = a.displayName;
+            
+            a.activationButton = newAlgoButton;
+            a.activationButton.UpdateStatus(false);
+            a.activationButton.gameObject.SetActive(a.enabled);
+        });
         this.resultButton.gameObject.SetActive(false);
 
-        algorithmResults = new List<Edge>[this.associations.Length];
+        algorithmResults = new object[this.associations.Length];
 
         Controller.Singleton.OnGraphModified += ClearAlgorithmResults;
         Controller.Singleton.OnInstanceChanged += (newInstance) => ClearAlgorithmResults();
@@ -158,7 +190,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         this.resultButton.Checked = false;
     }
 
-    public void StoreAlgorithmResult(string algorithmName, List<Edge> result) {
+    public void StoreAlgorithmResult(string algorithmName, object result) {
         foreach (GraphDisplayAlgorithmAssociation association in this.associations)
         {
             if (association.algorithmClass == algorithmName)
@@ -208,7 +240,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     public void ClearAlgorithmResults() {
-        this.algorithmResults = new List<Edge>[this.associations.Length];
+        this.algorithmResults = new object[this.associations.Length];
         this.AlgorithmResult = null;
         this.resultButton.gameObject.SetActive(false);
 
@@ -235,7 +267,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public void SetStepByStep(bool enabled)
     {
-        this.stepByStep = enabled;
+        this.StepByStep = enabled;
     }
 
     public void Search(string term)
@@ -244,7 +276,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         {
             if (association.algorithmClass.ToLower().Contains(term.ToLower()))
             {
-                association.activationButton.gameObject.SetActive(true);
+                association.activationButton.gameObject.SetActive(association.enabled);
             }
             else
             {
