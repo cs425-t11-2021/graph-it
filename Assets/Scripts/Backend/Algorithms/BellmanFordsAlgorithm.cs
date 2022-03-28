@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class BellmanFordsAlgorithm : Algorithm
+public class BellmanFordsAlgorithm : LoggedAlgorithm
 {
     public float Cost { get; private set; }
     public List< Edge > Path { get; private set; }

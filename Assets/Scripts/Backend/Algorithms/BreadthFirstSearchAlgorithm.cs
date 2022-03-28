@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class BreadthFirstSearchAlgorithm : Algorithm
+public class BreadthFirstSearchAlgorithm : LoggedAlgorithm
 {
     public List< Edge > Tree { get; private set; }
     private Vertex root;

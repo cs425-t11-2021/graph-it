@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class KruskalsAlgorithm : Algorithm
+public class KruskalsAlgorithm : LoggedAlgorithm
 {
     public List< Edge > Mst { get; private set; }
 
@@ -27,22 +27,32 @@ public class KruskalsAlgorithm : Algorithm
             throw new System.Exception("Kruskal's algorithm is unsupported on directed graphs.");
         }
 
-        this.Mst = new List< Edge >();
+        List< Edge > mst = new List< Edge >();
         List< Edge > edges = new List< Edge >( this.Graph.Adjacency.Values.OrderBy( edge => edge.Weight ) );
         HashSet< HashSet< Vertex > > forest = new HashSet< HashSet< Vertex > >();
         foreach ( Vertex vert in this.Graph.Vertices )
             forest.Add( new HashSet< Vertex >() { vert } );
-        foreach ( Edge edge in edges )
+
+        this.AddStep( StepType.ADD_TO_RESULT, new List< Vertex >( this.Graph.Vertices ), null, "Add each vertex to its own tree." );
+
+        for ( int i = 0; i < edges.Count; ++i )
         {
-            HashSet< Vertex > tree1 = KruskalsAlgorithm.GetComponentOf( forest, edge.vert1 );
-            HashSet< Vertex > tree2 = KruskalsAlgorithm.GetComponentOf( forest, edge.vert2 );
+            this.AddStep( StepType.CONSIDER, null, new List< Edge >( edges.GetRange( i, edges.Count - i ) ), "Find minimally weighted edge that connects disjoint trees." );
+
+            HashSet< Vertex > tree1 = KruskalsAlgorithm.GetComponentOf( forest, edges[ i ].vert1 );
+            HashSet< Vertex > tree2 = KruskalsAlgorithm.GetComponentOf( forest, edges[ i ].vert2 );
             if ( tree1 != tree2 )
             {
                 forest.Remove( tree1 );
                 tree2.UnionWith( tree1 );
-                this.Mst.Add( edge );
+                mst.Add( edges[ i ] );
+
+                this.AddStep( StepType.ADD_TO_RESULT, new List< Vertex >() { edges[ i ].vert1, edges[ i ].vert2 }, new List< Edge >() { edges[ i ] }, "Add minimally weighted edge that connects disjoint trees." );
             }
         }
+        this.Mst = mst;
+
+        this.AddStep( StepType.FINISHED, new List< Vertex >( this.Graph.Vertices ), new List< Edge >( mst ), "Kruskals's Algorithm finished." );
     }
 
     private static HashSet< Vertex > GetComponentOf( HashSet< HashSet< Vertex > > components, Vertex vert )
