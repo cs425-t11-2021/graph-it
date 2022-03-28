@@ -59,12 +59,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
 {
 
     [SerializeField] private GraphInfoAlgorithmAssociation[] associations;
-    
-    // // Reference to the text display of the graph order
-    // [SerializeField] private TMP_InputField orderText;
-    // // Reference of the text display of the graph size
-    // [SerializeField] private TMP_InputField sizeText;
-    
+
     //Reference to the button to open the graph info panels
     [SerializeField] private Button openPanel;
     [SerializeField] private TMP_InputField graphInfoField;
@@ -73,7 +68,8 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
     private void Awake()
     {
         this.infoAlgorithmResults = new ConcurrentDictionary<GraphInfoAlgorithmAssociation, string>();
-
+        
+        Logger.Log("Loading currently enabled graph info algorithms.", this, LogType.INFO);
         foreach (GraphInfoAlgorithmAssociation association in this.associations)
         {
             this.infoAlgorithmResults[association] = association.lead + ":";

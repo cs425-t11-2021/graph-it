@@ -96,6 +96,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     private void Awake() {
         this.deprecationWarning?.SetActive(false);
         
+        Logger.Log("Loading currently enabled graph display algorithms.", this, LogType.INFO);
+        NotificationManager.Singleton.CreateNotification("Loading currently enabled algorithms.", 3);
         Array.ForEach(this.associations, a =>
         {
             // Create a new toggle button for each association
