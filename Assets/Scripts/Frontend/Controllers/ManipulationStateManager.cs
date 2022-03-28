@@ -31,6 +31,7 @@ public class ManipulationStateManager : SingletonBehavior<ManipulationStateManag
         ManipulationState.disabledState = new DisabledState();
         ManipulationState.algorithmInitiationState = new AlgorithmInitiationState();
         ManipulationState.algorithmDisplayState = new AlgorithmDisplayState();
+        ManipulationState.algorithmSteppedDisplayState = new AlgorithmSteppedDisplayState();
         
         // Go into view state at program start
         this.ActiveState = ManipulationState.viewState;

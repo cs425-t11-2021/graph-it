@@ -170,13 +170,13 @@ public class AlgorithmManager
     public List< Edge > GetBreadthFirstSearchTreeWithAction( Vertex root, Action< Edge, Vertex > action ) => ( ( BreadthFirstSearchAlgorithm ) this.complete.GetValue( BreadthFirstSearchAlgorithm.GetHash( root, action ) ) )?.Tree;
 
 
-    public bool NextStepAvailable( Type loggedAlgo, params object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).NextStepAvailable();
+    public bool NextStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).NextStepAvailable();
 
-    public bool BackStepAvailable( Type loggedAlgo, params object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).BackStepAvailable();
+    public bool BackStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).BackStepAvailable();
 
-    public bool GetStepAvailable( Type loggedAlgo, params object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).GetStepAvailable();
+    public bool GetStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).GetStepAvailable();
 
-    public void NextStep( Type loggedAlgo, params object[] parms )
+    public void NextStep( Type loggedAlgo, object[] parms )
     {
         LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
         if ( !algo.NextStepAvailable() )
@@ -184,15 +184,15 @@ public class AlgorithmManager
         algo.NextStep();
     }
 
-    public void BackStep( Type loggedAlgo, params object[] parms )
+    public void BackStep( Type loggedAlgo, object[] parms )
     {
         LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
-        if ( !algo.NextStepAvailable() )
+        if ( !algo.BackStepAvailable() )
             throw new System.Exception( "The provided algorithm's back step is not available." );
         algo.BackStep();
     }
 
-    public ( StepType, List< Vertex >, List< Edge >, string ) GetStep( Type loggedAlgo, params object[] parms )
+    public ( StepType, List< Vertex >, List< Edge >, string ) GetStep( Type loggedAlgo, object[] parms )
     {
         LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
         if ( !algo.GetStepAvailable() )
