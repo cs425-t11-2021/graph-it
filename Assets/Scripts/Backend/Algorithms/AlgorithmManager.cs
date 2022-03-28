@@ -56,22 +56,17 @@ public class AlgorithmManager
     {
         int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
         if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
-        {
             this.RunAlgorithm( algorithm, display, parms );
-            return;
-        }
-
-        if (display) {
-            if ( this.IsComplete( hash ) ) {
+        else if ( display )
+        {
+            if ( this.IsComplete( hash ) )
+            {
                 RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ), this ) );
                 RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms, this ) );
             }
-            else if (this.IsRunning( hash ) )
-            {
+            else if ( this.IsRunning( hash ) )
                 RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this.running.GetValue( hash ), this ) );
-            }
         }
-        
     }
 
     public void RunAdjacencyMatrix( bool display=true ) => this.EnsureRunning( typeof ( AdjacencyMatrixAlgorithm ), display );
@@ -174,6 +169,51 @@ public class AlgorithmManager
 
     public List< Edge > GetBreadthFirstSearchTreeWithAction( Vertex root, Action< Edge, Vertex > action ) => ( ( BreadthFirstSearchAlgorithm ) this.complete.GetValue( BreadthFirstSearchAlgorithm.GetHash( root, action ) ) )?.Tree;
 
+
+    public bool NextStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).NextStepAvailable();
+
+    public bool BackStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).BackStepAvailable();
+
+    public bool GetStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).GetStepAvailable();
+
+    public void NextStep( Type loggedAlgo, object[] parms )
+    {
+        LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
+        if ( !algo.NextStepAvailable() )
+            throw new System.Exception( "The provided algorithm's next step is not available." );
+        algo.NextStep();
+    }
+
+    public void BackStep( Type loggedAlgo, object[] parms )
+    {
+        LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
+        if ( !algo.BackStepAvailable() )
+            throw new System.Exception( "The provided algorithm's back step is not available." );
+        algo.BackStep();
+    }
+
+    public ( StepType, List< Vertex >, List< Edge >, string ) GetStep( Type loggedAlgo, object[] parms )
+    {
+        LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
+        if ( !algo.GetStepAvailable() )
+            throw new System.Exception( "The provided algorithm's step is not available." );
+        return algo.GetStep();
+    }
+
+    private Algorithm GetAlgorithm( Type algorithm, object[] parms )
+    {
+        int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
+        if ( !this.IsRunning( hash ) && !this.IsComplete( hash ) )
+            throw new System.Exception( "The provided algorithm is not running nor completed." );
+        Algorithm algo = null;
+        if ( this.IsRunning( hash ) )
+            algo = this.running.GetValue( hash );
+        if ( this.IsComplete( hash ) )
+            algo = this.complete.GetValue( hash );
+        return algo;
+    }
+
+
     public void MarkRunning( Algorithm algo )
     {
         this.running[ algo.GetHashCode() ] = algo;
@@ -209,7 +249,7 @@ public class AlgorithmManager
     {
         Clear();
         
-        Logger.Log("Copying Graph DS.", this, LogType.INFO);
+        Logger.Log( "Copying Graph DS.", this, LogType.INFO );
         this.graphCopy = new Graph( this.graph );
     }
 

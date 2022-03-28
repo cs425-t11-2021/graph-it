@@ -22,8 +22,4 @@ public class OnHoverLabel : MonoBehaviour
         this.label.text = labelText;
         this.rect.sizeDelta = labelSize;
     }
-
-    public void OnNotHover(){
-        Destroy(this.gameObject);
-    }
 }

@@ -3,7 +3,7 @@
 
 using System;
 using System.Threading;
-using UnityEngine;
+using System.Collections.Generic;
 
 public enum AlgorithmType { INFO, DISPLAY, INTERNAL }
 
@@ -87,11 +87,11 @@ public abstract class Algorithm
     {
         if ( this.currThread?.IsAlive ?? false )
         {
-            this.running = false;
-            this.complete = false;
             this.unmarkRunning( this );
             this.currThread.Abort();
         }
+        this.running = false;
+        this.complete = false;
     }
 
     public new abstract int GetHashCode();
