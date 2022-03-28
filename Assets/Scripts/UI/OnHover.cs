@@ -22,6 +22,14 @@ public class OnHover : MonoBehaviour
 
     public void OnHoverExit()
     {
-        this.newLabel.OnNotHover();
+        if (this.newLabel != null) {
+            Destroy(this.newLabel.gameObject);
+        }
+    }
+
+    private void OnDisable() {
+        if (this.newLabel != null) {
+            Destroy(this.newLabel.gameObject);
+        }
     }
 }
