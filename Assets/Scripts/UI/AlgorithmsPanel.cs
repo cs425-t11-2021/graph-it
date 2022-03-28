@@ -46,10 +46,23 @@ public class GraphDisplayAlgorithmAssociation
                     NotificationManager.Singleton.CreateNotification(string.Format("<color=red>{0} returned a null result.</color>", algorithmClass), 3);
                 }
                 else
-                {                    
-                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, result);
+                {
+                    string[] extras = null;
+                    if (this.extraInfo.Length > 0)
+                    {
+                        extras = new string[this.extraInfo.Length];
+                        foreach ((DisplayAlgorithmExtraInfo info, int i) in this.extraInfo.WithIndex())
+                        {
+                            object extra = Type.GetType("AlgorithmManager").GetMethod(info.getInfoMethod)
+                                .Invoke(Controller.Singleton.AlgorithmManager, (Object[]) vertexParms);
+                            extras[i] = info.lead + ": " + extra.ToString();
+                        }
+                    }
+                    
+                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, result, extras);
                     if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
                         AlgorithmsPanel.Singleton.AlgorithmResult = result;
+                        AlgorithmsPanel.Singleton.AlgorithmExtra = extras;
                     }
 
                     NotificationManager.Singleton.CreateNotification("<#0000FF>" + this.algorithmClass + "</color> finished.", 3);
@@ -74,6 +87,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private Color selectedFinishedColor;
     [SerializeField] private Transform algorithmButtonHolder;
     [SerializeField] private GameObject algorithmToggleButtonPrefab;
+    [SerializeField] public GameObject extraInfoPanel;
     
     // TODO: get rid of Eventaully
     [SerializeField] private GameObject deprecationWarning;
@@ -82,9 +96,11 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public GraphDisplayAlgorithmAssociation CurrentlySelectedAlgorithm {get; private set;}
 
-    public object AlgorithmResult {get; set;}
+    public object AlgorithmResult { get; set; }
+    public string[] AlgorithmExtra { get; set; }
 
-    public object[] algorithmResults;
+    private object[] algorithmResults;
+    private string[][] algorithmExtras;
 
 
     // Property for whether or not the algorithm buttons are enabled
@@ -115,11 +131,13 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         this.resultButton.gameObject.SetActive(false);
 
         algorithmResults = new object[this.associations.Length];
+        algorithmExtras = new string[this.associations.Length][];
 
         Controller.Singleton.OnGraphModified += ClearAlgorithmResults;
         Controller.Singleton.OnInstanceChanged += (newInstance) => ClearAlgorithmResults();
 
         this.resultButton.gameObject.SetActive(false);
+        this.extraInfoPanel.gameObject.SetActive(false);
     }
 
     public void UpdateGraphDisplayResults(Algorithm algorithm, Vertex[] vertexParms, AlgorithmManager algoMan)
@@ -178,10 +196,12 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 if (this.algorithmResults[index] != null) {
                     this.resultButton.gameObject.SetActive(true);
                     this.AlgorithmResult = this.algorithmResults[index];
+                    this.AlgorithmExtra = this.algorithmExtras[index];
                 }
                 else {
                     this.resultButton.gameObject.SetActive(false);
                     this.AlgorithmResult = null;
+                    this.AlgorithmExtra = null;
                 }
             }
             else {
@@ -190,15 +210,21 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
 
         this.resultButton.Checked = false;
+
+        if (this.CurrentlySelectedAlgorithm == null)
+        {
+            this.resultButton.gameObject.SetActive(false);
+        }
     }
 
-    public void StoreAlgorithmResult(string algorithmName, object result) {
+    public void StoreAlgorithmResult(string algorithmName, object result, string[] extras) {
         foreach (GraphDisplayAlgorithmAssociation association in this.associations)
         {
             if (association.algorithmClass == algorithmName)
             {
                 int index = Array.IndexOf(this.associations, association);
                 this.algorithmResults[index] = result;
+                this.algorithmExtras[index] = extras;
                 association.activationButton.checkedColor = this.selectedFinishedColor;
                 association.activationButton.originalColor = this.defaultFinishedColor;
                 association.activationButton.GetComponent<Image>().color = this.defaultFinishedColor;
@@ -244,6 +270,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void ClearAlgorithmResults() {
         this.algorithmResults = new object[this.associations.Length];
         this.AlgorithmResult = null;
+        this.AlgorithmExtra = null;
         this.resultButton.gameObject.SetActive(false);
 
         foreach (GraphDisplayAlgorithmAssociation association in this.associations) {

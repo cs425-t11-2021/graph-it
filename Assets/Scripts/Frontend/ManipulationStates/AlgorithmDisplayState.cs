@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class AlgorithmDisplayState : ManipulationState
 {
 
     private object algorithmResult;
+    private string[] algorithmExtra;
     private List<EdgeObj> highlightedEdges;
     private List<VertexObj> highlightedVertices;
 
@@ -19,6 +22,7 @@ public class AlgorithmDisplayState : ManipulationState
         // }
         
         this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;
+        this.algorithmExtra = AlgorithmsPanel.Singleton.AlgorithmExtra;
         this.highlightedEdges = new List<EdgeObj>();
         this.highlightedVertices = new List<VertexObj>();
 
@@ -81,6 +85,14 @@ public class AlgorithmDisplayState : ManipulationState
             }
         }
         
+        if (this.algorithmExtra != null)
+        {
+            AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_Text>(true).text = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.algorithmClass + " Extra Info:";
+            string output = "";
+            Array.ForEach(this.algorithmExtra, s => output += s + "\n");
+            AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = output;
+            AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);           
+        }
     }
 
     // private IEnumerator DisplayResultWithAnimation(float delay)
@@ -120,6 +132,9 @@ public class AlgorithmDisplayState : ManipulationState
     {
         this.highlightedEdges.ForEach(e => e.IsAlgorithmResult = false);
         this.highlightedVertices.ForEach(v => v.IsAlgorithmResult = false);
+        
+        AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = "";
+        AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);
 
         // RunInMain.Singleton.queuedTasks.Enqueue(() =>
         //     RunInMain.Singleton.StopAllCoroutines());
