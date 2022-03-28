@@ -276,7 +276,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     {
         foreach (GraphDisplayAlgorithmAssociation association in this.associations)
         {
-            if (association.algorithmClass.ToLower().Contains(term.ToLower()))
+            if (association.displayName.ToLower().Contains(term.ToLower()))
             {
                 association.activationButton.gameObject.SetActive(association.enabled);
             }
