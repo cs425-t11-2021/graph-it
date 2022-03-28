@@ -88,6 +88,12 @@ public class AlgorithmManager
 
     public void RunChromatic( bool display=true ) => this.EnsureRunning( typeof ( ChromaticAlgorithm ), display );
 
+    public void RunIndependence( bool display=true ) => this.EnsureRunning( typeof ( IndependenceAlgorithm ), display );
+
+    public void RunClique( bool display=true ) => this.EnsureRunning( typeof ( CliqueAlgorithm ), display );
+
+    public void RunMatching( bool display=true ) => this.EnsureRunning( typeof ( MatchingAlgorithm ), display );
+
     public void RunBipartite( bool display=true ) => this.EnsureRunning( typeof ( BipartiteAlgorithm ), display );
 
     public void RunCyclic( bool display=true ) => this.EnsureRunning( typeof ( CyclicAlgorithm ), display );
@@ -124,6 +130,20 @@ public class AlgorithmManager
     public float? GetDiameter() => ( ( DiameterAlgorithm ) this.complete.GetValue( DiameterAlgorithm.GetHash() ) )?.Diameter;
 
     public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;
+
+    public int[] GetChromaticColoring() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.Coloring;
+
+    public int? GetIndependenceNumber() => ( ( IndependenceAlgorithm ) this.complete.GetValue( IndependenceAlgorithm.GetHash() ) )?.IndependenceNumber;
+
+    public List< Vertex > GetMaxIndependentSet() => ( ( IndependenceAlgorithm ) this.complete.GetValue( IndependenceAlgorithm.GetHash() ) )?.MaxIndependentSet;
+
+    public int? GetCliqueNumber() => ( ( CliqueAlgorithm ) this.complete.GetValue( CliqueAlgorithm.GetHash() ) )?.CliqueNumber;
+
+    public List< Vertex > GetMaxClique() => ( ( CliqueAlgorithm ) this.complete.GetValue( CliqueAlgorithm.GetHash() ) )?.MaxClique;
+
+    public int? GetMaxMatchingCard() => ( ( MatchingAlgorithm ) this.complete.GetValue( MatchingAlgorithm.GetHash() ) )?.MaxMatchingCard;
+
+    public List< Edge > GetMaxMatching() => ( ( MatchingAlgorithm ) this.complete.GetValue( MatchingAlgorithm.GetHash() ) )?.MaxMatching;
 
     // TODO: rename this more appropriately
     public bool? GetBipartite() => ( ( BipartiteAlgorithm ) this.complete.GetValue( BipartiteAlgorithm.GetHash() ) )?.IsBipartite;
