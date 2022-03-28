@@ -1,214 +1,177 @@
+
 //All code developed by Team 11
+
 using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.UI;
 using TMPro;
+using System.Reflection;
+using Object = System.Object;
+
+[System.Serializable]
+public class GraphInfoAlgorithmAssociation
+{
+    public string algorithmClass = "";
+    public bool enabled = false;
+    public string lead = "";
+    public string nullValue = "N/A";
+    public string activationMethod = "";
+    public string completedMethod = "";
+
+    public Action OnCompleteUpdateUI
+    {
+        get
+        {
+            return () =>
+            {
+                object result = Type.GetType("AlgorithmManager").GetMethod(completedMethod)
+                    .Invoke(Controller.Singleton.AlgorithmManager, null);
+                
+                if (result == null)
+                {
+                    GraphInfo.Singleton.SetInfoAlgorithmResult(this, lead + ": " + nullValue);
+                }
+                else
+                {
+                    GraphInfo.Singleton.SetInfoAlgorithmResult( this, lead + ": " + Convert.ToString(result));
+                }
+            };
+        }
+    }
+
+    public Action OnCalculatingUpdateUI
+    {
+        get
+        {
+            return () =>
+            {
+                GraphInfo.Singleton.SetInfoAlgorithmResult(this, lead + ": ...");
+            };
+        }
+    }
+}
 
 public class GraphInfo : SingletonBehavior<GraphInfo>
 {
-    // Reference to the text display of chromatic number
-    [SerializeField] private TMP_Text chromaticText;
-    // Reference to the text display of bipartite
-    [SerializeField] private TMP_Text bipartiteText;
-    // Reference to the text display of the graph order
-    [SerializeField] private TMP_Text orderText;
-    // Reference of the text display of the graph size
-    [SerializeField] private TMP_Text sizeText;
-    // Reference of the text display of the graph size
-    [SerializeField] private TMP_Text minDegreeText;
-    // Reference of the text display of the minimum degree
-    [SerializeField] private TMP_Text maxDegreeText;
-    // Reference of the text display of the maximmum degree
-    [SerializeField] private TMP_Text radiusText;
-    // Reference to the text display of radius
-    [SerializeField] private TMP_Text diameterText;
-    // Reference to the text display of diameter
-    [SerializeField] private TMP_Text cyclicText;
-    // Reference to the text display of cyclic
 
-    //[SerializeField] private Button closePanel;
-    //Reference to the button to close the graph info panels
-    [SerializeField] private Button openPanel;
+    [SerializeField] private GraphInfoAlgorithmAssociation[] associations;
+
     //Reference to the button to open the graph info panels
+    [SerializeField] private Button openPanel;
+    [SerializeField] private TMP_InputField graphInfoField;
+    private ConcurrentDictionary<GraphInfoAlgorithmAssociation, string> infoAlgorithmResults;
 
-    // Reference of the button of prim
-    //[SerializeField] private Button primButton;
-    // Reference of the kruskal button
-    //[SerializeField] private Button kruskalButton;
-    // Reference of the button of dijkstra
-    //[SerializeField] private Button dijkstraButton;
-
-    // Property for whether or not the algorithm buttons are enabled
-    /*public bool AlgorithmButtonsEnabled {
-        set {
-            primButton.enabled = value;
-            dijkstraButton.enabled = value;
-            kruskalButton.enabled = value;
+    private void Awake()
+    {
+        this.infoAlgorithmResults = new ConcurrentDictionary<GraphInfoAlgorithmAssociation, string>();
+        
+        Logger.Log("Loading currently enabled graph info algorithms.", this, LogType.INFO);
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            this.infoAlgorithmResults[association] = association.lead + ":";
         }
-    }*/
+    }
 
-    public void InitiateAlgorithmManager() {
-        Controller.Singleton.AlgorithmManager.Initiate(
-            Controller.Singleton.Graph,
-            ( Action ) this.UpdateMinDegreeResult,
-            ( Action ) this.UpdateMaxDegreeResult,
-            ( Action ) this.UpdateRadiusResult,
-            ( Action ) this.UpdateDiameterResult,
-            ( Action ) this.UpdateChromaticResult,
-            ( Action ) this.UpdateBipartiteResult,
-            ( Action ) this.UpdateCyclicResult,
-            ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsResult,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsResult,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchResult,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchResult,
-            ( Action ) this.UpdateMinDegreeCalculating,
-            ( Action ) this.UpdateMaxDegreeCalculating,
-            ( Action ) this.UpdateRadiusCalculating,
-            ( Action ) this.UpdateDiameterCalculating,
-            ( Action ) this.UpdateChromaticCalculating,
-            ( Action ) this.UpdateBipartiteCalculating,
-            ( Action ) this.UpdateCyclicCalculating,
-            ( Action ) AlgorithmsPanel.Singleton.UpdatePrimsCalculating,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateKruskalsCalculating,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateDepthFirstSearchCalculating,
-            ( Action ) AlgorithmsPanel.Singleton.UpdateBreadthFirstSearchCalculating
+    public void UpdateGraphInfoResults(Algorithm algorithm, AlgorithmManager algoMan)
+    {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
+        string algorithmName = algorithm.GetType().ToString();
+
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                association.OnCompleteUpdateUI();
+                RefreshGraphInfoUI();
+                return;
+            }
+        }
+    }
+
+    public void UpdateGraphInfoCalculating(Algorithm algorithm, AlgorithmManager algoMan)
+    {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
+        // Fix strange race condition
+        if (algorithm == null) return;
+        
+        string algorithmName = algorithm.GetType().ToString();
+
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                association.OnCalculatingUpdateUI();
+                RefreshGraphInfoUI();
+                return;
+            }
+        }        
+    }
+
+    public void SetInfoAlgorithmResult(GraphInfoAlgorithmAssociation association, string result)
+    {
+        this.infoAlgorithmResults[association] = result;
+    }
+
+    public void InitiateAlgorithmManager(AlgorithmManager algoManager) {
+        algoManager.Initiate(
+            Controller.Singleton.Graph
         );
         this.UpdateGraphInfo();
     }
     
     public void UpdateGraphInfo() {
-        this.orderText.text = "Order: " + Controller.Singleton.Graph.Order;
-        this.sizeText.text = "Size: " + Controller.Singleton.Graph.Size;
-
         // Run multithreaded algorithms
-        // Controller.Singleton.AlgorithmManager.Clear();
-        // this.algorithmManager.RunChromatic();
-        Controller.Singleton.AlgorithmManager.RunMinDegree();
-        Controller.Singleton.AlgorithmManager.RunMaxDegree();
-        Controller.Singleton.AlgorithmManager.RunRadius();
-        Controller.Singleton.AlgorithmManager.RunDiameter();
-        Controller.Singleton.AlgorithmManager.RunBipartite(); //TEMPORARY FIX
-        Controller.Singleton.AlgorithmManager.RunCyclic();
-    }
-
-    public void DisplayGraphInfo()
-    {
-        UpdateChromaticResult();
-        UpdateBipartiteResult();
-        UpdateCyclicResult();
-        UpdateMinDegreeResult();
-        UpdateMaxDegreeResult();
-        UpdateRadiusResult();
-        UpdateDiameterResult();
-    }
-
-    public void UpdateMinDegreeResult() { 
-        // Debug.Log( "Min degree: " + AlgorithmManager.Singleton.GetMinDegree() ); 
-        this.minDegreeText.text = "Minimum Degree (δ): " + Controller.Singleton.AlgorithmManager.GetMinDegree();
-    }
-
-    public void UpdateMaxDegreeResult() { 
-        // Debug.Log( "Max degree: " + AlgorithmManager.Singleton.GetMaxDegree() ); 
-        this.maxDegreeText.text = "Maximum Degree (Δ): " + Controller.Singleton.AlgorithmManager.GetMaxDegree();
-    }
-
-    public void UpdateRadiusResult() { 
-        if (Controller.Singleton.AlgorithmManager.GetRadius() is null)
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
         {
-            this.radiusText.text = "Radius: N/A";
-        } else
-        {
-            this.radiusText.text = "Radius: " + Controller.Singleton.AlgorithmManager.GetRadius();
+            this.infoAlgorithmResults[association] = association.lead + ":";
+            if (association.enabled)
+            {
+                Type.GetType("AlgorithmManager").GetMethod(association.activationMethod)
+                    .Invoke(Controller.Singleton.AlgorithmManager, new Object[] {true});
+            }
         }
     }
 
-    public void UpdateDiameterResult() { 
-        if (Controller.Singleton.AlgorithmManager.GetDiameter() is null)
-        {
-            this.diameterText.text = "Diameter: N/A";
-        } else
-        {
-            this.diameterText.text = "Diameter: " + Controller.Singleton.AlgorithmManager.GetDiameter();
-        }
-    }
-
-    public void UpdateChromaticResult() {
-        int? chromaticNumber = Controller.Singleton.AlgorithmManager.GetChromaticNumber();
-        if ( chromaticNumber is null )
-            this.chromaticText.text = "Chromatic Number: Error";
-        else
-            this.chromaticText.text = "Chromatic Number: " + chromaticNumber;
-    }
-
-    public void UpdateBipartiteResult() {
-        this.bipartiteText.text = "Bipartite: " + ( Controller.Singleton.AlgorithmManager.GetBipartite() ?? false ? "Yes" : "No" );
-    }
-
-    public void UpdateCyclicResult() {
-        this.cyclicText.text = "Cyclic: " + (Controller.Singleton.AlgorithmManager.GetCyclic() ?? false ? "Yes" : "No");
-    }
-
-    // public void UpdatePrimsResult() { }
-
-    // public void UpdateKruskalsResult() { }
-
-    // public void UpdateDepthFirstSearchResult() { }
-
-    // public void UpdateBreadthFirstSearchResult() { }
-
-    public void UpdateBellmanFordResult()
+    private void RefreshGraphInfoUI()
     {
-        
-    }
+        string output = "";
+        output += "Order: " + Controller.Singleton.Graph.Order + "\n";
+        output += "Size: " + Controller.Singleton.Graph.Size + "\n";
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            if (association.enabled)
+            {
+                output += this.infoAlgorithmResults[association] + "\n";
+            }
+        }
 
-    public void UpdateMinDegreeCalculating() { }
-
-    public void UpdateMaxDegreeCalculating() { }
-
-    public void UpdateRadiusCalculating() { 
-        
-    }
-
-    public void UpdateDiameterCalculating() { 
-        
-    }
-
-    public void UpdateChromaticCalculating() {
-        this.chromaticText.text = "Chromatic Number: ...";
-        // Debug.Log("Running UpdateChromaticCalculating");
-    }
-
-    public void UpdateBipartiteCalculating() {
-        this.bipartiteText.text = "Bipartite: ...";
-        // Debug.Log("Running UpdateBipartiteCalculating");
-    }
-
-    public void UpdateCyclicCalculating() {
-
+        graphInfoField.text = output;
     }
 
     //deactivate the graphInfo panel and display the open panel button for the user to access
     public void CloseGraphInfoPanel(){
-        //GetComponent<RectTransform>().position = new Vector3(-577.1f,293.79f,0); //moves the panel off the screen (TEMPORARY FIX) and shows the button to open the graph info panel
         this.gameObject.SetActive(false); 
         openPanel.gameObject.SetActive(true);
     }
 
     //activate the graphInfo panel and prevent access to the open panel button
     public void OpenGraphInfoPanel(){
-        //GetComponent<RectTransform>().position = new Vector3(500f,0,0); //moves the panel back onto the screen (TEMPORARY FIX) and make the open panel button not accessible
-        //this.transform.position = new Vector3 (0f,293.79f,0);
         this.gameObject.SetActive(true);
         openPanel.gameObject.SetActive(false);
     }
 
-    // public void UpdatePrimsCalculating() { }
-
-    // public void UpdateKruskalsCalculating() { }
-
-    // public void UpdateDepthFirstSearchCalculating() { }
-
-    // public void UpdateBreadthFirstSearchCalculating() { }
 }

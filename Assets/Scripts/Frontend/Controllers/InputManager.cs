@@ -35,13 +35,28 @@ public class InputManager : SingletonBehavior<InputManager>
         }
     }
 
+    // Property for whether or not Control/Command key is being held
+    public bool ControlCommandKeyHeld {
+        get {
+            return Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.LeftCommand);
+        }
+    }
+    
+    // Whether or not the left mouse button is held
+    public bool LeftMouseButtonHeld
+    {
+        get
+        {
+            return Input.GetMouseButton(0);
+        }
+    }
+
     // Property for getting the vertex object the cursor is currently hovering
     public GameObject CurrentHoveringVertex {
         get {
             Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, 0f, LayerMask.GetMask("Vertex"));
             if (hit.collider) {
-                Logger.Log("Cursor over vertex.", this, LogType.DEBUG);
                 return hit.collider.gameObject;
             }
             return null;
@@ -54,7 +69,6 @@ public class InputManager : SingletonBehavior<InputManager>
             Vector3 cursorPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(cursorPos, Vector2.zero, 0f, LayerMask.GetMask("Edge"));
             if (hit.collider) {
-                Logger.Log("Cursor over edge.", this, LogType.DEBUG);
                 return hit.collider.gameObject;
             }
             return null;
@@ -85,13 +99,11 @@ public class InputManager : SingletonBehavior<InputManager>
             if (!UIManager.Singleton.CursorOnUI) {
                 // Double click detection
                 if (Time.time - timeOfLastClick < doubleClickTimeDelta) {
-                    Logger.Log("Double click detected.", this, LogType.DEBUG);
                     doubleClickedThisFrame = true;
                     OnMouseDoubleClick?.Invoke();
                 }
                 else {
                     // Single click detection
-                    Logger.Log("Click detected.", this, LogType.DEBUG);
                     OnMouseClick?.Invoke();
 
                     // Vertex click detection
@@ -110,7 +122,6 @@ public class InputManager : SingletonBehavior<InputManager>
 
             // Mouse drag start detection
             if (!this.doubleClickedThisFrame && !this.dragging && Input.mousePosition != this.mouseLastClickPosition) {
-                Logger.Log("Mouse drag started.", this, LogType.DEBUG);
                 this.dragging = true;
                 OnMouseDragStart?.Invoke();
             }
@@ -121,13 +132,11 @@ public class InputManager : SingletonBehavior<InputManager>
 
                 /// Mouse drag end detection
                 if (Input.mousePosition != this.mouseLastClickPosition) {
-                    Logger.Log("Mouse drag finished.", this, LogType.DEBUG);
                     OnMouseDragEnd?.Invoke();
                 }
                 else {
                     // Non mouse drag detection
                     if (!UIManager.Singleton.CursorOnUI) {
-                        Logger.Log("Click in place detected.", this, LogType.DEBUG);
                         OnMouseClickInPlace?.Invoke();
                     }
                 }

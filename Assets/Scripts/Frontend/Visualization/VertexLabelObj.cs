@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using System;
 using System.Linq;
 using TMPro;
+using UnityEngine.EventSystems;
 
 public class VertexLabelObj : MonoBehaviour
 {
@@ -140,7 +141,7 @@ public class VertexLabelObj : MonoBehaviour
     {
         if (displayEnabled)
         {
-            inputField.interactable = false;
+            if (!EventSystem.current.alreadySelecting) inputField.interactable = false;
             if (string.IsNullOrEmpty(inputField.text))
             {
                 inputField.gameObject.SetActive(false);
@@ -165,6 +166,11 @@ public class VertexLabelObj : MonoBehaviour
     // Update the content field with a new label
     public void UpdateLabel(string newLabel)
     {
+        UpdateVertexLabel(newLabel);
+    }
+
+    public void UpdateVertexLabel(string newLabel, bool updateDS = true)
+    {
         if (newLabel.StartsWith("$") && newLabel.EndsWith("$")) {
             if (latexMode) {
                 latexMode = false;
@@ -174,14 +180,16 @@ public class VertexLabelObj : MonoBehaviour
 
             string formula = newLabel.Substring(1, newLabel.Length - 2);
             this.content = " ";
-            inputField.text = newLabel;
+            this.inputField.text = newLabel;
             this.latexFormula = formula;
 
             waitingForLatex = true;
             LatexRenderer.Singleton.AddToLatexQueue(formula, result => this.latexTexture = result);
 
             Logger.Log("Vertex label changed to " + formula, this, LogType.INFO);
-            this.vertexObj.Vertex.Label = newLabel;
+            
+            if (updateDS)
+                this.vertexObj.Vertex.Label = newLabel;
         }
         else {
             latexMode = false;
@@ -191,9 +199,12 @@ public class VertexLabelObj : MonoBehaviour
             this.latexTexture = null;
             image.enabled = false;
             this.content = newLabel;
+            this.inputField.text = newLabel;
 
             Logger.Log("Vertex label changed to " + newLabel, this, LogType.INFO);
-            this.vertexObj.Vertex.Label = newLabel;
+            
+            if (updateDS)
+                this.vertexObj.Vertex.Label = newLabel;
         }
     }
 }

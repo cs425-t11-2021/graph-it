@@ -42,7 +42,7 @@ public class SelectionState : ManipulationState
             SelectionManager.Singleton.ToggleVertexSelection(vertex);
         }
         else if (InputManager.Singleton.CurrentHoveringEdge) {
-            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponent<EdgeObj>();
+            EdgeObj edge = InputManager.Singleton.CurrentHoveringEdge.GetComponentInParent<EdgeObj>();
             SelectionManager.Singleton.ToggleEdgeSelection(edge);
         }
     }
@@ -61,14 +61,17 @@ public class SelectionState : ManipulationState
         
         // When mouse is released, calcualte all objects that fall within the selection box and select them
         Bounds bounds = UpdateSelectionRect();
-        foreach (VertexObj v in Controller.Singleton.VertexObjs) {
-            if (bounds.Contains(v.transform.position))
+        Collider2D[] colliders = Physics2D.OverlapAreaAll(bounds.min, bounds.max, LayerMask.GetMask("Vertex", "Edge"));
+
+        foreach (Collider2D col in colliders)
+        {
+            VertexObj v = col.gameObject.GetComponent<VertexObj>();
+            EdgeObj e = col.gameObject.GetComponentInParent<EdgeObj>();
+
+            if (v)
                 SelectionManager.Singleton.SelectVertex(v);
-        }
-        foreach (EdgeObj e in Controller.Singleton.EdgeObjs) {
-            if (bounds.Contains((Vector2) e.transform.position)) {
+            if (e)
                 SelectionManager.Singleton.SelectEdge(e);
-            }
         }
 
         this.selectionRect.gameObject.SetActive(false);

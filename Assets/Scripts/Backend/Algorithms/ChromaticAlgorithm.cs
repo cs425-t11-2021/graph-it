@@ -1,88 +1,77 @@
 
+// All code developed by Team 11
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
-using UnityEngine;
 
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
-    private static ConcurrentDictionary< Graph, int > maxDegrees = new ConcurrentDictionary< Graph, int >();
     public int ChromaticNumber { get; private set; }
     public int[] Coloring { get; private set; }
 
-    public ChromaticAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public ChromaticAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
     public override void Run()
     {
-        // TODO: if HasLoops, then throw error
+        // TODO: if HasLoops, then return +inf
 
-        this.Coloring = new int[ this.Graph.Order ];
-        int chi = Math.Min( this.Graph.Order, 1 ); // TODO: get lower bound
-        this.WaitUntil( () => ChromaticAlgorithm.HasMaxDegree( this.Graph ) );
-        int upperBound = ChromaticAlgorithm.maxDegrees[ this.Graph ] + 1;
-        while ( !this.IsProperColoring() )
+        this.AlgoManager.RunMaxDegree();
+
+        int[] coloring = new int[ this.Graph.Order ];
+        int chi = Math.Min( this.Graph.Order, 1 );
+        this.WaitUntilMaxDegreeComplete();
+        int upperBound = ( int ) this.AlgoManager.GetMaxDegree() + 1;
+        // TODO: use clique number for lower bound
+
+        while ( !this.IsProperColoring( coloring ) )
         {
             if ( chi > upperBound ) // something really bad happended
                 throw new System.Exception( "Coloring could not be computed." );
-            if ( this.Coloring.Min() >= chi - 1 )
+            if ( coloring.Min() >= chi - 1 )
             {
                 chi++;
-                // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "increment chi to " + chi ) );
-                Array.Clear( this.Coloring, 0, this.Coloring.Length );
+                Array.Clear( coloring, 0, coloring.Length );
             }
-            // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "update color" ) );
-            this.UpdateColoring( chi );
-            // foreach ( int c in this.Coloring )
-                // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( c ) );
+            this.UpdateColoring( coloring, chi );
         }
-        // RunInMain.Singleton.queuedTasks.Enqueue( () => Debug.Log( "finished coloring" ) );
+        this.Coloring = coloring;
         this.ChromaticNumber = chi;
-
-        BipartiteAlgorithm.SetChromaticNumber( this.Graph, chi );
     }
 
-    private bool IsProperColoring()
+    private bool IsProperColoring( int[] coloring )
     {
-        foreach ( Edge edge in this.Graph.Adjacency.Values )
+        for ( int i = 0; i < this.Graph.Order; ++i )
         {
-            if ( edge.vert1 == edge.vert2 ) // temp
-                continue;
-            if ( this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert1 ) ] == this.Coloring[ this.Graph.Vertices.IndexOf( edge.vert2 ) ] )
-                return false;
+            for ( int j = 0; j < this.Graph.Order; ++j )
+            {
+                // temp i != j ignoring loops
+                if ( i != j && coloring[ i ] == coloring[ j ] && this.Graph.IsAdjacent( this.Graph.Vertices[ i ], this.Graph.Vertices[ j ] ) )
+                    return false;
+            }
         }
         return true;
     }
 
-    private void UpdateColoring( int colors )
+    private void UpdateColoring( int[] coloring, int colors, int index=0 )
     {
-        this.UpdateColoringHelper( colors, 0 );
-    }
-
-    private void UpdateColoringHelper( int colors, int index )
-    {
-        if ( index < this.Coloring.Length )
+        if ( index < coloring.Length )
         {
-            if ( this.Coloring[ index ] < colors - 1 )
+            if ( coloring[ index ] < colors - 1 )
             {
-                this.Coloring[ index ]++;
+                coloring[ index ]++;
                 for ( int i = 0; i < index; ++i )
-                    this.Coloring[ i ] = 0;
+                    coloring[ i ] = 0;
             }
             else
-                this.UpdateColoringHelper( colors, ++index );
+                this.UpdateColoring( coloring, colors, ++index );
         }
     }
 
-    private static bool HasMaxDegree( Graph graph ) => ChromaticAlgorithm.maxDegrees.GetValue( graph, -1 ) != -1;
-
-    public static void SetMaxDegree( Graph graph, int maxDegree ) => ChromaticAlgorithm.maxDegrees[ graph ] = maxDegree;
-
-    public override void Kill()
+    private void WaitUntilMaxDegreeComplete()
     {
-        base.Kill();
-        BipartiteAlgorithm.ClearChromaticNumber( this.Graph );
+        this.WaitUntilAlgorithmComplete( MaxDegreeAlgorithm.GetHash() );
     }
 
     public static int GetHash() => typeof ( ChromaticAlgorithm ).GetHashCode();

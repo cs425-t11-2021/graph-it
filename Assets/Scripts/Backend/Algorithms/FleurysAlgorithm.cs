@@ -1,25 +1,20 @@
+
+// All code developed by Team 11
+
 using System;
 
 [System.Serializable]
 public class FleurysAlgorithm : Algorithm
 {
-    public bool eulerianCircuitExists { get; private set; }
+    public bool EulerianCircuitExists { get; private set; }
 
-    public FleurysAlgorithm(
-        Graph graph,
-        Action updateUI,
-        Action updateCalc,
-        Action< Algorithm > markRunning, 
-        Action< Algorithm > markComplete,
-        Action< Algorithm > unmarkRunning)
-        : base(
-            graph,
-            updateUI,
-            updateCalc,
-            markRunning,
-            markComplete,
-            unmarkRunning)
-    {}
+    public FleurysAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager )
+    {
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
+    }
 
     public override void Run()
     {
@@ -38,7 +33,7 @@ public class FleurysAlgorithm : Algorithm
 
         if (numOddDegrees != 0 && numOddDegrees != 2)
         {
-            eulerianCircuitExists = false;
+            this.EulerianCircuitExists = false;
             return;
         }
 

@@ -17,9 +17,7 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
     [SerializeField]
     private ToggleButton edgeCreationModeButton;
-
-    [SerializeField]
-    private Button addEdgeButton;
+    
 
     [SerializeField]
     private Button changeTypeButton;
@@ -39,8 +37,6 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
         // Default configuration
         deleteButton.gameObject.SetActive(false);
-        // edgeCreationModeButton.gameObject.SetActive(false);
-        addEdgeButton.gameObject.SetActive(false);
         changeTypeButton.gameObject.SetActive(false);
         this.edgeThicknessButton.gameObject.SetActive(false);
         this.edgeCurvatureButton.gameObject.SetActive(false);

@@ -2,7 +2,7 @@
 // All code developed by Team 11
 
 using System;
-using UnityEngine;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class Edge
@@ -138,9 +138,9 @@ public class Edge
         if ( recordChange )
         {
             if ( this.CreateMod is null )
-                // throw new System.Exception( "Edge label change cannot be recorded." );
-                Debug.Log( "Edge label change cannot be recorded." );
-            // this.CreateMod( Modification.EDGE_LABEL, ( this, this.label, label ) );
+                throw new System.Exception( "Edge label change cannot be recorded." );
+                // Debug.Log( "Edge label change cannot be recorded." );
+            this.CreateMod( Modification.EDGE_LABEL, ( this, this.label, label ) );
         }
 
         this.label = label;
@@ -167,11 +167,31 @@ public class Edge
         this.thickness = thickness;
     }
 
+    public static void IncrementThicknesses( List< Edge > edges, bool recordChange=true )
+    {
+
+    }
+
+    public static void DecrementThicknesses( List< Edge > edges, bool recordChange=true )
+    {
+        
+    }
+
     public void SetCurvature( int curvature, bool recordChange=true )
     {
         if ( recordChange )
             this.CreateMod( Modification.EDGE_CURVATURE, ( this, this.curvature, curvature ) );
         this.curvature = curvature;
+    }
+
+    public static void IncrementCurvature( List< Edge > edges, bool recordChange=true )
+    {
+        
+    }
+
+    public static void DecrementCurvature( List< Edge > edges, bool recordChange=true )
+    {
+        
     }
 
     public void SetTailStyle( uint style, bool recordChange=true )

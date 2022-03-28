@@ -21,6 +21,17 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         // Initialize data structures
         this.selectedVertices = new List<VertexObj>();
         this.selectedEdges = new List<EdgeObj>();
+
+        Controller.Singleton.OnInstanceChanged += (newInstance) => DeSelectAll();
+    }
+
+    private void Update() {
+        // Control + A to select all
+        if (InputManager.Singleton.ControlCommandKeyHeld) {
+            if (Input.GetKeyDown(KeyCode.A)) {
+                SelectAll();
+            }
+        }
     }
 
     // Select a vertex if it's not selected
@@ -57,7 +68,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
 
         if (callEvent)
             // Call selection changed event
-            this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+            this.OnSelectionChange?.Invoke(this.selectedVertices.Count, this.selectedEdges.Count);
 
         Logger.Log(String.Format("{0} vertex: {1}.", select ? "Selecting" : "Deselecting", vertexObj.name), this, LogType.INFO);
     }
@@ -105,25 +116,17 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     {
         // Destroy the graph objects corresponding to the currently selected vertices and edges
         // Destroy the gameObjects for edges in selectedEdges
-        foreach (EdgeObj edgeObj in this.selectedEdges)
-        {
-            Controller.Singleton.RemoveEdge(edgeObj);
-        }
+
+        Controller.Singleton.RemoveCollection(this.selectedVertices, this.selectedEdges);
 
         this.selectedEdges = new List<EdgeObj>();
-
-        // For each vertex to be deleted, find all edges connecting to the vertex, then destroy the vertex object
-        foreach (VertexObj vertexObj in this.selectedVertices)
-        {
-            Controller.Singleton.RemoveVertex(vertexObj);
-        }
         this.selectedVertices = new List<VertexObj>();
 
         // Update the Grpah information UI
         GraphInfo.Singleton.UpdateGraphInfo();
 
         // Call selection changed event
-        this.OnSelectionChange(this.selectedVertices.Count, this.selectedEdges.Count);
+        this.OnSelectionChange?.Invoke(this.selectedVertices.Count, this.selectedEdges.Count);
     }
 
     // Method called to remove all selections
@@ -169,117 +172,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     // Gets the number of edges currently selected
     public int SelectedEdgeCount() {
         return selectedEdges.Count;
-    }
-
-    // TODO: Move somewhere else
-    // Runs the prim algorithm on the currently selected vertex
-    public void RunPrims() {
-        if (selectedVertices.Count != 1) {
-            Debug.Log( ( new System.Exception( "Cannot start Prim's algorithm." ) ).ToString() );
-            throw new System.Exception( "Cannot start Prim's algorithm." );
-        }
-
-        List<Edge> primEdges = Controller.Singleton.Graph.Prim(selectedVertices[0].Vertex);
-        List<Vertex> primVertices = new List<Vertex>();
-        foreach (Edge e in primEdges) {
-            primVertices.Add(e.vert1);
-            primVertices.Add(e.vert2);
-        }
-
-        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-        {
-            if (primEdges.Contains(edgeObj.Edge))
-                SelectEdge(edgeObj);
-        }
-
-        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
-        {
-            if (primVertices.Contains(vertexObj.Vertex))
-                SelectVertex(vertexObj);
-        }
-    }
-    public void RunKruskal() {
-        List<Edge> kruskalEdges = Controller.Singleton.Graph.Kruskal();
-        List<Vertex> kruskalVertices = new List<Vertex>();
-        foreach (Edge e in kruskalEdges) {
-            kruskalVertices.Add(e.vert1);
-            kruskalVertices.Add(e.vert2);
-        }
-
-        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-        {
-            if (kruskalEdges.Contains(edgeObj.Edge))
-                SelectEdge(edgeObj);
-        }
-
-        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
-        {
-            if (kruskalVertices.Contains(vertexObj.Vertex))
-                SelectVertex(vertexObj);
-        }
-    }
-
-    // TEMOPARY CODE
-    public void RunDijkstra() {
-        if (selectedVertices.Count != 2) {
-            Debug.Log( ( new System.Exception( "Cannot start Dijkstra's algorithm." ) ).ToString() );
-            throw new System.Exception( "Cannot start Dijkstra's algorithm." );
-        }
-        
-        DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
-        dijkstra.Run(Controller.Singleton.Graph, selectedVertices[0].Vertex, selectedVertices[1].Vertex);
-        List<Edge> dijkstraEdges = new List<Edge>();
-        List<Vertex> dijkstraVertices = dijkstra.path;
-        for (int i = 0; i < dijkstraVertices.Count - 1; i++) {
-            HashSet<Edge> incidentEdges = Controller.Singleton.Graph.GetIncidentEdges(dijkstraVertices[i]);
-            foreach (Edge edge in incidentEdges) {
-                if (edge.vert1 == dijkstraVertices[i + 1] || edge.vert2 == dijkstraVertices[i + 1]) {
-                    dijkstraEdges.Add(edge);
-                }
-            }
-        }
-
-        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-        {
-            if (dijkstraEdges.Contains(edgeObj.Edge))
-                SelectEdge(edgeObj);
-        }
-
-        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
-        {
-            if (dijkstraVertices.Contains(vertexObj.Vertex))
-                SelectVertex(vertexObj);
-        }
-    }
-    
-    // TEMORARY CODE
-    public void RunBellmanFord()
-    {
-        if (selectedVertices.Count != 1) {
-            Debug.Log( ( new System.Exception( "Cannot start Bellman Ford algorithm." ) ).ToString() );
-            throw new System.Exception( "Cannot start Bellman Ford algorithm." );
-        }
-
-        List<Edge> bellmanFordEdges = Controller.Singleton.Graph.BellmanFord(this.selectedVertices[0].Vertex);
-
-        List<Vertex> bellmanFordVertices = new List<Vertex>();
-        foreach (Edge e in bellmanFordEdges) {
-            bellmanFordVertices.Add(e.vert1);
-            bellmanFordVertices.Add(e.vert2);
-        }
-
-        foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-        {
-            if (bellmanFordEdges.Contains(edgeObj.Edge))
-                SelectEdge(edgeObj);
-        }
-
-        foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
-        {
-            if (bellmanFordVertices.Contains(vertexObj.Vertex))
-                SelectVertex(vertexObj);
-        }
-
     }
 
     // Add a new edge between the first two selected vertices

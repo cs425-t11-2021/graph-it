@@ -1,3 +1,6 @@
+
+// All code developed by Team 11
+
 using System;
 
 [System.Serializable]
@@ -5,21 +8,7 @@ public class RadiusAlgorithm : Algorithm
 {
     public float? Radius { get; private set; }
 
-    public RadiusAlgorithm(
-        Graph graph,
-        Action updateUI,
-        Action updateCalc,
-        Action< Algorithm > markRunning,
-        Action< Algorithm > markComplete,
-        Action< Algorithm > unmarkRunning )
-            : base(
-                graph,
-                updateUI,
-                updateCalc,
-                markRunning,
-                markComplete,
-                unmarkRunning ) { }
-    
+    public RadiusAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
     public override void Run()
     {
@@ -29,13 +18,11 @@ public class RadiusAlgorithm : Algorithm
             return;
         }
 
-        if (this.Graph.Vertices.Count == 0)
+        if (this.Graph.Order == 0)
         {
             this.Radius = 0;
             return;
         }
-
-        DijkstrasAlgorithm dijkstra = new DijkstrasAlgorithm();
 
         float radius = float.PositiveInfinity;
         foreach ( Vertex u in this.Graph.Vertices )
@@ -43,10 +30,12 @@ public class RadiusAlgorithm : Algorithm
             float max_dist = 0;
             foreach ( Vertex v in this.Graph.Vertices )
             {
-                dijkstra.Run(this.Graph, u, v);
-                if (dijkstra.cost > max_dist)
+                this.AlgoManager.RunDijkstras( u, v, false );
+                this.WaitUntilDijkstrasComplete( u, v );
+                float cost = ( float ) this.AlgoManager.GetDijkstrasCost( u, v );
+                if (cost > max_dist)
                 {
-                    max_dist = dijkstra.cost;
+                    max_dist = cost;
                 }
             }
 
@@ -55,8 +44,12 @@ public class RadiusAlgorithm : Algorithm
                 radius = max_dist;
             }
         }
-
         this.Radius = radius;
+    }
+
+    private void WaitUntilDijkstrasComplete( Vertex src, Vertex dest )
+    {
+        this.WaitUntilAlgorithmComplete( DijkstrasAlgorithm.GetHash( src, dest ) );
     }
 
     public static int GetHash() => typeof ( RadiusAlgorithm ).GetHashCode();

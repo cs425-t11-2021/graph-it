@@ -1,29 +1,37 @@
 
+// All code developed by Team 11
+
 using System;
 using System.Threading;
 using UnityEngine;
 
+public enum AlgorithmType { INFO, DISPLAY, INTERNAL }
+
 public abstract class Algorithm
 {
+    protected AlgorithmManager AlgoManager { get; private set; }
     protected Graph Graph { get; private set; }
     private Thread currThread;
-    private Action updateUI;
-    private Action updateCalc;
     private Action< Algorithm > markRunning;
     private Action< Algorithm > markComplete;
     private Action< Algorithm > unmarkRunning;
     protected bool running;
     protected bool complete;
+    
+    // Whether ths algorithm is an info or display algorithm
+    public AlgorithmType type;
+    
+    // All the vertex parameters associated with an algorithm
+    public Vertex[] vertexParms = null;
 
-    public Algorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning )
+    public Algorithm( AlgorithmManager algoManager )
     {
-        this.Graph = graph;
+        this.AlgoManager = algoManager;
+        this.Graph = algoManager.graphCopy;
         this.currThread = null;
-        this.updateUI = updateUI;
-        this.updateCalc = updateCalc;
-        this.markRunning = markRunning;
-        this.markComplete = markComplete;
-        this.unmarkRunning = unmarkRunning;
+        this.markRunning = algoManager.MarkRunning;
+        this.markComplete = algoManager.MarkComplete;
+        this.unmarkRunning = algoManager.UnmarkRunning;
         this.running = false;
         this.complete = false;
     }
@@ -33,7 +41,7 @@ public abstract class Algorithm
     public void RunThread()
     {
         this.Kill();
-        Logger.Log("Starting Thread.", this, LogType.DEBUG);
+        Logger.Log( "Starting Thread.", this, LogType.DEBUG );
         this.currThread = new Thread( new ThreadStart( this.RunWrapper ) );
         this.currThread.Start();
     }
@@ -44,23 +52,35 @@ public abstract class Algorithm
         {
             this.running = true;
             this.markRunning( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateCalc );
+            
+            if ( this.type == AlgorithmType.INFO )
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this, this.AlgoManager ) );
+            
             this.Run();
-            Logger.Log("Finishing Thread.", this, LogType.DEBUG);
+            Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
             this.running = false;
             this.complete = true;
             this.markComplete( this );
-            RunInMain.Singleton.queuedTasks.Enqueue( this.updateUI );
+            
+            if ( this.type == AlgorithmType.INFO )
+                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this, this.AlgoManager ) );
+            else if ( this.type == AlgorithmType.DISPLAY )
+                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
         }
-        catch ( ThreadAbortException e )
+        catch ( ThreadAbortException )
         {
-            Logger.Log("Killing thread.", this, LogType.DEBUG);
+            Logger.Log( "Killing thread.", this, LogType.DEBUG );
         }
     }
 
     protected void WaitUntil( Func< bool > condition )
     {
         SpinWait.SpinUntil( condition );
+    }
+
+    protected void WaitUntilAlgorithmComplete( int hash )
+    {
+        this.WaitUntil( () => this.AlgoManager.IsComplete( hash ) );
     }
 
     public virtual void Kill()

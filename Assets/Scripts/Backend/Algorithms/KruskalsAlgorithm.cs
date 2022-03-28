@@ -1,4 +1,6 @@
 
+// All code developed by Team 11
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -8,12 +10,22 @@ public class KruskalsAlgorithm : Algorithm
 {
     public List< Edge > Mst { get; private set; }
 
-    public KruskalsAlgorithm( Graph graph, Action updateUI, Action updateCalc, Action< Algorithm > markRunning, Action< Algorithm > markComplete, Action< Algorithm > unmarkRunning ) : base( graph, updateUI, updateCalc, markRunning, markComplete, unmarkRunning ) { }
+    public KruskalsAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager )
+    {
+        // Assign the type of the algorithm
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
+    }
 
     public override void Run()
     {
-        if ( this.Graph.Directed )
-            throw new System.Exception( "Kruskal's algorithm is unsupported on directed graphs." );
+        if (this.Graph.Directed)
+        {
+            RunInMain.Singleton.queuedTasks.Enqueue(() => NotificationManager.Singleton.CreateNotification("<color=red>Kruskal's algorithm is unsupported on directed graphs.</color>", 3));
+            throw new System.Exception("Kruskal's algorithm is unsupported on directed graphs.");
+        }
 
         this.Mst = new List< Edge >();
         List< Edge > edges = new List< Edge >( this.Graph.Adjacency.Values.OrderBy( edge => edge.Weight ) );
