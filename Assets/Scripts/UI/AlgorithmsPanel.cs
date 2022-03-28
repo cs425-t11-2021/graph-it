@@ -225,6 +225,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 else {
                     this.stepByStepToggle.SetActive(false);
                 }
+                this.StepByStep = false;
             }
             else {
                 association.activationButton.UpdateStatus(false);
