@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class DijkstrasAlgorithm : Algorithm
+public class DijkstrasAlgorithm : LoggedAlgorithm
 {
     public float Cost { get; private set; }
     public List< Edge > Path { get; private set; }

@@ -11,7 +11,14 @@ public class MatchingAlgorithm : Algorithm
     public int MaxMatchingCard { get; private set; }
     public List< Edge > MaxMatching { get; private set; }
 
-    public MatchingAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
+    public MatchingAlgorithm(AlgorithmManager algoManager, bool display) : base(algoManager)
+    {
+        // Assign the type of the algorithm
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
+    }
 
     public override void Run()
     {

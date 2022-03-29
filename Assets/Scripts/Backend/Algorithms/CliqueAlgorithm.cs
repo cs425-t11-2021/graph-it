@@ -11,7 +11,14 @@ public class CliqueAlgorithm : Algorithm
     public int CliqueNumber { get; private set; }
     public List< Vertex > MaxClique { get; private set; }
 
-    public CliqueAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
+    public CliqueAlgorithm(AlgorithmManager algoManager, bool display) : base(algoManager)
+    {
+        // Assign the type of the algorithm
+        if ( display )
+            this.type = AlgorithmType.DISPLAY;
+        else
+            this.type = AlgorithmType.INTERNAL;
+    }
 
     public override void Run()
     {

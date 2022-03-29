@@ -11,6 +11,7 @@ public class AlgorithmInitiationState : ManipulationState
     public override void OnStateEnter()
     {
         this.currentAssociation = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm;
+        Debug.Log(this.currentAssociation);
         if (this.currentAssociation == null) {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
         }

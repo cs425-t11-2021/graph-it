@@ -12,6 +12,7 @@ public abstract class ManipulationState
     public static ManipulationState disabledState;
     public static ManipulationState algorithmInitiationState;
     public static ManipulationState algorithmDisplayState;
+    public static ManipulationState algorithmSteppedDisplayState;
 
     // Property for whether or not the state is active
     public bool Active {
