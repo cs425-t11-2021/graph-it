@@ -27,7 +27,7 @@ public class FileMenu : MenuButton
         Controller.Singleton.CreateGraphInstance();
         
         // TEMPOARY
-        ResourceManager.Singleton.LoadVertexSprites();
+        // ResourceManager.Singleton.LoadVertexSprites();
         
         NotificationManager.Singleton.CreateNotification("Creating a new graph.", 3);
         EventSystem.current.SetSelectedGameObject(null);
