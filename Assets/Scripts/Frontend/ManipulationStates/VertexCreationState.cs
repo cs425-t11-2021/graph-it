@@ -1,9 +1,15 @@
 // State for quickly creating vertices, left click on graph to create a new vertex
 public class VertexCreationState : ManipulationState
 {
-    public override void OnStateEnter() {}
+    public override void OnStateEnter()
+    {
+        Grid.Singleton.DisplayGridLines();
+    }
 
-    public override void OnStateExit() {}
+    public override void OnStateExit()
+    {
+        Grid.Singleton.HideGridLines();
+    }
 
     public override void OnClick()
     {
