@@ -33,6 +33,15 @@ public class FileMenu : MenuButton
         EventSystem.current.SetSelectedGameObject(null);
     }
 
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        Application.Quit();
+        #endif
+    }
+
     
     //display pop-up with options users can choose from to create graphs from
     public void CreateFromPreset(){
