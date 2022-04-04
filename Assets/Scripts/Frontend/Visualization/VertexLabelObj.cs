@@ -16,7 +16,8 @@ public class VertexLabelObj : MonoBehaviour
     private Rect rect;
 
     // Reference to the text mesh object
-    TMP_InputField inputField;
+    private TMP_InputField inputField;
+    private GraphicRaycaster raycaster;
 
     private bool displayEnabled;
 
@@ -46,12 +47,14 @@ public class VertexLabelObj : MonoBehaviour
         RectTransform rectTransform = GetComponent<RectTransform>();
         this.rect = rectTransform.rect;
 
-        inputField = GetComponentInChildren<TMP_InputField>();
+        this.inputField = GetComponentInChildren<TMP_InputField>();
+        this.raycaster = GetComponent<GraphicRaycaster>();
+        this.raycaster.enabled = false;
 
         SettingsManager.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
 
-        image = this.gameObject.GetComponentInChildren<RawImage>();
-        image.enabled = false;
+        this.image = this.gameObject.GetComponentInChildren<RawImage>();
+        this.image.enabled = false;
 
         this.vertexObj.OnVertexObjMove += UpdatePosition;
     }
@@ -127,7 +130,7 @@ public class VertexLabelObj : MonoBehaviour
         if (displayEnabled)
         {
             inputField.gameObject.SetActive(true);
-            inputField.interactable = true;
+            this.raycaster.enabled = true;
         }
 
         if (latexMode) {
@@ -141,7 +144,6 @@ public class VertexLabelObj : MonoBehaviour
     {
         if (displayEnabled)
         {
-            if (!EventSystem.current.alreadySelecting) inputField.interactable = false;
             if (string.IsNullOrEmpty(inputField.text))
             {
                 inputField.gameObject.SetActive(false);
@@ -150,6 +152,7 @@ public class VertexLabelObj : MonoBehaviour
             {
                 inputField.gameObject.SetActive(true);
             }
+            this.raycaster.enabled = false;
             UpdatePosition();
         }
 

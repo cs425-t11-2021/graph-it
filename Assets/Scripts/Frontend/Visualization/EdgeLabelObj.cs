@@ -37,6 +37,7 @@ public class EdgeLabelObj : MonoBehaviour
         this.rect = rectTransform.rect;
         this.inputField = GetComponentInChildren<TMP_InputField>();
         this.raycaster = GetComponent<GraphicRaycaster>();
+        this.raycaster.enabled = false;
 
         SettingsManager.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
         this.gameObject.SetActive(false);
