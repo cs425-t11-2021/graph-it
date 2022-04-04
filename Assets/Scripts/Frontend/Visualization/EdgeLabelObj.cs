@@ -10,8 +10,6 @@ public class EdgeLabelObj : MonoBehaviour
     // private double weight;
     // UI Rect of the label object
     private Rect rect;
-    // Store previous global position of the labelObj
-    private Vector3 previousPosition;
 
     // Reference to the text mesh object
     private TMP_InputField inputField;
@@ -52,23 +50,18 @@ public class EdgeLabelObj : MonoBehaviour
     {
         this.displayEnabled = enabled;
 
-        if (enabled)
-        {
+        if (this.enabled)
             MakeUneditable();
-        }
         else
-        {
             this.inputField.gameObject.SetActive(false);
-        }
     }
 
     public void UpdatePosition() {
-        if (!this.enabled) {
+        if (!this.enabled)
             return;
-        }
 
-        transform.position = FindSuitablePosition();
-        transform.localScale = new Vector3(0.01f, 0.01f, 1);
+        this.transform.position = FindSuitablePosition();
+        this.transform.localScale = new Vector3(0.01f, 0.01f, 1);
     }
 
     Vector3 FindSuitablePosition()
@@ -89,7 +82,7 @@ public class EdgeLabelObj : MonoBehaviour
     {
         if (displayEnabled)
         {
-            inputField.gameObject.SetActive(true);
+            this.inputField.gameObject.SetActive(true);
             this.raycaster.enabled = true;
         }
     }
@@ -97,15 +90,15 @@ public class EdgeLabelObj : MonoBehaviour
     // Make the label uneditable
     public void MakeUneditable()
     {
-        if (displayEnabled)
+        if (this.displayEnabled)
         {
-            if (string.IsNullOrEmpty(inputField.text))
+            if (string.IsNullOrEmpty(this.inputField.text))
             {
-                inputField.gameObject.SetActive(false);
+                this.inputField.gameObject.SetActive(false);
             }
             else
             {
-                inputField.gameObject.SetActive(true);
+                this.inputField.gameObject.SetActive(true);
             }
 
             this.raycaster.enabled = false;
@@ -129,11 +122,11 @@ public class EdgeLabelObj : MonoBehaviour
 
         if (this.edgeObject.Edge.Weighted)
         {
-            inputField.text = this.edgeObject.Edge.Weight.ToString();
+            this.inputField.text = this.edgeObject.Edge.Weight.ToString();
         }
         else
         {
-            inputField.text = this.edgeObject.Edge.Label;
+            this.inputField.text = this.edgeObject.Edge.Label;
         }
         
         if (!EventSystem.current.alreadySelecting) EventSystem.current.SetSelectedGameObject(null);

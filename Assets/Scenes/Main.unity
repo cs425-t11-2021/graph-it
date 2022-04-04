@@ -603,7 +603,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.08319802, y: 0.08578698}
   m_AnchorMax: {x: 0.80579203, y: 0.68319136}
-  m_AnchoredPosition: {x: -2.2244568, y: 8.0312195}
+  m_AnchoredPosition: {x: -0.38909912, y: 8.0312195}
   m_SizeDelta: {x: -20.4627, y: -2.8213}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &52387259
@@ -5191,7 +5191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Select
-  offset: {x: 40, y: -45, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &499060056
 MonoBehaviour:
@@ -6328,7 +6328,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Create Edge
-  offset: {x: 70, y: -45, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 165, y: 40}
 --- !u!114 &606668074
 MonoBehaviour:
@@ -12929,7 +12929,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Edge Type
-  offset: {x: 60, y: -45, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 150, y: 40}
 --- !u!114 &1136272512
 MonoBehaviour:
@@ -13259,7 +13259,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Delete
-  offset: {x: 40, y: -45, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &1147743077
 MonoBehaviour:
@@ -15032,7 +15032,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1159227432}
   m_HandleRect: {fileID: 1159227431}
   m_Direction: 2
-  m_Value: 1.0000004
+  m_Value: 0.9999998
   m_Size: 0.56930393
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -19020,7 +19020,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Select
-  offset: {x: 50, y: -50, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 100, y: 40}
 --- !u!114 &1639705721
 MonoBehaviour:
@@ -20007,7 +20007,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Create Vertices
-  offset: {x: 80, y: -45, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 175, y: 40}
 --- !u!114 &1723796981
 MonoBehaviour:
@@ -24049,7 +24049,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Thickness
-  offset: {x: 60, y: -45, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 140, y: 40}
 --- !u!114 &359608985734554706
 MonoBehaviour:
@@ -24970,7 +24970,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Vertex Style
-  offset: {x: 70, y: -45, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 150, y: 40}
 --- !u!114 &2027812034803370405
 MonoBehaviour:
@@ -25702,7 +25702,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Curvature
-  offset: {x: 60, y: -45, z: 0}
+  offset: {x: 20, y: -20, z: 0}
   size: {x: 140, y: 40}
 --- !u!114 &3832231448021805302
 MonoBehaviour:

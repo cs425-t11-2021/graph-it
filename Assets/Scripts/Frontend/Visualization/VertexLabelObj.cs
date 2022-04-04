@@ -63,25 +63,25 @@ public class VertexLabelObj : MonoBehaviour
     {
         this.displayEnabled = enabled;
 
-        if (enabled)
+        if (this.enabled)
         {
             MakeUneditable();
         }
         else
         {
-            inputField.gameObject.SetActive(false);
+            this.inputField.gameObject.SetActive(false);
         }
     }
 
     private void Update() {
-        if (waitingForLatex) {
+        if (this.waitingForLatex) {
             if (this.latexTexture != null) {
-                waitingForLatex = false;
-                latexMode = true;
-                image.rectTransform.sizeDelta = new Vector2(this.latexTexture.width, this.latexTexture.height);
-                image.texture = this.latexTexture;
-                if (!inputField.interactable)
-                    image.enabled = true;
+                this.waitingForLatex = false;
+                this.latexMode = true;
+                this.image.rectTransform.sizeDelta = new Vector2(this.latexTexture.width, this.latexTexture.height);
+                this.image.texture = this.latexTexture;
+                if (!this.inputField.interactable)
+                    this.image.enabled = true;
             }
         }
     }
@@ -92,11 +92,11 @@ public class VertexLabelObj : MonoBehaviour
         Vector3? position = FindSuitablePosition();
         if (position == null)
         {
-            inputField.gameObject.SetActive(false);
+            this.inputField.gameObject.SetActive(false);
         }
         else
         {
-            transform.localPosition = (Vector3) position + Vector3.forward;
+            this.transform.localPosition = (Vector3) position + Vector3.forward;
         }
     }
 
@@ -112,7 +112,7 @@ public class VertexLabelObj : MonoBehaviour
         {
             for (float angle = 0f; angle <= 360f; angle += 30f)
             {
-                Vector2 vertexPos = transform.parent.position;
+                Vector2 vertexPos = this.transform.parent.position;
                 Vector3 localPos = new Vector3(radius * Mathf.Cos(angle * Mathf.Deg2Rad), radius * Mathf.Sin(angle * Mathf.Deg2Rad), 1);
                 Collider2D col = Physics2D.OverlapArea(vertexPos + new Vector2(localPos.x - this.rect.width / 200, localPos.y + this.rect.height / 200), vertexPos + new Vector2(localPos.x + this.rect.width / 200, localPos.y - this.rect.height / 200), LayerMask.GetMask("Edge", "Vertex"));
                 if (!col)
@@ -127,42 +127,42 @@ public class VertexLabelObj : MonoBehaviour
     // Make the label editable
     public void MakeEditable()
     {
-        if (displayEnabled)
+        if (this.displayEnabled)
         {
-            inputField.gameObject.SetActive(true);
+            this.inputField.gameObject.SetActive(true);
             this.raycaster.enabled = true;
         }
 
-        if (latexMode) {
-            image.enabled = false;
-            inputField.text = "$" + this.latexFormula + "$";
+        if (this.latexMode) {
+            this.image.enabled = false;
+            this.inputField.text = "$" + this.latexFormula + "$";
         }
     }
 
     // Make the label uneditable
     public void MakeUneditable()
     {
-        if (displayEnabled)
+        if (this.displayEnabled)
         {
-            if (string.IsNullOrEmpty(inputField.text))
+            if (string.IsNullOrEmpty(this.inputField.text))
             {
-                inputField.gameObject.SetActive(false);
+                this.inputField.gameObject.SetActive(false);
             }
             else
             {
-                inputField.gameObject.SetActive(true);
+                this.inputField.gameObject.SetActive(true);
             }
             this.raycaster.enabled = false;
             UpdatePosition();
         }
 
-        if (waitingForLatex) {
-            inputField.text = " ";
+        if (this.waitingForLatex) {
+            this.inputField.text = " ";
         }
 
-        if (latexMode) {
-            image.enabled = true;
-            inputField.text = " ";
+        if (this.latexMode) {
+            this.image.enabled = true;
+            this.inputField.text = " ";
         }
     }
 
