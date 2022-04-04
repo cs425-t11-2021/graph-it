@@ -116,7 +116,9 @@ public class EdgeObj : MonoBehaviour
         this.labelObj.Initiate(this);
 
         this.Vertex1.OnVertexObjMove += UpdateSpline;
+        this.Vertex1.OnVertexObjMove += UpdateLabelPosition;
         this.Vertex2.OnVertexObjMove += UpdateSpline;
+        this.Vertex2.OnVertexObjMove += UpdateLabelPosition;
         
         UpdateSpline();
     }
@@ -134,6 +136,10 @@ public class EdgeObj : MonoBehaviour
         {
             UpdateCurvedSpline(this.Edge.Curvature * 0.1f);
         }
+    }
+
+    private void UpdateLabelPosition() {
+        this.labelObj.UpdatePosition();
     }
 
     private float FindBestAngleForLoop()
@@ -440,6 +446,8 @@ public class EdgeObj : MonoBehaviour
     private void OnDestroy()
     {
         this.Vertex1.OnVertexObjMove -= UpdateSpline;
+        this.Vertex1.OnVertexObjMove -= UpdateLabelPosition;
         this.Vertex2.OnVertexObjMove -= UpdateSpline;
+        this.Vertex2.OnVertexObjMove -= UpdateLabelPosition;
     }
 }

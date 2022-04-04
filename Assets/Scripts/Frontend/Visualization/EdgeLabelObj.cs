@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
@@ -14,6 +15,8 @@ public class EdgeLabelObj : MonoBehaviour
 
     // Reference to the text mesh object
     private TMP_InputField inputField;
+
+    private GraphicRaycaster raycaster;
 
     private bool displayEnabled;
 
@@ -33,10 +36,15 @@ public class EdgeLabelObj : MonoBehaviour
         RectTransform rectTransform = GetComponent<RectTransform>();
         this.rect = rectTransform.rect;
         this.inputField = GetComponentInChildren<TMP_InputField>();
+        this.raycaster = GetComponent<GraphicRaycaster>();
 
         SettingsManager.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
         this.gameObject.SetActive(false);
 
+    }
+
+    private void Start() {
+        UpdatePosition();
     }
 
     private void OnToggleVertexLabels(bool enabled)
@@ -53,8 +61,8 @@ public class EdgeLabelObj : MonoBehaviour
         }
     }
 
-    private void FixedUpdate() {
-        if (!enabled) {
+    public void UpdatePosition() {
+        if (!this.enabled) {
             return;
         }
 
@@ -81,7 +89,7 @@ public class EdgeLabelObj : MonoBehaviour
         if (displayEnabled)
         {
             inputField.gameObject.SetActive(true);
-            inputField.interactable = true;
+            this.raycaster.enabled = true;
         }
     }
 
@@ -90,7 +98,6 @@ public class EdgeLabelObj : MonoBehaviour
     {
         if (displayEnabled)
         {
-            if (!EventSystem.current.alreadySelecting) inputField.interactable = false;
             if (string.IsNullOrEmpty(inputField.text))
             {
                 inputField.gameObject.SetActive(false);
@@ -99,7 +106,9 @@ public class EdgeLabelObj : MonoBehaviour
             {
                 inputField.gameObject.SetActive(true);
             }
-            transform.localPosition = FindSuitablePosition();
+
+            this.raycaster.enabled = false;
+            UpdatePosition();
         }
     }
 
