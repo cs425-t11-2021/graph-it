@@ -20,7 +20,9 @@ public enum Modification
     EDGE_STYLE,         // modified is tuple consisting of edge, oldStyle, newStyle
     EDGE_COLOR,         // modified is tuple consisting of edge, oldColor, newColor
     EDGE_THICKNESS,     // modified is tuple consisting of edge, oldThickness, newThickness
+    EDGE_THICKNESSES,   // modified is tuple consisting of list of edges, list of oldThicknesses, list of newThickness
     EDGE_CURVATURE,     // modified is tuple consisting of edge, oldCurvature, newCurvature
+    EDGE_CURVATURES,    // modified is tuple consisting of list of edges, list of oldCurvatures, list of newCurvatures
     EDGE_TAIL_STYLE,    // modified is tuple consisting of edge, oldTail, newTail
     EDGE_HEAD_STYLE,    // modified is tuple consisting of edge, oldHead, newHead
     EDGE_REVERSE,       // modified is reversed edge
@@ -85,8 +87,14 @@ public class GraphModification
             case Modification.EDGE_THICKNESS:
                 this.UndoEdgeThickness();
                 break;
+            case Modification.EDGE_THICKNESSES:
+                this.UndoEdgeThicknesses();
+                break;
             case Modification.EDGE_CURVATURE:
                 this.UndoEdgeCurvature();
+                break;
+            case Modification.EDGE_CURVATURES:
+                this.UndoEdgeCurvatures();
                 break;
             case Modification.EDGE_TAIL_STYLE:
                 this.UndoEdgeTailStyle();
@@ -206,6 +214,16 @@ public class GraphModification
         Controller.Singleton.GetEdgeObj( thicknessData.Item1 ).SetThickness(thicknessData.Item2, false);
     }
 
+    private void UndoEdgeThicknesses()
+    {
+        ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < thicknessData.Item1.Count; ++i )
+            thicknessData.Item1[ i ].SetThickness( thicknessData.Item2[ i ], false );
+
+        // TODO: Update front end
+        // Controller.Singleton.GetEdgeObj( thicknessData.Item1 ).SetThickness(thicknessData.Item2, false);
+    }
+
     private void UndoEdgeCurvature()
     {
         ( Edge, int, int ) curveData = ( ( Edge, int, int ) ) this.Modified;
@@ -213,6 +231,16 @@ public class GraphModification
 
         // Update front end
         Controller.Singleton.GetEdgeObj( curveData.Item1 ).SetCurvature(curveData.Item2, false);
+    }
+
+    private void UndoEdgeCurvatures()
+    {
+        ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
+        for ( int i = 0; i < curveData.Item1.Count; ++i )
+            curveData.Item1[ i ].SetCurvature( curveData.Item2[ i ], false );
+
+        // TODO: Update front end
+        // Controller.Singleton.GetEdgeObj( curveData.Item1 ).SetCurvature(curveData.Item2, false);
     }
 
     private void UndoEdgeTailStyle()

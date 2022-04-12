@@ -2,6 +2,7 @@
 // All code developed by Team 11
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -11,8 +12,8 @@ public class Edge
     public Action< Edge > MakeUndirectedInGraph { private get; set; }
     public Action< Edge > ReverseInGraph { private get; set; }
     public Action< Modification, System.Object > CreateMod { private get; set; }
-    public Vertex vert1; // TODO: private set
-    public Vertex vert2; // TODO: private set
+    public Vertex vert1;
+    public Vertex vert2;
     private bool directed;
     public bool Directed
     {
@@ -169,12 +170,22 @@ public class Edge
 
     public static void IncrementThicknesses( List< Edge > edges, bool recordChange=true )
     {
-
+        List< uint > oldThicknesses = new List< uint >( edges.Select( e => e.Thickness ) );
+        List< uint > newThicknesses = new List< uint >( oldThicknesses.Select( t => t + 1 ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_THICKNESSES, ( edges, oldThicknesses, newThicknesses ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetThickness( newThicknesses[ i ], false );
     }
 
     public static void DecrementThicknesses( List< Edge > edges, bool recordChange=true )
     {
-        
+        List< uint > oldThicknesses = new List< uint >( edges.Select( e => e.thickness ) );
+        List< uint > newThicknesses = new List< uint >( oldThicknesses.Select( t => t - 1 ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_THICKNESSES, ( edges, oldThicknesses, newThicknesses ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetThickness( newThicknesses[ i ], false );
     }
 
     public void SetCurvature( int curvature, bool recordChange=true )
@@ -186,12 +197,22 @@ public class Edge
 
     public static void IncrementCurvature( List< Edge > edges, bool recordChange=true )
     {
-        
+        List< int > oldCurvatures = new List< int >( edges.Select( e => e.curvature ) );
+        List< int > newCurvatures = new List< int >( oldCurvatures.Select( t => t + 1 ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_CURVATURES, ( edges, oldCurvatures, newCurvatures ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetCurvature( newCurvatures[ i ], false );
     }
 
     public static void DecrementCurvature( List< Edge > edges, bool recordChange=true )
     {
-        
+        List< int > oldCurvatures = new List< int >( edges.Select( e => e.curvature ) );
+        List< int > newCurvatures = new List< int >( oldCurvatures.Select( t => t - 1 ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_CURVATURES, ( edges, oldCurvatures, newCurvatures ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetCurvature( newCurvatures[ i ], false );
     }
 
     public void SetTailStyle( uint style, bool recordChange=true )
