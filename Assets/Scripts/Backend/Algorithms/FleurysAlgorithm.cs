@@ -120,7 +120,7 @@ public class FleurysAlgorithm : Algorithm
         int count2 = dfsCount(u, visited);
  
         // 2.c) Add the edge back to the graph
-        this.graphCopy.AddEdge(e, false);
+        this.graphCopy.Add(e, false);
         return count1 == count2;
     }
 

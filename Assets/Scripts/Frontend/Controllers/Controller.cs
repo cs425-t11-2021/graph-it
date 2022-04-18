@@ -141,7 +141,7 @@ public class Controller : SingletonBehavior<Controller>
         foreach (VertexObj vertexObj in SelectionManager.Singleton.SelectedVertices)
         {
             Vertex newVertex = new Vertex(vertexObj.Vertex);
-            newGraph.AddVertex(newVertex, false);
+            newGraph.Add(newVertex, false);
             vertexCorrespondanceDict[vertexObj.Vertex] = newVertex;
         }
 
@@ -153,7 +153,7 @@ public class Controller : SingletonBehavior<Controller>
                 Edge newEdge = new Edge(edgeObj.Edge);
                 newEdge.vert1 = vertexCorrespondanceDict[newEdge.vert1];
                 newEdge.vert2 = vertexCorrespondanceDict[newEdge.vert2];
-                newGraph.AddEdge(newEdge, false);
+                newGraph.Add(newEdge, false);
             }
         }
     

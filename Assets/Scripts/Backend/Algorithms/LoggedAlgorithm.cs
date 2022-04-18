@@ -41,30 +41,44 @@ public abstract class LoggedAlgorithm : Algorithm
         this.steps = new List< AlgorithmStep >();
     }
 
-    public bool NextStepAvailable() => this.step < this.steps.Count - 1;
+    public bool IsNextStepAvailable() => this.step < this.steps.Count - 1;
 
-    public bool BackStepAvailable() => this.step > 0;
+    public bool IsBackStepAvailable() => this.step > 0;
 
-    public bool GetStepAvailable() => this.step >= 0;
+    public bool IsFirstStepAvailable() => this.step >= 0;
+
+    public bool IsStepAvailable( int step ) => this.steps.Count >= step; // index based 1
 
     public void NextStep()
     {
-        if ( !this.NextStepAvailable() )
+        if ( !this.IsNextStepAvailable() )
             throw new System.Exception( "Cannot perform next step when step is currently being computed." );
         this.step++;
     }
 
     public void BackStep()
     {
-        if ( !this.BackStepAvailable() )
+        if ( !this.IsBackStepAvailable() )
             throw new System.Exception( "Cannot perform back step when step is currently being computed." );
         this.step--;
     }
 
-    public AlgorithmStep GetStep()
+    public AlgorithmStep GetCurrentStep()
     {
-        if ( !this.GetStepAvailable() )
+        if ( !this.IsFirstStepAvailable() )
             throw new System.Exception( "Cannot retrieve step when no step has been taken." );
+        return this.steps[ this.step ];
+    }
+
+    public AlgorithmStep GetStep( int step )
+    {
+        if ( !this.IsStepAvailable( step - 1 ) )
+        {
+            if ( this.complete )
+                throw new System.Exception( "Cannot retrieve out of bounds step." );
+            throw new System.Exception( "Cannot retrieve step when step is currently being computed." );
+        }
+        this.step = step - 1;
         return this.steps[ this.step ];
     }
 

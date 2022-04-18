@@ -68,7 +68,7 @@ public class CopyManager : SingletonBehavior<CopyManager>
         {
             Vertex newVertex = new Vertex(v);
             vertexCorrespondanceDict[v] = newVertex;
-            Controller.Singleton.Graph.AddVertex(newVertex, false);
+            Controller.Singleton.Graph.Add(newVertex, false);
             Controller.Singleton.CreateVertexObj(newVertex, false);
         }
 
@@ -77,7 +77,7 @@ public class CopyManager : SingletonBehavior<CopyManager>
             Edge newEdge = new Edge(e);
             newEdge.vert1 = vertexCorrespondanceDict[newEdge.vert1];
             newEdge.vert2 = vertexCorrespondanceDict[newEdge.vert2];
-            Controller.Singleton.Graph.AddEdge(newEdge, false);
+            Controller.Singleton.Graph.Add(newEdge, false);
             Controller.Singleton.CreateEdgeObj(newEdge, false);
         }
         

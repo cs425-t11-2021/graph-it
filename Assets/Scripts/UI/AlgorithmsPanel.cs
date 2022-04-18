@@ -334,18 +334,18 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     public void GetNextStep() {
-        if (Controller.Singleton.AlgorithmManager.NextStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams)) {
+        if (Controller.Singleton.AlgorithmManager.IsNextStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams)) {
             Controller.Singleton.AlgorithmManager.NextStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
-            this.CurrentStep =  Controller.Singleton.AlgorithmManager.GetStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
+            this.CurrentStep =  Controller.Singleton.AlgorithmManager.GetCurrentStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
             this.stepAlgorithmText.text = "Step: " + this.CurrentStep?.Item4;
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
         }
     }
 
     public void GetPreviousStep() {
-        if (Controller.Singleton.AlgorithmManager.BackStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams)) {
+        if (Controller.Singleton.AlgorithmManager.IsBackStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams)) {
             Controller.Singleton.AlgorithmManager.BackStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
-            this.CurrentStep =  Controller.Singleton.AlgorithmManager.GetStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
+            this.CurrentStep =  Controller.Singleton.AlgorithmManager.GetCurrentStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
             this.stepAlgorithmText.text = "Step: " + this.CurrentStep?.Item4;
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
         }
