@@ -192,7 +192,7 @@ public class AlgorithmManager
         algo.BackStep();
     }
 
-    public ( StepType, List< Vertex >, List< Edge >, string ) GetStep( Type loggedAlgo, object[] parms )
+    public AlgorithmStep GetStep( Type loggedAlgo, object[] parms )
     {
         LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
         if ( !algo.GetStepAvailable() )

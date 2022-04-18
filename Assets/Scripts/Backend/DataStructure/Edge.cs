@@ -237,6 +237,17 @@ public class Edge
 
     public bool IncidentOn( Vertex vert ) => vert == this.vert1 || vert == this.vert2;
 
+    public static HashSet< Vertex > GetIncidentVertices( IEnumerable< Edge > edges )
+    {
+        HashSet< Vertex > incidentVerts = new HashSet< Vertex >();
+        foreach ( Edge edge in edges )
+        {
+            incidentVerts.Add( edge.vert1 );
+            incidentVerts.Add( edge.vert2 );
+        }
+        return incidentVerts;
+    }
+
     public override int GetHashCode() => ( this.vert1, this.vert2, this.directed, this.label, this.Weight, this.style, this.color, this.thickness ).GetHashCode();
 
     public override string ToString()

@@ -27,6 +27,7 @@ public enum Modification
     EDGE_HEAD_STYLE,    // modified is tuple consisting of edge, oldHead, newHead
     EDGE_REVERSE,       // modified is reversed edge
 
+    ADD_COLLECTION,     // modified is
     REMOVE_COLLECTION   // modified is tuple consisting of hash set of vertices, hash set of edges
 }
 

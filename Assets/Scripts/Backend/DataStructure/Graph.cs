@@ -484,7 +484,7 @@ public class Graph
         return this.GetIncidentEdges( new HashSet< Vertex >() { vert } );
     }
 
-    public HashSet< Edge > GetIncidentEdges( HashSet< Vertex > verts )
+    public HashSet< Edge > GetIncidentEdges( IEnumerable< Vertex > verts )
     {
         HashSet< Edge > incidentEdges = new HashSet< Edge >();
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )

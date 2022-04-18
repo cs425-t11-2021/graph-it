@@ -33,11 +33,31 @@ public class KruskalsAlgorithm : LoggedAlgorithm
         foreach ( Vertex vert in this.Graph.Vertices )
             forest.Add( new HashSet< Vertex >() { vert } );
 
-        this.AddStep( StepType.ADD_TO_RESULT, new List< Vertex >( this.Graph.Vertices ), null, "Add each vertex to its own tree." );
+        // add result step
+        this.AddStep(
+            StepType.ADD_TO_RESULT,
+            "Add each vertex to its own tree.",
+            new List< Vertex >( this.Graph.Vertices ),
+            null,
+            null,
+            null,
+            null,
+            null
+        );
 
         for ( int i = 0; i < edges.Count; ++i )
         {
-            this.AddStep( StepType.CONSIDER, null, new List< Edge >( edges.GetRange( i, edges.Count - i ) ), "Find minimally weighted edge that connects disjoint trees." );
+            // add consider step
+            this.AddStep(
+                StepType.CONSIDER,
+                "Find minimally weighted edge that connects disjoint trees.",
+                new List< Vertex >( this.Graph.Vertices ),
+                new List< Edge >( mst ),
+                null,
+                null,
+                new List< Vertex >( Edge.GetIncidentVertices( edges.GetRange( i, edges.Count - i ) ) ),
+                new List< Edge >( edges.GetRange( i, edges.Count - i ) )
+            );
 
             HashSet< Vertex > tree1 = KruskalsAlgorithm.GetComponentOf( forest, edges[ i ].vert1 );
             HashSet< Vertex > tree2 = KruskalsAlgorithm.GetComponentOf( forest, edges[ i ].vert2 );
@@ -47,12 +67,32 @@ public class KruskalsAlgorithm : LoggedAlgorithm
                 tree2.UnionWith( tree1 );
                 mst.Add( edges[ i ] );
 
-                this.AddStep( StepType.ADD_TO_RESULT, new List< Vertex >() { edges[ i ].vert1, edges[ i ].vert2 }, new List< Edge >() { edges[ i ] }, "Add minimally weighted edge that connects disjoint trees." );
+                // add result step
+                this.AddStep(
+                    StepType.ADD_TO_RESULT,
+                    "Add minimally weighted edge with weight " + edges[ i ].Weight + " that connects disjoint trees.",
+                    new List< Vertex >( this.Graph.Vertices ),
+                    new List< Edge >( mst ),
+                    new List< Vertex >() { edges[ i ].vert1, edges[ i ].vert2 },
+                    new List< Edge >() { edges[ i ] },
+                    null,
+                    null
+                );
             }
         }
         this.Mst = mst;
 
-        this.AddStep( StepType.FINISHED, new List< Vertex >( this.Graph.Vertices ), new List< Edge >( mst ), "Kruskals's Algorithm finished." );
+        // add finish step
+        this.AddStep(
+            StepType.FINISHED,
+            "Kruskals's Algorithm finished.",
+            new List< Vertex >( this.Graph.Vertices ),
+            new List< Edge >( mst ),
+            null,
+            null,
+            null,
+            null
+        );
     }
 
     private static HashSet< Vertex > GetComponentOf( HashSet< HashSet< Vertex > > components, Vertex vert )
