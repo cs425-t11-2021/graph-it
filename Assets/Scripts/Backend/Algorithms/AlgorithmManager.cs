@@ -194,21 +194,22 @@ public class AlgorithmManager
         algo.BackStep();
     }
 
-    public AlgorithmStep GetCurrentStep( Type loggedAlgo, object[] parms )
-    {
-        LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
-        if ( !algo.IsFirstStepAvailable() )
-            throw new System.Exception( "The provided algorithm's step is not available." );
-        return algo.GetCurrentStep();
-    }
-
-    public AlgorithmStep GetStep( int step, Type loggedAlgo, object[] parms )
+    public void GoToStep( int step, Type loggedAlgo, object[] parms )
     {
         LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
         if ( !algo.IsStepAvailable( step ) )
             throw new System.Exception( "The provided algorithm's step is not available." );
-        return algo.GetStep( step );
+        algo.GoToStep( step );
     }
+
+    public AlgorithmStep GetStep( Type loggedAlgo, object[] parms )
+    {
+        LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
+        if ( !algo.IsFirstStepAvailable() )
+            throw new System.Exception( "The provided algorithm's step is not available." );
+        return algo.GetStep();
+    }
+
 
     private Algorithm GetAlgorithm( Type algorithm, object[] parms )
     {

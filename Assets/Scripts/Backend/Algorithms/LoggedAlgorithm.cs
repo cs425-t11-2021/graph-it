@@ -63,22 +63,23 @@ public abstract class LoggedAlgorithm : Algorithm
         this.step--;
     }
 
-    public AlgorithmStep GetCurrentStep()
+    // index based 1
+    public void GoToStep( int step )
+    {
+        if ( !this.IsStepAvailable( step ) )
+        {
+            if ( this.complete )
+                throw new System.Exception( "Algorithm completed before step " + step + " was reached." );
+            throw new System.Exception( "Cannot perform go to step when step is currently being computed." );
+        }
+
+        this.step = step - 1;
+    }
+
+    public AlgorithmStep GetStep()
     {
         if ( !this.IsFirstStepAvailable() )
             throw new System.Exception( "Cannot retrieve step when no step has been taken." );
-        return this.steps[ this.step ];
-    }
-
-    public AlgorithmStep GetStep( int step )
-    {
-        if ( !this.IsStepAvailable( step - 1 ) )
-        {
-            if ( this.complete )
-                throw new System.Exception( "Cannot retrieve out of bounds step." );
-            throw new System.Exception( "Cannot retrieve step when step is currently being computed." );
-        }
-        this.step = step - 1;
         return this.steps[ this.step ];
     }
 
