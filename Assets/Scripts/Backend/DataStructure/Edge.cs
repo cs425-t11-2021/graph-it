@@ -164,55 +164,57 @@ public class Edge
     public void SetThickness( uint thickness, bool recordChange=true )
     {
         if ( recordChange )
-            this.CreateMod( Modification.EDGE_THICKNESS, ( this, this.thickness, thickness ) );
+            this.CreateMod( Modification.EDGE_THICKNESSES, ( new List< Edge >() { this }, new List< uint >() { this.thickness }, new List< uint >() { thickness } ) );
         this.thickness = thickness;
+    }
+
+    public static void SetThicknesses( List< Edge > edges, List< uint > thicknesses, bool recordChange=true )
+    {
+        List< uint > oldThicknesses = new List< uint >( edges.Select( e => e.Thickness ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_THICKNESSES, ( edges, oldThicknesses, thicknesses ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetThickness( thicknesses[ i ], false );
     }
 
     public static void IncrementThicknesses( List< Edge > edges, bool recordChange=true )
     {
-        List< uint > oldThicknesses = new List< uint >( edges.Select( e => e.Thickness ) );
-        List< uint > newThicknesses = new List< uint >( oldThicknesses.Select( t => t + 1 ) );
-        if ( recordChange )
-            edges[ 0 ].CreateMod( Modification.EDGE_THICKNESSES, ( edges, oldThicknesses, newThicknesses ) );
-        for ( int i = 0; i < edges.Count; ++i )
-            edges[ i ].SetThickness( newThicknesses[ i ], false );
+        List< uint > newThicknesses = new List< uint >( edges.Select( e => e.Thickness + 1 ) );
+        Edge.SetThicknesses( edges, newThicknesses, recordChange );
     }
 
     public static void DecrementThicknesses( List< Edge > edges, bool recordChange=true )
     {
-        List< uint > oldThicknesses = new List< uint >( edges.Select( e => e.thickness ) );
-        List< uint > newThicknesses = new List< uint >( oldThicknesses.Select( t => t - 1 ) );
-        if ( recordChange )
-            edges[ 0 ].CreateMod( Modification.EDGE_THICKNESSES, ( edges, oldThicknesses, newThicknesses ) );
-        for ( int i = 0; i < edges.Count; ++i )
-            edges[ i ].SetThickness( newThicknesses[ i ], false );
+        List< uint > newThicknesses = new List< uint >( edges.Select( e => e.Thickness - 1 ) );
+        Edge.SetThicknesses( edges, newThicknesses, recordChange );
     }
 
     public void SetCurvature( int curvature, bool recordChange=true )
     {
         if ( recordChange )
-            this.CreateMod( Modification.EDGE_CURVATURE, ( this, this.curvature, curvature ) );
+            this.CreateMod( Modification.EDGE_CURVATURES, ( new List< Edge >() { this }, new List< int >() { this.curvature }, new List< int >() { curvature } ) );
         this.curvature = curvature;
+    }
+
+    public static void SetCurvatures( List< Edge > edges, List< int > curvatures, bool recordChange=true )
+    {
+        List< int > oldCurvatures = new List< int >( edges.Select( e => e.Curvature ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_CURVATURES, ( edges, oldCurvatures, curvatures ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetCurvature( curvatures[ i ], false );
     }
 
     public static void IncrementCurvature( List< Edge > edges, bool recordChange=true )
     {
-        List< int > oldCurvatures = new List< int >( edges.Select( e => e.curvature ) );
-        List< int > newCurvatures = new List< int >( oldCurvatures.Select( t => t + 1 ) );
-        if ( recordChange )
-            edges[ 0 ].CreateMod( Modification.EDGE_CURVATURES, ( edges, oldCurvatures, newCurvatures ) );
-        for ( int i = 0; i < edges.Count; ++i )
-            edges[ i ].SetCurvature( newCurvatures[ i ], false );
+        List< int > newCurvatures = new List< int >( edges.Select( e => e.Curvature + 1 ) );
+        Edge.SetCurvatures( edges, newCurvatures, recordChange );
     }
 
     public static void DecrementCurvature( List< Edge > edges, bool recordChange=true )
     {
-        List< int > oldCurvatures = new List< int >( edges.Select( e => e.curvature ) );
-        List< int > newCurvatures = new List< int >( oldCurvatures.Select( t => t - 1 ) );
-        if ( recordChange )
-            edges[ 0 ].CreateMod( Modification.EDGE_CURVATURES, ( edges, oldCurvatures, newCurvatures ) );
-        for ( int i = 0; i < edges.Count; ++i )
-            edges[ i ].SetCurvature( newCurvatures[ i ], false );
+        List< int > newCurvatures = new List< int >( edges.Select( e => e.Curvature - 1 ) );
+        Edge.SetCurvatures( edges, newCurvatures, recordChange );
     }
 
     public void SetTailStyle( uint style, bool recordChange=true )
