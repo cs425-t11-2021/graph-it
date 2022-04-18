@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using TMPro;
 using UnityEngine.EventSystems;
 
@@ -9,11 +10,11 @@ public class EdgeLabelObj : MonoBehaviour
     // private double weight;
     // UI Rect of the label object
     private Rect rect;
-    // Store previous global position of the labelObj
-    private Vector3 previousPosition;
 
     // Reference to the text mesh object
     private TMP_InputField inputField;
+
+    private GraphicRaycaster raycaster;
 
     private bool displayEnabled;
 
@@ -33,33 +34,34 @@ public class EdgeLabelObj : MonoBehaviour
         RectTransform rectTransform = GetComponent<RectTransform>();
         this.rect = rectTransform.rect;
         this.inputField = GetComponentInChildren<TMP_InputField>();
+        this.raycaster = GetComponent<GraphicRaycaster>();
+        this.raycaster.enabled = false;
 
         SettingsManager.Singleton.OnToggleVertexLabels += OnToggleVertexLabels;
         this.gameObject.SetActive(false);
 
     }
 
+    private void Start() {
+        UpdatePosition();
+    }
+
     private void OnToggleVertexLabels(bool enabled)
     {
         this.displayEnabled = enabled;
 
-        if (enabled)
-        {
+        if (this.enabled)
             MakeUneditable();
-        }
         else
-        {
             this.inputField.gameObject.SetActive(false);
-        }
     }
 
-    private void FixedUpdate() {
-        if (!enabled) {
+    public void UpdatePosition() {
+        if (!this.enabled)
             return;
-        }
 
-        transform.position = FindSuitablePosition();
-        transform.localScale = new Vector3(0.01f, 0.01f, 1);
+        this.transform.position = FindSuitablePosition();
+        this.transform.localScale = new Vector3(0.01f, 0.01f, 1);
     }
 
     Vector3 FindSuitablePosition()
@@ -80,26 +82,27 @@ public class EdgeLabelObj : MonoBehaviour
     {
         if (displayEnabled)
         {
-            inputField.gameObject.SetActive(true);
-            inputField.interactable = true;
+            this.inputField.gameObject.SetActive(true);
+            this.raycaster.enabled = true;
         }
     }
 
     // Make the label uneditable
     public void MakeUneditable()
     {
-        if (displayEnabled)
+        if (this.displayEnabled)
         {
-            if (!EventSystem.current.alreadySelecting) inputField.interactable = false;
-            if (string.IsNullOrEmpty(inputField.text))
+            if (string.IsNullOrEmpty(this.inputField.text))
             {
-                inputField.gameObject.SetActive(false);
+                this.inputField.gameObject.SetActive(false);
             }
             else
             {
-                inputField.gameObject.SetActive(true);
+                this.inputField.gameObject.SetActive(true);
             }
-            transform.localPosition = FindSuitablePosition();
+
+            this.raycaster.enabled = false;
+            UpdatePosition();
         }
     }
 
@@ -119,11 +122,11 @@ public class EdgeLabelObj : MonoBehaviour
 
         if (this.edgeObject.Edge.Weighted)
         {
-            inputField.text = this.edgeObject.Edge.Weight.ToString();
+            this.inputField.text = this.edgeObject.Edge.Weight.ToString();
         }
         else
         {
-            inputField.text = this.edgeObject.Edge.Label;
+            this.inputField.text = this.edgeObject.Edge.Label;
         }
         
         if (!EventSystem.current.alreadySelecting) EventSystem.current.SetSelectedGameObject(null);

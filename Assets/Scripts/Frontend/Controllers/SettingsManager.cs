@@ -3,6 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public struct ColorScheme {
+    Color backgroundColor;
+    Color textColor;
+}
+
 // Monobehavior which manages the program settings such as visuals
 public class SettingsManager : SingletonBehavior<SettingsManager>
 {

@@ -38,9 +38,9 @@ public class UIManager : SingletonBehavior<UIManager>
     // Property for whether or not the toolbar is enabled
     public bool ToolBarEnabled {
         set {
-            Button[] toolbarButtons = this.toolbar.GetComponentsInChildren<Button>();
+            Button[] toolbarButtons = this.toolbar.GetComponentsInChildren<Button>(true);
             Array.ForEach(toolbarButtons, button => button.enabled = value);
-            ToggleButton[] toolbarToggleButtons = this.toolbar.GetComponentsInChildren<ToggleButton>();
+            ToggleButton[] toolbarToggleButtons = this.toolbar.GetComponentsInChildren<ToggleButton>(true);
             Array.ForEach(toolbarToggleButtons, button => button.enabled = value);
         }
     }

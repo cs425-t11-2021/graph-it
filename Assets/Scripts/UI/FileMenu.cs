@@ -27,10 +27,19 @@ public class FileMenu : MenuButton
         Controller.Singleton.CreateGraphInstance();
         
         // TEMPOARY
-        ResourceManager.Singleton.LoadVertexSprites();
+        // ResourceManager.Singleton.LoadVertexSprites();
         
         NotificationManager.Singleton.CreateNotification("Creating a new graph.", 3);
         EventSystem.current.SetSelectedGameObject(null);
+    }
+
+    public void Quit()
+    {
+        #if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+        #else
+        Application.Quit();
+        #endif
     }
 
     
