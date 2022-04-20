@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class Tab : MonoBehaviour, IPointerClickHandler
+public class Tab : MonoBehaviour //, IPointerClickHandler --might be useful later on for right click menu options
 {
     // Graph instance associated with this tab
     private GraphInstance graphInstance;
@@ -54,7 +54,7 @@ public class Tab : MonoBehaviour, IPointerClickHandler
     public void Close()
     {
         Controller.Singleton.RemoveGraphInstance(this.graphInstance);
-        Destroy(this.gameObject);
+        Destroy(this.gameObject); 
     }
 
     private void OnDestroy()
@@ -64,11 +64,11 @@ public class Tab : MonoBehaviour, IPointerClickHandler
     }
 
     // TEMPROARY: CLOSE A TAB WHEN RIGHT CLICKING ON IT
-    public void OnPointerClick(PointerEventData eventData)
+    /*public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             Close();
         }
-    }
+    }*/
 }
