@@ -111,7 +111,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     private object[] algorithmResults;
     private string[][] algorithmExtras;
     private Vertex[][] algorithmVertexPrams;
-    public (StepType, List<Vertex>, List<Edge>, string)? CurrentStep { get; set; }
+    public AlgorithmStep CurrentStep { get; set; }
 
 
     // Property for whether or not the algorithm buttons are enabled
@@ -337,7 +337,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         if (Controller.Singleton.AlgorithmManager.IsNextStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams)) {
             Controller.Singleton.AlgorithmManager.NextStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
             this.CurrentStep =  Controller.Singleton.AlgorithmManager.GetStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
-            this.stepAlgorithmText.text = "Step: " + this.CurrentStep?.Item4;
+            this.stepAlgorithmText.text = "Step: " + this.CurrentStep.desc;
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
         }
     }
@@ -346,7 +346,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         if (Controller.Singleton.AlgorithmManager.IsBackStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams)) {
             Controller.Singleton.AlgorithmManager.BackStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
             this.CurrentStep =  Controller.Singleton.AlgorithmManager.GetStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
-            this.stepAlgorithmText.text = "Step: " + this.CurrentStep?.Item4;
+            this.stepAlgorithmText.text = "Step: " + this.CurrentStep.desc;
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
         }
     }

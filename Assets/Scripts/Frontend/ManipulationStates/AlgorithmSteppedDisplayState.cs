@@ -5,28 +5,23 @@ using UnityEngine;
 public class AlgorithmSteppedDisplayState : ManipulationState
 {
 
-    private (StepType, List<Vertex>, List<Edge>, string) currentStep;
+    private AlgorithmStep currentStep;
     private List<EdgeObj> highlightedEdges;
     private List<VertexObj> highlightedVertices;
 
     public override void OnStateEnter()
     {
-        if (AlgorithmsPanel.Singleton.CurrentStep != null) {
-            this.currentStep = ((StepType, List<Vertex>, List<Edge>, string)) AlgorithmsPanel.Singleton.CurrentStep;
-        }
-        else {
-            Logger.Log("Steps not found for current algorith.", this, LogType.ERROR);
-        }
+        this.currentStep =  AlgorithmsPanel.Singleton.CurrentStep;
 
         this.highlightedEdges = new List<EdgeObj>();
         this.highlightedVertices = new List<VertexObj>();
 
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(true);
         
-        if (this.currentStep.Item3 != null) {
+        if (this.currentStep.considerEdges != null) {
             foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
             {
-                if (this.currentStep.Item3.Contains(edgeObj.Edge))
+                if (this.currentStep.considerEdges.Contains(edgeObj.Edge))
                 {
                     edgeObj.IsAlgorithmResult = true;
                     this.highlightedEdges.Add(edgeObj);
@@ -34,10 +29,10 @@ public class AlgorithmSteppedDisplayState : ManipulationState
             }
         }
 
-        if (this.currentStep.Item2 != null) {
+        if (this.currentStep.considerVertices != null) {
             foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
             {
-                if (this.currentStep.Item2.Contains(vertexObj.Vertex))
+                if (this.currentStep.considerVertices.Contains(vertexObj.Vertex))
                 {
                     vertexObj.IsAlgorithmResult = true;
                     this.highlightedVertices.Add(vertexObj);

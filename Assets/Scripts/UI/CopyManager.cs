@@ -64,12 +64,13 @@ public class CopyManager : SingletonBehavior<CopyManager>
         if (this.clipboard == null) return;
         
         Dictionary<Vertex, Vertex> vertexCorrespondanceDict = new Dictionary<Vertex, Vertex>();
+        List<Vertex> newVertices = new List<Vertex>();
+        List<Edge> newEdges = new List<Edge>();
         foreach (Vertex v in this.clipboard.Value.Item2)
         {
             Vertex newVertex = new Vertex(v);
             vertexCorrespondanceDict[v] = newVertex;
-            Controller.Singleton.Graph.Add(newVertex, false);
-            Controller.Singleton.CreateVertexObj(newVertex, false);
+            newVertices.Add(newVertex);
         }
 
         foreach (Edge e in this.clipboard.Value.Item3)
@@ -77,9 +78,12 @@ public class CopyManager : SingletonBehavior<CopyManager>
             Edge newEdge = new Edge(e);
             newEdge.vert1 = vertexCorrespondanceDict[newEdge.vert1];
             newEdge.vert2 = vertexCorrespondanceDict[newEdge.vert2];
-            Controller.Singleton.Graph.Add(newEdge, false);
-            Controller.Singleton.CreateEdgeObj(newEdge, false);
+            newEdges.Add(newEdge);
         }
+
+        Controller.Singleton.Graph.Add(newVertices, newEdges, true);
+        newVertices.ForEach(v => Controller.Singleton.CreateVertexObj(v, false));
+        newEdges.ForEach(e => Controller.Singleton.CreateEdgeObj(e, false));
         
         Controller.Singleton.ForceInvokeModificationEvent();
         GraphInfo.Singleton.UpdateGraphInfo();

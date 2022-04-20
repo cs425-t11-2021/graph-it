@@ -228,6 +228,11 @@ public class Controller : SingletonBehavior<Controller>
         GraphInfo.Singleton.UpdateGraphInfo();
     }
 
+    public void AddCollection(List<Vertex> vertices, List<Edge> edges) {
+        this.Graph.Add(vertices, edges, true);
+        
+    }
+
     // Create a new vertex object to correspond to a passed in graph vertex
     public void CreateVertexObj(Vertex vertex, bool invokeEvents = true) {
         Vector2 pos = new Vector2( vertex.Pos.X, vertex.Pos.Y );

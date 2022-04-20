@@ -437,7 +437,9 @@ public class GraphModification
 
             // Update front end
             foreach ( Vertex v in collection.Item1 )
-                Controller.Singleton.RemoveVertex( Controller.Singleton.GetVertexObj( v ), false );
+                // Controller.Singleton.RemoveVertex( Controller.Singleton.GetVertexObj( v ), false );
+                Controller.Singleton.CreateVertexObj(v, false);
+            Controller.Singleton.ForceInvokeModificationEvent();
         }
         if ( !( collection.Item2 is null ) )
         {
@@ -445,7 +447,9 @@ public class GraphModification
 
             // Update front end
             foreach ( Edge e in collection.Item2 )
-                Controller.Singleton.RemoveEdge( Controller.Singleton.GetEdgeObj( e ), false );
+                // Controller.Singleton.RemoveEdge( Controller.Singleton.GetEdgeObj( e ), false );
+                Controller.Singleton.CreateEdgeObj(e, false);
+            Controller.Singleton.ForceInvokeModificationEvent();
         }
     }
 
