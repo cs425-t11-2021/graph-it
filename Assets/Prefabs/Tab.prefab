@@ -147,9 +147,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
-  labelDescription: Close
-  offset: {x: 0, y: 0, z: 0}
-  size: {x: 50, y: 50}
+  labelDescription: Close Tab
+  offset: {x: 10, y: -50, z: 0}
+  size: {x: 140, y: 40}
 --- !u!114 &7139753448821803557
 MonoBehaviour:
   m_ObjectHideFlags: 0
