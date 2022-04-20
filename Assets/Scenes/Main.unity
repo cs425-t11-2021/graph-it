@@ -5266,7 +5266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Select
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &499060056
 MonoBehaviour:
@@ -6478,7 +6478,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Create Edge
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 165, y: 40}
 --- !u!114 &606668074
 MonoBehaviour:
@@ -7166,7 +7166,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1076611919}
   m_HandleRect: {fileID: 1076611918}
   m_Direction: 0
-  m_Value: 0
+  m_Value: 1
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -10420,8 +10420,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -28, y: 0.00000047684}
-  m_SizeDelta: {x: 50, y: 377}
+  m_AnchoredPosition: {x: -27.599976, y: -3}
+  m_SizeDelta: {x: 50, y: 379.6002}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1003453692
 MonoBehaviour:
@@ -13143,7 +13143,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Edge Type
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 150, y: 40}
 --- !u!114 &1136272512
 MonoBehaviour:
@@ -13473,7 +13473,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Delete
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &1147743077
 MonoBehaviour:
@@ -15247,7 +15247,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1159227431}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.5693038
+  m_Size: 0.56930393
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -19234,7 +19234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Select
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 100, y: 40}
 --- !u!114 &1639705721
 MonoBehaviour:
@@ -20284,7 +20284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Create Vertices
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 175, y: 40}
 --- !u!114 &1723796981
 MonoBehaviour:
@@ -22011,8 +22011,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 261, y: -2.6271}
-  m_SizeDelta: {x: 50, y: 704.74}
+  m_AnchoredPosition: {x: 260.99997, y: -4.3606005}
+  m_SizeDelta: {x: 50, y: 701.2729}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1908079560
 MonoBehaviour:
@@ -24539,7 +24539,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Thickness
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 140, y: 40}
 --- !u!114 &359608985734554706
 MonoBehaviour:
@@ -25462,7 +25462,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Vertex Style
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 150, y: 40}
 --- !u!114 &2027812034803370405
 MonoBehaviour:
@@ -26194,7 +26194,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Curvature
-  offset: {x: 20, y: -20, z: 0}
+  offset: {x: 20, y: -45, z: 0}
   size: {x: 140, y: 40}
 --- !u!114 &3832231448021805302
 MonoBehaviour:
@@ -30143,7 +30143,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -29.800049, y: 52.400024}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &9108086599154852524
