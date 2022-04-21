@@ -257,7 +257,7 @@ GameObject:
   - component: {fileID: 5507994078453696702}
   - component: {fileID: 7158508273230804293}
   m_Layer: 5
-  m_Name: Image
+  m_Name: info icon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -332,10 +332,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  labelPrefab: {fileID: 6302722055027619565, guid: 4f2b011603ef72848904de4a8e2352c5, type: 3}
+  labelPrefab: {fileID: 2954843947706007661, guid: 4f2b011603ef72848904de4a8e2352c5, type: 3}
   labelDescription: Display info here
-  offset: {x: 0, y: 0, z: 0}
-  size: {x: 500, y: 500}
+  offset: {x: 100, y: 45, z: 0}
+  size: {x: 200, y: 100}
 --- !u!114 &7158508273230804293
 MonoBehaviour:
   m_ObjectHideFlags: 0
