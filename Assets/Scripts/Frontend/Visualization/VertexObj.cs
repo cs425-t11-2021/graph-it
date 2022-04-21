@@ -20,7 +20,9 @@ public class VertexObj : MonoBehaviour
     
     private Color normalColor = Color.black;
     private Color selectedColor = new Color32(0, 125, 255, 255);
-    private Color resultColor = new Color32(0, 200, 0, 255);
+
+    private int resultStatus = 0;
+    private float resultTimer = 0f;
 
     // Property for whether or not the vertex object is selected
     private bool selected;
@@ -42,20 +44,19 @@ public class VertexObj : MonoBehaviour
         }
     }
 
-    private bool isAlgorithmResult;
-    public bool IsAlgorithmResult {
-        get => this.isAlgorithmResult;
-        set {
-            if (this.selected)
-                SelectionManager.Singleton.DeselectVertex(this);
-
-            this.isAlgorithmResult = value;
-            // If the vertex object becomes selected, make its label editable
-            if (value) {
-                this.spriteRenderer.color = resultColor;
+    public int AlgorithmResultLevel
+    {
+        set
+        {
+            this.resultStatus = value;
+            if (this.resultStatus == 0)
+            {
+                this.spriteRenderer.color = this.normalColor;
             }
-            else {
-                this.spriteRenderer.color = normalColor;
+            else if (this.resultStatus == 1)
+            {
+                this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
+                this.resultTimer = 0f;
             }
         }
     }
@@ -95,6 +96,31 @@ public class VertexObj : MonoBehaviour
         {
             this.previousPosition = this.transform.position;
             this.OnVertexObjMove?.Invoke();
+        }
+
+        if (resultStatus == 1)
+        {
+            if (resultTimer <= 0f)
+            {
+                resultTimer = 0.2f;
+                if (this.spriteRenderer.color == normalColor)
+                {
+                    this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
+                }
+                else
+                {
+                    this.spriteRenderer.color = this.normalColor;
+                }
+            }
+            resultTimer -= Time.deltaTime;
+        }
+        else if (resultStatus == 2)
+        {
+            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[1];
+        }
+        else if (resultStatus == 3)
+        {
+            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[2];
         }
     }
 

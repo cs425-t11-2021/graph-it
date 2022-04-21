@@ -36,9 +36,7 @@ public class EdgeObj : MonoBehaviour
     private bool selected = false;
     // Whether edge is currently being hovered over
     private bool hovering = false;
-    // Whether edge is the result of an algorithm
-    private bool isAlgorithmResult;
-    
+
     // Other visual things
     // Width scale factor for edge thickness increse of 1
     [SerializeField] private float edgeWidthScaleFactor = 0.05f;
@@ -56,6 +54,7 @@ public class EdgeObj : MonoBehaviour
                 this.spriteRenderer.color = new Color32(0, 125, 255, 255);
                 labelObj.MakeEditable();
                 shapeRenderer.sortingOrder = -1;
+                spriteRenderer.sortingOrder = -1;
             }
             else {
                 this.shapeRenderer.color = new Color32(0, 0, 0, 255);
@@ -63,27 +62,38 @@ public class EdgeObj : MonoBehaviour
                 this.spriteRenderer.color = new Color32(0, 0, 0, 255);
                 labelObj.MakeUneditable();
                 shapeRenderer.sortingOrder = -2;
+                spriteRenderer.sortingOrder = -2;
             }
         }
     }
 
-    public bool IsAlgorithmResult {
-        get => this.isAlgorithmResult;
-        set {
-            if (this.selected)
-                SelectionManager.Singleton.DeselectEdge(this);
-
-            this.isAlgorithmResult = value;
-            // If the vertex object becomes selected, make its label editable
-            if (value) {
-                this.shapeRenderer.color = new Color32(0, 200, 0, 255);
-                this.arrowSpriteRenderer.color = new Color32(0, 200, 0, 255);;
-                this.spriteRenderer.color = new Color32(0, 200, 0, 255);;
-            }
-            else {
+    private int resultStatus = 0;
+    private float resultTimer = 0f;
+    public int AlgorithmResultLevel
+    {
+        set
+        {
+            this.resultStatus = value;
+            if (this.resultStatus == 0)
+            {
                 this.shapeRenderer.color = new Color32(0, 0, 0, 255);
                 this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
                 this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                shapeRenderer.sortingOrder = -2;
+                spriteRenderer.sortingOrder = -2;
+            }
+            else
+            {
+                shapeRenderer.sortingOrder = -1;
+                spriteRenderer.sortingOrder = -1;
+            }
+
+            if (this.resultStatus == 1)
+            {
+                this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[0];
+                this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
+                this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
+                this.resultTimer = 0f;
             }
         }
     }
@@ -121,6 +131,43 @@ public class EdgeObj : MonoBehaviour
         this.Vertex2.OnVertexObjMove += UpdateLabelPosition;
         
         UpdateSpline();
+    }
+
+    private void Update()
+    {
+        if (resultStatus == 1)
+        {
+            if (resultTimer <= 0f)
+            {
+                resultTimer = 0.2f;
+                if (this.spriteRenderer.color == new Color32(0, 200, 0, 255))
+                {
+                    this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[0];
+                    this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
+                    this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
+                }
+                else
+                {
+                    this.shapeRenderer.color = new Color32(0, 0, 0, 255);
+                    this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
+                    this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                }
+            }
+
+            resultTimer -= Time.deltaTime;
+        }
+        else if (resultStatus == 2)
+        {
+            this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[1];
+            this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[1];
+            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[1];
+        }
+        else if (resultStatus == 3)
+        {
+            this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[2];
+            this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[2];
+            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[2];
+        }
     }
 
     public void UpdateSpline()

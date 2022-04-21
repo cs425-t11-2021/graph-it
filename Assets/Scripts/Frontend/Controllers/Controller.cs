@@ -35,6 +35,8 @@ public class Controller : SingletonBehavior<Controller>
     [SerializeField] public GameObject edgeTemplatePrefab;
     // Mask of Collider Layers that should receive mouse input
     [SerializeField] private LayerMask clickableLayers;
+
+    [SerializeField] public Color[] algorithmResultColors;
     
     // List of currently available graph instances
     private List<GraphInstance> instances = new List<GraphInstance>();

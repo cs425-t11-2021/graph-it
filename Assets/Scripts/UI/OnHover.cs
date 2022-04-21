@@ -13,6 +13,12 @@ public class OnHover : MonoBehaviour
     [SerializeField] private Vector2 size;
     private OnHoverLabel newLabel;
     
+    public string Description
+    {
+        get => this.labelDescription;
+        set => this.labelDescription = value;
+    }
+    
    public void OnHoverMouse(){
         this.newLabel = Instantiate(labelPrefab, UIManager.Singleton.mainCanvas.transform).GetComponent<OnHoverLabel>();
         this.newLabel.CreateLabel(this.labelDescription, this.size);
