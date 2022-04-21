@@ -132,7 +132,7 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
         this.AddStep(
             StepType.ADD_TO_RESULT,
             "Construct path from destination.",
-            vertexPath,
+            new List< Vertex >( vertexPath ),
             null,
             null,
             null,
@@ -158,7 +158,7 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
                 this.AddStep(
                     StepType.ADD_TO_RESULT,
                     "Construct path from destination.",
-                    vertexPath,
+                    new List< Vertex >( vertexPath ),
                     new List< Edge >( path ),
                     new List< Vertex >() { prevVert },
                     new List< Edge >() { prevEdge },
