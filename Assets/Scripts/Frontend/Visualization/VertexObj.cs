@@ -102,7 +102,7 @@ public class VertexObj : MonoBehaviour
         {
             if (resultTimer <= 0f)
             {
-                resultTimer = 0.2f;
+                resultTimer = 0.33f;
                 if (this.spriteRenderer.color == normalColor)
                 {
                     this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
