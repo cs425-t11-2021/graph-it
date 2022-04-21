@@ -181,19 +181,27 @@ public class GraphModification
     private void UndoEdgeThicknesses()
     {
         ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
-        for ( int i = 0; i < thicknessData.Item1.Count; ++i )
-            thicknessData.Item1[ i ].SetThickness( thicknessData.Item2[ i ], false );
+        for (int i = 0; i < thicknessData.Item1.Count; ++i)
+        {
+            thicknessData.Item1[i].SetThickness(thicknessData.Item2[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( thicknessData.Item1[i] ).UpdateSpline();
+        }
 
-        // TODO: Update front end
+        
     }
 
     private void UndoEdgeCurvatures()
     {
         ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
-        for ( int i = 0; i < curveData.Item1.Count; ++i )
-            curveData.Item1[ i ].SetCurvature( curveData.Item2[ i ], false );
-
-        // TODO: Update front end
+        for (int i = 0; i < curveData.Item1.Count; ++i)
+        {
+            curveData.Item1[i].SetCurvature(curveData.Item2[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( curveData.Item1[i] ).UpdateSpline();
+        }
     }
 
     private void UndoEdgeTailStyle()
@@ -395,19 +403,25 @@ public class GraphModification
     private void RedoEdgeThicknesses()
     {
         ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
-        for ( int i = 0; i < thicknessData.Item1.Count; ++i )
-            thicknessData.Item1[ i ].SetThickness( thicknessData.Item3[ i ], false );
-
-        // TODO: Update front end
+        for (int i = 0; i < thicknessData.Item1.Count; ++i)
+        {
+            thicknessData.Item1[i].SetThickness(thicknessData.Item3[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( thicknessData.Item1[i] ).UpdateSpline();
+        }
     }
 
     private void RedoEdgeCurvatures()
     {
         ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
-        for ( int i = 0; i < curveData.Item1.Count; ++i )
-            curveData.Item1[ i ].SetCurvature( curveData.Item3[ i ], false );
-
-        // TODO: Update front end
+        for (int i = 0; i < curveData.Item1.Count; ++i)
+        {
+            curveData.Item1[i].SetCurvature(curveData.Item3[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( curveData.Item1[i] ).UpdateSpline();
+        }
     }
 
     private void RedoEdgeTailStyle()
