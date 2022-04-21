@@ -45,19 +45,20 @@ public class KruskalsAlgorithm : LoggedAlgorithm
             null
         );
 
+        // add consider step
+        this.AddStep(
+            StepType.CONSIDER,
+            "Find minimally weighted edge that connects disjoint trees.",
+            new List< Vertex >( this.Graph.Vertices ),
+            new List< Edge >( mst ),
+            null,
+            null,
+            new List< Vertex >( Edge.GetIncidentVertices( edges ) ),
+            new List< Edge >( edges )
+        );
+
         for ( int i = 0; i < edges.Count; ++i )
         {
-            // add consider step
-            this.AddStep(
-                StepType.CONSIDER,
-                "Find minimally weighted edge that connects disjoint trees.",
-                new List< Vertex >( this.Graph.Vertices ),
-                new List< Edge >( mst ),
-                null,
-                null,
-                new List< Vertex >( Edge.GetIncidentVertices( edges.GetRange( i, edges.Count - i ) ) ),
-                new List< Edge >( edges.GetRange( i, edges.Count - i ) )
-            );
 
             HashSet< Vertex > tree1 = KruskalsAlgorithm.GetComponentOf( forest, edges[ i ].vert1 );
             HashSet< Vertex > tree2 = KruskalsAlgorithm.GetComponentOf( forest, edges[ i ].vert2 );
@@ -77,6 +78,18 @@ public class KruskalsAlgorithm : LoggedAlgorithm
                     new List< Edge >() { edges[ i ] },
                     null,
                     null
+                );
+
+                // add consider step
+                this.AddStep(
+                    StepType.CONSIDER,
+                    "Find minimally weighted edge that connects disjoint trees.",
+                    new List< Vertex >( this.Graph.Vertices ),
+                    new List< Edge >( mst ),
+                    null,
+                    null,
+                    new List< Vertex >( Edge.GetIncidentVertices( edges.GetRange( i, edges.Count - i ) ) ),
+                    new List< Edge >( edges.GetRange( i, edges.Count - i ) )
                 );
             }
         }
