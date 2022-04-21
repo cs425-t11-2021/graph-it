@@ -139,8 +139,8 @@ public class EdgeObj : MonoBehaviour
         {
             if (resultTimer <= 0f)
             {
-                resultTimer = 0.2f;
-                if (this.spriteRenderer.color == new Color32(0, 200, 0, 255))
+                resultTimer = 0.33f;
+                if (this.spriteRenderer.color == new Color32(0, 0, 0, 255))
                 {
                     this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[0];
                     this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
