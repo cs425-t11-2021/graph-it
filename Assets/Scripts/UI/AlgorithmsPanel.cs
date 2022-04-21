@@ -412,7 +412,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         while (Controller.Singleton.AlgorithmManager.IsNextStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams))
         {
             GetNextStep();
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(.5f);
         }
         this.autoStepThroughToggle.UpdateStatus(false);
     }
