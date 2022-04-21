@@ -12,7 +12,7 @@ public class Tab : MonoBehaviour //, IPointerClickHandler --might be useful late
     // Toggle button associated with the tab, for visual purpose
     private ToggleButton toggle;
     // TMP text component for the tab label
-    private TMP_Text tabLabel;
+    private TMP_InputField tabLabel;
     
     // Name of the tab
     public string TabName
@@ -24,7 +24,7 @@ public class Tab : MonoBehaviour //, IPointerClickHandler --might be useful late
     private void Awake()
     {
         // Get component references
-        this.tabLabel = GetComponentInChildren<TMP_Text>();
+        this.tabLabel = GetComponentInChildren<TMP_InputField>(true);
         this.toggle = GetComponent<ToggleButton>();
         
         // When the active instance changes, highlight the tab is the tab is associated with the new active instance
@@ -61,6 +61,11 @@ public class Tab : MonoBehaviour //, IPointerClickHandler --might be useful late
     {
         // Unsubscribe to event when the object is destroyed
         Controller.Singleton.OnInstanceChanged -= OnInstanceChanged;
+    }
+
+    public void Rename(string newName)
+    {
+        tabLabel.text = newName;
     }
 
     // TEMPROARY: CLOSE A TAB WHEN RIGHT CLICKING ON IT
