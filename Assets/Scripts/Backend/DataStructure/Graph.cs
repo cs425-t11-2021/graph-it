@@ -152,28 +152,84 @@ public class Graph
         get => this.Adjacency.GetValue( ( vert1, vert2 ) );
     }
 
-    // TODO: add more parameters
-    public Vertex AddVertex( float x, float y, bool recordChange=true )
+
+    public ( List< Vertex >, List< Edge > ) Add( List< Vertex > vertices, List< Edge > edges, bool recordChange=true )
     {
-        return this.AddVertex( new Vertex( x : x, y : y ), recordChange );
+        this.Add( vertices, false );
+        this.Add( edges, false );
+
+        if ( recordChange )
+            new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >( vertices ), new HashSet< Edge >( edges ) ) );
+        return ( vertices, edges );
     }
 
-    public Vertex AddVertex( Vertex vert, bool recordChange=true )
+    public ( List< Vertex >, Edge ) Add( List< Vertex > vertices, Edge edge, bool recordChange=true )
+    {
+        this.Add( vertices, false );
+        this.Add( edge, false );
+
+        if ( recordChange )
+            new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >( vertices ), new HashSet< Edge >() { edge } ) );
+        return ( vertices, edge );
+    }
+
+    public ( Vertex, List< Edge > ) Add( Vertex vert, List< Edge > edges, bool recordChange=true )
+    {
+        this.Add( vert, false );
+        this.Add( edges, false );
+
+        if ( recordChange )
+            new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >() { vert }, new HashSet< Edge >( edges ) ) );
+        return ( vert, edges );
+    }
+
+    public List< Vertex > Add( List< Vertex > vertices, bool recordChange=true )
+    {
+        foreach ( Vertex vert in vertices )
+            this.Add( vert, false );
+
+        if ( recordChange )
+            new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >( vertices ), ( HashSet< Edge > ) null ) );
+        return vertices;
+    }
+
+    public List< Edge > Add( List< Edge > edges, bool recordChange=true )
+    {
+        foreach ( Edge edge in edges )
+            this.Add( edge, false );
+
+        if ( recordChange )
+            new GraphModification( this, Modification.ADD_COLLECTION, ( ( HashSet< Vertex > ) null, new HashSet< Edge >( edges ) ) );
+        return edges;
+    }
+
+    public ( Vertex, Edge ) Add( Vertex vert, Edge edge, bool recordChange=true )
+    {
+        this.Add( vert, false );
+        this.Add( edge, false );
+
+        if ( recordChange )
+            new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >() { vert }, new HashSet< Edge >() { edge } ) );
+        return ( vert, edge );
+    }
+
+    public Vertex Add( Vertex vert, bool recordChange=true )
     {
         vert.CreateMod = ( Action< Modification, System.Object > ) this.CreateModificationAction;
         this.Vertices.Add( vert );
 
         if ( recordChange )
-            new GraphModification( this, Modification.ADD_VERTEX, vert );
+            new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >() { vert }, ( HashSet< Edge > ) null ) );
         return vert;
     }
 
-    public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false, bool recordChange=true )
+    // TODO: add more parameters
+    public Vertex AddVertex( float x, float y, bool recordChange=true )
     {
-        return this.AddEdge( new Edge( vert1, vert2, directed ), recordChange );
+        return this.Add( new Vertex( x : x, y : y ), recordChange );
     }
 
-    public Edge AddEdge( Edge edge, bool recordChange=true )
+    public Edge Add( Edge edge, bool recordChange=true )
     {
         if ( !this.Vertices.Contains( edge.vert1 ) || !this.Vertices.Contains( edge.vert2 ) )
             throw new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." );
@@ -188,8 +244,13 @@ public class Graph
             this.Adjacency[ ( edge.vert2, edge.vert1 ) ] = edge;
 
         if ( recordChange )
-            new GraphModification( this, Modification.ADD_EDGE, edge );
+            new GraphModification( this, Modification.ADD_COLLECTION, ( ( HashSet< Vertex > ) null, new HashSet< Edge >() { edge } ) );
         return edge;
+    }
+
+    public Edge AddEdge( Vertex vert1, Vertex vert2, bool directed=false, bool recordChange=true )
+    {
+        return this.Add( new Edge( vert1, vert2, directed ), recordChange );
     }
 
     public void Remove( List< Vertex > vertices, List< Edge > edges, bool recordChange=true )
@@ -387,9 +448,9 @@ public class Graph
     private void ParseLine( string line, bool flag, Dictionary< uint, uint > indices )
     {
         if ( flag )
-            this.AddVertex( this.ParseVertex( line, indices ), false );
+            this.Add( this.ParseVertex( line, indices ), false );
         else
-            this.AddEdge( this.ParseEdge( line, indices ), false );
+            this.Add( this.ParseEdge( line, indices ), false );
     }
 
     private Vertex ParseVertex( string line, Dictionary< uint, uint > indices )
@@ -484,7 +545,7 @@ public class Graph
         return this.GetIncidentEdges( new HashSet< Vertex >() { vert } );
     }
 
-    public HashSet< Edge > GetIncidentEdges( HashSet< Vertex > verts )
+    public HashSet< Edge > GetIncidentEdges( IEnumerable< Vertex > verts )
     {
         HashSet< Edge > incidentEdges = new HashSet< Edge >();
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )

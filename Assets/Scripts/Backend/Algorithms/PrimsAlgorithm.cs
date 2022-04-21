@@ -30,14 +30,24 @@ public class PrimsAlgorithm : LoggedAlgorithm
     {
         if ( this.Graph.Directed )
         {
-            RunInMain.Singleton.queuedTasks.Enqueue(() => NotificationManager.Singleton.CreateNotification("<color=red>Prim's algorithm is unsupported on directed graphs.</color>", 3));
+            RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( "<color=red>Prim's algorithm is unsupported on directed graphs.</color>", 3 ) );
             throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
         }
 
         List< Edge > mst = new List< Edge >();
         HashSet< Vertex > mstVertices = new HashSet< Vertex >() { this.root };
 
-        this.AddStep( StepType.ADD_TO_RESULT, new List< Vertex >() { this.root }, null, "Add root to tree." );
+        // add result step
+        this.AddStep(
+            StepType.ADD_TO_RESULT,
+            "Add root to tree.",
+            new List< Vertex >( mstVertices ),
+            null,
+            new List< Vertex >( mstVertices ),
+            null,
+            null,
+            null
+        );
 
         int mstVerticesPrevCount = -1;
         while ( mstVerticesPrevCount != mstVertices.Count )
@@ -45,7 +55,17 @@ public class PrimsAlgorithm : LoggedAlgorithm
             mstVerticesPrevCount = mstVertices.Count;
             IEnumerable< Edge > incidentEdges = this.Graph.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.Weight );
 
-            this.AddStep( StepType.CONSIDER, null, new List< Edge >( incidentEdges ), "Find minimally weighted edge." );
+            // add consider step
+            this.AddStep(
+                StepType.CONSIDER,
+                "Find minimally weighted incident edge.",
+                new List< Vertex >( mstVertices ),
+                new List< Edge >( mst ),
+                null,
+                null,
+                new List< Vertex >( Edge.GetIncidentVertices( incidentEdges ) ),
+                new List< Edge >( incidentEdges )
+            );
 
             foreach ( Edge edge in incidentEdges )
             {
@@ -54,14 +74,34 @@ public class PrimsAlgorithm : LoggedAlgorithm
                     mstVertices.Add( edge.vert1 );
                     mstVertices.Add( edge.vert2 );
                     mst.Add( edge );
-                    this.AddStep( StepType.ADD_TO_RESULT, new List< Vertex >() { edge.vert1, edge.vert2 }, new List< Edge >() { edge }, "Add minimally weighted edge." );
+                    // add result step
+                    this.AddStep(
+                        StepType.ADD_TO_RESULT,
+                        "Add minimally weighted incident edge with weight " + edge.Weight,
+                        new List< Vertex >( mstVertices ),
+                        new List< Edge >( mst ),
+                        new List< Vertex >() { edge.vert1, edge.vert2 },
+                        new List< Edge >() { edge },
+                        new List< Vertex >( Edge.GetIncidentVertices( incidentEdges ) ),
+                        new List< Edge >( incidentEdges )
+                    );
                     break;
                 }
             }
         }
         this.Mst = mst;
 
-        this.AddStep( StepType.FINISHED, new List< Vertex >( this.Graph.Vertices ), new List< Edge >( mst ), "Prim's Algorithm finished." );
+        // add finished step
+        this.AddStep(
+            StepType.FINISHED,
+            "Prim's Algorithm finished.",
+            new List< Vertex >( this.Graph.Vertices ),
+            new List< Edge >( mst ),
+            null,
+            null,
+            null,
+            null
+        );
     }
 
     public static int GetHash( Vertex vert ) => ( typeof ( PrimsAlgorithm ), vert ).GetHashCode();

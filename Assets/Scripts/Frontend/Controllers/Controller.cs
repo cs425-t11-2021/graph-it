@@ -35,6 +35,8 @@ public class Controller : SingletonBehavior<Controller>
     [SerializeField] public GameObject edgeTemplatePrefab;
     // Mask of Collider Layers that should receive mouse input
     [SerializeField] private LayerMask clickableLayers;
+
+    [SerializeField] public Color[] algorithmResultColors;
     
     // List of currently available graph instances
     private List<GraphInstance> instances = new List<GraphInstance>();
@@ -141,7 +143,7 @@ public class Controller : SingletonBehavior<Controller>
         foreach (VertexObj vertexObj in SelectionManager.Singleton.SelectedVertices)
         {
             Vertex newVertex = new Vertex(vertexObj.Vertex);
-            newGraph.AddVertex(newVertex, false);
+            newGraph.Add(newVertex, false);
             vertexCorrespondanceDict[vertexObj.Vertex] = newVertex;
         }
 
@@ -153,7 +155,7 @@ public class Controller : SingletonBehavior<Controller>
                 Edge newEdge = new Edge(edgeObj.Edge);
                 newEdge.vert1 = vertexCorrespondanceDict[newEdge.vert1];
                 newEdge.vert2 = vertexCorrespondanceDict[newEdge.vert2];
-                newGraph.AddEdge(newEdge, false);
+                newGraph.Add(newEdge, false);
             }
         }
     
@@ -226,6 +228,11 @@ public class Controller : SingletonBehavior<Controller>
         Vertex vertex = this.Graph.AddVertex(pos.x, pos.y);
         CreateVertexObj(vertex);
         GraphInfo.Singleton.UpdateGraphInfo();
+    }
+
+    public void AddCollection(List<Vertex> vertices, List<Edge> edges) {
+        this.Graph.Add(vertices, edges, true);
+        
     }
 
     // Create a new vertex object to correspond to a passed in graph vertex

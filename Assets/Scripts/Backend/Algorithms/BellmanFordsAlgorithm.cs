@@ -41,6 +41,30 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
             dist[ vert ] = Single.PositiveInfinity;
         dist[ src ] = 0;
 
+        // add result step
+        this.AddStep(
+            StepType.ADD_TO_RESULT,
+            "Set all vertices to distance " + float.PositiveInfinity + " except source which has distance 0.",
+            new List< Vertex >() { this.src },
+            null,
+            new List< Vertex >() { this.src },
+            null,
+            null,
+            null
+        );
+
+        // add consider step
+        this.AddStep(
+            StepType.CONSIDER,
+            "Update distances between source and all vertices for each individual edge.",
+            new List< Vertex >() { this.src },
+            null,
+            null,
+            null,
+            new List< Vertex >( this.Graph.Vertices ),
+            new List< Edge >( this.Graph.Adjacency.Values )
+        );
+
         // relax edges
         for ( int i = 1; i < this.Graph.Order; i++ )
         {
@@ -50,20 +74,72 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
                 {
                     dist[ kvp.Key.Item2 ] = dist[ kvp.Key.Item1 ] + kvp.Value.Weight;
                     prev[ kvp.Key.Item2 ] = kvp.Value;
+
+                    // add result step
+                    this.AddStep(
+                        StepType.ADD_TO_RESULT,
+                        "Update distance between source and all vertices for each individual edge.",
+                        new List< Vertex >() { this.src },
+                        null,
+                        new List< Vertex >() { kvp.Key.Item1, kvp.Key.Item2 },
+                        new List< Edge >() { kvp.Value },
+                        null,
+                        null
+                    );
                 }
             }
         }
+
+        // add consider step
+        this.AddStep(
+            StepType.CONSIDER,
+            "Search for negative weight cycles.",
+            null,
+            null,
+            null,
+            null,
+            new List< Vertex >( this.Graph.Vertices ),
+            new List< Edge >( this.Graph.Adjacency.Values )
+        );
 
         // check for negative cycles
         foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Graph.Adjacency )
         {
             if ( dist[ kvp.Key.Item1 ] + kvp.Value.Weight < dist[ kvp.Key.Item2 ] )
+            {
+                // add error step
+                this.AddStep(
+                    StepType.ERROR,
+                    "Negative weight cycle detected.",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                );
+
                 throw new System.Exception( "Negative weight cycle found." );
+            }
         }
 
         // get path from tree
         float cost = 0;
         Vertex prevVert = this.dest;
+        List< Vertex > vertexPath = new List< Vertex >() { prevVert };
+
+        // add result step
+        this.AddStep(
+            StepType.ADD_TO_RESULT,
+            "Construct path from destination.",
+            new List< Vertex >( vertexPath ),
+            null,
+            null,
+            null,
+            null,
+            null
+        );
+
         while ( !( prevVert is null ) && prevVert != this.src )
         {
             Edge prevEdge = prev.GetValue( prevVert );
@@ -75,7 +151,20 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
                     throw new System.Exception( "Path could not be found." );
                 path.Add( prevEdge );
                 prevVert = prevEdge.vert1 == prevVert ? prevEdge.vert2 : prevEdge.vert1;
+                vertexPath.Add( prevVert );
                 cost += prevEdge.Weight;
+
+                // add result step
+                this.AddStep(
+                    StepType.ADD_TO_RESULT,
+                    "Construct path from destination.",
+                    new List< Vertex >( vertexPath ),
+                    new List< Edge >( path ),
+                    new List< Vertex >() { prevVert },
+                    new List< Edge >() { prevEdge },
+                    null,
+                    null
+                );
             }
         }
 
@@ -87,6 +176,18 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
             this.Path = path;
             this.Cost = cost;
         }
+
+        // add finish step
+        this.AddStep(
+            StepType.FINISHED,
+            "Bellman-Ford's Algorithm finished.",
+            new List< Vertex >( vertexPath ),
+            new List< Edge >( path ),
+            null,
+            null,
+            null,
+            null
+        );
     }
 
     public static int GetHash( Vertex src, Vertex dest ) => ( typeof ( BellmanFordsAlgorithm ), src, dest ).GetHashCode();

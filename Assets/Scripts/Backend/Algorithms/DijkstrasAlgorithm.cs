@@ -31,6 +31,8 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
     {
         List< Vertex > vertexPath = new List< Vertex >();
         List< Edge > edgePath = new List< Edge >();
+        HashSet< Vertex > visited = new HashSet< Vertex >(); // for step through
+        HashSet< Edge > visitedEdges = new HashSet< Edge >(); // for step through
         HashSet< Vertex > notVisited = new HashSet< Vertex >( this.Graph.Vertices );
         Dictionary< Vertex, float > dist = new Dictionary< Vertex, float >();
         Dictionary< Vertex, Vertex > prev = new Dictionary< Vertex, Vertex >();
@@ -40,11 +42,34 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
             prev[ v ] = null;
             dist[ v ] = float.PositiveInfinity;
         }
-
         dist[ this.src ] = 0;
+
+        // add result step
+        this.AddStep(
+            StepType.ADD_TO_RESULT,
+            "Set all vertices to distance " + float.PositiveInfinity + " except source which has distance 0.",
+            new List< Vertex >() { this.src },
+            null,
+            new List< Vertex >() { this.src },
+            null,
+            null,
+            null
+        );
 
         while ( notVisited.Count > 0 )
         {
+            // add consider step
+            this.AddStep(
+                StepType.CONSIDER,
+                "Search for closest non-visited vertex.",
+                new List< Vertex >( visited ),
+                new List< Edge >( visitedEdges ),
+                null,
+                null,
+                new List< Vertex >( notVisited ),
+                null
+            );
+
             // find u in notVisited such that dist[u] is minimal
             Vertex u = notVisited.First();
             foreach ( Vertex v in notVisited )
@@ -54,8 +79,22 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
             }
 
             notVisited.Remove( u );
+            visited.Add( u );
+
+            // add result step
+            this.AddStep(
+                StepType.ADD_TO_RESULT,
+                "Add closest non-visited vertex with distance " + dist[ u ] + ".",
+                new List< Vertex >( visited ),
+                new List< Edge >( visitedEdges ),
+                new List< Vertex >() { u },
+                null,
+                new List< Vertex >( notVisited ),
+                null
+            );
 
             // update neighbors of u
+            List< Edge > newVistedEdges = new List< Edge >();
             foreach ( Vertex v in notVisited )
             {
                 if ( this.Graph.IsAdjacentDirected( u, v ) )
@@ -65,38 +104,93 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
                     {
                         dist[ v ] = tmp;
                         prev[ v ] = u;
+                        newVistedEdges.Add( this.Graph[ u, v ] );
                     }
                 }
             }
+            visitedEdges.UnionWith( newVistedEdges );
+
+            // add consider step
+            this.AddStep(
+                StepType.CONSIDER,
+                "Update all distances of non-visited vertices from newly added vertex.",
+                new List< Vertex >( visited ),
+                new List< Edge >( visitedEdges ),
+                new List< Vertex >() { u },
+                newVistedEdges,
+                new List< Vertex >( notVisited ),
+                null
+            );
         }
 
         this.Cost = dist[ this.dest ];
 
+        // add result step
+        this.AddStep(
+            StepType.ADD_TO_RESULT,
+            "Obtain path length " + this.Cost + " from source to destination.",
+            new List< Vertex >( visited ),
+            new List< Edge >( visitedEdges ),
+            null,
+            null,
+            null,
+            null
+        );
+
         // put together final path 
         Vertex curr = this.dest;
-        while ( curr != this.src )
+        while ( !( curr is null ) && curr != this.src )
         {
             vertexPath.Add( curr );
-            curr = prev[ curr ];
+            edgePath.Add( this.Graph[ prev[ curr ], curr ] );
             if ( curr is null )
             {
+                // add error step
+                this.AddStep(
+                    StepType.ERROR,
+                    "Path could not be constructed.",
+                    new List< Vertex >( vertexPath ),
+                    new List< Edge >( edgePath ),
+                    null,
+                    null,
+                    null,
+                    null
+                );
+
                 vertexPath = new List<Vertex>();
                 return;
             }
+
+            // add result step
+            this.AddStep(
+                StepType.ADD_TO_RESULT,
+                "Construct path from destination.",
+                new List< Vertex >( vertexPath ),
+                new List< Edge >( edgePath ),
+                new List< Vertex >() { curr },
+                new List< Edge >() { this.Graph[ prev[ curr ], curr ] },
+                null,
+                null
+            );
+
+            curr = prev[ curr ];
         }
         vertexPath.Add( this.src );
         vertexPath.Reverse();
 
-        for (int i = 0; i < vertexPath.Count - 1; i++) {
-            HashSet<Edge> incidentEdges = this.Graph.GetIncidentEdges( vertexPath[ i ] );
-            foreach (Edge edge in incidentEdges) {
-                if (edge.vert1 == vertexPath[i + 1] || edge.vert2 == vertexPath[i + 1]) {
-                    edgePath.Add(edge);
-                }
-            }
-        }
-
         this.Path = edgePath;
+
+        // add finish step
+        this.AddStep(
+            StepType.FINISHED,
+            "Dijkstra's Algorithm finished.",
+            new List< Vertex >( vertexPath ),
+            new List< Edge >( edgePath ),
+            null,
+            null,
+            null,
+            null
+        );
     }
 
     public static int GetHash( Vertex src, Vertex dest ) => ( typeof ( DijkstrasAlgorithm ), src, dest ).GetHashCode();

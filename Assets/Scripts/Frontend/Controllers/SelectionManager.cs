@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class SelectionManager : SingletonBehavior<SelectionManager>
 {
@@ -191,5 +192,41 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
     // Change the type of selected edges
     public void ChangeSelectedEdgesType() {
         this.selectedEdges.ForEach(e => e.ToggleEdgeType());
+    }
+
+    public void IncrementSelectedEdgesThickness() {
+        List<Edge> edges = this.selectedEdges.Select(e => e.Edge).ToList();
+        edges.RemoveAll(e => e.Thickness >= 5);
+        if (edges.Count > 0) {
+            Edge.IncrementThicknesses(edges);
+            this.selectedEdges.ForEach(e => e.UpdateSpline());
+        }
+    }
+
+    public void DecrementSelectedEdgesThickness() {
+        List<Edge> edges = this.selectedEdges.Select(e => e.Edge).ToList();
+        edges.RemoveAll(e => e.Thickness <= 0);
+        if (edges.Count > 0) {
+            Edge.DecrementThicknesses(edges);
+            this.selectedEdges.ForEach(e => e.UpdateSpline());
+        }
+    }
+
+    public void IncrementSelectedEdgesCurvature() {
+        List<Edge> edges = this.selectedEdges.Select(e => e.Edge).ToList();
+        edges.RemoveAll(e => e.Curvature >= 5);
+        if (edges.Count > 0) {
+            Edge.IncrementCurvature(edges);
+            this.selectedEdges.ForEach(e => e.UpdateSpline());
+        }
+    }
+
+    public void DecrementSelectedEdgesCurvature() {
+        List<Edge> edges = this.selectedEdges.Select(e => e.Edge).ToList();
+        edges.RemoveAll(e => e.Curvature <= -5);
+        if (edges.Count > 0) {
+            Edge.DecrementCurvature(edges);
+            this.selectedEdges.ForEach(e => e.UpdateSpline());
+        }
     }
 }

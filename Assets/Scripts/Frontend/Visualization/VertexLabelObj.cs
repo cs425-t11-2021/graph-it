@@ -63,7 +63,7 @@ public class VertexLabelObj : MonoBehaviour
     {
         this.displayEnabled = enabled;
 
-        if (this.enabled)
+        if (this.displayEnabled)
         {
             MakeUneditable();
         }

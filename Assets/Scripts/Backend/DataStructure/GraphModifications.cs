@@ -7,26 +7,23 @@ using UnityEngine;
 
 public enum Modification
 {
-    ADD_VERTEX,         // modified is added vertex
     VERTEX_LABEL,       // modified is tuple consisting of vertex, oldLabel, newLabel
     VERTEX_POS,         // modified is tuple consisting of vertex, x0, y0, x1, y1
     VERTEX_STYLE,       // modified is tuple consisting of vertex, oldStyle, newStyle
     VERTEX_SIZE,        // modified is tuple consisting of vertex, oldSize, newSize
     VERTEX_COLOR,       // modified is tuple consisting of vertex, oldColor, newColor
 
-    ADD_EDGE,           // modified is added edge
     EDGE_DIRECTED,      // modified is a pair of vertex, newDirected. Guaranteed be called when directed value is different
     EDGE_LABEL,         // modified is tuple consisting of edge, oldLabel, newLabel
     EDGE_STYLE,         // modified is tuple consisting of edge, oldStyle, newStyle
     EDGE_COLOR,         // modified is tuple consisting of edge, oldColor, newColor
-    EDGE_THICKNESS,     // modified is tuple consisting of edge, oldThickness, newThickness
     EDGE_THICKNESSES,   // modified is tuple consisting of list of edges, list of oldThicknesses, list of newThickness
-    EDGE_CURVATURE,     // modified is tuple consisting of edge, oldCurvature, newCurvature
     EDGE_CURVATURES,    // modified is tuple consisting of list of edges, list of oldCurvatures, list of newCurvatures
     EDGE_TAIL_STYLE,    // modified is tuple consisting of edge, oldTail, newTail
     EDGE_HEAD_STYLE,    // modified is tuple consisting of edge, oldHead, newHead
     EDGE_REVERSE,       // modified is reversed edge
 
+    ADD_COLLECTION,     // modified is tuple consisting of hash set of vertices, hash set of edges
     REMOVE_COLLECTION   // modified is tuple consisting of hash set of vertices, hash set of edges
 }
 
@@ -43,7 +40,8 @@ public class GraphModification
         this.Modified = modified;
         this.graph.Changes.Push( this );
         this.graph.UndoneChanges.Clear();
-        // Graph.PrintStack( this.graph.Changes );
+
+        // Graph.PrintStack( this.graph.Changes ); // testing
         // Debug.Log( "" );
     }
 
@@ -51,9 +49,6 @@ public class GraphModification
     {
         switch ( this.Mod )
         {
-            case Modification.ADD_VERTEX:
-                this.UndoAddVertex();
-                break;
             case Modification.VERTEX_LABEL:
                 this.UndoVertexLabel();
                 break;
@@ -69,9 +64,6 @@ public class GraphModification
             case Modification.VERTEX_COLOR:
                 this.UndoVertexColor();
                 break;
-            case Modification.ADD_EDGE:
-                this.UndoAddEdge();
-                break;
             case Modification.EDGE_DIRECTED:
                 this.UndoEdgeDirected();
                 break;
@@ -84,14 +76,8 @@ public class GraphModification
             case Modification.EDGE_COLOR:
                 this.UndoEdgeColor();
                 break;
-            case Modification.EDGE_THICKNESS:
-                this.UndoEdgeThickness();
-                break;
             case Modification.EDGE_THICKNESSES:
                 this.UndoEdgeThicknesses();
-                break;
-            case Modification.EDGE_CURVATURE:
-                this.UndoEdgeCurvature();
                 break;
             case Modification.EDGE_CURVATURES:
                 this.UndoEdgeCurvatures();
@@ -105,6 +91,9 @@ public class GraphModification
             case Modification.EDGE_REVERSE:
                 this.UndoEdgeReverse();
                 break;
+            case Modification.ADD_COLLECTION:
+                this.UndoAddCollection();
+                break;
             case Modification.REMOVE_COLLECTION:
                 this.UndoRemoveCollection();
                 break;
@@ -112,14 +101,6 @@ public class GraphModification
         
         // Update Algorithm Manager
         GraphInfo.Singleton.UpdateGraphInfo();
-    }
-
-    private void UndoAddVertex()
-    {
-        this.graph.Remove( ( Vertex ) this.Modified, false );
-        
-        // Update front end
-        Controller.Singleton.RemoveVertex(Controller.Singleton.GetVertexObj( ( Vertex ) this.Modified), false );
     }
 
     private void UndoVertexLabel()
@@ -167,14 +148,6 @@ public class GraphModification
         // TODO: FRONT END NOT IMPLEMENTED
     }
 
-    private void UndoAddEdge()
-    {
-        this.graph.Remove( ( Edge ) this.Modified, false );
-        
-        // Update front end
-        Controller.Singleton.RemoveEdge(Controller.Singleton.GetEdgeObj( ( Edge ) this.Modified), false );
-    }
-
     private void UndoEdgeDirected()
     {
         ( Edge, bool ) directedData = ( ( Edge, bool ) ) this.Modified;
@@ -205,42 +178,30 @@ public class GraphModification
         colorData.Item1.SetColor( colorData.Item2, false );
     }
 
-    private void UndoEdgeThickness()
-    {
-        ( Edge, uint, uint ) thicknessData = ( ( Edge, uint, uint ) ) this.Modified;
-        thicknessData.Item1.SetThickness( thicknessData.Item2, false );
-
-        // Update front end
-        Controller.Singleton.GetEdgeObj( thicknessData.Item1 ).SetThickness(thicknessData.Item2, false);
-    }
-
     private void UndoEdgeThicknesses()
     {
         ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
-        for ( int i = 0; i < thicknessData.Item1.Count; ++i )
-            thicknessData.Item1[ i ].SetThickness( thicknessData.Item2[ i ], false );
+        for (int i = 0; i < thicknessData.Item1.Count; ++i)
+        {
+            thicknessData.Item1[i].SetThickness(thicknessData.Item2[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( thicknessData.Item1[i] ).UpdateSpline();
+        }
 
-        // TODO: Update front end
-        // Controller.Singleton.GetEdgeObj( thicknessData.Item1 ).SetThickness(thicknessData.Item2, false);
-    }
-
-    private void UndoEdgeCurvature()
-    {
-        ( Edge, int, int ) curveData = ( ( Edge, int, int ) ) this.Modified;
-        curveData.Item1.SetCurvature( curveData.Item2, false );
-
-        // Update front end
-        Controller.Singleton.GetEdgeObj( curveData.Item1 ).SetCurvature(curveData.Item2, false);
+        
     }
 
     private void UndoEdgeCurvatures()
     {
         ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
-        for ( int i = 0; i < curveData.Item1.Count; ++i )
-            curveData.Item1[ i ].SetCurvature( curveData.Item2[ i ], false );
-
-        // TODO: Update front end
-        // Controller.Singleton.GetEdgeObj( curveData.Item1 ).SetCurvature(curveData.Item2, false);
+        for (int i = 0; i < curveData.Item1.Count; ++i)
+        {
+            curveData.Item1[i].SetCurvature(curveData.Item2[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( curveData.Item1[i] ).UpdateSpline();
+        }
     }
 
     private void UndoEdgeTailStyle()
@@ -263,25 +224,52 @@ public class GraphModification
         Controller.Singleton.GetEdgeObj( ( Edge ) this.Modified ).ReverseEdge(false);
     }
 
+    private void UndoAddCollection()
+    {
+        ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
+        if ( !( collection.Item2 is null ) )
+        {
+            foreach ( Edge edge in collection.Item2 )
+            {
+                this.graph.Remove( edge, false );
+
+                // Update front end
+                Controller.Singleton.RemoveEdge( Controller.Singleton.GetEdgeObj( edge ), false );
+            }
+        }
+        if ( !( collection.Item1 is null ) )
+        {
+            foreach ( Vertex vert in collection.Item1 )
+            {
+                this.graph.Remove( vert, false );
+
+                // Update front end
+                Controller.Singleton.RemoveVertex( Controller.Singleton.GetVertexObj( vert ), false );
+            }
+        }
+    }
+
     private void UndoRemoveCollection()
     {
         ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
-        if ( !( collection.Item1 is null ) )
-        {
-            foreach ( Vertex vert in collection.Item1 ) {
-                this.graph.AddVertex( vert, false );
-
-                // Update front end
-                Controller.Singleton.CreateVertexObj( vert );
-            }
-        }
         if ( !( collection.Item2 is null ) )
         {
-            foreach ( Edge edge in collection.Item2 ) {
-                this.graph.AddEdge( edge, false );
+            foreach ( Edge edge in collection.Item2 )
+            {
+                this.graph.Add( edge, false );
 
                 // Update front end
                 Controller.Singleton.CreateEdgeObj( edge );
+            }
+        }
+        if ( !( collection.Item1 is null ) )
+        {
+            foreach ( Vertex vert in collection.Item1 )
+            {
+                this.graph.Add( vert, false );
+
+                // Update front end
+                Controller.Singleton.CreateVertexObj( vert );
             }
         }
     }
@@ -290,9 +278,6 @@ public class GraphModification
     {
         switch ( this.Mod )
         {
-            case Modification.ADD_VERTEX:
-                this.RedoAddVertex();
-                break;
             case Modification.VERTEX_LABEL:
                 this.RedoVertexLabel();
                 break;
@@ -308,9 +293,6 @@ public class GraphModification
             case Modification.VERTEX_COLOR:
                 this.RedoVertexColor();
                 break;
-            case Modification.ADD_EDGE:
-                this.RedoAddEdge();
-                break;
             case Modification.EDGE_DIRECTED:
                 this.RedoEdgeDirected();
                 break;
@@ -323,11 +305,11 @@ public class GraphModification
             case Modification.EDGE_COLOR:
                 this.RedoEdgeColor();
                 break;
-            case Modification.EDGE_THICKNESS:
-                this.RedoEdgeThickness();
+            case Modification.EDGE_THICKNESSES:
+                this.RedoEdgeThicknesses();
                 break;
-            case Modification.EDGE_CURVATURE:
-                this.RedoEdgeCurvature();
+            case Modification.EDGE_CURVATURES:
+                this.RedoEdgeCurvatures();
                 break;
             case Modification.EDGE_TAIL_STYLE:
                 this.RedoEdgeTailStyle();
@@ -338,6 +320,9 @@ public class GraphModification
             case Modification.EDGE_REVERSE:
                 this.RedoEdgeReverse();
                 break;
+            case Modification.ADD_COLLECTION:
+                this.RedoAddCollection();
+                break;
             case Modification.REMOVE_COLLECTION:
                 this.RedoRemoveCollection();
                 break;
@@ -345,14 +330,6 @@ public class GraphModification
         
         // Update Algorithm Manager
         GraphInfo.Singleton.UpdateGraphInfo();
-    }
-
-    private void RedoAddVertex()
-    {
-        this.graph.AddVertex( ( Vertex ) this.Modified, false );
-        
-        // Update front end
-        Controller.Singleton.CreateVertexObj((Vertex) this.Modified);
     }
 
     private void RedoVertexLabel()
@@ -393,14 +370,6 @@ public class GraphModification
         colorData.Item1.SetColor( colorData.Item3, false );
     }
 
-    private void RedoAddEdge()
-    {
-        this.graph.AddEdge( ( Edge ) this.Modified, false );
-
-        // Update front end
-        Controller.Singleton.CreateEdgeObj((Edge) this.Modified);
-    }
-
     private void RedoEdgeDirected()
     {
         ( Edge, bool ) directedData = ( ( Edge, bool ) ) this.Modified;
@@ -431,22 +400,28 @@ public class GraphModification
         colorData.Item1.SetColor( colorData.Item3, false );
     }
 
-    private void RedoEdgeThickness()
+    private void RedoEdgeThicknesses()
     {
-        ( Edge, uint, uint ) thicknessData = ( ( Edge, uint, uint ) ) this.Modified;
-        thicknessData.Item1.SetThickness( thicknessData.Item3, false );
-
-        // Update front end
-        Controller.Singleton.GetEdgeObj( thicknessData.Item1 ).SetThickness(thicknessData.Item3, false);
+        ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for (int i = 0; i < thicknessData.Item1.Count; ++i)
+        {
+            thicknessData.Item1[i].SetThickness(thicknessData.Item3[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( thicknessData.Item1[i] ).UpdateSpline();
+        }
     }
 
-    private void RedoEdgeCurvature()
+    private void RedoEdgeCurvatures()
     {
-        ( Edge, int, int ) curveData = ( ( Edge, int, int ) ) this.Modified;
-        curveData.Item1.SetCurvature( curveData.Item3, false );
-
-        // Update front end
-        Controller.Singleton.GetEdgeObj( curveData.Item1 ).SetCurvature(curveData.Item3, false);
+        ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
+        for (int i = 0; i < curveData.Item1.Count; ++i)
+        {
+            curveData.Item1[i].SetCurvature(curveData.Item3[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( curveData.Item1[i] ).UpdateSpline();
+        }
     }
 
     private void RedoEdgeTailStyle()
@@ -466,30 +441,51 @@ public class GraphModification
         this.UndoEdgeReverse();
     }
 
+    private void RedoAddCollection()
+    {
+        ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
+        
+        if ( !( collection.Item1 is null ) )
+        {
+            this.graph.Add( new List< Vertex >( collection.Item1 ), false );
+
+            // Update front end
+            foreach ( Vertex v in collection.Item1 )
+                // Controller.Singleton.RemoveVertex( Controller.Singleton.GetVertexObj( v ), false );
+                Controller.Singleton.CreateVertexObj(v, false);
+            Controller.Singleton.ForceInvokeModificationEvent();
+        }
+        if ( !( collection.Item2 is null ) )
+        {
+            this.graph.Add( new List< Edge >( collection.Item2 ), false );
+
+            // Update front end
+            foreach ( Edge e in collection.Item2 )
+                // Controller.Singleton.RemoveEdge( Controller.Singleton.GetEdgeObj( e ), false );
+                Controller.Singleton.CreateEdgeObj(e, false);
+            Controller.Singleton.ForceInvokeModificationEvent();
+        }
+    }
+
     private void RedoRemoveCollection()
     {
         ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
         
-        if (!(collection.Item2 is null))
+        if ( !( collection.Item2 is null ) )
         {
-            this.graph.Remove(new List<Edge>(collection.Item2));
-            
+            this.graph.Remove( new List< Edge >( collection.Item2 ), false );
+
             // Update front end
-            foreach (Edge e in collection.Item2)
-            {
-                Controller.Singleton.RemoveEdge(Controller.Singleton.GetEdgeObj( e ), false );
-            }
+            foreach ( Edge e in collection.Item2 )
+                Controller.Singleton.RemoveEdge( Controller.Singleton.GetEdgeObj( e ), false );
         }
-        
-        if (!(collection.Item1 is null))
+        if ( !( collection.Item1 is null ) )
         {
-            this.graph.Remove(new List<Vertex>(collection.Item1));
-            
+            this.graph.Remove( new List< Vertex >( collection.Item1 ), false );
+
             // Update front end
-            foreach (Vertex v in collection.Item1)
-            {
-                Controller.Singleton.RemoveVertex(Controller.Singleton.GetVertexObj( v ), false );
-            }
+            foreach ( Vertex v in collection.Item1 )
+                Controller.Singleton.RemoveVertex( Controller.Singleton.GetVertexObj( v ), false );
         }
     }
 }

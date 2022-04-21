@@ -170,16 +170,18 @@ public class AlgorithmManager
     public List< Edge > GetBreadthFirstSearchTreeWithAction( Vertex root, Action< Edge, Vertex > action ) => ( ( BreadthFirstSearchAlgorithm ) this.complete.GetValue( BreadthFirstSearchAlgorithm.GetHash( root, action ) ) )?.Tree;
 
 
-    public bool NextStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).NextStepAvailable();
+    public bool IsNextStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsNextStepAvailable();
 
-    public bool BackStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).BackStepAvailable();
+    public bool IsBackStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsBackStepAvailable();
 
-    public bool GetStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).GetStepAvailable();
+    public bool IsAnyStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsFirstStepAvailable();
+
+    public bool IsStepAvailable( int step, Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsStepAvailable( step );
 
     public void NextStep( Type loggedAlgo, object[] parms )
     {
         LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
-        if ( !algo.NextStepAvailable() )
+        if ( !algo.IsNextStepAvailable() )
             throw new System.Exception( "The provided algorithm's next step is not available." );
         algo.NextStep();
     }
@@ -187,18 +189,27 @@ public class AlgorithmManager
     public void BackStep( Type loggedAlgo, object[] parms )
     {
         LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
-        if ( !algo.BackStepAvailable() )
+        if ( !algo.IsBackStepAvailable() )
             throw new System.Exception( "The provided algorithm's back step is not available." );
         algo.BackStep();
     }
 
-    public ( StepType, List< Vertex >, List< Edge >, string ) GetStep( Type loggedAlgo, object[] parms )
+    public void GoToStep( int step, Type loggedAlgo, object[] parms )
     {
         LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
-        if ( !algo.GetStepAvailable() )
+        if ( !algo.IsStepAvailable( step ) )
+            throw new System.Exception( "The provided algorithm's step is not available." );
+        algo.GoToStep( step );
+    }
+
+    public AlgorithmStep GetStep( Type loggedAlgo, object[] parms )
+    {
+        LoggedAlgorithm algo = ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms );
+        if ( !algo.IsFirstStepAvailable() )
             throw new System.Exception( "The provided algorithm's step is not available." );
         return algo.GetStep();
     }
+
 
     private Algorithm GetAlgorithm( Type algorithm, object[] parms )
     {
@@ -258,6 +269,17 @@ public class AlgorithmManager
         Logger.Log( "Stopping all algorithms.", this, LogType.INFO );
         foreach ( KeyValuePair< int, Algorithm > kvp in this.running.ToList() )
             kvp.Value?.Kill();
+    }
+
+    public void KillAlgo( Type algo, params object[] parms )
+    {
+        int hash = ( int ) algo.GetMethod( "GetHash" ).Invoke( null, parms );
+        this.KillAlgo( hash );
+    }
+
+    public void KillAlgo( int hash )
+    {
+        this.running.GetValue( hash )?.Kill();
     }
 
     ~AlgorithmManager()

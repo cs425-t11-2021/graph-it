@@ -42,7 +42,7 @@ public class AlgorithmDisplayState : ManipulationState
                 {
                     if (resultEdges.Contains(edgeObj.Edge))
                     {
-                        edgeObj.IsAlgorithmResult = true;
+                        edgeObj.AlgorithmResultLevel = 3;
                         this.highlightedEdges.Add(edgeObj);
                     }
                 }
@@ -51,7 +51,7 @@ public class AlgorithmDisplayState : ManipulationState
                 {
                     if (resultVertices.Contains(vertexObj.Vertex))
                     {
-                        vertexObj.IsAlgorithmResult = true;
+                        vertexObj.AlgorithmResultLevel = 3;
                         this.highlightedVertices.Add(vertexObj);
                     }
                 }
@@ -67,7 +67,7 @@ public class AlgorithmDisplayState : ManipulationState
                 {
                     if (resultEdges.Contains(edgeObj.Edge))
                     {
-                        edgeObj.IsAlgorithmResult = true;
+                        edgeObj.AlgorithmResultLevel = 0;
                         this.highlightedEdges.Add(edgeObj);
                     }
                 }
@@ -76,7 +76,7 @@ public class AlgorithmDisplayState : ManipulationState
                 {
                     if (resultVertices.Contains(vertexObj.Vertex))
                     {
-                        vertexObj.IsAlgorithmResult = true;
+                        vertexObj.AlgorithmResultLevel = 0;
                         this.highlightedVertices.Add(vertexObj);
                     }
                 }
@@ -130,8 +130,8 @@ public class AlgorithmDisplayState : ManipulationState
 
     public override void OnStateExit()
     {
-        this.highlightedEdges.ForEach(e => e.IsAlgorithmResult = false);
-        this.highlightedVertices.ForEach(v => v.IsAlgorithmResult = false);
+        this.highlightedEdges.ForEach(e => e.AlgorithmResultLevel = 0);
+        this.highlightedVertices.ForEach(v => v.AlgorithmResultLevel = 0);
         
         AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = "";
         AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);
