@@ -7395,7 +7395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Open
-  offset: {x: 65, y: -10, z: 0}
+  offset: {x: 90, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &684446434
 MonoBehaviour:
@@ -20094,7 +20094,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Open
-  offset: {x: 65, y: -10, z: 0}
+  offset: {x: 90, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!1 &1709803080
 GameObject:
@@ -21620,6 +21620,8 @@ GameObject:
   - component: {fileID: 1860173417}
   - component: {fileID: 1860173419}
   - component: {fileID: 1860173418}
+  - component: {fileID: 1860173421}
+  - component: {fileID: 1860173420}
   m_Layer: 5
   m_Name: info icon
   m_TagString: Untagged
@@ -21684,6 +21686,71 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1860173416}
   m_CullTransparentMesh: 1
+--- !u!114 &1860173420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860173416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0675a6e48b009bf479f6ebcd0369b542, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 765814139225906435, guid: d6f6133ff1afaa440a4c7c9579513dc3, type: 3}
+  labelDescription: 'Chromatic Number: The least number of colors required to color
+    the vertices of a graph such that no edge is monochromatic. \n \n Bipartite:
+    The vertices of a graph can be separated into two disjoint independent sets.         
+    Radius: The minimal maximal distance between any two vertices of a graph.              
+    Diameter: The maximal minimal distance between any two vertices of a graph.'
+  offset: {x: 170, y: -270, z: 0}
+  size: {x: 400, y: 600}
+--- !u!114 &1860173421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1860173416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1860173420}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverMouse
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 1860173420}
+          m_TargetAssemblyTypeName: OnHover, Assembly-CSharp
+          m_MethodName: OnHoverExit
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &1863659744
 GameObject:
   m_ObjectHideFlags: 0
@@ -26743,6 +26810,10 @@ PrefabInstance:
     - target: {fileID: 765814139225906435, guid: d6f6133ff1afaa440a4c7c9579513dc3, type: 3}
       propertyPath: m_Name
       value: graph info description
+      objectReference: {fileID: 0}
+    - target: {fileID: 765814139225906435, guid: d6f6133ff1afaa440a4c7c9579513dc3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1638108733172164011, guid: d6f6133ff1afaa440a4c7c9579513dc3, type: 3}
       propertyPath: m_Pivot.x
