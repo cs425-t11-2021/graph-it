@@ -123,7 +123,7 @@ public class EdgeObj : MonoBehaviour
         UpdateSpline();
     }
 
-    private void UpdateSpline()
+    public void UpdateSpline()
     {
         this.transform.parent.position = this.Vertex1.transform.position + new Vector3(0f, 0f, 1f);
         if (this.Edge.Curvature == int.MaxValue) {
@@ -387,61 +387,28 @@ public class EdgeObj : MonoBehaviour
         UpdateSpline();
     }
 
-    public void ChangeThickness(int change)
-    {
-        uint newThickness = this.Edge.Thickness;
-        if (change > 0)
-        {
-            newThickness = this.Edge.Thickness + 1;
-            if (newThickness > 5)
-            {
-                newThickness = 5;
-            }
-        }
-        else
-        {
-            if (this.Edge.Thickness != 0)
-            {
-                newThickness = this.Edge.Thickness - 1;
-            }
-        }
+    // public void ChangeThickness(int change)
+    // {
+    //     uint newThickness = this.Edge.Thickness;
+    //     if (change > 0)
+    //     {
+    //         newThickness = this.Edge.Thickness + 1;
+    //         if (newThickness > 5)
+    //         {
+    //             newThickness = 5;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         if (this.Edge.Thickness != 0)
+    //         {
+    //             newThickness = this.Edge.Thickness - 1;
+    //         }
+    //     }
         
-        Logger.Log("Edge thickness changed to " + newThickness, this, LogType.INFO);
-        SetThickness(newThickness);
-    }
-
-    public void SetThickness(uint thickness, bool updateDS = true) {
-        if (updateDS) this.Edge.Thickness = thickness;
-        UpdateSpline();
-    }
-
-    public void ChangeCurvature(int change)
-    {
-        int newCurvature = this.Edge.Curvature;
-        if (change > 0)
-        {
-            newCurvature += 1;
-            if (newCurvature > 12)
-            {
-                newCurvature = 12;
-            }
-        }
-        else
-        {
-            if (newCurvature != 0)
-            {
-                newCurvature -= 1;
-            }
-        }
-        
-        Logger.Log("Edge curvature changed to " + this.Edge.Curvature, this, LogType.INFO);
-        SetCurvature(newCurvature);
-    }
-
-    public void SetCurvature(int curvature, bool updateDS = true) {
-        if (updateDS) this.Edge.Curvature = curvature;
-        UpdateSpline();
-    }
+    //     Logger.Log("Edge thickness changed to " + newThickness, this, LogType.INFO);
+    //     SetThickness(newThickness);
+    // }
 
     private void OnDestroy()
     {
