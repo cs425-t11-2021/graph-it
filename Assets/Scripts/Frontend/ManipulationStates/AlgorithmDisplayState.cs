@@ -67,7 +67,7 @@ public class AlgorithmDisplayState : ManipulationState
                 {
                     if (resultEdges.Contains(edgeObj.Edge))
                     {
-                        edgeObj.AlgorithmResultLevel = 0;
+                        edgeObj.AlgorithmResultLevel = 3;
                         this.highlightedEdges.Add(edgeObj);
                     }
                 }
@@ -76,7 +76,7 @@ public class AlgorithmDisplayState : ManipulationState
                 {
                     if (resultVertices.Contains(vertexObj.Vertex))
                     {
-                        vertexObj.AlgorithmResultLevel = 0;
+                        vertexObj.AlgorithmResultLevel = 3;
                         this.highlightedVertices.Add(vertexObj);
                     }
                 }
