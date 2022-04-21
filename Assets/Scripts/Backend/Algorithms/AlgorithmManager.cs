@@ -271,6 +271,17 @@ public class AlgorithmManager
             kvp.Value?.Kill();
     }
 
+    public void KillAlgo( Type algo, params object[] parms )
+    {
+        int hash = ( int ) algo.GetMethod( "GetHash" ).Invoke( null, parms );
+        this.KillAlgo( hash );
+    }
+
+    public void KillAlgo( int hash )
+    {
+        this.running.GetValue( hash )?.Kill();
+    }
+
     ~AlgorithmManager()
     {
         this.KillAll();

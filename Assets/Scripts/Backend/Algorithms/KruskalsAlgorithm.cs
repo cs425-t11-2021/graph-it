@@ -39,7 +39,7 @@ public class KruskalsAlgorithm : LoggedAlgorithm
             "Add each vertex to its own tree.",
             new List< Vertex >( this.Graph.Vertices ),
             null,
-            null,
+            new List< Vertex >( this.Graph.Vertices ),
             null,
             null,
             null

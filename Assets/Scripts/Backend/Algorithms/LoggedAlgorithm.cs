@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Collections.Generic;
 
-public enum StepType { ADD_TO_RESULT, CONSIDER, FINISHED }
+public enum StepType { ADD_TO_RESULT, CONSIDER, FINISHED, ERROR }
 
 public struct AlgorithmStep
 {
