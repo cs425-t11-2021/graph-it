@@ -10992,7 +10992,7 @@ MonoBehaviour:
     requiredVertices: 0
     activationMethod: RunMatching
     completedMethod: GetMaxMatching
-    description: 
+    description: Provides a maximal matching.
     resultType: 0
     extraInfo:
     - lead: Max Matching Card
@@ -11004,7 +11004,7 @@ MonoBehaviour:
     requiredVertices: 0
     activationMethod: RunClique
     completedMethod: GetMaxClique
-    description: 
+    description: 'Provides the largest clique. '
     resultType: 1
     extraInfo:
     - lead: Clique Number
@@ -11016,7 +11016,7 @@ MonoBehaviour:
     requiredVertices: 0
     activationMethod: RunIndependence
     completedMethod: GetMaxIndependentSet
-    description: 
+    description: 'Provides the largest independent set. '
     resultType: 1
     extraInfo:
     - lead: Independence Number
@@ -15639,7 +15639,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1159227432}
   m_HandleRect: {fileID: 1159227431}
   m_Direction: 2
-  m_Value: 1.0000004
+  m_Value: 0.9999998
   m_Size: 0.56930393
   m_NumberOfSteps: 0
   m_OnValueChanged:
