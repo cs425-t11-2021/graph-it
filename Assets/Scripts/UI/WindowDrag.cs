@@ -10,7 +10,13 @@ public class WindowDrag : MonoBehaviour, IDragHandler//, IPointerDownHandler
     public void OnDrag(PointerEventData eventData){
         //throw new System.NotImplementedException();
         //Debug.Log("Dragging Window");
-        windowToDrag.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        if (CursorInScreen())
+            windowToDrag.anchoredPosition += eventData.delta / canvas.scaleFactor;
+    }
+
+    private bool CursorInScreen() {
+        Vector3 cursorViewPoint = Camera.main.ScreenToViewportPoint(Input.mousePosition);
+        return !(cursorViewPoint.x < 0 || cursorViewPoint.x > 1 || cursorViewPoint.y < 0 || cursorViewPoint.y > 1);
     }
 
     //maybe not needed, but if multiple windows of same priority:
