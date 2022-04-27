@@ -62,6 +62,13 @@ public class UIManager : SingletonBehavior<UIManager>
         }
     }
 
+
+    public bool TabsBarEnabled{
+        set{
+            ToggleButton[] tabs = this.tabsBar.GetComponentsInChildren<ToggleButton>(true);
+            Array.ForEach(tabs, togButton => togButton.enabled = value);
+        }
+    }
     // Property for whether or not the toolbar is enabled
     public bool ToolBarEnabled {
         set {

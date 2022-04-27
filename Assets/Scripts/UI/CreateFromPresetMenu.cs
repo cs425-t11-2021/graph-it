@@ -20,6 +20,7 @@ public class CreateFromPresetMenu : MonoBehaviour
         UIManager.Singleton.OpenGraphInfoPanelEnabled = false;
         UIManager.Singleton.AlgorithmsPanelEnabled = false;
         UIManager.Singleton.OpenAlgInfoPanelEnabled = false;
+        UIManager.Singleton.TabsBarEnabled = false;
         UIManager.Singleton.ToolBarEnabled = false;
 
         // Suspend the manipulation state if the import menu is active
@@ -35,6 +36,7 @@ public class CreateFromPresetMenu : MonoBehaviour
         UIManager.Singleton.OpenGraphInfoPanelEnabled = true;
         UIManager.Singleton.AlgorithmsPanelEnabled = true;
         UIManager.Singleton.OpenAlgInfoPanelEnabled = true;
+        UIManager.Singleton.TabsBarEnabled = true;
         UIManager.Singleton.ToolBarEnabled = true;
 
         // Unsuspend the manipulation state
