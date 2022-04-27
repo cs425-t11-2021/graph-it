@@ -171,6 +171,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             if (association.algorithmClass == algorithmName)
             {
                 association.OnCompleteUpdateDisplay(vertexParms);
+                association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName;
                 return;
             }
         }        
@@ -192,6 +193,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         {
             Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, new Object[] {true});
         }
+
+        association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName + "...";
     }
 
     public void SelectAlgorithm(string algorithmName) {
@@ -334,6 +337,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void SetStepByStep(bool enabled)
     {
         this.StepByStep = enabled;
+        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        this.resultButton.UpdateStatus(false);
     }
 
     public void GetNextStep() {
