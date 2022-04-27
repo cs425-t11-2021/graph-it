@@ -8,8 +8,8 @@ using System.Collections.Generic;
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
-    public int ChromaticNumber { get; private set; }
-    public int[] Coloring { get; private set; }
+    public int chi;
+    public int[] coloring;
 
     public ChromaticAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
@@ -19,25 +19,23 @@ public class ChromaticAlgorithm : Algorithm
 
         this.AlgoManager.RunMaxDegree();
 
-        int[] coloring = new int[ this.Graph.Order ];
-        int chi = Math.Min( this.Graph.Order, 1 );
+        this.coloring = new int[ this.Graph.Order ];
+        this.chi = Math.Min( this.Graph.Order, 1 );
         this.WaitUntilMaxDegreeComplete();
-        int upperBound = ( int ) this.AlgoManager.GetMaxDegree() + 1;
+        int upperBound = ( int ) this.AlgoManager.GetMaxDegree().results[ "maximum degree" ].Item1 + 1;
         // TODO: use clique number for lower bound
 
         while ( !this.IsProperColoring( coloring ) )
         {
-            if ( chi > upperBound ) // something really bad happended
+            if ( this.chi > upperBound ) // something really bad happended
                 throw new System.Exception( "Coloring could not be computed." );
-            if ( coloring.Min() >= chi - 1 )
+            if ( coloring.Min() >= this.chi - 1 )
             {
-                chi++;
+                this.chi++;
                 Array.Clear( coloring, 0, coloring.Length );
             }
-            this.UpdateColoring( coloring, chi );
+            this.UpdateColoring( coloring, this.chi );
         }
-        this.Coloring = coloring;
-        this.ChromaticNumber = chi;
     }
 
     private bool IsProperColoring( int[] coloring )
@@ -67,6 +65,18 @@ public class ChromaticAlgorithm : Algorithm
             else
                 this.UpdateColoring( coloring, colors, ++index );
         }
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "chromatic number" ] = ( this.chi, typeof ( int ) );
+        result.results[ "minimal coloring" ] = ( this.coloring, typeof ( int[] ) );
+        return result;
     }
 
     private void WaitUntilMaxDegreeComplete()

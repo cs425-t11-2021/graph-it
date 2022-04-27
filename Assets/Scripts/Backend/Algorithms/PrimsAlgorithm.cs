@@ -8,13 +8,16 @@ using System.Collections.Generic;
 [System.Serializable]
 public class PrimsAlgorithm : LoggedAlgorithm
 {
-    public List< Edge > Mst { get; private set; }
     private Vertex root;
+
+    private float cost;
+    private List< Vertex > mstVertices;
+    private List< Edge > mstEdges;
 
     public PrimsAlgorithm( AlgorithmManager algoManager,  bool display, Vertex root ) : base( algoManager )
     {
         if ( !this.Graph.Vertices.Contains( root ) )
-            throw new System.Exception( "Vertex for Prim's algorithm is not in graph." );
+            this.CreateError( "Vertex for Prim's algorithm is not in graph." );
         this.root = root;
         
         // Assign the type of the algorithm
@@ -29,38 +32,35 @@ public class PrimsAlgorithm : LoggedAlgorithm
     public override void Run()
     {
         if ( this.Graph.Directed )
-        {
-            RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( "<color=red>Prim's algorithm is unsupported on directed graphs.</color>", 3 ) );
-            throw new System.Exception( "Prim's algorithm is unsupported on directed graphs." );
-        }
+            this.CreateError( "Prim's algorithm is unsupported on directed graphs." );
 
-        List< Edge > mst = new List< Edge >();
-        HashSet< Vertex > mstVertices = new HashSet< Vertex >() { this.root };
+        this.mstEdges = new List< Edge >();
+        HashSet< Vertex > mstVerticesSet = new HashSet< Vertex >() { this.root };
 
         // add result step
         this.AddStep(
             StepType.ADD_TO_RESULT,
             "Add root to tree.",
-            new List< Vertex >( mstVertices ),
+            new List< Vertex >( mstVerticesSet ),
             null,
-            new List< Vertex >( mstVertices ),
+            new List< Vertex >( mstVerticesSet ),
             null,
             null,
             null
         );
 
         int mstVerticesPrevCount = -1;
-        while ( mstVerticesPrevCount != mstVertices.Count )
+        while ( mstVerticesPrevCount != mstVerticesSet.Count )
         {
-            mstVerticesPrevCount = mstVertices.Count;
-            IEnumerable< Edge > incidentEdges = this.Graph.GetIncidentEdges( mstVertices ).OrderBy( edge => edge.Weight );
+            mstVerticesPrevCount = mstVerticesSet.Count;
+            IEnumerable< Edge > incidentEdges = this.Graph.GetIncidentEdges( mstVerticesSet ).OrderBy( edge => edge.Weight );
 
             // add consider step
             this.AddStep(
                 StepType.CONSIDER,
                 "Find minimally weighted incident edge.",
-                new List< Vertex >( mstVertices ),
-                new List< Edge >( mst ),
+                new List< Vertex >( mstVerticesSet ),
+                new List< Edge >( this.mstEdges ),
                 null,
                 null,
                 new List< Vertex >( Edge.GetIncidentVertices( incidentEdges ) ),
@@ -71,15 +71,16 @@ public class PrimsAlgorithm : LoggedAlgorithm
             {
                 if ( !mstVertices.Contains( edge.vert1 ) || !mstVertices.Contains( edge.vert2 ) )
                 {
-                    mstVertices.Add( edge.vert1 );
-                    mstVertices.Add( edge.vert2 );
-                    mst.Add( edge );
+                    mstVerticesSet.Add( edge.vert1 );
+                    mstVerticesSet.Add( edge.vert2 );
+                    this.mstEdges.Add( edge );
+
                     // add result step
                     this.AddStep(
                         StepType.ADD_TO_RESULT,
                         "Add minimally weighted incident edge with weight " + edge.Weight,
-                        new List< Vertex >( mstVertices ),
-                        new List< Edge >( mst ),
+                        new List< Vertex >( mstVerticesSet ),
+                        new List< Edge >( this.mstEdges ),
                         new List< Vertex >() { edge.vert1, edge.vert2 },
                         new List< Edge >() { edge },
                         new List< Vertex >( Edge.GetIncidentVertices( incidentEdges ) ),
@@ -89,19 +90,33 @@ public class PrimsAlgorithm : LoggedAlgorithm
                 }
             }
         }
-        this.Mst = mst;
+        this.mstVertices = new List< Vertex >( mstVerticesSet );
+        this.cost = this.mstEdges.Select( e => e.Weight ).Aggregate( ( sum, w ) => sum + w );
 
         // add finished step
         this.AddStep(
             StepType.FINISHED,
             "Prim's Algorithm finished.",
-            new List< Vertex >( this.Graph.Vertices ),
-            new List< Edge >( mst ),
+            new List< Vertex >( this.mstVertices ),
+            new List< Edge >( this.mstEdges ),
             null,
             null,
             null,
             null
         );
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "prim cost" ] = ( this.cost, typeof ( float ) );
+        result.results[ "prim mst vertices" ] = ( this.mstVertices, typeof ( List< Vertex > ) );
+        result.results[ "prim mst edges" ] = ( this.mstEdges, typeof ( List< Edge > ) );
+        return result;
     }
 
     public static int GetHash( Vertex vert ) => ( typeof ( PrimsAlgorithm ), vert ).GetHashCode();

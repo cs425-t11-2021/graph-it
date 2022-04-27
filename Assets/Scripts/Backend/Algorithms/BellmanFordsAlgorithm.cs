@@ -9,16 +9,18 @@ using UnityEngine;
 [System.Serializable]
 public class BellmanFordsAlgorithm : LoggedAlgorithm
 {
-    public float Cost { get; private set; }
-    public List< Edge > Path { get; private set; }
     private Vertex src;
     private Vertex dest;
+
+    private float cost;
+    private List< Edge > edgePath;
+    private List< Vertex > vertexPath;
 
     public BellmanFordsAlgorithm( AlgorithmManager algoManager,  bool display, Vertex src, Vertex dest ) : base( algoManager )
     {
         this.src = src;
         this.dest = dest;
-        
+
         // Assign the type of the algorithm
         if ( display )
             this.type = AlgorithmType.DISPLAY;
@@ -31,14 +33,15 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
     public override void Run()
     {
         if ( this.Graph.Weighted && !this.Graph.FullyWeighted )
-            throw new System.Exception( "Graph is not fully weighted." );
+            this.CreateError( "Bellman-Ford cannot be executed on partially weighted graph." );
 
         // initialize data
         Dictionary< Vertex, float > dist = new Dictionary< Vertex, float >();
         Dictionary< Vertex, Edge > prev = new Dictionary< Vertex, Edge >();
-        List< Edge > path = new List< Edge >();
+        this.edgePath = new List< Edge >();
+        this.vertexPath = new List< Vertex >();
         foreach ( Vertex vert in this.Graph.Vertices )
-            dist[ vert ] = Single.PositiveInfinity;
+            dist[ vert ] = float.PositiveInfinity;
         dist[ src ] = 0;
 
         // add result step
@@ -119,20 +122,20 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
                     null
                 );
 
-                throw new System.Exception( "Negative weight cycle found." );
+                this.CreateError( "Bellman-Ford detected negative weight cycle." );
             }
         }
 
         // get path from tree
         float cost = 0;
         Vertex prevVert = this.dest;
-        List< Vertex > vertexPath = new List< Vertex >() { prevVert };
+        this.vertexPath.Add( prevVert );
 
         // add result step
         this.AddStep(
             StepType.ADD_TO_RESULT,
             "Construct path from destination.",
-            vertexPath,
+            new List< Vertex >( this.vertexPath ),
             null,
             null,
             null,
@@ -144,22 +147,22 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
         {
             Edge prevEdge = prev.GetValue( prevVert );
             if ( prevEdge is null )
-                throw new System.Exception( "Path could not be found." );
+                this.CreateError( "Bellman-Ford failed to construct path." );
             else
             {
-                if ( path.Contains( prevEdge ) )
-                    throw new System.Exception( "Path could not be found." );
-                path.Add( prevEdge );
+                if ( this.edgePath.Contains( prevEdge ) )
+                    this.CreateError( "Bellman-Ford failed to construct path." );
+                this.edgePath.Add( prevEdge );
                 prevVert = prevEdge.vert1 == prevVert ? prevEdge.vert2 : prevEdge.vert1;
-                vertexPath.Add( prevVert );
+                this.vertexPath.Add( prevVert );
                 cost += prevEdge.Weight;
 
                 // add result step
                 this.AddStep(
                     StepType.ADD_TO_RESULT,
                     "Construct path from destination.",
-                    vertexPath,
-                    new List< Edge >( path ),
+                    new List< Vertex >( this.vertexPath ),
+                    new List< Edge >( this.edgePath ),
                     new List< Vertex >() { prevVert },
                     new List< Edge >() { prevEdge },
                     null,
@@ -169,25 +172,34 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
         }
 
         if ( prevVert is null )
-            throw new System.Exception( "Path could not be found." );
+            this.CreateError( "Bellman-Ford failed to construct path." );
         else
-        {
-            path.Reverse();
-            this.Path = path;
-            this.Cost = cost;
-        }
+            this.edgePath.Reverse();
 
         // add finish step
         this.AddStep(
             StepType.FINISHED,
             "Bellman-Ford's Algorithm finished.",
             new List< Vertex >( vertexPath ),
-            new List< Edge >( path ),
+            new List< Edge >( edgePath ),
             null,
             null,
             null,
             null
         );
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "bellmanford cost" ] = ( this.cost, typeof ( float ) );
+        result.results[ "bellmanford vertices" ] = ( this.vertexPath, typeof ( List< Vertex > ) );
+        result.results[ "bellmanford edges" ] = ( this.edgePath, typeof ( List< Edge > ) );
+        return result;
     }
 
     public static int GetHash( Vertex src, Vertex dest ) => ( typeof ( BellmanFordsAlgorithm ), src, dest ).GetHashCode();

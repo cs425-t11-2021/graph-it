@@ -8,8 +8,8 @@ using System.Collections.Generic;
 [System.Serializable]
 public class IndependenceAlgorithm : Algorithm
 {
-    public int IndependenceNumber { get; private set; }
-    public List< Vertex > MaxIndependentSet { get; private set; }
+    private int alpha;
+    private List< Vertex > maxIndependentSet;
 
     public IndependenceAlgorithm(AlgorithmManager algoManager, bool display) : base(algoManager)
     {
@@ -23,29 +23,27 @@ public class IndependenceAlgorithm : Algorithm
     public override void Run()
     {
         bool[] set = new bool[ this.Graph.Order ];
-        int card = this.Graph.Order;
+        this.alpha = this.Graph.Order;
 
-        while ( !this.IsIndependentSet( set ) || !this.HasSpecifiedCardinality( set, card ) )
+        while ( !this.IsIndependentSet( set ) || !this.HasSpecifiedCardinality( set, this.alpha ) )
         {
-            if ( card < 0 ) // something really bad happended
-                throw new System.Exception( "Indepedent set could not be computed." );
+            if ( this.alpha < 0 ) // something really bad happended
+                this.CreateError( "Indepedent set could not be computed." );
             if ( set.All( s => s ) )
             {
-                card--;
+                this.alpha--;
                 Array.Clear( set, 0, set.Length );
             }
             this.UpdateSet( set );
         }
-        this.IndependenceNumber = card;
 
         // retrieve max independent set
-        List< Vertex > maxIndependentSet = new List< Vertex >();
+        this.maxIndependentSet = new List< Vertex >();
         for ( int i = 0; i < set.Length; ++i )
         {
             if ( set[ i ] )
-                maxIndependentSet.Add( this.Graph.Vertices[ i ] );
+                this.maxIndependentSet.Add( this.Graph.Vertices[ i ] );
         }
-        this.MaxIndependentSet = maxIndependentSet;
     }
 
     private bool IsIndependentSet( bool[] set )
@@ -85,6 +83,18 @@ public class IndependenceAlgorithm : Algorithm
                 c++;
         }
         return card == c;
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "indepednence number" ] = ( this.alpha, typeof ( int ) );
+        result.results[ "maximum independent set" ] = ( this.maxIndependentSet, typeof ( List< Vertex > ) );
+        return result;
     }
 
     public static int GetHash() => typeof ( IndependenceAlgorithm ).GetHashCode();
