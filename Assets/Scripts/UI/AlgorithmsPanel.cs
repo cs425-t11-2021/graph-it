@@ -171,7 +171,6 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             if (association.algorithmClass == algorithmName)
             {
                 association.OnCompleteUpdateDisplay(vertexParms);
-                association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName;
                 return;
             }
         }        
@@ -261,6 +260,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 association.activationButton.GetComponent<Image>().color = this.defaultFinishedColor;
                 association.activationButton.UpdateStatus(association.activationButton.Checked);
 
+                association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName;
+
                 if (CurrentlySelectedAlgorithm == association) {
                     this.resultButton.gameObject.SetActive(true);
                 }
@@ -311,6 +312,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             association.activationButton.checkedColor = this.selectedColor;
             association.activationButton.originalColor = this.deafultColor;
             association.activationButton.GetComponent<Image>().color = this.deafultColor;
+            association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName;
             association.activationButton.UpdateStatus(association.activationButton.Checked);
         }
 
