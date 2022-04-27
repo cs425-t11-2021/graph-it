@@ -192,6 +192,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         {
             Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, new Object[] {true});
         }
+
+        association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName + "...";
     }
 
     public void SelectAlgorithm(string algorithmName) {
@@ -258,6 +260,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 association.activationButton.GetComponent<Image>().color = this.defaultFinishedColor;
                 association.activationButton.UpdateStatus(association.activationButton.Checked);
 
+                association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName;
+
                 if (CurrentlySelectedAlgorithm == association) {
                     this.resultButton.gameObject.SetActive(true);
                 }
@@ -308,6 +312,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             association.activationButton.checkedColor = this.selectedColor;
             association.activationButton.originalColor = this.deafultColor;
             association.activationButton.GetComponent<Image>().color = this.deafultColor;
+            association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName;
             association.activationButton.UpdateStatus(association.activationButton.Checked);
         }
 
@@ -334,6 +339,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void SetStepByStep(bool enabled)
     {
         this.StepByStep = enabled;
+        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        this.resultButton.UpdateStatus(false);
     }
 
     public void GetNextStep() {
