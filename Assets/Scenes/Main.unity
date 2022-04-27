@@ -6199,9 +6199,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   menuBar: {fileID: 1251704790}
   graphInfoPanel: {fileID: 579688374}
-  openGraphInfo: {fileID: 684446427}
+  openGraphInfo: {fileID: 684446429}
   algPanel: {fileID: 1012987116}
-  openAlgPanel: {fileID: 1689317850}
+  openAlgPanel: {fileID: 1689317852}
   tabsBar: {fileID: 1646532291}
   toolbar: {fileID: 1228080542}
   mainCanvas: {fileID: 523876766}
