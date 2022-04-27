@@ -13,21 +13,6 @@ public class CopyManager : SingletonBehavior<CopyManager>
         clipboard = null;
     }
 
-    private void Update()
-    {
-        if (InputManager.Singleton.ControlCommandKeyHeld)
-        {
-            if (Input.GetKeyDown(KeyCode.C))
-            {
-                CopyCurrentSelection();
-            }
-            else if (Input.GetKeyDown(KeyCode.V))
-            {
-                Paste();
-            }
-        }
-    }
-
     public void CopyCurrentSelection()
     {
         if (SelectionManager.Singleton.SelectedVertices.Count == 0) return;

@@ -26,15 +26,6 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         Controller.Singleton.OnInstanceChanged += (newInstance) => DeSelectAll();
     }
 
-    private void Update() {
-        // Control + A to select all
-        if (InputManager.Singleton.ControlCommandKeyHeld) {
-            if (Input.GetKeyDown(KeyCode.A)) {
-                SelectAll();
-            }
-        }
-    }
-
     // Select a vertex if it's not selected
     public void SelectVertex(VertexObj vertexObj, bool callEvent = true)
     {
