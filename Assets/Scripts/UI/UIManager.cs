@@ -10,11 +10,14 @@ public class UIManager : SingletonBehavior<UIManager>
     [Header("UI Components")]
     // References to the different main UI components
     [SerializeField] private GameObject menuBar;
-    [SerializeField] private GameObject graphInfo;
+    [SerializeField] private GameObject graphInfoPanel;
+    [SerializeField] private GameObject openGraphInfo;
     [SerializeField] private GameObject algPanel;
-    [SerializeField] private GameObject importFileMenu;
-    [SerializeField] private GameObject exportFileMenu;
-    [SerializeField] private GameObject importErrorDialog;
+    [SerializeField] private GameObject openAlgPanel;
+    [SerializeField] private GameObject tabsBar;
+    //[SerializeField] private GameObject importFileMenu;
+    //[SerializeField] private GameObject exportFileMenu;
+    //[SerializeField] private GameObject importErrorDialog;
     [SerializeField] private GameObject toolbar;
     [SerializeField] public GameObject mainCanvas;
     [SerializeField] public GameObject selectionRect;
@@ -29,6 +32,10 @@ public class UIManager : SingletonBehavior<UIManager>
     public bool MenuBarEnabled {
         set => Array.ForEach(this.menuButtons, menuButton => menuButton.ToggleButtonEnabled = value);
     }
+
+    /*public bool GraphInfoEnabled{
+        set => this.graphInfo.GraphInfoEnabled = value;
+    }*/
 
     // Property for whether or not the algorithm panel is enabled
     public bool AlgorithmsPanelEnabled {
@@ -47,8 +54,9 @@ public class UIManager : SingletonBehavior<UIManager>
 
     // Array of all menu bar buttons
     private MenuButton[] menuButtons;
+
     //Reference to the graph info
-    //private GraphInfo graphInfo;
+    private GraphInfo graphInfo;
 
     // Reference to the algorithm panel
     private AlgorithmsPanel algorithmsPanel;
@@ -57,6 +65,7 @@ public class UIManager : SingletonBehavior<UIManager>
         // Get references
         this.menuButtons = this.menuBar.GetComponentsInChildren<MenuButton>(true);
         this.algorithmsPanel = this.algPanel.GetComponentInChildren<AlgorithmsPanel>();
+        this.graphInfo = this.graphInfoPanel.GetComponentInChildren<GraphInfo>();
     }
 
     private void Update() {
