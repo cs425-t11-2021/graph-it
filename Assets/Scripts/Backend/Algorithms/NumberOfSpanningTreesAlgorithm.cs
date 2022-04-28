@@ -15,7 +15,7 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
     {
         this.AlgoManager.RunWeightMatrix(false);
 
-        float[,] laplacian = this.AlgoManager.GetWeightMatrix();
+        float[,] laplacian = (float[,]) this.AlgoManager.GetWeightMatrix().results["weight matrix"].Item1;
 
         int n = laplacian.GetLength(0);
 
@@ -87,6 +87,17 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
     private void WaitUntilWeightMatrixComplete()
     {
         this.WaitUntilAlgorithmComplete( WeightMatrixAlgorithm.GetHash() );
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "number of spanning trees" ] = ( this.NumberOfSpanningTrees, typeof(int) );
+        return result;
     }
 
     public static int GetHash() => typeof ( NumberOfSpanningTreesAlgorithm ).GetHashCode();
