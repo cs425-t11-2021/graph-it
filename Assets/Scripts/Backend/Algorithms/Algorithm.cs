@@ -83,6 +83,7 @@ public abstract class Algorithm
             this.Run();
             this.running = false;
             this.complete = true;
+            this.error = false;
             this.AlgoManager.MarkComplete( this );
             Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
 
@@ -91,20 +92,22 @@ public abstract class Algorithm
             else if ( this.type == AlgorithmType.DISPLAY )
                 RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
         }
-        catch ( ThreadAbortException )
+        catch ( Exception e )
         {
-            Logger.Log( "Killing thread.", this, LogType.DEBUG );
-        }
-        finally
-        {
-            this.running = false;
-            this.complete = true;
-            this.error = true;
-            this.AlgoManager.MarkComplete( this );
-            this.errorDesc = this.errorDesc is null ? this.errorDesc : "Unexpected error.";
-            Logger.Log( "Algorithm Error; Finishing Thread.", this, LogType.DEBUG );
+            if ( e is ThreadAbortException )
+                Logger.Log( "Killing thread.", this, LogType.DEBUG );
+            else
+            {
+                this.running = false;
+                this.complete = true;
+                this.error = true;
+                this.AlgoManager.MarkComplete( this );
+                this.errorDesc = e.Message;
+                Logger.Log( "Algorithm Error; Finishing Thread.", this, LogType.DEBUG );
 
-            // TODO: tell front end there was an error
+                // TODO: tell front end there was an error
+                RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( "<color=red>" + this.errorDesc + "</color>", 3 ) );
+            }
         }
     }
 
@@ -116,11 +119,10 @@ public abstract class Algorithm
 
     protected void CreateError( string desc )
     {
-        this.error = true;
-        this.errorDesc = desc;
-        RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( "<color=red>" + desc + "</color>", 3 ) );
         throw new AlgorithmException( desc );
     }
+
+    public bool HasError() => this.error;
 
     protected void WaitUntil( Func< bool > condition )
     {
@@ -130,6 +132,8 @@ public abstract class Algorithm
     protected void WaitUntilAlgorithmComplete( int hash )
     {
         this.WaitUntil( () => this.AlgoManager.IsComplete( hash ) );
+        if ( this.AlgoManager.HasError( hash ) )
+            this.CreateError( "Required algorithm failed." );
     }
 
     public virtual void Kill()

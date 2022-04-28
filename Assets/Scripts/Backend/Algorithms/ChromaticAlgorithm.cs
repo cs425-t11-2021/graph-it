@@ -8,34 +8,47 @@ using System.Collections.Generic;
 [System.Serializable]
 public class ChromaticAlgorithm : Algorithm
 {
-    public int chi;
-    public int[] coloring;
+    private int chi;
+    private int lowerBound;
+    private int upperBound;
+    private int[] coloring;
 
     public ChromaticAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
     public override void Run()
     {
-        // TODO: if HasLoops, then return +inf
-
-        this.AlgoManager.RunMaxDegree();
-
-        this.coloring = new int[ this.Graph.Order ];
-        this.chi = Math.Min( this.Graph.Order, 1 );
-        this.WaitUntilMaxDegreeComplete();
-        int upperBound = ( int ) this.AlgoManager.GetMaxDegree().results[ "maximum degree" ].Item1 + 1;
-        // TODO: use clique number for lower bound
-
-        while ( !this.IsProperColoring( coloring ) )
+        // if loops, then chi = +inf
+        if ( this.Graph.HasLoops )
+            this.chi = int.MaxValue; // TODO: make proper infinity
+        else
         {
-            if ( this.chi > upperBound ) // something really bad happended
-                throw new System.Exception( "Coloring could not be computed." );
-            if ( coloring.Min() >= this.chi - 1 )
+            this.AlgoManager.RunMaxDegree();
+            this.coloring = new int[ this.Graph.Order ];
+
+            // get lower bound, use clique number if possible
+            if ( this.AlgoManager.IsComplete( CliqueAlgorithm.GetHash() ) )
+                this.lowerBound = ( int ) this.AlgoManager.GetClique().results[ "clique number" ].Item1;
+            else
+                this.lowerBound = Math.Min( this.Graph.Order, 1 );
+            // get upper bound
+            this.WaitUntilMaxDegreeComplete();
+            this.upperBound = ( int ) this.AlgoManager.GetMaxDegree().results[ "maximum degree" ].Item1 + 1;
+            this.estimated = true;
+
+            this.chi = this.lowerBound;
+            while ( !this.IsProperColoring( coloring ) )
             {
-                this.chi++;
-                Array.Clear( coloring, 0, coloring.Length );
+                if ( this.chi > upperBound ) // something really bad happended
+                    this.CreateError( "Coloring could not be computed." );
+                if ( coloring.Min() >= this.chi - 1 )
+                {
+                    this.chi++;
+                    Array.Clear( coloring, 0, coloring.Length );
+                }
+                this.UpdateColoring( coloring, this.chi );
             }
-            this.UpdateColoring( coloring, this.chi );
         }
+
     }
 
     private bool IsProperColoring( int[] coloring )
@@ -69,11 +82,19 @@ public class ChromaticAlgorithm : Algorithm
 
     public override AlgorithmResult GetResult()
     {
+        AlgorithmResult result;
         if ( this.error )
             return this.GetErrorResult();
+        if ( this.estimated )
+        {
+            result = new AlgorithmResult( AlgorithmResultType.ESTIMATE );
+            result.results[ "chromatic number lower bound" ] = ( this.lowerBound, typeof ( int ) );
+            result.results[ "chromatic number upper bound" ] = ( this.upperBound, typeof ( int ) );
+            return result;
+        }
         if ( this.running )
             return this.GetRunningResult();
-        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
         result.results[ "chromatic number" ] = ( this.chi, typeof ( int ) );
         result.results[ "minimal coloring" ] = ( this.coloring, typeof ( int[] ) );
         return result;
