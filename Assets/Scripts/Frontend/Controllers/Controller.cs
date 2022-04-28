@@ -73,7 +73,9 @@ public class Controller : SingletonBehavior<Controller>
     public event Action<VertexObj> OnVertexObjectCreation;
     public event Action<EdgeObj> OnEdgeObjectCreation;
     public event Action OnGraphModified;
-    public event Action<GraphInstance> OnInstanceChanged;
+    public event Action<GraphInstance, GraphInstance> OnInstanceChanged;
+    public event Action<GraphInstance> OnInstanceCreated;
+    public event Action<GraphInstance> OnInstanceDeleted;
 
     private void Awake() {
         // Instantiate a new garph instance and graph object container
@@ -123,6 +125,8 @@ public class Controller : SingletonBehavior<Controller>
         GraphInstance newInstance = new GraphInstance(new GameObject("GraphObjContainer" + this.newInstanceID).transform, this.newInstanceID++, new AlgorithmManager(), existingGraph);
         this.instances.Add(newInstance);
         Logger.Log("Creating a new graph instance with id " + newInstance.id + ".", this, LogType.INFO);
+
+        OnInstanceCreated?.Invoke(newInstance);
         
         // Create a new tab associated with this instance
         TabBar.Singleton.CreateNewTab("Graph" + newInstance.id, newInstance);
@@ -173,6 +177,8 @@ public class Controller : SingletonBehavior<Controller>
             throw new SystemException("Graph instance being requested does not exist.");
             return;
         }
+
+        GraphInstance previous = this.activeGraphInstance;
         
         Logger.Log("Changing active graph instance to " + instance.id + ".", this, LogType.INFO);
         if (this.activeGraphInstance != null)
@@ -185,7 +191,7 @@ public class Controller : SingletonBehavior<Controller>
             GraphInfo.Singleton.InitiateAlgorithmManager(instance.algorithmManager);
         }
         
-        OnInstanceChanged?.Invoke(instance);
+        OnInstanceChanged?.Invoke(previous, instance);
     }
 
     public void RemoveGraphInstance(GraphInstance instance)
@@ -221,6 +227,8 @@ public class Controller : SingletonBehavior<Controller>
         Destroy(instance.container.gameObject);
         instance.container = null;
         instance.algorithmManager.Clear();
+
+        OnInstanceDeleted?.Invoke(instance);
     }
 
     // Add a new vertex at a given position

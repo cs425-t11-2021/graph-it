@@ -31,7 +31,7 @@ public class Tab : MonoBehaviour //, IPointerClickHandler --might be useful late
         Controller.Singleton.OnInstanceChanged += OnInstanceChanged;
     }
 
-    private void OnInstanceChanged(GraphInstance instance)
+    private void OnInstanceChanged(GraphInstance previous, GraphInstance instance)
     {
         this.toggle.UpdateStatus(instance == this.graphInstance);
 

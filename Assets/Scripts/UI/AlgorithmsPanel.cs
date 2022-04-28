@@ -138,7 +138,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         this.algorithmVertexPrams = new Vertex[this.associations.Length][];
 
         Controller.Singleton.OnGraphModified += ClearAlgorithmResults;
-        Controller.Singleton.OnInstanceChanged += (newInstance) => ClearAlgorithmResults();
+        Controller.Singleton.OnInstanceChanged += (previous, current) => ClearAlgorithmResults();
 
         this.resultButton.gameObject.SetActive(false);
         this.extraInfoPanel.gameObject.SetActive(false);
