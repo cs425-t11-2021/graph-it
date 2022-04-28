@@ -106,7 +106,10 @@ public class AlgorithmManager
     public void RunBreadthFirstSearchWithAction( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), display, vert, action );
 
     public void RunNumberOfSpanningTrees( bool display=true ) => this.EnsureRunning( typeof ( NumberOfSpanningTreesAlgorithm ), display );
+
     public void RunAveragePathLength( bool display=true ) => this.EnsureRunning( typeof ( AveragePathLengthAlgorithm ), display );
+
+    public void RunGirth( bool display=true ) => this.EnsureRunning( typeof( GirthAlgorithm ), display );
 
 
     public AlgorithmResult GetResult( Type algorithm, params object[] parms )
@@ -162,6 +165,8 @@ public class AlgorithmManager
     public AlgorithmResult GetNumberOfSpanningTrees() => this.GetResult( typeof ( NumberOfSpanningTreesAlgorithm ) );
     
     public AlgorithmResult GetAveragePathLength() => this.GetResult( typeof ( AveragePathLengthAlgorithm ) );
+
+    public AlgorithmResult GetGirth() => this.GetResult( typeof ( GirthAlgorithm ) );
 
     public bool IsNextStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsNextStepAvailable();
 
