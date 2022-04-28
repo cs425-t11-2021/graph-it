@@ -8,7 +8,7 @@ using UnityEngine;
 [System.Serializable]
 public class NumberOfSpanningTreesAlgorithm : Algorithm
 {
-    public int NumberOfSpanningTrees { get; private set; }
+    public long NumberOfSpanningTrees { get; private set; }
 
     public NumberOfSpanningTreesAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
@@ -21,7 +21,7 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
 
         int n = weightMatrix.GetLength(0);
         
-        int[,] laplacian = new int[n,n];
+        long[,] laplacian = new long[n,n];
 
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
@@ -40,9 +40,9 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
             }
         }
 
-        int det = 1;
+        long det = 1;
 
-        int dividingFactor = 1;
+        long dividingFactor = 1;
 
         for (int i = 0; i < n - 1; i++)
         {
@@ -76,25 +76,27 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
                     // we're scaling a row by the pivot value, so add a factor to divide later
                     dividingFactor *= laplacian[i,i];
 
-                    int coeff = laplacian[j,i];
+                    long coeff = laplacian[j,i];
                     for (int k = i; k < n - 1; k++)
                     {
                         laplacian[j,k] = laplacian[j,k]*laplacian[i,i] - laplacian[i,k]*coeff;
                     }
                 }
             }
+
+            Debug.Log(det.ToString() + ", " + dividingFactor.ToString());
         }
 
         this.NumberOfSpanningTrees = Math.Abs(det / dividingFactor);
     }
 
-    private void SwapRows(int[,] array, int row1, int row2)
+    private void SwapRows(long[,] array, int row1, int row2)
     {
         if (row1 == row2) return;
 
         for (int i = 0; i < array.GetLength(0); i++)
         {
-            int temp = array[row1,i];
+            long temp = array[row1,i];
             array[row1,i] = array[row2,i];
             array[row2,i] = temp;
         }
