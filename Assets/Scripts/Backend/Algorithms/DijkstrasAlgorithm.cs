@@ -8,10 +8,12 @@ using System.Collections.Generic;
 [System.Serializable]
 public class DijkstrasAlgorithm : LoggedAlgorithm
 {
-    public float Cost { get; private set; }
-    public List< Edge > Path { get; private set; }
     private Vertex src;
     private Vertex dest;
+
+    private float cost;
+    private List< Vertex > vertexPath;
+    private List< Edge > edgePath;
 
     public DijkstrasAlgorithm( AlgorithmManager algoManager, bool display, Vertex src, Vertex dest ) : base( algoManager )
     {
@@ -29,8 +31,8 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
 
     public override void Run()
     {
-        List< Vertex > vertexPath = new List< Vertex >();
-        List< Edge > edgePath = new List< Edge >();
+        this.vertexPath = new List< Vertex >();
+        this.edgePath = new List< Edge >();
         HashSet< Vertex > visited = new HashSet< Vertex >(); // for step through
         HashSet< Edge > visitedEdges = new HashSet< Edge >(); // for step through
         HashSet< Vertex > notVisited = new HashSet< Vertex >( this.Graph.Vertices );
@@ -117,18 +119,18 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
                 new List< Vertex >( visited ),
                 new List< Edge >( visitedEdges ),
                 new List< Vertex >() { u },
-                newVistedEdges,
+                new List< Edge >( newVistedEdges ),
                 new List< Vertex >( notVisited ),
                 null
             );
         }
 
-        this.Cost = dist[ this.dest ];
+        this.cost = dist[ this.dest ];
 
         // add result step
         this.AddStep(
             StepType.ADD_TO_RESULT,
-            "Obtain path length " + this.Cost + " from source to destination.",
+            "Obtain path length " + this.cost + " from source to destination.",
             new List< Vertex >( visited ),
             new List< Edge >( visitedEdges ),
             null,
@@ -141,32 +143,31 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
         Vertex curr = this.dest;
         while ( !( curr is null ) && curr != this.src )
         {
-            vertexPath.Add( curr );
-            edgePath.Add( this.Graph[ prev[ curr ], curr ] );
+            this.vertexPath.Add( curr );
+            this.edgePath.Add( this.Graph[ prev[ curr ], curr ] );
             if ( curr is null )
             {
                 // add error step
                 this.AddStep(
                     StepType.ERROR,
                     "Path could not be constructed.",
-                    new List< Vertex >( vertexPath ),
-                    new List< Edge >( edgePath ),
+                    new List< Vertex >( this.vertexPath ),
+                    new List< Edge >( this.edgePath ),
                     null,
                     null,
                     null,
                     null
                 );
 
-                vertexPath = new List<Vertex>();
-                return;
+                this.CreateError( "Dijkstra's path could not be constructed." );
             }
 
             // add result step
             this.AddStep(
                 StepType.ADD_TO_RESULT,
                 "Construct path from destination.",
-                new List< Vertex >( vertexPath ),
-                new List< Edge >( edgePath ),
+                new List< Vertex >( this.vertexPath ),
+                new List< Edge >( this.edgePath ),
                 new List< Vertex >() { curr },
                 new List< Edge >() { this.Graph[ prev[ curr ], curr ] },
                 null,
@@ -175,10 +176,8 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
 
             curr = prev[ curr ];
         }
-        vertexPath.Add( this.src );
-        vertexPath.Reverse();
-
-        this.Path = edgePath;
+        this.vertexPath.Add( this.src );
+        this.vertexPath.Reverse();
 
         // add finish step
         this.AddStep(
@@ -191,6 +190,19 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
             null,
             null
         );
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "dijkstra cost" ] = ( this.cost, typeof ( float ) );
+        result.results[ "dijkstra vertices" ] = ( this.vertexPath, typeof ( List< Vertex > ) );
+        result.results[ "dijkstra edges" ] = ( this.edgePath, typeof ( List< Edge > ) );
+        return result;
     }
 
     public static int GetHash( Vertex src, Vertex dest ) => ( typeof ( DijkstrasAlgorithm ), src, dest ).GetHashCode();

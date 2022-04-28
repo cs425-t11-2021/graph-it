@@ -8,14 +8,26 @@ using System.Collections.Generic;
 [System.Serializable]
 public class MaxDegreeAlgorithm : Algorithm
 {
-    public int MaxDegree { get; private set; }
+    private int delta;
 
     public MaxDegreeAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
     public override void Run()
     {
+        Logger.Log( "running max degree.", this, LogType.INFO );
         IEnumerable< int > degrees = this.Graph.Vertices.Select( vert => this.Graph.GetVertexDegree( vert ) );
-        this.MaxDegree = degrees.Count() > 0 ? degrees.Max() : 0;
+        this.delta = degrees.Count() > 0 ? degrees.Max() : 0;
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "maximum degree" ] = ( this.delta, typeof ( int ) );
+        return result;
     }
 
     public static int GetHash() => typeof ( MaxDegreeAlgorithm ).GetHashCode();

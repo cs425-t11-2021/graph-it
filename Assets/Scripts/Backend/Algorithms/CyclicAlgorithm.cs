@@ -8,7 +8,7 @@ using System.Collections.Generic;
 [System.Serializable]
 public class CyclicAlgorithm : Algorithm
 {
-    public bool IsCyclic { get; private set; }
+    private bool isCyclic;
 
     public CyclicAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
@@ -26,13 +26,13 @@ public class CyclicAlgorithm : Algorithm
             {
                 if (this.IsCyclicHelper(u, visited, null))
                 {
-                    this.IsCyclic = true;
+                    this.isCyclic = true;
                     return;
                 }
             }
         }
 
-        this.IsCyclic = false;
+        this.isCyclic = false;
     }
 
     private bool IsCyclicHelper( Vertex vert, Dictionary< Vertex, bool > visited, Vertex parent )
@@ -57,6 +57,17 @@ public class CyclicAlgorithm : Algorithm
         }
 
         return false;
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "cyclic" ] = ( this.isCyclic, typeof ( bool ) );
+        return result;
     }
 
     public static int GetHash() => typeof ( CyclicAlgorithm ).GetHashCode();

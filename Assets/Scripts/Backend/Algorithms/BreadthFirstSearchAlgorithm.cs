@@ -8,9 +8,11 @@ using System.Collections.Generic;
 [System.Serializable]
 public class BreadthFirstSearchAlgorithm : LoggedAlgorithm
 {
-    public List< Edge > Tree { get; private set; }
     private Vertex root;
     private Action< Edge, Vertex > action;
+
+    private List< Vertex > treeVertices;
+    private List< Edge > treeEdges;
 
     public BreadthFirstSearchAlgorithm( AlgorithmManager algoManager, bool display, Vertex root, Action< Edge, Vertex > action ) : base( algoManager )
     {
@@ -28,7 +30,8 @@ public class BreadthFirstSearchAlgorithm : LoggedAlgorithm
 
     public override void Run()
     {
-        this.Tree = new List< Edge >();
+        this.treeVertices = new List< Vertex >() { this.root };
+        this.treeEdges = new List< Edge >();
         Dictionary< Vertex, bool > visited = new Dictionary< Vertex, bool >();
         Queue< Vertex > queue = new Queue< Vertex >();
         queue.Enqueue( this.root );
@@ -42,11 +45,24 @@ public class BreadthFirstSearchAlgorithm : LoggedAlgorithm
                 {
                     visited[ vert2 ] = true;
                     queue.Enqueue( vert2 );
-                    this.Tree.Add( edge );
+                    this.treeVertices.Add( vert2 );
+                    this.treeEdges.Add( edge );
                     this.action( edge, vert2 );
                 }
             }
         }
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "bfs vertices" ] = ( this.treeVertices, typeof ( List< Vertex > ) );
+        result.results[ "bfs edges" ] = ( this.treeEdges, typeof ( List< Edge > ) );
+        return result;
     }
 
     public static int GetHash( Vertex vert, Action< Edge, Vertex > action ) => ( typeof ( BreadthFirstSearchAlgorithm ), vert, action ).GetHashCode();

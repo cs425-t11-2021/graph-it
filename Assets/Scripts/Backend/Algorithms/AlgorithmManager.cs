@@ -20,9 +20,9 @@ public class AlgorithmManager
         get => this.running.Values.ToList();
     }
     private ConcurrentDictionary< int, Algorithm > complete = new ConcurrentDictionary< int, Algorithm >();
-    public List< Algorithm > Complete
+    public List< Algorithm > Complete // TODO: algorithms in error state are added to complete, fix?
     {
-        get => this.running.Values.ToList();
+        get => this.complete.Values.ToList();
     }
 
     private Action< Edge, Vertex > nothing = ( e, v ) => { };
@@ -34,17 +34,6 @@ public class AlgorithmManager
         this.graphCopy = new Graph( graph );
     }
 
-    public void RunAll()
-    {
-        this.RunMinDegree();
-        this.RunMaxDegree();
-        this.RunRadius();
-        this.RunDiameter();
-        this.RunCyclic();
-        this.RunChromatic();
-        // this.RunPrims();
-        this.RunKruskals();
-    }
 
     private void RunAlgorithm( Type algorithm, bool display, object[] parms )
     {
@@ -75,7 +64,11 @@ public class AlgorithmManager
 
     public void RunMinDegree( bool display=true ) => this.EnsureRunning( typeof ( MinDegreeAlgorithm ), display );
 
-    public void RunMaxDegree( bool display=true ) => this.EnsureRunning( typeof ( MaxDegreeAlgorithm ), display );
+    public void RunMaxDegree( bool display=true )
+    {
+        Logger.Log( "running max degree in algorithm manager.", this, LogType.INFO );
+        this.EnsureRunning( typeof ( MaxDegreeAlgorithm ), display );
+    }
 
     public void RunRadius( bool display=true ) => this.EnsureRunning( typeof ( RadiusAlgorithm ), display );
 
@@ -111,72 +104,68 @@ public class AlgorithmManager
 
     public void RunBreadthFirstSearchWithAction( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), display, vert, action );
 
-
-    public bool[,] GetAdjacencyMatrix() => ( ( AdjacencyMatrixAlgorithm ) this.complete.GetValue( AdjacencyMatrixAlgorithm.GetHash() ) )?.Matrix;
-
-    public float[,] GetWeightMatrix() => ( ( WeightMatrixAlgorithm ) this.complete.GetValue( WeightMatrixAlgorithm.GetHash() ) )?.Matrix;
-
-    public int? GetMinDegree() => ( ( MinDegreeAlgorithm ) this.complete.GetValue( MinDegreeAlgorithm.GetHash() ) )?.MinDegree;
-
-    public int? GetMaxDegree() => ( ( MaxDegreeAlgorithm ) this.complete.GetValue( MaxDegreeAlgorithm.GetHash() ) )?.MaxDegree;
-
-    public float? GetRadius() => ( ( RadiusAlgorithm ) this.complete.GetValue( RadiusAlgorithm.GetHash() ) )?.Radius;
-
-    public float? GetDiameter() => ( ( DiameterAlgorithm ) this.complete.GetValue( DiameterAlgorithm.GetHash() ) )?.Diameter;
-
-    public int? GetChromaticNumber() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.ChromaticNumber;
-
-    public int[] GetChromaticColoring() => ( ( ChromaticAlgorithm ) this.complete.GetValue( ChromaticAlgorithm.GetHash() ) )?.Coloring;
-
-    public int? GetIndependenceNumber() => ( ( IndependenceAlgorithm ) this.complete.GetValue( IndependenceAlgorithm.GetHash() ) )?.IndependenceNumber;
-
-    public List< Vertex > GetMaxIndependentSet() => ( ( IndependenceAlgorithm ) this.complete.GetValue( IndependenceAlgorithm.GetHash() ) )?.MaxIndependentSet;
-
-    public int? GetCliqueNumber() => ( ( CliqueAlgorithm ) this.complete.GetValue( CliqueAlgorithm.GetHash() ) )?.CliqueNumber;
-
-    public List< Vertex > GetMaxClique() => ( ( CliqueAlgorithm ) this.complete.GetValue( CliqueAlgorithm.GetHash() ) )?.MaxClique;
-
-    public int? GetMaxMatchingCard() => ( ( MatchingAlgorithm ) this.complete.GetValue( MatchingAlgorithm.GetHash() ) )?.MaxMatchingCard;
-
-    public List< Edge > GetMaxMatching() => ( ( MatchingAlgorithm ) this.complete.GetValue( MatchingAlgorithm.GetHash() ) )?.MaxMatching;
-
-    // TODO: rename this more appropriately
-    public bool? GetBipartite() => ( ( BipartiteAlgorithm ) this.complete.GetValue( BipartiteAlgorithm.GetHash() ) )?.IsBipartite;
-
-    // TODO: rename this more appropriately
-    public bool? GetCyclic() => ( ( CyclicAlgorithm ) this.complete.GetValue( CyclicAlgorithm.GetHash() ) )?.IsCyclic;
-
-    // TODO: rename this more appropriately
-    public bool? GetFleurys() => ( ( FleurysAlgorithm ) this.complete.GetValue( FleurysAlgorithm.GetHash() ) )?.EulerianCircuitExists;
-
-    public List< Edge > GetPrimsMST( Vertex root ) => ( ( PrimsAlgorithm ) this.complete.GetValue( PrimsAlgorithm.GetHash( root ) ) )?.Mst;
-
-    public List< Edge > GetKruskalsMST() => ( ( KruskalsAlgorithm ) this.complete.GetValue( KruskalsAlgorithm.GetHash() ) )?.Mst;
-
-    public float? GetDijkstrasCost( Vertex src, Vertex dest ) => ( ( DijkstrasAlgorithm ) this.complete.GetValue( DijkstrasAlgorithm.GetHash( src, dest ) ) )?.Cost;
-
-    public List< Edge > GetDijkstrasPath( Vertex src, Vertex dest ) => ( ( DijkstrasAlgorithm ) this.complete.GetValue( DijkstrasAlgorithm.GetHash( src, dest ) ) )?.Path;
-
-    public float? GetBellmanFordsCost( Vertex src, Vertex dest ) => ( ( BellmanFordsAlgorithm ) this.complete.GetValue( BellmanFordsAlgorithm.GetHash( src, dest ) ) )?.Cost;
-
-    public List< Edge > GetBellmanFordsPath( Vertex src, Vertex dest ) => ( ( BellmanFordsAlgorithm ) this.complete.GetValue( BellmanFordsAlgorithm.GetHash( src, dest ) ) )?.Path;
-
-    public List< Edge > GetDepthFirstSearchTree( Vertex root ) => this.GetDepthFirstSearchTreeWithAction( root, this.nothing );
-
-    public List< Edge > GetDepthFirstSearchTreeWithAction( Vertex root, Action< Edge, Vertex > action ) => ( ( DepthFirstSearchAlgorithm ) this.complete.GetValue( DepthFirstSearchAlgorithm.GetHash( root, action ) ) )?.Tree;
-
-    public List< Edge > GetBreadthFirstSearchTree( Vertex root ) => this.GetBreadthFirstSearchTreeWithAction( root, this.nothing );
-
-    public List< Edge > GetBreadthFirstSearchTreeWithAction( Vertex root, Action< Edge, Vertex > action ) => ( ( BreadthFirstSearchAlgorithm ) this.complete.GetValue( BreadthFirstSearchAlgorithm.GetHash( root, action ) ) )?.Tree;
+    public void RunNumberOfSpanningTrees( bool display=true ) => this.EnsureRunning( typeof ( NumberOfSpanningTreesAlgorithm ), display );
 
 
-    public bool IsNextStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsNextStepAvailable();
+    public AlgorithmResult GetResult( Type algorithm, params object[] parms )
+    {
+        int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
+        if ( !this.IsComplete( hash ) )
+            throw new System.Exception( "Cannot retrieve algorithm result when algorithm is not complete." ); // TODO: replace with custom error
+        return this.complete[ hash ].GetResult();
+    }
 
-    public bool IsBackStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsBackStepAvailable();
+    public AlgorithmResult GetAdjacencyMatrix() => this.GetResult( typeof ( AdjacencyMatrixAlgorithm ) );
 
-    public bool IsAnyStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsFirstStepAvailable();
+    public AlgorithmResult GetWeightMatrix() => this.GetResult( typeof ( WeightMatrixAlgorithm ) );
 
-    public bool IsStepAvailable( int step, Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsStepAvailable( step );
+    public AlgorithmResult GetMinDegree() => this.GetResult( typeof ( MinDegreeAlgorithm ) );
+
+    public AlgorithmResult GetMaxDegree() => this.GetResult( typeof ( MaxDegreeAlgorithm ) );
+
+    public AlgorithmResult GetRadius() => this.GetResult( typeof ( RadiusAlgorithm ) );
+
+    public AlgorithmResult GetDiameter() => this.GetResult( typeof ( DiameterAlgorithm ) );
+
+    public AlgorithmResult GetChromatic() => this.GetResult( typeof ( ChromaticAlgorithm ) );
+
+    public AlgorithmResult GetIndependence() => this.GetResult( typeof ( IndependenceAlgorithm ) );
+
+    public AlgorithmResult GetClique() => this.GetResult( typeof ( CliqueAlgorithm ) );
+
+    public AlgorithmResult GetMaxMatching() => this.GetResult( typeof ( MatchingAlgorithm ) );
+
+    public AlgorithmResult GetBipartite() => this.GetResult( typeof ( BipartiteAlgorithm ) );
+
+    public AlgorithmResult GetCyclic() => this.GetResult( typeof ( CyclicAlgorithm ) );
+
+    public AlgorithmResult GetFleurys() => this.GetResult( typeof ( FleurysAlgorithm ) );
+
+    public AlgorithmResult GetPrims( Vertex root ) => this.GetResult( typeof ( PrimsAlgorithm ), root );
+
+    public AlgorithmResult GetKruskals() => this.GetResult( typeof ( KruskalsAlgorithm ) );
+
+    public AlgorithmResult GetDijkstras( Vertex src, Vertex dest ) => this.GetResult( typeof ( DijkstrasAlgorithm ), src, dest );
+
+    public AlgorithmResult GetBellmanFords( Vertex src, Vertex dest ) => this.GetResult( typeof ( BellmanFordsAlgorithm ), src, dest );
+
+    public AlgorithmResult GetDepthFirstSearch( Vertex root ) => this.GetResult( typeof ( DepthFirstSearchAlgorithm ), root, this.nothing );
+
+    public AlgorithmResult GetDepthFirstSearchWithAction( Vertex root, Action< Edge, Vertex > action ) => this.GetResult( typeof ( DepthFirstSearchAlgorithm ), root, action );
+
+    public AlgorithmResult GetBreadthFirstSearch( Vertex root ) => this.GetResult( typeof ( BreadthFirstSearchAlgorithm ), root, this.nothing );
+
+    public AlgorithmResult GetBreadthFirstSearchWithAction( Vertex root, Action< Edge, Vertex > action ) => this.GetResult( typeof ( BreadthFirstSearchAlgorithm ), root, action );
+
+    public AlgorithmResult GetNumberOfSpanningTrees() => this.GetResult( typeof ( NumberOfSpanningTreesAlgorithm ) );
+
+    public bool IsNextStepAvailable( Type loggedAlgo, object[] parms ) => !( ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) )?.IsNextStepAvailable() is null );
+
+    public bool IsBackStepAvailable( Type loggedAlgo, object[] parms ) => !( ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) )?.IsBackStepAvailable() is null );
+
+    public bool IsAnyStepAvailable( Type loggedAlgo, object[] parms ) => !( ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) )?.IsFirstStepAvailable() is null );
+
+    public bool IsStepAvailable( int step, Type loggedAlgo, object[] parms ) => !( ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) )?.IsStepAvailable( step ) is null );
 
     public void NextStep( Type loggedAlgo, object[] parms )
     {
@@ -210,7 +199,6 @@ public class AlgorithmManager
         return algo.GetStep();
     }
 
-
     private Algorithm GetAlgorithm( Type algorithm, object[] parms )
     {
         int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
@@ -241,6 +229,7 @@ public class AlgorithmManager
         this.running.TryRemove( algo.GetHashCode(), out _ );
     }
 
+
     public bool IsRunning( Algorithm algo ) => this.IsRunning( algo.GetHashCode() );
 
     public bool IsRunning( int key ) => this.running.ContainsKey( key );
@@ -248,6 +237,10 @@ public class AlgorithmManager
     public bool IsComplete( Algorithm algo ) => this.IsComplete( algo.GetHashCode() );
 
     public bool IsComplete( int key ) => this.complete.ContainsKey( key );
+
+    public bool HasError( Algorithm algo ) => this.HasError( algo.GetHashCode() );
+
+    public bool HasError( int key ) => this.IsComplete( key ) && this.complete[ key ].HasError();
 
     public void Clear()
     {

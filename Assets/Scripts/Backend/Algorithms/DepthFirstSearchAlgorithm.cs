@@ -8,9 +8,11 @@ using System.Collections.Generic;
 [System.Serializable]
 public class DepthFirstSearchAlgorithm : LoggedAlgorithm
 {
-    public List< Edge > Tree { get; private set; }
     private Vertex root;
     private Action< Edge, Vertex > action;
+
+    private List< Vertex > treeVertices;
+    private List< Edge > treeEdges;
 
     public DepthFirstSearchAlgorithm( AlgorithmManager algoManager,  bool display, Vertex root, Action< Edge, Vertex > action ) : base( algoManager )
     {
@@ -28,7 +30,8 @@ public class DepthFirstSearchAlgorithm : LoggedAlgorithm
 
     public override void Run()
     {
-        this.Tree = new List< Edge >();
+        this.treeVertices = new List< Vertex >() { this.root };
+        this.treeEdges = new List< Edge >();
         Dictionary< Vertex, bool > visited = new Dictionary< Vertex, bool >();
         this.DepthFirstSearchHelper( this.root, visited, this.action );
     }
@@ -39,19 +42,33 @@ public class DepthFirstSearchAlgorithm : LoggedAlgorithm
         {
             if ( !visited.GetValue( edge.vert1 ) )
             {
-                this.Tree.Add( edge );
+                this.treeVertices.Add( edge.vert1 );
+                this.treeEdges.Add( edge );
                 visited[ edge.vert1 ] = true;
                 f( edge, edge.vert1 );
                 this.DepthFirstSearchHelper( edge.vert1, visited, f );
             }
             else if ( !visited.GetValue( edge.vert2 ) )
             {
-                this.Tree.Add( edge );
+                this.treeVertices.Add( edge.vert2 );
+                this.treeEdges.Add( edge );
                 visited[ edge.vert2 ] = true;
                 f( edge, edge.vert2 );
                 this.DepthFirstSearchHelper( edge.vert2, visited, f );
             }
         }
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "dfs vertices" ] = ( this.treeVertices, typeof ( List< Vertex > ) );
+        result.results[ "dfs edges" ] = ( this.treeEdges, typeof ( List< Edge > ) );
+        return result;
     }
 
     public static int GetHash( Vertex vert, Action< Edge, Vertex > action ) => ( typeof ( DepthFirstSearchAlgorithm ), vert, action ).GetHashCode();

@@ -8,8 +8,10 @@ using System.Collections.Generic;
 [System.Serializable]
 public class CliqueAlgorithm : Algorithm
 {
-    public int CliqueNumber { get; private set; }
-    public List< Vertex > MaxClique { get; private set; }
+    private int omega;
+    private List< Vertex > cliqueVertices;
+    private List< Edge > cliqueEdges;
+
 
     public CliqueAlgorithm(AlgorithmManager algoManager, bool display) : base(algoManager)
     {
@@ -23,29 +25,36 @@ public class CliqueAlgorithm : Algorithm
     public override void Run()
     {
         bool[] set = new bool[ this.Graph.Order ];
-        int card = this.Graph.Order;
+        this.omega = this.Graph.Order;
 
-        while ( !this.IsClique( set ) || !this.HasSpecifiedCardinality( set, card ) )
+        while ( !this.IsClique( set ) || !this.HasSpecifiedCardinality( set, this.omega ) )
         {
-            if ( card < 0 ) // something really bad happended
-                throw new System.Exception( "Clique could not be computed." );
+            if ( this.omega < 0 ) // something really bad happended
+                this.CreateError( "Maximum clique could not be computed." );
             if ( set.All( s => s ) )
             {
-                card--;
+                this.omega--;
                 Array.Clear( set, 0, set.Length );
             }
             this.UpdateSet( set );
         }
-        this.CliqueNumber = card;
 
         // retrieve max clique
-        List< Vertex > maxClique = new List< Vertex >();
+        this.cliqueVertices = new List< Vertex >();
+        this.cliqueEdges = new List< Edge >();
         for ( int i = 0; i < set.Length; ++i )
         {
             if ( set[ i ] )
-                maxClique.Add( this.Graph.Vertices[ i ] );
+                this.cliqueVertices.Add( this.Graph.Vertices[ i ] );
         }
-        this.MaxClique = maxClique;
+        foreach ( Vertex vert1 in this.cliqueVertices )
+        {
+            foreach ( Vertex vert2 in this.cliqueVertices )
+            {
+                if ( vert1 != vert2 )
+                    this.cliqueEdges.Add( this.Graph[ vert1, vert2 ] );
+            }
+        }
     }
 
     private bool IsClique( bool[] set )
@@ -85,6 +94,19 @@ public class CliqueAlgorithm : Algorithm
                 c++;
         }
         return card == c;
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "clique number" ] = ( this.omega, typeof ( int ) );
+        result.results[ "maximum clique vertices" ] = ( this.cliqueVertices, typeof ( List< Vertex > ) );
+        result.results[ "maximum clique edges" ] = ( this.cliqueEdges, typeof ( List< Edge > ) );
+        return result;
     }
 
     public static int GetHash() => typeof ( CliqueAlgorithm ).GetHashCode();

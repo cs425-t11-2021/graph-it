@@ -8,10 +8,11 @@ using System.Collections.Generic;
 [System.Serializable]
 public class MatchingAlgorithm : Algorithm
 {
-    public int MaxMatchingCard { get; private set; }
-    public List< Edge > MaxMatching { get; private set; }
+    private int nu;
+    private List< Vertex > maxMatchingVertices;
+    private List< Edge > maxMatchingEdges;
 
-    public MatchingAlgorithm(AlgorithmManager algoManager, bool display) : base(algoManager)
+    public MatchingAlgorithm( AlgorithmManager algoManager, bool display ) : base(algoManager)
     {
         // Assign the type of the algorithm
         if ( display )
@@ -24,29 +25,28 @@ public class MatchingAlgorithm : Algorithm
     {
         List< Edge > edges = this.Graph.Adjacency.Values.Where( edge => edge.Directed || edge.vert1 < edge.vert2 ).ToList();
         bool[] set = new bool[ edges.Count ];
-        int card = edges.Count;
+        this.nu = edges.Count;
 
-        while ( !this.IsMatching( edges, set ) || !this.HasSpecifiedCardinality( set, card ) )
+        while ( !this.IsMatching( edges, set ) || !this.HasSpecifiedCardinality( set, this.nu ) )
         {
-            if ( card < 0 ) // something really bad happended
-                throw new System.Exception( "Matching could not be computed." );
+            if ( this.nu < 0 ) // something really bad happended
+                this.CreateError( "Matching could not be computed." );
             if ( set.All( s => s ) )
             {
-                card--;
+                this.nu--;
                 Array.Clear( set, 0, set.Length );
             }
             this.UpdateSet( set );
         }
-        this.MaxMatchingCard = card;
 
         // retrieve max matching
-        List< Edge > maxMatching = new List< Edge >();
+        this.maxMatchingEdges = new List< Edge >();
         for ( int i = 0; i < set.Length; ++i )
         {
             if ( set[ i ] )
-                maxMatching.Add( edges[ i ] );
+                this.maxMatchingEdges.Add( edges[ i ] );
         }
-        this.MaxMatching = maxMatching;
+        this.maxMatchingVertices = new List< Vertex >( Edge.GetIncidentVertices( this.maxMatchingEdges ) );
     }
 
     private bool IsMatching( List< Edge > edges, bool[] set )
@@ -86,6 +86,19 @@ public class MatchingAlgorithm : Algorithm
                 c++;
         }
         return card == c;
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "maximum matching number" ] = ( this.nu, typeof ( int ) );
+        result.results[ "maximum matching vertices" ] = ( this.maxMatchingVertices, typeof ( List< Vertex > ) );
+        result.results[ "maximum matching edges" ] = ( this.maxMatchingEdges, typeof ( List< Edge > ) );
+        return result;
     }
 
     public static int GetHash() => typeof ( MatchingAlgorithm ).GetHashCode();

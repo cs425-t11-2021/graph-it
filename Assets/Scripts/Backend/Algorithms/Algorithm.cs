@@ -7,18 +7,43 @@ using System.Collections.Generic;
 
 public enum AlgorithmType { INFO, DISPLAY, INTERNAL }
 
+public enum AlgorithmResultType { SUCCESS, RUNNING, ERROR, ESTIMATE }
+
+public struct AlgorithmResult
+{
+    public AlgorithmResultType type;
+    public string desc;
+    public Dictionary< string, ( object, Type ) > results;
+
+    public AlgorithmResult( AlgorithmResultType type, string desc="" ) : this()
+    {
+        this.type = type;
+        this.desc = desc;
+        this.results = new Dictionary< string, ( object, Type ) >();
+    }
+}
+
+public class AlgorithmException : Exception
+{
+    public AlgorithmException() : base() { }
+    public AlgorithmException( string message ) : base( message ) { }
+    public AlgorithmException( string message, Exception inner ) : base( message, inner ) { }
+
+    protected AlgorithmException( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base( info, context ) { }
+}
+
 public abstract class Algorithm
 {
     protected AlgorithmManager AlgoManager { get; private set; }
     protected Graph Graph { get; private set; }
     private Thread currThread;
-    private Action< Algorithm > markRunning;
-    private Action< Algorithm > markComplete;
-    private Action< Algorithm > unmarkRunning;
     protected bool running;
     protected bool complete;
+    protected bool estimated;
+    protected bool error;
+    protected string errorDesc;
     
-    // Whether ths algorithm is an info or display algorithm
+    // Whether the algorithm is an info or display algorithm
     public AlgorithmType type;
     
     // All the vertex parameters associated with an algorithm
@@ -29,11 +54,10 @@ public abstract class Algorithm
         this.AlgoManager = algoManager;
         this.Graph = algoManager.graphCopy;
         this.currThread = null;
-        this.markRunning = algoManager.MarkRunning;
-        this.markComplete = algoManager.MarkComplete;
-        this.unmarkRunning = algoManager.UnmarkRunning;
         this.running = false;
         this.complete = false;
+        this.error = false;
+        this.errorDesc = null;
     }
 
     public abstract void Run();
@@ -51,27 +75,54 @@ public abstract class Algorithm
         try
         {
             this.running = true;
-            this.markRunning( this );
-            
+            this.AlgoManager.MarkRunning( this );
+
             if ( this.type == AlgorithmType.INFO )
                 RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoCalculating( this, this.AlgoManager ) );
-            
+
             this.Run();
-            Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
             this.running = false;
             this.complete = true;
-            this.markComplete( this );
-            
+            this.error = false;
+            this.AlgoManager.MarkComplete( this );
+            Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
+
             if ( this.type == AlgorithmType.INFO )
                 RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this, this.AlgoManager ) );
             else if ( this.type == AlgorithmType.DISPLAY )
                 RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
         }
-        catch ( ThreadAbortException )
+        catch ( Exception e )
         {
-            Logger.Log( "Killing thread.", this, LogType.DEBUG );
+            if ( e is ThreadAbortException )
+                Logger.Log( "Killing thread.", this, LogType.DEBUG );
+            else
+            {
+                this.running = false;
+                this.complete = true;
+                this.error = true;
+                this.AlgoManager.MarkComplete( this );
+                this.errorDesc = e.Message;
+                Logger.Log( "Algorithm Error; Finishing Thread.", this, LogType.DEBUG );
+
+                // TODO: tell front end there was an error
+                RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( "<color=red>" + this.errorDesc + "</color>", 3 ) );
+            }
         }
     }
+
+    public abstract AlgorithmResult GetResult();
+
+    protected AlgorithmResult GetErrorResult() => new AlgorithmResult( AlgorithmResultType.ERROR, this.errorDesc );
+
+    protected AlgorithmResult GetRunningResult() => new AlgorithmResult( AlgorithmResultType.RUNNING );
+
+    protected void CreateError( string desc )
+    {
+        throw new AlgorithmException( desc );
+    }
+
+    public bool HasError() => this.error;
 
     protected void WaitUntil( Func< bool > condition )
     {
@@ -81,13 +132,15 @@ public abstract class Algorithm
     protected void WaitUntilAlgorithmComplete( int hash )
     {
         this.WaitUntil( () => this.AlgoManager.IsComplete( hash ) );
+        if ( this.AlgoManager.HasError( hash ) )
+            this.CreateError( "Required algorithm failed." );
     }
 
     public virtual void Kill()
     {
         if ( this.currThread?.IsAlive ?? false )
         {
-            this.unmarkRunning( this );
+            this.AlgoManager.UnmarkRunning( this );
             this.currThread.Abort();
         }
         this.running = false;
