@@ -453,9 +453,6 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public void CloseStepByStep()
     {
-        CloseExtraInfo();
-        this.stepByStepPanel.SetActive(false);
-
         Toolbar.Singleton.EnterViewMode();
         this.resultButton.UpdateStatus(false);
         this.ExtraInfoClosed = false;
