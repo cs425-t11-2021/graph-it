@@ -3,6 +3,7 @@
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using UnityEngine;
 
 [System.Serializable]
 public class NumberOfSpanningTreesAlgorithm : Algorithm
@@ -16,15 +17,22 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
         this.AlgoManager.RunWeightMatrix(false);
         this.WaitUntilWeightMatrixComplete();
 
-        float[,] laplacian = (float[,]) this.AlgoManager.GetWeightMatrix().results["weight matrix"].Item1;
+        float[,] weightMatrix = (float[,]) this.AlgoManager.GetWeightMatrix().results["weight matrix"].Item1;
 
-        int n = laplacian.GetLength(0);
+        int n = weightMatrix.GetLength(0);
+        
+        int[,] laplacian = new int[n,n];
+
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                laplacian[i,j] = 0;
+        
 
         for (int i = 0; i < n; i++)
         {
             for (int j = 0; j < n; j++)
             {
-                if (i != j && laplacian[i,j] > 0)
+                if (i != j && !float.IsInfinity(weightMatrix[i,j]))
                 {
                     laplacian[i,j] = -1;
                     laplacian[i,i] += 1;
@@ -32,7 +40,9 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
             }
         }
 
-        float det = 1;
+        int det = 1;
+
+        int dividingFactor = 1;
 
         for (int i = 0; i < n - 1; i++)
         {
@@ -40,10 +50,12 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
             int pivot = -1;
             for (int j = i; j < n - 1; j++)
             {
-                if (laplacian[i,j] != 0)
+                if (laplacian[j,i] != 0)
                 {
-                    pivot = j;
-                    break;
+                    if (pivot == -1 || Math.Abs(laplacian[j,i]) < Math.Abs(laplacian[pivot,i]) )
+                    {
+                        pivot = j;
+                    }
                 }
             }
 
@@ -61,25 +73,28 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
             {
                 if (laplacian[j,i] != 0)
                 {
-                    float coeff = laplacian[j,i] / laplacian[i,i];
+                    // we're scaling a row by the pivot value, so add a factor to divide later
+                    dividingFactor *= laplacian[i,i];
+
+                    int coeff = laplacian[j,i];
                     for (int k = i; k < n - 1; k++)
                     {
-                        laplacian[j,k] -= coeff * laplacian[i,k];
+                        laplacian[j,k] = laplacian[j,k]*laplacian[i,i] - laplacian[i,k]*coeff;
                     }
                 }
             }
         }
 
-        NumberOfSpanningTrees = (int) det;
+        this.NumberOfSpanningTrees = Math.Abs(det / dividingFactor);
     }
 
-    private void SwapRows(float[,] array, int row1, int row2)
+    private void SwapRows(int[,] array, int row1, int row2)
     {
         if (row1 == row2) return;
 
         for (int i = 0; i < array.GetLength(0); i++)
         {
-            float temp = array[row1,i];
+            int temp = array[row1,i];
             array[row1,i] = array[row2,i];
             array[row2,i] = temp;
         }
