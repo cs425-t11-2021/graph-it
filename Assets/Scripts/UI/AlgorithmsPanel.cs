@@ -235,7 +235,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
         if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmInitiationState)
         {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            Toolbar.Singleton.EnterViewMode();
         }
     }
 
@@ -277,7 +277,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             }
             else
             {
-                ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+                Toolbar.Singleton.EnterViewMode();
                 this.ExtraInfoClosed = false;
             }
         }
@@ -307,7 +307,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
 
         if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState) {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            Toolbar.Singleton.EnterViewMode();
             this.ExtraInfoClosed = false;
         }
     }
@@ -323,7 +323,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             }
         }
         else {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            Toolbar.Singleton.EnterViewMode();
             this.ExtraInfoClosed = false;
         }
     }
@@ -331,7 +331,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void SetStepByStep(bool enabled)
     {
         this.StepByStep = enabled;
-        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        Toolbar.Singleton.EnterViewMode();
         this.ExtraInfoClosed = false;
         this.resultButton.UpdateStatus(false);
     }
@@ -456,7 +456,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         CloseExtraInfo();
         this.stepByStepPanel.SetActive(false);
 
-        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        Toolbar.Singleton.EnterViewMode();
         this.resultButton.UpdateStatus(false);
         this.ExtraInfoClosed = false;
     }

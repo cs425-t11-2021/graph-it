@@ -193,7 +193,7 @@ public class Controller : SingletonBehavior<Controller>
         // Deselect All
         SelectionManager.Singleton.DeSelectAll();
         // Reset toolbar toggles
-        Toolbar.Singleton.ResetAll();
+        Toolbar.Singleton.EnterViewMode();
         // If snap to grid is enabled, clear out the grid
         if (Grid.Singleton.GridEnabled)
         {

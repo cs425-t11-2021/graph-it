@@ -7,6 +7,9 @@ using TMPro;
 public class Toolbar : SingletonBehavior<Toolbar>
 {
     [SerializeField]
+    private ToggleButton viewModeButton;
+
+    [SerializeField]
     private ToggleButton selectionModeButton;
 
     [SerializeField]
@@ -41,6 +44,10 @@ public class Toolbar : SingletonBehavior<Toolbar>
         this.edgeThicknessButton.gameObject.SetActive(false);
         this.edgeCurvatureButton.gameObject.SetActive(false);
         this.changeVertexStyleButton.gameObject.SetActive(false);
+    }
+
+    private void Start() {
+        EnterViewMode();
     }
 
     private void Update() {
@@ -89,52 +96,52 @@ public class Toolbar : SingletonBehavior<Toolbar>
 
     // Turn off all toggles
     public void ResetAll() {
-        this.selectionModeButton.Checked = false;
-        this.createVertexModeButton.Checked = false;
-        this.edgeCreationModeButton.Checked = false;
+        this.selectionModeButton.UpdateStatus(false);
+        this.createVertexModeButton.UpdateStatus(false);
+        this.edgeCreationModeButton.UpdateStatus(false);
+        this.viewModeButton.UpdateStatus(false);
+        CloseSubpanels();
+    }
+
+    public void EnterViewMode() {
+        ResetAll();
+        this.viewModeButton.UpdateStatus(true);
+        if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.viewState) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        }
     }
 
     // Enable or disable selection mode
-    public void ToggleSelectionMode() {
+    public void EnterSelectionMode() {
+        ResetAll();
+        this.selectionModeButton.UpdateStatus(true);
         if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.selectionState) {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.selectionState;
-            this.createVertexModeButton.UpdateStatus(false);
-            this.edgeCreationModeButton.UpdateStatus(false);
-        }
-        else {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
-        }
-        
-        CloseSubpanels();
+        }        
     }
 
     // Enable or disable vertex creation mode
-    public void ToggleCreateVertexMode() {
+    public void EnterVertexCreationMode() {
+        ResetAll();
+        this.createVertexModeButton.UpdateStatus(true);
         if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.vertexCreationState) {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.vertexCreationState;
-            this.selectionModeButton.UpdateStatus(false);
-            this.edgeCreationModeButton.UpdateStatus(false);
         }
-        else {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+    }
+
+    // Enable or disable edge addition mode
+    public void EnterEdgeCreationMode() {
+        ResetAll();
+        this.edgeCreationModeButton.UpdateStatus(false);
+        if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.edgeCreationState) {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.edgeCreationState;
         }
-        
-        CloseSubpanels();
     }
 
     // Function to enable certain toolbar buttons when a graph component is selected
     private void OnSelectionChange(int selectedVertexCount, int selectedEdgeCount) {
         // Enable delete button if any components are selected
         this.deleteButton.gameObject.SetActive(selectedVertexCount + selectedEdgeCount > 0);
-
-        // // Enable the Edge Creation Mode button when nothing is selected
-        // if (selectedVertexCount == 0 && selectedEdgeCount == 0) {
-        //     this.edgeCreationModeButton.gameObject.SetActive(true);
-        // }
-        // else {
-        //     this.edgeCreationModeButton.Checked = false;
-        //     this.edgeCreationModeButton.gameObject.SetActive(false);
-        // }
 
         // Enable the Add Edge button when two vertices are selected
         // this.addEdgeButton.gameObject.SetActive(selectedVertexCount == 2 && selectedEdgeCount == 0);
@@ -160,18 +167,6 @@ public class Toolbar : SingletonBehavior<Toolbar>
     // Function called by delete button
     public void DeleteSelection() {
         SelectionManager.Singleton.DeleteSelection();
-    }
-
-    // Enable or disable edge addition mode
-    public void ToggleAddEdgeMode() {
-        if (ManipulationStateManager.Singleton.ActiveState != ManipulationState.edgeCreationState) {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.edgeCreationState;
-            this.selectionModeButton.UpdateStatus(false);
-            this.createVertexModeButton.UpdateStatus(false);
-        }
-        else {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
-        }
     }
 
     // Function called by Add Edge button
