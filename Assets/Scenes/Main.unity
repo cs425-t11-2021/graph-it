@@ -10025,6 +10025,14 @@ MonoBehaviour:
     completedMethod: GetFleurys
     description: 
     activationButton: {fileID: 0}
+  - algorithmClass: GirthAlgorithm
+    displayName: Girth
+    enabled: 1
+    requiredVertices: 0
+    activationMethod: RunGirth
+    completedMethod: GetGirth
+    description: 
+    activationButton: {fileID: 0}
   algOpenPanel: {fileID: 1689317852}
   resultButton: {fileID: 468119564}
   runButton: {fileID: 1581409057}
@@ -14505,8 +14513,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1159227432}
   m_HandleRect: {fileID: 1159227431}
   m_Direction: 2
-  m_Value: 1.0000004
-  m_Size: 0.56297845
+  m_Value: 0.99999946
+  m_Size: 0.5629783
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
