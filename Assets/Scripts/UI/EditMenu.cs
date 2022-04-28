@@ -32,11 +32,29 @@ public class EditMenu : MenuButton
     {
         if (InputManager.Singleton.ControlCommandKeyHeld) {
             if (Input.GetKeyDown(KeyCode.Z)) {
-                Undo();
+                if (Input.GetKey(KeyCode.LeftShift)) {
+                    Redo();
+                }
+                else {
+                    Undo();
+                }
             }
 
-            if (Input.GetKeyDown(KeyCode.X)) {
-                Redo();
+            if (Input.GetKeyDown(KeyCode.A)) {
+                SelectAll();
+            }
+
+            if (Input.GetKeyDown(KeyCode.D)) {
+                DeselectAll();
+            }
+
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                Copy();
+            }
+            else if (Input.GetKeyDown(KeyCode.V))
+            {
+                Paste();
             }
         }
 

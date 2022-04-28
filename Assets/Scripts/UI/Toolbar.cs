@@ -200,18 +200,22 @@ public class Toolbar : SingletonBehavior<Toolbar>
     // Function called by the edge thickness plus or minus buttons
     public void ChangeEdgeThickness(int change)
     {
-        foreach (EdgeObj edgeObj in SelectionManager.Singleton.SelectedEdges)
-        {
-            edgeObj.ChangeThickness(change);
+        if (change > 0) {
+            SelectionManager.Singleton.IncrementSelectedEdgesThickness();
+        }
+        else {
+            SelectionManager.Singleton.DecrementSelectedEdgesThickness();
         }
     }
     
     // Function called by the edge curvature plus or minus buttons
     public void ChangeEdgeCurvature(int change)
     {
-        foreach (EdgeObj edgeObj in SelectionManager.Singleton.SelectedEdges)
-        {
-            edgeObj.ChangeCurvature(change);
+        if (change > 0) {
+            SelectionManager.Singleton.IncrementSelectedEdgesCurvature();
+        }
+        else {
+            SelectionManager.Singleton.DecrementSelectedEdgesCurvature();
         }
     }
 

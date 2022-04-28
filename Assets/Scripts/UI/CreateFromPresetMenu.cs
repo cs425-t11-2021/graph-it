@@ -16,7 +16,11 @@ public class CreateFromPresetMenu : MonoBehaviour
     //NEED TO BE UPDATED WITH CURRENT UI ELEMENTS
     private void OnEnable() {
         UIManager.Singleton.MenuBarEnabled = false;
+        UIManager.Singleton.GraphInfoEnabled = false;
+        UIManager.Singleton.OpenGraphInfoPanelEnabled = false;
         UIManager.Singleton.AlgorithmsPanelEnabled = false;
+        UIManager.Singleton.OpenAlgInfoPanelEnabled = false;
+        UIManager.Singleton.TabsBarEnabled = false;
         UIManager.Singleton.ToolBarEnabled = false;
 
         // Suspend the manipulation state if the import menu is active
@@ -28,7 +32,11 @@ public class CreateFromPresetMenu : MonoBehaviour
     //helper function to restore the user's ability to interact with the program once the menu is closed
     private void OnDisable() {
         UIManager.Singleton.MenuBarEnabled = true;
+        UIManager.Singleton.GraphInfoEnabled = true;
+        UIManager.Singleton.OpenGraphInfoPanelEnabled = true;
         UIManager.Singleton.AlgorithmsPanelEnabled = true;
+        UIManager.Singleton.OpenAlgInfoPanelEnabled = true;
+        UIManager.Singleton.TabsBarEnabled = true;
         UIManager.Singleton.ToolBarEnabled = true;
 
         // Unsuspend the manipulation state

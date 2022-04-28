@@ -5,14 +5,14 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.EventSystems;
 
-public class Tab : MonoBehaviour, IPointerClickHandler
+public class Tab : MonoBehaviour //, IPointerClickHandler --might be useful later on for right click menu options
 {
     // Graph instance associated with this tab
     private GraphInstance graphInstance;
     // Toggle button associated with the tab, for visual purpose
     private ToggleButton toggle;
     // TMP text component for the tab label
-    private TMP_Text tabLabel;
+    private TMP_InputField tabLabel;
     
     // Name of the tab
     public string TabName
@@ -24,7 +24,7 @@ public class Tab : MonoBehaviour, IPointerClickHandler
     private void Awake()
     {
         // Get component references
-        this.tabLabel = GetComponentInChildren<TMP_Text>();
+        this.tabLabel = GetComponentInChildren<TMP_InputField>(true);
         this.toggle = GetComponent<ToggleButton>();
         
         // When the active instance changes, highlight the tab is the tab is associated with the new active instance
@@ -54,7 +54,7 @@ public class Tab : MonoBehaviour, IPointerClickHandler
     public void Close()
     {
         Controller.Singleton.RemoveGraphInstance(this.graphInstance);
-        Destroy(this.gameObject);
+        Destroy(this.gameObject); 
     }
 
     private void OnDestroy()
@@ -63,12 +63,17 @@ public class Tab : MonoBehaviour, IPointerClickHandler
         Controller.Singleton.OnInstanceChanged -= OnInstanceChanged;
     }
 
+    public void Rename(string newName)
+    {
+        tabLabel.text = newName;
+    }
+
     // TEMPROARY: CLOSE A TAB WHEN RIGHT CLICKING ON IT
-    public void OnPointerClick(PointerEventData eventData)
+    /*public void OnPointerClick(PointerEventData eventData)
     {
         if (eventData.button == PointerEventData.InputButton.Right)
         {
             Close();
         }
-    }
+    }*/
 }

@@ -141,7 +141,7 @@ public class DijkstrasAlgorithm : LoggedAlgorithm
 
         // put together final path 
         Vertex curr = this.dest;
-        while ( curr != this.src )
+        while ( !( curr is null ) && curr != this.src )
         {
             this.vertexPath.Add( curr );
             this.edgePath.Add( this.Graph[ prev[ curr ], curr ] );

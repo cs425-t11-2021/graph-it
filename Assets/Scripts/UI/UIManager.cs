@@ -10,11 +10,14 @@ public class UIManager : SingletonBehavior<UIManager>
     [Header("UI Components")]
     // References to the different main UI components
     [SerializeField] private GameObject menuBar;
-    [SerializeField] private GameObject graphInfo;
+    [SerializeField] private GameObject graphInfoPanel;
+    [SerializeField] private Button openGraphInfo;
     [SerializeField] private GameObject algPanel;
-    [SerializeField] private GameObject importFileMenu;
-    [SerializeField] private GameObject exportFileMenu;
-    [SerializeField] private GameObject importErrorDialog;
+    [SerializeField] private Button openAlgPanel;
+    [SerializeField] private GameObject tabsBar;
+    //[SerializeField] private GameObject importFileMenu;
+    //[SerializeField] private GameObject exportFileMenu;
+    //[SerializeField] private GameObject importErrorDialog;
     [SerializeField] private GameObject toolbar;
     [SerializeField] public GameObject mainCanvas;
     [SerializeField] public GameObject selectionRect;
@@ -30,11 +33,45 @@ public class UIManager : SingletonBehavior<UIManager>
         set => Array.ForEach(this.menuButtons, menuButton => menuButton.ToggleButtonEnabled = value);
     }
 
-    // Property for whether or not the algorithm panel is enabled
-    public bool AlgorithmsPanelEnabled {
-        set => this.algorithmsPanel.AlgorithmButtonsEnabled = value;
+    public bool GraphInfoEnabled{
+        set{
+            Button[] closeGraphPanel = this.graphInfoPanel.GetComponentsInChildren<Button>(true);
+            Array.ForEach(closeGraphPanel, button => button.enabled = value);
+        }
     }
 
+    public bool OpenGraphInfoPanelEnabled{
+        set{
+            this.openGraphInfo.enabled = value;
+        }
+    }
+
+    // Property for whether or not the algorithm panel is enabled
+    public bool AlgorithmsPanelEnabled {
+        set{
+            ToggleButton[] algsButtons = this.algPanel.GetComponentsInChildren<ToggleButton>(true);
+            Array.ForEach(algsButtons, togButton => togButton.enabled = value);
+            Button[] closeAlgPanel = this.algPanel.GetComponentsInChildren<Button>(true);
+            Array.ForEach(closeAlgPanel, button => button.enabled = value);
+        }
+    }
+
+    public bool OpenAlgInfoPanelEnabled{
+        set{
+            this.openAlgPanel.enabled = value;
+        }
+    }
+
+
+    public bool TabsBarEnabled{
+        set{
+            ToggleButton[] tabs = this.tabsBar.GetComponentsInChildren<ToggleButton>(true);
+            Array.ForEach(tabs, togButton => togButton.enabled = value);
+
+            Button[] tabButtons = this.tabsBar.GetComponentsInChildren<Button>(true);
+            Array.ForEach(tabButtons, button => button.enabled = value);
+        }
+    }
     // Property for whether or not the toolbar is enabled
     public bool ToolBarEnabled {
         set {
@@ -47,16 +84,18 @@ public class UIManager : SingletonBehavior<UIManager>
 
     // Array of all menu bar buttons
     private MenuButton[] menuButtons;
+
     //Reference to the graph info
-    //private GraphInfo graphInfo;
+   // private GraphInfo graphInfo;
 
     // Reference to the algorithm panel
-    private AlgorithmsPanel algorithmsPanel;
+   // private AlgorithmsPanel[] algorithmsPanel;
 
     private void Awake() {
         // Get references
         this.menuButtons = this.menuBar.GetComponentsInChildren<MenuButton>(true);
-        this.algorithmsPanel = this.algPanel.GetComponentInChildren<AlgorithmsPanel>();
+        //this.algorithmsPanel = this.algPanel.GetComponentInChildren<AlgorithmsPanel>();
+        //this.graphInfo = this.graphInfoPanel.GetComponentInChildren<GraphInfo>();
     }
 
     private void Update() {

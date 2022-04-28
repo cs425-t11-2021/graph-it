@@ -50,7 +50,7 @@ public class EdgeLabelObj : MonoBehaviour
     {
         this.displayEnabled = enabled;
 
-        if (this.enabled)
+        if (this.displayEnabled)
             MakeUneditable();
         else
             this.inputField.gameObject.SetActive(false);

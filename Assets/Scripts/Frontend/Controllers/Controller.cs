@@ -35,6 +35,8 @@ public class Controller : SingletonBehavior<Controller>
     [SerializeField] public GameObject edgeTemplatePrefab;
     // Mask of Collider Layers that should receive mouse input
     [SerializeField] private LayerMask clickableLayers;
+
+    [SerializeField] public Color[] algorithmResultColors;
     
     // List of currently available graph instances
     private List<GraphInstance> instances = new List<GraphInstance>();
@@ -226,6 +228,11 @@ public class Controller : SingletonBehavior<Controller>
         Vertex vertex = this.Graph.AddVertex(pos.x, pos.y);
         CreateVertexObj(vertex);
         GraphInfo.Singleton.UpdateGraphInfo();
+    }
+
+    public void AddCollection(List<Vertex> vertices, List<Edge> edges) {
+        this.Graph.Add(vertices, edges, true);
+        
     }
 
     // Create a new vertex object to correspond to a passed in graph vertex

@@ -21,6 +21,22 @@ public class FileMenu : MenuButton
     [SerializeField] private GameObject fileDropDown; //TO DO - close immediately after selection of option
     [SerializeField] private CreateFromPresetMenu presetMenu; //no clue if this will work
 
+    private void Update() {
+        if (InputManager.Singleton.ControlCommandKeyHeld) {
+            if (Input.GetKeyDown(KeyCode.N)) {
+                NewGraphFunc();
+            }
+
+            if (Input.GetKeyDown(KeyCode.O)) {
+                ImportFromFile();
+            }
+
+            if (Input.GetKeyDown(KeyCode.S)) {
+                ExportToFile();
+            }
+        }
+    }
+
     //When the user selects the "New Graph" button; the existing graph is cleared for the user to create a new graph
     public void NewGraphFunc(){
         Logger.Log("Creating a new graph.", this, LogType.DEBUG);

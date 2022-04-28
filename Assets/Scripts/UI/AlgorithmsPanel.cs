@@ -26,6 +26,7 @@ public class GraphDisplayAlgorithmAssociation
     public int requiredVertices = 0;
     public string activationMethod = "";
     public string completedMethod = "";
+    public string description = "";
     public ResultType resultType;
     public DisplayAlgorithmExtraInfo[] extraInfo;
     
@@ -96,6 +97,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] private GameObject stepByStepToggle;
     [SerializeField] public GameObject stepByStepPanel;
     [SerializeField] private TMP_Text stepAlgorithmText;
+    [SerializeField] private ToggleButton autoStepThroughToggle;
 
     // TODO: get rid of Eventaully
     [SerializeField] private GameObject deprecationWarning;
@@ -111,7 +113,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     private object[] algorithmResults;
     private string[][] algorithmExtras;
     private Vertex[][] algorithmVertexPrams;
-    public (StepType, List<Vertex>, List<Edge>, string)? CurrentStep { get; set; }
+    public AlgorithmStep CurrentStep { get; set; }
 
 
     // Property for whether or not the algorithm buttons are enabled
@@ -134,6 +136,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             newAlgoButton.GetComponent<Image>().color = this.deafultColor;
             newAlgoButton.checkedChanged.AddListener(delegate { SelectAlgorithm(a.algorithmClass); });
             newAlgoButton.GetComponentInChildren<TMP_Text>(true).text = a.displayName;
+            newAlgoButton.GetComponentInChildren<OnHover>(true).Description = a.description;
             
             a.activationButton = newAlgoButton;
             a.activationButton.UpdateStatus(false);
@@ -189,6 +192,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         {
             Type.GetType("AlgorithmManager").GetMethod(association.activationMethod).Invoke(Controller.Singleton.AlgorithmManager, new Object[] {true});
         }
+
+        association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName + "...";
     }
 
     public void SelectAlgorithm(string algorithmName) {
@@ -224,8 +229,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 }
                 else {
                     this.stepByStepToggle.SetActive(false);
+                    this.StepByStep = false;
                 }
-                this.StepByStep = false;
             }
             else {
                 association.activationButton.UpdateStatus(false);
@@ -254,6 +259,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                 association.activationButton.originalColor = this.defaultFinishedColor;
                 association.activationButton.GetComponent<Image>().color = this.defaultFinishedColor;
                 association.activationButton.UpdateStatus(association.activationButton.Checked);
+
+                association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName;
 
                 if (CurrentlySelectedAlgorithm == association) {
                     this.resultButton.gameObject.SetActive(true);
@@ -305,6 +312,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             association.activationButton.checkedColor = this.selectedColor;
             association.activationButton.originalColor = this.deafultColor;
             association.activationButton.GetComponent<Image>().color = this.deafultColor;
+            association.activationButton.GetComponentInChildren<TMP_Text>(true).text = association.displayName;
             association.activationButton.UpdateStatus(association.activationButton.Checked);
         }
 
@@ -331,13 +339,15 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void SetStepByStep(bool enabled)
     {
         this.StepByStep = enabled;
+        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        this.resultButton.UpdateStatus(false);
     }
 
     public void GetNextStep() {
         if (Controller.Singleton.AlgorithmManager.IsNextStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams)) {
             Controller.Singleton.AlgorithmManager.NextStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
             this.CurrentStep =  Controller.Singleton.AlgorithmManager.GetStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
-            this.stepAlgorithmText.text = "Step: " + this.CurrentStep?.Item4;
+            this.stepAlgorithmText.text = "Step: " + this.CurrentStep.desc;
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
         }
     }
@@ -346,10 +356,74 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         if (Controller.Singleton.AlgorithmManager.IsBackStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams)) {
             Controller.Singleton.AlgorithmManager.BackStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
             this.CurrentStep =  Controller.Singleton.AlgorithmManager.GetStep(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
-            this.stepAlgorithmText.text = "Step: " + this.CurrentStep?.Item4;
+            this.stepAlgorithmText.text = "Step: " + this.CurrentStep.desc;
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
         }
     }
+
+    public void GoToFirstStep()
+    {
+        if (Controller.Singleton.AlgorithmManager.IsBackStepAvailable(
+                Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams))
+        {
+            while (Controller.Singleton.AlgorithmManager.IsBackStepAvailable(
+                       Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams))
+            {
+                Controller.Singleton.AlgorithmManager.BackStep(
+                    Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
+            }
+
+            this.CurrentStep = Controller.Singleton.AlgorithmManager.GetStep(
+                Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
+            this.stepAlgorithmText.text = "Step: " + this.CurrentStep.desc;
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
+        }
+    }
+    
+    public void GoToLastStep()
+    {
+        if (Controller.Singleton.AlgorithmManager.IsNextStepAvailable(
+                Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams))
+        {
+            while (Controller.Singleton.AlgorithmManager.IsNextStepAvailable(
+                       Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams))
+            {
+                Controller.Singleton.AlgorithmManager.NextStep(
+                    Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
+            }
+
+            this.CurrentStep = Controller.Singleton.AlgorithmManager.GetStep(
+                Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams);
+            this.stepAlgorithmText.text = "Step: " + this.CurrentStep.desc;
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
+        }
+    }
+
+    private bool autoStepThroughPlaying = false;
+
+    public void ToggleAutoStepThrough()
+    {
+        autoStepThroughPlaying = !autoStepThroughPlaying;
+        if (autoStepThroughPlaying)
+        {
+            StartCoroutine(AutoStepThrough());
+        }
+        else
+        {
+            StopAllCoroutines();
+        }
+    }
+
+    IEnumerator AutoStepThrough()
+    {
+        while (Controller.Singleton.AlgorithmManager.IsNextStepAvailable(Type.GetType(this.CurrentlySelectedAlgorithm.algorithmClass), this.AlgorithmVertexPrams))
+        {
+            GetNextStep();
+            yield return new WaitForSeconds(.5f);
+        }
+        this.autoStepThroughToggle.UpdateStatus(false);
+    }
+    
 
     public void Search(string term)
     {

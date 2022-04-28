@@ -181,19 +181,27 @@ public class GraphModification
     private void UndoEdgeThicknesses()
     {
         ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
-        for ( int i = 0; i < thicknessData.Item1.Count; ++i )
-            thicknessData.Item1[ i ].SetThickness( thicknessData.Item2[ i ], false );
+        for (int i = 0; i < thicknessData.Item1.Count; ++i)
+        {
+            thicknessData.Item1[i].SetThickness(thicknessData.Item2[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( thicknessData.Item1[i] ).UpdateSpline();
+        }
 
-        // TODO: Update front end
+        
     }
 
     private void UndoEdgeCurvatures()
     {
         ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
-        for ( int i = 0; i < curveData.Item1.Count; ++i )
-            curveData.Item1[ i ].SetCurvature( curveData.Item2[ i ], false );
-
-        // TODO: Update front end
+        for (int i = 0; i < curveData.Item1.Count; ++i)
+        {
+            curveData.Item1[i].SetCurvature(curveData.Item2[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( curveData.Item1[i] ).UpdateSpline();
+        }
     }
 
     private void UndoEdgeTailStyle()
@@ -244,16 +252,6 @@ public class GraphModification
     private void UndoRemoveCollection()
     {
         ( HashSet< Vertex >, HashSet< Edge > ) collection = ( ( HashSet< Vertex >, HashSet< Edge > ) ) this.Modified;
-        if ( !( collection.Item2 is null ) )
-        {
-            foreach ( Edge edge in collection.Item2 )
-            {
-                this.graph.Add( edge, false );
-
-                // Update front end
-                Controller.Singleton.CreateEdgeObj( edge );
-            }
-        }
         if ( !( collection.Item1 is null ) )
         {
             foreach ( Vertex vert in collection.Item1 )
@@ -262,6 +260,16 @@ public class GraphModification
 
                 // Update front end
                 Controller.Singleton.CreateVertexObj( vert );
+            }
+        }
+        if ( !( collection.Item2 is null ) )
+        {
+            foreach ( Edge edge in collection.Item2 )
+            {
+                this.graph.Add( edge, false );
+
+                // Update front end
+                Controller.Singleton.CreateEdgeObj( edge );
             }
         }
     }
@@ -395,19 +403,25 @@ public class GraphModification
     private void RedoEdgeThicknesses()
     {
         ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
-        for ( int i = 0; i < thicknessData.Item1.Count; ++i )
-            thicknessData.Item1[ i ].SetThickness( thicknessData.Item3[ i ], false );
-
-        // TODO: Update front end
+        for (int i = 0; i < thicknessData.Item1.Count; ++i)
+        {
+            thicknessData.Item1[i].SetThickness(thicknessData.Item3[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( thicknessData.Item1[i] ).UpdateSpline();
+        }
     }
 
     private void RedoEdgeCurvatures()
     {
         ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
-        for ( int i = 0; i < curveData.Item1.Count; ++i )
-            curveData.Item1[ i ].SetCurvature( curveData.Item3[ i ], false );
-
-        // TODO: Update front end
+        for (int i = 0; i < curveData.Item1.Count; ++i)
+        {
+            curveData.Item1[i].SetCurvature(curveData.Item3[i], false);
+            
+            // Update front end
+            Controller.Singleton.GetEdgeObj( curveData.Item1[i] ).UpdateSpline();
+        }
     }
 
     private void RedoEdgeTailStyle()
@@ -437,7 +451,9 @@ public class GraphModification
 
             // Update front end
             foreach ( Vertex v in collection.Item1 )
-                Controller.Singleton.RemoveVertex( Controller.Singleton.GetVertexObj( v ), false );
+                // Controller.Singleton.RemoveVertex( Controller.Singleton.GetVertexObj( v ), false );
+                Controller.Singleton.CreateVertexObj(v, false);
+            Controller.Singleton.ForceInvokeModificationEvent();
         }
         if ( !( collection.Item2 is null ) )
         {
@@ -445,7 +461,9 @@ public class GraphModification
 
             // Update front end
             foreach ( Edge e in collection.Item2 )
-                Controller.Singleton.RemoveEdge( Controller.Singleton.GetEdgeObj( e ), false );
+                // Controller.Singleton.RemoveEdge( Controller.Singleton.GetEdgeObj( e ), false );
+                Controller.Singleton.CreateEdgeObj(e, false);
+            Controller.Singleton.ForceInvokeModificationEvent();
         }
     }
 

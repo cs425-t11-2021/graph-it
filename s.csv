@@ -1,0 +1,46 @@
+vertices:
+id: 0, label: , x: 2, y: 0, style: 0, color: 0
+id: 1, label: , x: 0, y: 2, style: 0, color: 0
+id: 2, label: , x: -2, y: 0, style: 0, color: 0
+id: 3, label: , x: 0, y: -2, style: 0, color: 0
+id: 5, label: , x: 5.5, y: 1.5, style: 0, color: 0
+id: 6, label: , x: 5.5, y: 0.5, style: 0, color: 0
+id: 7, label: , x: 7, y: 1.5, style: 0, color: 0
+id: 8, label: , x: 7, y: 0.5, style: 0, color: 0
+id: 9, label: , x: 8.5, y: 1.5, style: 0, color: 0
+id: 10, label: , x: 8.5, y: 0.5, style: 0, color: 0
+id: 11, label: , x: 7, y: 3, style: 0, color: 0
+id: 14, label: , x: 5.5, y: -1, style: 0, color: 0
+id: 15, label: , x: 5.5, y: -2, style: 0, color: 0
+id: 16, label: , x: 7, y: -1, style: 0, color: 0
+id: 17, label: , x: 7, y: -2, style: 0, color: 0
+id: 18, label: , x: 8.5, y: -1, style: 0, color: 0
+id: 19, label: , x: 8.5, y: -2, style: 0, color: 0
+id: 20, label: , x: 8, y: -0.5, style: 0, color: 0
+id: 21, label: , x: 6, y: 0, style: 0, color: 0
+id: 22, label: , x: 7, y: -3.5, style: 0, color: 0
+
+edges:
+vert1: 1, vert2: 0, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 2, vert2: 0, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 3, vert2: 0, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 2, vert2: 1, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 3, vert2: 1, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 3, vert2: 2, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 5, vert2: 11, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 11, vert2: 9, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 5, vert2: 6, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 7, vert2: 8, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 9, vert2: 10, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 20, vert2: 18, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 8, vert2: 20, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 10, vert2: 20, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 14, vert2: 21, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 14, vert2: 15, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 16, vert2: 17, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 18, vert2: 19, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 6, vert2: 21, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 21, vert2: 16, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 15, vert2: 22, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 22, vert2: 19, directed: False, label: , style: 0, color: 0, thickness: 0
+vert1: 0, vert2: 21, directed: False, label: , style: 0, color: 0, thickness: 0
