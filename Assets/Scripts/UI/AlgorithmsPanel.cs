@@ -103,6 +103,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     private Vertex[][] algorithmVertexPrams;
     public AlgorithmStep CurrentStep { get; set; }
 
+    public bool ExtraInfoClosed { get; private set; } = false;
+
 
     // Property for whether or not the algorithm buttons are enabled
     public bool AlgorithmButtonsEnabled
@@ -228,6 +230,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             this.resultButton.gameObject.SetActive(false);
             this.stepByStepToggle.SetActive(false);
         }
+
+        this.ExtraInfoClosed = false;
     }
 
     public void StoreAlgorithmResult(string algorithmName, AlgorithmResult result, Vertex[] vertexParms) {
@@ -269,6 +273,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             else
             {
                 ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+                this.ExtraInfoClosed = false;
             }
         }
         else
@@ -277,9 +282,9 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
     }
 
-    public void DisplayAlgorithmResult() {
-        ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
-    }
+    // public void DisplayAlgorithmResult() {
+    //     ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
+    // }
 
     public void ClearAlgorithmResults() {
         this.algorithmResults = new AlgorithmResult[this.associations.Length];
@@ -298,6 +303,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
         if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState) {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            this.ExtraInfoClosed = false;
         }
     }
 
@@ -313,6 +319,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
         else {
             ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            this.ExtraInfoClosed = false;
         }
     }
 
@@ -320,6 +327,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     {
         this.StepByStep = enabled;
         ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        this.ExtraInfoClosed = false;
         this.resultButton.UpdateStatus(false);
     }
 
@@ -430,6 +438,22 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void OpenAlgorithmInfoPanel(){
         this.gameObject.SetActive(true);
         algOpenPanel.gameObject.SetActive(false);
+    }
+
+    public void CloseExtraInfo()
+    {
+        this.extraInfoPanel.SetActive(false);
+        ExtraInfoClosed = true;
+    }
+
+    public void CloseStepByStep()
+    {
+        CloseExtraInfo();
+        this.stepByStepPanel.SetActive(false);
+
+        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        this.resultButton.UpdateStatus(false);
+        this.ExtraInfoClosed = false;
     }
 
 }

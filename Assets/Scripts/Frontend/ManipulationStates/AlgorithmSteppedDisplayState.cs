@@ -89,14 +89,16 @@ public class AlgorithmSteppedDisplayState : ManipulationState
                 this.infoResults.Add(resultID.ToTitleCase() + ": " + Convert.ToString(kvp.Value.Item1));
             }
         }
-
-        if (this.infoResults.Count > 0)
-        {
-            AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_Text>(true).text = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName + " Additional Info:";
-            string output = "";
-            this.infoResults.ForEach(s => output += s + "\n");
-            AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = output;
-            AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);
+        
+        if (!AlgorithmsPanel.Singleton.ExtraInfoClosed) {
+            if (this.infoResults.Count > 0)
+            {
+                AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_Text>(true).text = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName + " Additional Info:";
+                string output = "";
+                this.infoResults.ForEach(s => output += s + "\n");
+                AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = output;
+                AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);
+            }
         }
     }
 
