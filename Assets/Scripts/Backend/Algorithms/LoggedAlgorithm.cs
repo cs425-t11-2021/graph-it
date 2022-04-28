@@ -83,6 +83,7 @@ public abstract class LoggedAlgorithm : Algorithm
         return this.steps[ this.step ];
     }
 
+    // TODO: copy each list here
     protected void AddStep(
         StepType type,
         string desc,

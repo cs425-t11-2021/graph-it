@@ -7,8 +7,9 @@ using System.Collections.Generic;
 [System.Serializable]
 public class FleurysAlgorithm : Algorithm
 {
-    public bool EulerianCircuitExists { get; private set; }
-    public List< Edge > Result { get; private set; }
+    private bool hasEulerianCircuit;
+    private List< Vertex > circuitVertices;
+    private List< Edge > circuitEdges;
 
     private Graph graphCopy;
 
@@ -29,7 +30,8 @@ public class FleurysAlgorithm : Algorithm
         //      - graph is connected
 
         Vertex initial = this.graphCopy.Vertices[0];
-        this.Result = new List< Edge >();
+        this.circuitEdges = new List< Edge >();
+        this.circuitVertices = new List< Vertex >();
 
         int numOddDegrees = 0;
         foreach ( Vertex u in this.graphCopy.Vertices )
@@ -43,11 +45,11 @@ public class FleurysAlgorithm : Algorithm
 
         if (numOddDegrees != 0 && numOddDegrees != 2)
         {
-            this.EulerianCircuitExists = false;
+            this.hasEulerianCircuit = false;
             return;
         }
 
-        this.EulerianCircuitExists = true;
+        this.hasEulerianCircuit = true;
 
 
         // run Depth First search to determine if graph is connected
@@ -60,7 +62,7 @@ public class FleurysAlgorithm : Algorithm
 
         if (dfsCount(this.graphCopy.Vertices[0], visited) < this.graphCopy.Vertices.Count)
         {
-            this.EulerianCircuitExists = false;
+            this.hasEulerianCircuit = false;
             return;
         }
 
@@ -75,7 +77,7 @@ public class FleurysAlgorithm : Algorithm
                 {
                     if (isValidNextEdge(curr, vert))
                     {
-                        this.Result.Add(this.graphCopy[curr, vert]);
+                        this.circuitEdges.Add(this.graphCopy[curr, vert]);
                         this.graphCopy.Remove(this.graphCopy[curr, vert], false);
                         curr = vert;
                         break;
@@ -83,6 +85,8 @@ public class FleurysAlgorithm : Algorithm
                 }
             }
         }
+
+        this.circuitVertices = new List< Vertex >( Edge.GetIncidentVertices( this.circuitEdges ) );
     }
 
     private bool isValidNextEdge( Vertex u, Vertex v)
@@ -142,6 +146,27 @@ public class FleurysAlgorithm : Algorithm
             }
         }
         return count;
+    }
+
+    public override AlgorithmResult GetResult()
+    {
+        if ( this.error )
+            return this.GetErrorResult();
+        if ( this.running )
+            return this.GetRunningResult();
+        AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
+        result.results[ "eulerian circuit" ] = ( this.hasEulerianCircuit, typeof ( bool ) );
+        result.results[ "eulerian circuit vertices" ] = ( this.circuitVertices, typeof ( List< Vertex > ) );
+
+        List< (int, Edge) > orderedEdges = new List< (int, Edge) >();
+        int i = 0;
+        foreach (Edge edge in this.circuitEdges)
+        {
+            orderedEdges.Add((i, edge));
+            i++;
+        }
+        result.results[ "eulerian circuit edges" ] = ( orderedEdges, typeof ( List< (int, Edge) > ) );
+        return result;
     }
 
     public static int GetHash() => typeof ( FleurysAlgorithm ).GetHashCode();

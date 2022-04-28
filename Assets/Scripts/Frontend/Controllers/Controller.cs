@@ -179,13 +179,13 @@ public class Controller : SingletonBehavior<Controller>
             this.GraphObjContainer.gameObject.SetActive(false);
         this.activeGraphInstance = instance;
         this.GraphObjContainer.gameObject.SetActive(true);
-        
-        OnInstanceChanged?.Invoke(instance);
 
         if (updateGraphInfo)
         {
             GraphInfo.Singleton.InitiateAlgorithmManager(instance.algorithmManager);
         }
+        
+        OnInstanceChanged?.Invoke(instance);
     }
 
     public void RemoveGraphInstance(GraphInstance instance)
