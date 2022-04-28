@@ -31,6 +31,7 @@ public class FleurysAlgorithm : Algorithm
 
         Vertex initial = this.graphCopy.Vertices[0];
         this.circuitEdges = new List< Edge >();
+        this.circuitVertices = new List< Vertex >();
 
         int numOddDegrees = 0;
         foreach ( Vertex u in this.graphCopy.Vertices )
