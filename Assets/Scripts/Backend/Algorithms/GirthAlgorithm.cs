@@ -127,6 +127,9 @@ public class GirthAlgorithm : Algorithm
             result.results[ "girth" ] = ( this.girth, typeof ( int ) );
             result.results[ "smallest cycle vertices" ] = ( this.cycleVertices, typeof ( List< Vertex > ) );
             result.results[ "smallest cycle edges" ] = ( this.cycleEdges, typeof ( List< Edge > ) );
+        } else
+        {
+            result.results[ "girth" ] = ( float.PositiveInfinity, typeof ( float ) );
         }
 
         return result;

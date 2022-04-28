@@ -47,8 +47,6 @@ public class ChromaticAlgorithm : Algorithm
                 }
                 this.UpdateColoring( coloring, this.chi );
             }
-
-            this.estimated = false;
         }
 
     }
@@ -59,7 +57,6 @@ public class ChromaticAlgorithm : Algorithm
         {
             for ( int j = 0; j < this.Graph.Order; ++j )
             {
-                // temp i != j ignoring loops
                 if ( i != j && coloring[ i ] == coloring[ j ] && this.Graph.IsAdjacent( this.Graph.Vertices[ i ], this.Graph.Vertices[ j ] ) )
                     return false;
             }
@@ -87,7 +84,7 @@ public class ChromaticAlgorithm : Algorithm
         AlgorithmResult result;
         if ( this.error )
             return this.GetErrorResult();
-        if ( this.estimated )
+        if ( this.estimated && !this.complete )
         {
             result = new AlgorithmResult( AlgorithmResultType.ESTIMATE );
             result.results[ "chromatic number lower bound" ] = ( this.lowerBound, typeof ( int ) );
