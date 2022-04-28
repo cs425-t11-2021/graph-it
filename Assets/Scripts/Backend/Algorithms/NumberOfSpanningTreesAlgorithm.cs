@@ -14,6 +14,7 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
     public override void Run()
     {
         this.AlgoManager.RunWeightMatrix(false);
+        this.WaitUntilWeightMatrixComplete();
 
         float[,] laplacian = (float[,]) this.AlgoManager.GetWeightMatrix().results["weight matrix"].Item1;
 

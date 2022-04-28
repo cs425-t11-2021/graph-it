@@ -27,7 +27,7 @@ public class GraphDisplayAlgorithmAssociation
     public string activationMethod = "";
     public string completedMethod = "";
     public string description = "";
-    public string[] results;
+    // public string[] results;
     // public DisplayAlgorithmExtraInfo[] extraInfo;
     
     [HideInInspector] public ToggleButton activationButton;
@@ -232,6 +232,11 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
 
         this.ExtraInfoClosed = false;
+
+        if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmInitiationState)
+        {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        }
     }
 
     public void StoreAlgorithmResult(string algorithmName, AlgorithmResult result, Vertex[] vertexParms) {

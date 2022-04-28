@@ -89,21 +89,21 @@ public class CreateFromPresetMenu : MonoBehaviour
 
     public void CreateCompleteBipartite()
     {
-        CreatePresetGraph(PresetGraph.CompleteBipartite, "Complete");
+        CreatePresetGraph(PresetGraph.CompleteBipartite, "Complete Bipartite");
     }
 
     public void CreateCycle()
     {
-        CreatePresetGraph(PresetGraph.Cycle, "Complete");
+        CreatePresetGraph(PresetGraph.Cycle, "Cycle");
     }
 
     public void CreatePath()
     {
-        CreatePresetGraph(PresetGraph.Path, "Complete");
+        CreatePresetGraph(PresetGraph.Path, "Path");
     }
 
     public void CreateStar()
     {
-        CreatePresetGraph(PresetGraph.Star, "Complete");
+        CreatePresetGraph(PresetGraph.Star, "Star");
     }
 }

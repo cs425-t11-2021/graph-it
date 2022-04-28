@@ -49,7 +49,7 @@ public class AlgorithmDisplayState : ManipulationState
                     }
                 }
             }
-            else if (resultType == typeof(float) || resultType == typeof(int))
+            else if (resultType == typeof(float) || resultType == typeof(int) || resultType == typeof(bool))
             {
                 this.infoResults.Add(resultID.ToTitleCase() + ": " + Convert.ToString(kvp.Value.Item1));
             }

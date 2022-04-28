@@ -23,16 +23,9 @@ public class RunInMain : SingletonBehavior<RunInMain>
     private void Update() {
         if (this.queuedTasks.Count > 0) {
             if (this.queuedTasks.TryDequeue(out Action f)) {
-                // Debug.Log("Dequeing " + f.Method.Name);
-                // Debug.Log( f?.GetHashCode() );
                 f();
-                // Debug.Log("Finished " + f.Method.Name);
             }
-            // else {
-                // Debug.Log("Something fucked up");
-            // }
-            // Action f = this.queuedTasks.Dequeue();
-            
+
         }
     }
 

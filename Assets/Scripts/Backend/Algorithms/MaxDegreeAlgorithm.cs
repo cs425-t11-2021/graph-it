@@ -14,7 +14,6 @@ public class MaxDegreeAlgorithm : Algorithm
 
     public override void Run()
     {
-        Logger.Log( "running max degree.", this, LogType.INFO );
         IEnumerable< int > degrees = this.Graph.Vertices.Select( vert => this.Graph.GetVertexDegree( vert ) );
         this.delta = degrees.Count() > 0 ? degrees.Max() : 0;
     }

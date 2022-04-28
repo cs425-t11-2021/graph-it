@@ -42,10 +42,6 @@ public class BipartiteAlgorithm : Algorithm
         // temp
         this.AlgoManager.RunChromatic( false );
         this.WaitUntilChromaticComplete();
-        foreach (var key in this.AlgoManager.GetChromatic().results.Keys)
-        {
-            Logger.Log(key, this, LogType.INFO);
-        }
         this.isBipartite = ( int ) this.AlgoManager.GetChromatic().results[ "chromatic number" ].Item1 <= 2;
     }
 

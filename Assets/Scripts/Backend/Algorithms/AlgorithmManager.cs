@@ -29,6 +29,8 @@ public class AlgorithmManager
 
     public void Initiate( Graph graph )
     {
+        Logger.Log("Initiated", this, LogType.INFO);
+        Controller.Singleton.OnGraphModified -= OnGraphModified;
         Controller.Singleton.OnGraphModified += OnGraphModified;
         this.graph = graph;
         this.graphCopy = new Graph( graph );
@@ -104,6 +106,7 @@ public class AlgorithmManager
     public void RunBreadthFirstSearchWithAction( Vertex vert, Action< Edge, Vertex > action, bool display=true ) => this.EnsureRunning( typeof ( BreadthFirstSearchAlgorithm ), display, vert, action );
 
     public void RunNumberOfSpanningTrees( bool display=true ) => this.EnsureRunning( typeof ( NumberOfSpanningTreesAlgorithm ), display );
+    public void RunAveragePathLength( bool display=true ) => this.EnsureRunning( typeof ( AveragePathLengthAlgorithm ), display );
 
 
     public AlgorithmResult GetResult( Type algorithm, params object[] parms )
@@ -157,6 +160,8 @@ public class AlgorithmManager
     public AlgorithmResult GetBreadthFirstSearchWithAction( Vertex root, Action< Edge, Vertex > action ) => this.GetResult( typeof ( BreadthFirstSearchAlgorithm ), root, action );
 
     public AlgorithmResult GetNumberOfSpanningTrees() => this.GetResult( typeof ( NumberOfSpanningTreesAlgorithm ) );
+    
+    public AlgorithmResult GetAveragePathLength() => this.GetResult( typeof ( AveragePathLengthAlgorithm ) );
 
     public bool IsNextStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsNextStepAvailable();
 
@@ -250,6 +255,8 @@ public class AlgorithmManager
 
     private void OnGraphModified()
     {
+        if (Controller.Singleton.AlgorithmManager != this) return;
+        
         Clear();
         
         Logger.Log( "Copying Graph DS.", this, LogType.INFO );

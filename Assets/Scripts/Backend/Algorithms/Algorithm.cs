@@ -86,13 +86,8 @@ public abstract class Algorithm
             this.error = false;
             this.AlgoManager.MarkComplete( this );
             Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
-
-            if ( this.type == AlgorithmType.INFO )
-                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this, this.AlgoManager ) );
-            else if ( this.type == AlgorithmType.DISPLAY )
-                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
         }
-        catch ( ThreadAbortException e )
+        catch ( Exception e )
         {
             if ( e is ThreadAbortException )
                 Logger.Log( "Killing thread.", this, LogType.DEBUG );
@@ -105,12 +100,15 @@ public abstract class Algorithm
                 this.errorDesc = e.Message;
                 Logger.Log( "Algorithm Error; Finishing Thread.", this, LogType.DEBUG );
 
-                // TODO: tell front end there was an error
-                RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( this.GetType() + " <color=red>" + this.errorDesc + "</color>", 3 ) );
-
-                throw e;
+                // // TODO: tell front end there was an error
+                // RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( this.GetType() + " <color=red>" + this.errorDesc + "</color>", 3 ) );
             }
         }
+        
+        if ( this.type == AlgorithmType.INFO )
+            RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this, this.AlgoManager ) );
+        else if ( this.type == AlgorithmType.DISPLAY )
+            RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
     }
 
     public abstract AlgorithmResult GetResult();

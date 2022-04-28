@@ -19,7 +19,6 @@ public class GraphInfoAlgorithmAssociation
     public string algorithmClass = "";
     public bool enabled = false;
     public string lead = "";
-    public string nullValue = "N/A";
     public string activationMethod = "";
     public string completedMethod = "";
 
@@ -132,6 +131,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         algoManager.Initiate(
             Controller.Singleton.Graph
         );
+
         this.UpdateGraphInfo();
     }
     
@@ -139,7 +139,7 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
         // Run multithreaded algorithms
         foreach (GraphInfoAlgorithmAssociation association in this.associations)
         {
-            this.infoAlgorithmResults[association] = association.lead + ":";
+            this.infoAlgorithmResults[association] = association.lead + ": ...";
             if (association.enabled)
             {
                 Type.GetType("AlgorithmManager").GetMethod(association.activationMethod)

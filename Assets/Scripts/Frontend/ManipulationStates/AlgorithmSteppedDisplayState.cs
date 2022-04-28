@@ -84,7 +84,7 @@ public class AlgorithmSteppedDisplayState : ManipulationState
             string resultID = kvp.Key;
             Type resultType = kvp.Value.Item2;
 
-            if (resultType == typeof(float) || resultType == typeof(int))
+            if (resultType == typeof(float) || resultType == typeof(int) || resultType == typeof(bool))
             {
                 this.infoResults.Add(resultID.ToTitleCase() + ": " + Convert.ToString(kvp.Value.Item1));
             }

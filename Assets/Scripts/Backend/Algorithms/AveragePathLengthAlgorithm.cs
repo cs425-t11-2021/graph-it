@@ -25,7 +25,7 @@ public class AveragePathLengthAlgorithm : Algorithm
             {
                 this.AlgoManager.RunDijkstras( u, v, false );
                 this.WaitUntilDijkstrasComplete( u, v );
-                float cost = ( float ) this.AlgoManager.GetDijkstras( u, v ).results[ "cost" ].Item1;
+                float cost = ( float ) this.AlgoManager.GetDijkstras( u, v ).results[ "dijkstra cost" ].Item1;
                 this.averagePathLength += cost;
             }
         }
