@@ -31,6 +31,7 @@ public class FleurysAlgorithm : Algorithm
 
         Vertex initial = this.graphCopy.Vertices[0];
         this.circuitEdges = new List< Edge >();
+        this.circuitVertices = new List< Vertex >();
 
         int numOddDegrees = 0;
         foreach ( Vertex u in this.graphCopy.Vertices )
@@ -156,7 +157,15 @@ public class FleurysAlgorithm : Algorithm
         AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
         result.results[ "eulerian circuit" ] = ( this.hasEulerianCircuit, typeof ( bool ) );
         result.results[ "eulerian circuit vertices" ] = ( this.circuitVertices, typeof ( List< Vertex > ) );
-        result.results[ "eulerian circuit edges" ] = ( this.circuitEdges, typeof ( List< Edge > ) );
+
+        List< (int, Edge) > orderedEdges = new List< (int, Edge) >();
+        int i = 0;
+        foreach (Edge edge in this.circuitEdges)
+        {
+            orderedEdges.Add((i, edge));
+            i++;
+        }
+        result.results[ "eulerian circuit edges" ] = ( orderedEdges, typeof ( List< (int, Edge) > ) );
         return result;
     }
 
