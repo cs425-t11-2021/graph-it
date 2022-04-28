@@ -2200,9 +2200,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
-  labelDescription: Select
-  offset: {x: 20, y: -45, z: 0}
-  size: {x: 90, y: 40}
+  labelDescription: Single Select
+  offset: {x: 5, y: -10, z: 0}
+  size: {x: 110, y: 40}
 --- !u!114 &194672073
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5416,9 +5416,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
-  labelDescription: Select
-  offset: {x: 20, y: -45, z: 0}
-  size: {x: 90, y: 40}
+  labelDescription: Multi-Select
+  offset: {x: 5, y: -10, z: 0}
+  size: {x: 110, y: 40}
 --- !u!114 &499060056
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6490,7 +6490,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Create Edge
-  offset: {x: 20, y: -45, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 165, y: 40}
 --- !u!114 &606668074
 MonoBehaviour:
@@ -7306,7 +7306,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Open
-  offset: {x: 90, y: -10, z: 0}
+  offset: {x: 10, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &684446434
 MonoBehaviour:
@@ -9298,7 +9298,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Next
-  offset: {x: 10, y: -15, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &961665053
 MonoBehaviour:
@@ -9878,7 +9878,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Close
-  offset: {x: 67, y: -10, z: 0}
+  offset: {x: 10, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &1003453696
 MonoBehaviour:
@@ -10095,7 +10095,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Play
-  offset: {x: 10, y: -15, z: 0}
+  offset: {x: 5, y: -15, z: 0}
   size: {x: 90, y: 40}
 --- !u!1 &1012987116
 GameObject:
@@ -11587,7 +11587,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: First
-  offset: {x: 10, y: -15, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!1 &1082026023
 GameObject:
@@ -12675,7 +12675,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Edge Type
-  offset: {x: 20, y: -45, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 150, y: 40}
 --- !u!114 &1136272512
 MonoBehaviour:
@@ -13005,7 +13005,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Delete
-  offset: {x: 20, y: -45, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &1147743077
 MonoBehaviour:
@@ -14861,7 +14861,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Back
-  offset: {x: 10, y: -15, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &1270736771
 MonoBehaviour:
@@ -17392,7 +17392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Last
-  offset: {x: 10, y: -15, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!1 &1442277413
 GameObject:
@@ -17658,7 +17658,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Close
-  offset: {x: -20, y: -20, z: 0}
+  offset: {x: 5, y: -5, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &1457295750
 MonoBehaviour:
@@ -19553,7 +19553,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Select
-  offset: {x: 20, y: -45, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 100, y: 40}
 --- !u!114 &1639705721
 MonoBehaviour:
@@ -20225,7 +20225,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Close
-  offset: {x: -20, y: -20, z: 0}
+  offset: {x: 5, y: -5, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &1679316091
 MonoBehaviour:
@@ -20588,7 +20588,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Open
-  offset: {x: 90, y: -10, z: 0}
+  offset: {x: 10, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!1 &1723796975
 GameObject:
@@ -20715,7 +20715,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Create Vertices
-  offset: {x: 20, y: -45, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 175, y: 40}
 --- !u!114 &1723796981
 MonoBehaviour:
@@ -21805,7 +21805,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Close
-  offset: {x: -20, y: -75, z: 0}
+  offset: {x: 5, y: -5, z: 0}
   size: {x: 90, y: 40}
 --- !u!114 &1834709935
 MonoBehaviour:
@@ -22159,7 +22159,7 @@ MonoBehaviour:
     sets.       ---------------       Radius: The minimal maximal distance between
     any two vertices of a graph.                  ---------------      Diameter:
     The maximal minimal distance between any two vertices of a graph.'
-  offset: {x: 170, y: -270, z: 0}
+  offset: {x: 0, y: 0, z: 0}
   size: {x: 400, y: 600}
 --- !u!114 &1860173421
 MonoBehaviour:
@@ -22562,7 +22562,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Close
-  offset: {x: 67, y: -10, z: 0}
+  offset: {x: 10, y: -10, z: 0}
   size: {x: 90, y: 40}
 --- !u!1 &1909434788
 GameObject:
@@ -24608,7 +24608,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Thickness
-  offset: {x: 20, y: -45, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 140, y: 40}
 --- !u!114 &359608985734554706
 MonoBehaviour:
@@ -25531,7 +25531,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Vertex Style
-  offset: {x: 20, y: -45, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 150, y: 40}
 --- !u!114 &2027812034803370405
 MonoBehaviour:
@@ -26263,7 +26263,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
   labelDescription: Curvature
-  offset: {x: 20, y: -45, z: 0}
+  offset: {x: 5, y: -10, z: 0}
   size: {x: 140, y: 40}
 --- !u!114 &3832231448021805302
 MonoBehaviour:
