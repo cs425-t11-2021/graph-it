@@ -5783,7 +5783,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   zoomSpeed: 300
-  zoomMin: 1
+  zoomMin: 2
   zoomMax: 20
 --- !u!20 &519420031
 Camera:
@@ -26936,7 +26936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12301043cea9840819f36da364fc77cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loggingLevel: 3
+  loggingLevel: 2
 --- !u!114 &4782475346978306233
 MonoBehaviour:
   m_ObjectHideFlags: 0

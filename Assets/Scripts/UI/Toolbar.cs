@@ -44,6 +44,10 @@ public class Toolbar : SingletonBehavior<Toolbar>
         this.edgeThicknessButton.gameObject.SetActive(false);
         this.edgeCurvatureButton.gameObject.SetActive(false);
         this.changeVertexStyleButton.gameObject.SetActive(false);
+
+        Controller.Singleton.OnInstanceChanged += (previous, next) => {
+            EnterViewMode();
+        };
     }
 
     private void Start() {
