@@ -27,8 +27,8 @@ public class GraphDisplayAlgorithmAssociation
     public string activationMethod = "";
     public string completedMethod = "";
     public string description = "";
-    public ResultType resultType;
-    public DisplayAlgorithmExtraInfo[] extraInfo;
+    public string[] results;
+    // public DisplayAlgorithmExtraInfo[] extraInfo;
     
     [HideInInspector] public ToggleButton activationButton;
 
@@ -38,32 +38,24 @@ public class GraphDisplayAlgorithmAssociation
         {
             return (vertexParms) =>
             {
-                object result = Type.GetType("AlgorithmManager").GetMethod(completedMethod)
+                AlgorithmResult result = (AlgorithmResult) Type.GetType("AlgorithmManager").GetMethod(completedMethod)
                     .Invoke(Controller.Singleton.AlgorithmManager, (Object[]) vertexParms);
                 
-                if (result == null)
+                if (result.type == AlgorithmResultType.ERROR)
                 {
-                    Logger.Log("Graph display algorithm " + algorithmClass + " returned a null result.", this, LogType.ERROR);
-                    NotificationManager.Singleton.CreateNotification(string.Format("<color=red>{0} returned a null result.</color>", algorithmClass), 3);
+                    Logger.Log("Graph display algorithm " + algorithmClass + " errored.", this, LogType.ERROR);
+                    NotificationManager.Singleton.CreateNotification(string.Format("{0} <color=red>Error: {1}</color>", algorithmClass, result.desc), 3);
                 }
                 else
                 {
-                    string[] extras = null;
-                    if (this.extraInfo.Length > 0)
+                    foreach (KeyValuePair<string, (object, Type)> kvp in result.results)
                     {
-                        extras = new string[this.extraInfo.Length];
-                        foreach ((DisplayAlgorithmExtraInfo info, int i) in this.extraInfo.WithIndex())
-                        {
-                            object extra = Type.GetType("AlgorithmManager").GetMethod(info.getInfoMethod)
-                                .Invoke(Controller.Singleton.AlgorithmManager, (Object[]) vertexParms);
-                            extras[i] = info.lead + ": " + extra.ToString();
-                        }
+                        
                     }
                     
-                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, result, extras, vertexParms);
+                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, result, vertexParms);
                     if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
                         AlgorithmsPanel.Singleton.AlgorithmResult = result;
-                        AlgorithmsPanel.Singleton.AlgorithmExtra = extras;
                         AlgorithmsPanel.Singleton.AlgorithmVertexPrams = vertexParms;
                     }
 
@@ -71,10 +63,6 @@ public class GraphDisplayAlgorithmAssociation
                 }
             };
         }
-    }
-
-    public void NextStep() {
-
     }
 }
 
@@ -106,12 +94,12 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public GraphDisplayAlgorithmAssociation CurrentlySelectedAlgorithm {get; private set;}
 
-    public object AlgorithmResult { get; set; }
-    public string[] AlgorithmExtra { get; set; }
+    public AlgorithmResult AlgorithmResult { get; set; }
+    // public string[] AlgorithmExtra { get; set; }
     public Vertex[] AlgorithmVertexPrams { get; set; }
 
-    private object[] algorithmResults;
-    private string[][] algorithmExtras;
+    private AlgorithmResult[] algorithmResults;
+    // private string[][] algorithmExtras;
     private Vertex[][] algorithmVertexPrams;
     public AlgorithmStep CurrentStep { get; set; }
 
@@ -144,8 +132,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         });
         this.resultButton.gameObject.SetActive(false);
 
-        this.algorithmResults = new object[this.associations.Length];
-        this.algorithmExtras = new string[this.associations.Length][];
+        this.algorithmResults = new AlgorithmResult[this.associations.Length];
         this.algorithmVertexPrams = new Vertex[this.associations.Length][];
 
         Controller.Singleton.OnGraphModified += ClearAlgorithmResults;
@@ -197,7 +184,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     public void SelectAlgorithm(string algorithmName) {
-        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+        foreach ((GraphDisplayAlgorithmAssociation association, int i) in this.associations.WithIndex())
         {
             if (association.algorithmClass == algorithmName)
             {
@@ -210,17 +197,14 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
                     association.activationButton.UpdateStatus(false);
                 }
 
-                int index = Array.IndexOf(this.associations, association);
-                if (this.algorithmResults[index] != null) {
+                if (this.algorithmResults[i] != null) {
                     this.resultButton.gameObject.SetActive(true);
-                    this.AlgorithmResult = this.algorithmResults[index];
-                    this.AlgorithmExtra = this.algorithmExtras[index];
-                    this.AlgorithmVertexPrams = this.algorithmVertexPrams[index];
+                    this.AlgorithmResult = this.algorithmResults[i];
+                    this.AlgorithmVertexPrams = this.algorithmVertexPrams[i];
                 }
                 else {
                     this.resultButton.gameObject.SetActive(false);
                     this.AlgorithmResult = null;
-                    this.AlgorithmExtra = null;
                     this.AlgorithmVertexPrams = null;
                 }
 
@@ -246,15 +230,13 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
     }
 
-    public void StoreAlgorithmResult(string algorithmName, object result, string[] extras, Vertex[] vertexParms) {
-        foreach (GraphDisplayAlgorithmAssociation association in this.associations)
+    public void StoreAlgorithmResult(string algorithmName, AlgorithmResult result, Vertex[] vertexParms) {
+        foreach ((GraphDisplayAlgorithmAssociation association, int i) in this.associations.WithIndex())
         {
             if (association.algorithmClass == algorithmName)
             {
-                int index = Array.IndexOf(this.associations, association);
-                this.algorithmResults[index] = result;
-                this.algorithmExtras[index] = extras;
-                this.algorithmVertexPrams[index] = vertexParms;
+                this.algorithmResults[i] = result;
+                this.algorithmVertexPrams[i] = vertexParms;
                 association.activationButton.checkedColor = this.selectedFinishedColor;
                 association.activationButton.originalColor = this.defaultFinishedColor;
                 association.activationButton.GetComponent<Image>().color = this.defaultFinishedColor;
@@ -300,11 +282,9 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     }
 
     public void ClearAlgorithmResults() {
-        this.algorithmResults = new object[this.associations.Length];
-        this.algorithmExtras = new string[this.associations.Length][];
+        this.algorithmResults = new AlgorithmResult[this.associations.Length];
         this.algorithmVertexPrams = new Vertex[this.associations.Length][];
         this.AlgorithmResult = null;
-        this.AlgorithmExtra = null;
         this.AlgorithmVertexPrams = null;
         this.resultButton.gameObject.SetActive(false);
 

@@ -8,125 +8,62 @@ using UnityEngine;
 public class AlgorithmDisplayState : ManipulationState
 {
 
-    private object algorithmResult;
-    private string[] algorithmExtra;
+    private AlgorithmResult algorithmResult;
     private List<EdgeObj> highlightedEdges;
     private List<VertexObj> highlightedVertices;
+    private List<string> infoResults;
 
     public override void OnStateEnter()
     {
-        // if (AlgorithmsPanel.Singleton.stepByStep)
-        // {
-        //     RunInMain.Singleton.queuedTasks.Enqueue( () => RunInMain.Singleton.StartCoroutine(DisplayResultWithAnimation(0.1f)) );
-        //     return;
-        // }
-        
         this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;
-        this.algorithmExtra = AlgorithmsPanel.Singleton.AlgorithmExtra;
         this.highlightedEdges = new List<EdgeObj>();
         this.highlightedVertices = new List<VertexObj>();
+        this.infoResults = new List<string>();
 
-        switch (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.resultType)
+        foreach (KeyValuePair<string, (object, Type)> kvp in this.algorithmResult.results)
         {
-            case ResultType.EdgeList:
+            string resultID = kvp.Key;
+            Type resultType = kvp.Value.Item2;
+
+            if (resultType == typeof(List<Vertex>))
             {
-                List<Edge> resultEdges = (List<Edge>) this.algorithmResult;
-                List<Vertex> resultVertices = new List<Vertex>();
-                foreach (Edge e in resultEdges)
-                {
-                    resultVertices.Add(e.vert1);
-                    resultVertices.Add(e.vert2);
-                }
-
-                foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-                {
-                    if (resultEdges.Contains(edgeObj.Edge))
-                    {
-                        edgeObj.AlgorithmResultLevel = 3;
-                        this.highlightedEdges.Add(edgeObj);
-                    }
-                }
-
+                List<Vertex> edgeList = (List<Vertex>) kvp.Value.Item1;
                 foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
                 {
-                    if (resultVertices.Contains(vertexObj.Vertex))
+                    if (edgeList.Contains(vertexObj.Vertex))
                     {
                         vertexObj.AlgorithmResultLevel = 3;
                         this.highlightedVertices.Add(vertexObj);
                     }
                 }
-
-                break;
             }
-            case ResultType.VertexList:
+            else if (resultType == typeof(List<Edge>))
             {
-                List<Vertex> resultVertices = (List<Vertex>) this.algorithmResult;
-                List<Edge> resultEdges = Controller.Singleton.Graph.GetIncidentEdges(new HashSet<Vertex>(resultVertices)).ToList();
-                
+                List<Edge> edgeList = (List<Edge>) kvp.Value.Item1;
                 foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
                 {
-                    if (resultEdges.Contains(edgeObj.Edge))
+                    if (edgeList.Contains(edgeObj.Edge))
                     {
                         edgeObj.AlgorithmResultLevel = 3;
                         this.highlightedEdges.Add(edgeObj);
                     }
                 }
-
-                foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
-                {
-                    if (resultVertices.Contains(vertexObj.Vertex))
-                    {
-                        vertexObj.AlgorithmResultLevel = 3;
-                        this.highlightedVertices.Add(vertexObj);
-                    }
-                }
-                
-                break;
+            }
+            else if (resultType == typeof(float) || resultType == typeof(int))
+            {
+                this.infoResults.Add(resultID.ToTitleCase() + ": " + Convert.ToString(kvp.Value.Item1));
             }
         }
-        
-        if (this.algorithmExtra != null)
+
+        if (this.infoResults.Count > 0)
         {
-            AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_Text>(true).text = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.algorithmClass + " Extra Info:";
+            AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_Text>(true).text = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName + " Additional Info:";
             string output = "";
-            Array.ForEach(this.algorithmExtra, s => output += s + "\n");
+            this.infoResults.ForEach(s => output += s + "\n");
             AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = output;
-            AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);           
+            AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);
         }
     }
-
-    // private IEnumerator DisplayResultWithAnimation(float delay)
-    // {
-    //     // this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;
-    //     //
-    //     // List<Vertex> resultVertices = new List<Vertex>();
-    //     // foreach (Edge e in algorithmResult) {
-    //     //     resultVertices.Add(e.vert1);
-    //     //     resultVertices.Add(e.vert2);
-    //     // }
-    //     //
-    //     // foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
-    //     // {
-    //     //     if (algorithmResult.Contains(edgeObj.Edge))
-    //     //     {
-    //     //         edgeObj.Vertex1.IsAlgorithmResult = true;
-    //     //         yield return new WaitForSeconds(delay);
-    //     //         edgeObj.IsAlgorithmResult = true;
-    //     //         yield return new WaitForSeconds(delay);
-    //     //         edgeObj.Vertex2.IsAlgorithmResult = true;
-    //     //         yield return new WaitForSeconds(delay);
-    //     //     }
-    //     //         
-    //     //     // yield return new WaitForSeconds(delay);
-    //     // }
-    //     //
-    //     // // foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
-    //     // // {
-    //     // //     if (resultVertices.Contains(vertexObj.Vertex) && !vertexObj.IsAlgorithmResult)
-    //     // //         vertexObj.IsAlgorithmResult = true;
-    //     // //     yield return new WaitForSeconds(delay);
-    //     // // }
-    // }
 
     public override void OnStateExit()
     {
@@ -135,9 +72,5 @@ public class AlgorithmDisplayState : ManipulationState
         
         AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = "";
         AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);
-
-        // RunInMain.Singleton.queuedTasks.Enqueue(() =>
-        //     RunInMain.Singleton.StopAllCoroutines());
-
     }
 }

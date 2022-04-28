@@ -66,7 +66,6 @@ public class AlgorithmManager
 
     public void RunMaxDegree( bool display=true )
     {
-        Logger.Log( "running max degree in algorithm manager.", this, LogType.INFO );
         this.EnsureRunning( typeof ( MaxDegreeAlgorithm ), display );
     }
 
@@ -133,7 +132,7 @@ public class AlgorithmManager
 
     public AlgorithmResult GetClique() => this.GetResult( typeof ( CliqueAlgorithm ) );
 
-    public AlgorithmResult GetMaxMatching() => this.GetResult( typeof ( MatchingAlgorithm ) );
+    public AlgorithmResult GetMatching() => this.GetResult( typeof ( MatchingAlgorithm ) );
 
     public AlgorithmResult GetBipartite() => this.GetResult( typeof ( BipartiteAlgorithm ) );
 
@@ -159,13 +158,13 @@ public class AlgorithmManager
 
     public AlgorithmResult GetNumberOfSpanningTrees() => this.GetResult( typeof ( NumberOfSpanningTreesAlgorithm ) );
 
-    public bool IsNextStepAvailable( Type loggedAlgo, object[] parms ) => !( ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) )?.IsNextStepAvailable() is null );
+    public bool IsNextStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsNextStepAvailable();
 
-    public bool IsBackStepAvailable( Type loggedAlgo, object[] parms ) => !( ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) )?.IsBackStepAvailable() is null );
+    public bool IsBackStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsBackStepAvailable();
 
-    public bool IsAnyStepAvailable( Type loggedAlgo, object[] parms ) => !( ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) )?.IsFirstStepAvailable() is null );
+    public bool IsAnyStepAvailable( Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsFirstStepAvailable();
 
-    public bool IsStepAvailable( int step, Type loggedAlgo, object[] parms ) => !( ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) )?.IsStepAvailable( step ) is null );
+    public bool IsStepAvailable( int step, Type loggedAlgo, object[] parms ) => ( ( LoggedAlgorithm ) this.GetAlgorithm( loggedAlgo, parms ) ).IsStepAvailable( step );
 
     public void NextStep( Type loggedAlgo, object[] parms )
     {

@@ -6527,7 +6527,7 @@ MonoBehaviour:
     lead: "Chromatic Number (\u03C7)"
     nullValue: N/A
     activationMethod: RunChromatic
-    completedMethod: GetChromaticNumber
+    completedMethod: GetChromatic
   - algorithmClass: BipartiteAlgorithm
     enabled: 1
     lead: Bipartite
@@ -11137,100 +11137,81 @@ MonoBehaviour:
     enabled: 1
     requiredVertices: 1
     activationMethod: RunPrims
-    completedMethod: GetPrimsMST
+    completedMethod: GetPrims
     description: Provides a minimum spanning tree.
-    resultType: 0
-    extraInfo: []
+    results: []
     activationButton: {fileID: 1072866589}
   - algorithmClass: KruskalsAlgorithm
     displayName: Kruskal's Algorithm
     enabled: 1
     requiredVertices: 0
     activationMethod: RunKruskals
-    completedMethod: GetKruskalsMST
+    completedMethod: GetKruskals
     description: Provides a minimum spanning forest.
-    resultType: 0
-    extraInfo: []
+    results: []
     activationButton: {fileID: 1937964950}
   - algorithmClass: BellmanFordsAlgorithm
     displayName: Bellman Ford Algorithm
     enabled: 1
     requiredVertices: 2
     activationMethod: RunBellmanFords
-    completedMethod: GetBellmanFordsPath
+    completedMethod: GetBellmanFords
     description: 'Provides a shortest path between two vertices. '
-    resultType: 0
-    extraInfo:
-    - lead: Cost
-      getInfoMethod: GetBellmanFordsCost
+    results: []
     activationButton: {fileID: 770796877}
   - algorithmClass: DijkstrasAlgorithm
     displayName: Dijkstra's Algorithm
     enabled: 1
     requiredVertices: 2
     activationMethod: RunDijkstras
-    completedMethod: GetDijkstrasPath
+    completedMethod: GetDijkstras
     description: Provides a shortest path between two vertices.
-    resultType: 0
-    extraInfo:
-    - lead: Cost
-      getInfoMethod: GetDijkstrasCost
+    results: []
     activationButton: {fileID: 1394906818}
   - algorithmClass: DepthFirstSearchAlgorithm
     displayName: Depth First Search
     enabled: 1
     requiredVertices: 1
     activationMethod: RunDepthFirstSearch
-    completedMethod: GetDepthFirstSearchTree
+    completedMethod: GetDepthFirstSearch
     description: A searching algorithm.
-    resultType: 0
-    extraInfo: []
+    results: []
     activationButton: {fileID: 282178711}
   - algorithmClass: BreadthFirstSearchAlgorithm
     displayName: Breadth First Search
     enabled: 1
     requiredVertices: 1
     activationMethod: RunBreadthFirstSearch
-    completedMethod: GetBreadthFirstSearchTree
+    completedMethod: GetBreadthFirstSearch
     description: A searching algorithm.
-    resultType: 0
-    extraInfo: []
+    results: []
     activationButton: {fileID: 1128869780}
   - algorithmClass: MatchingAlgorithm
     displayName: Max Matching
     enabled: 1
     requiredVertices: 0
     activationMethod: RunMatching
-    completedMethod: GetMaxMatching
+    completedMethod: GetMatching
     description: Provides a maximal matching.
-    resultType: 0
-    extraInfo:
-    - lead: Max Matching Card
-      getInfoMethod: GetMaxMatchingCard
+    results: []
     activationButton: {fileID: 1863659745}
   - algorithmClass: CliqueAlgorithm
     displayName: Max Clique
     enabled: 1
     requiredVertices: 0
     activationMethod: RunClique
-    completedMethod: GetMaxClique
+    completedMethod: GetClique
     description: 'Provides the largest clique. '
-    resultType: 1
-    extraInfo:
-    - lead: Clique Number
-      getInfoMethod: GetCliqueNumber
+    results: []
     activationButton: {fileID: 741127181}
   - algorithmClass: IndependenceAlgorithm
     displayName: Max Independent Sets
     enabled: 1
     requiredVertices: 0
     activationMethod: RunIndependence
-    completedMethod: GetMaxIndependentSet
+    completedMethod: GetIndependence
     description: 'Provides the largest independent set. '
-    resultType: 1
-    extraInfo:
-    - lead: Independence Number
-      getInfoMethod: GetIndependenceNumber
+    results: []
     activationButton: {fileID: 741127181}
   algOpenPanel: {fileID: 1689317852}
   resultButton: {fileID: 468119564}
@@ -29162,7 +29143,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12301043cea9840819f36da364fc77cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loggingLevel: 2
+  loggingLevel: 3
 --- !u!114 &4782475346978306233
 MonoBehaviour:
   m_ObjectHideFlags: 0

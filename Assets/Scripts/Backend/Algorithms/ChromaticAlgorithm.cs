@@ -47,6 +47,8 @@ public class ChromaticAlgorithm : Algorithm
                 }
                 this.UpdateColoring( coloring, this.chi );
             }
+
+            this.estimated = false;
         }
 
     }
