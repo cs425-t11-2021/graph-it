@@ -15,7 +15,10 @@ public class AveragePathLengthAlgorithm : Algorithm
         if (this.Graph.Directed)
             this.CreateError( "Average path length cannot be computed on directed graph." );
         if (this.Graph.Order < 2)
-            this.CreateError( "Average path length cannot be computed on graph with order less than 2." );
+        {
+            this.averagePathLength = null;
+            return;
+        }
 
         this.averagePathLength = 0;
 
@@ -40,7 +43,14 @@ public class AveragePathLengthAlgorithm : Algorithm
         if ( this.running )
             return this.GetRunningResult();
         AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
-        result.results[ "average path length" ] = ( this.averagePathLength, typeof ( float ) );
+        if (this.averagePathLength is null)
+        {
+            result.results[ "average path length" ] = ( "N/A", typeof ( string ) );
+        } else
+        {
+            result.results[ "average path length" ] = ( this.averagePathLength, typeof ( float ) );
+        }
+
         return result;
     }
 
