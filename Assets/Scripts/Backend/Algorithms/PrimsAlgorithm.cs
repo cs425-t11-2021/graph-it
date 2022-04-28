@@ -69,7 +69,7 @@ public class PrimsAlgorithm : LoggedAlgorithm
 
             foreach ( Edge edge in incidentEdges )
             {
-                if ( !mstVertices.Contains( edge.vert1 ) || !mstVertices.Contains( edge.vert2 ) )
+                if ( !mstVerticesSet.Contains( edge.vert1 ) || !mstVerticesSet.Contains( edge.vert2 ) )
                 {
                     mstVerticesSet.Add( edge.vert1 );
                     mstVerticesSet.Add( edge.vert2 );

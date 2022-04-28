@@ -29,7 +29,7 @@ public class RadiusAlgorithm : Algorithm
             {
                 this.AlgoManager.RunDijkstras( u, v, false );
                 this.WaitUntilDijkstrasComplete( u, v );
-                float cost = ( float ) this.AlgoManager.GetDijkstras( u, v ).results[ "cost" ].Item1;
+                float cost = ( float ) this.AlgoManager.GetDijkstras( u, v ).results[ "dijkstra cost" ].Item1;
                 if (cost > max_dist)
                 {
                     max_dist = cost;

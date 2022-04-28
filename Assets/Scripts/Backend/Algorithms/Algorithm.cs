@@ -9,13 +9,13 @@ public enum AlgorithmType { INFO, DISPLAY, INTERNAL }
 
 public enum AlgorithmResultType { SUCCESS, RUNNING, ERROR, ESTIMATE }
 
-public struct AlgorithmResult
+public class AlgorithmResult
 {
     public AlgorithmResultType type;
     public string desc;
     public Dictionary< string, ( object, Type ) > results;
 
-    public AlgorithmResult( AlgorithmResultType type, string desc="" ) : this()
+    public AlgorithmResult( AlgorithmResultType type, string desc="" )
     {
         this.type = type;
         this.desc = desc;
@@ -86,11 +86,6 @@ public abstract class Algorithm
             this.error = false;
             this.AlgoManager.MarkComplete( this );
             Logger.Log( "Finishing Thread.", this, LogType.DEBUG );
-
-            if ( this.type == AlgorithmType.INFO )
-                RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this, this.AlgoManager ) );
-            else if ( this.type == AlgorithmType.DISPLAY )
-                RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
         }
         catch ( Exception e )
         {
@@ -105,10 +100,15 @@ public abstract class Algorithm
                 this.errorDesc = e.Message;
                 Logger.Log( "Algorithm Error; Finishing Thread.", this, LogType.DEBUG );
 
-                // TODO: tell front end there was an error
-                RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( "<color=red>" + this.errorDesc + "</color>", 3 ) );
+                // // TODO: tell front end there was an error
+                // RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( this.GetType() + " <color=red>" + this.errorDesc + "</color>", 3 ) );
             }
         }
+        
+        if ( this.type == AlgorithmType.INFO )
+            RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this, this.AlgoManager ) );
+        else if ( this.type == AlgorithmType.DISPLAY )
+            RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
     }
 
     public abstract AlgorithmResult GetResult();

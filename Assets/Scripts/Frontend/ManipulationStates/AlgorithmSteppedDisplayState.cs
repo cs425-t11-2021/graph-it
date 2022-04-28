@@ -1,20 +1,25 @@
+using System.Reflection;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class AlgorithmSteppedDisplayState : ManipulationState
 {
-
+    private AlgorithmResult algorithmResult;
     private AlgorithmStep currentStep;
     private List<EdgeObj> highlightedEdges;
     private List<VertexObj> highlightedVertices;
+    private List<string> infoResults;
 
     public override void OnStateEnter()
     {
         this.currentStep =  AlgorithmsPanel.Singleton.CurrentStep;
-
+        this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;
         this.highlightedEdges = new List<EdgeObj>();
         this.highlightedVertices = new List<VertexObj>();
+        this.infoResults = new List<string>();
 
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(true);
 
@@ -71,6 +76,28 @@ public class AlgorithmSteppedDisplayState : ManipulationState
             if (!contained)
             {
                 vertexObj.AlgorithmResultLevel = 0;
+            }
+        }
+        
+        foreach (KeyValuePair<string, (object, Type)> kvp in this.algorithmResult.results)
+        {
+            string resultID = kvp.Key;
+            Type resultType = kvp.Value.Item2;
+
+            if (resultType == typeof(float) || resultType == typeof(int) || resultType == typeof(bool))
+            {
+                this.infoResults.Add(resultID.ToTitleCase() + ": " + Convert.ToString(kvp.Value.Item1));
+            }
+        }
+        
+        if (!AlgorithmsPanel.Singleton.ExtraInfoClosed) {
+            if (this.infoResults.Count > 0)
+            {
+                AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_Text>(true).text = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName + " Additional Info:";
+                string output = "";
+                this.infoResults.ForEach(s => output += s + "\n");
+                AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = output;
+                AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);
             }
         }
     }
