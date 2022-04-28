@@ -8,7 +8,7 @@ using UnityEngine;
 [System.Serializable]
 public class NumberOfSpanningTreesAlgorithm : Algorithm
 {
-    public long NumberOfSpanningTrees { get; private set; }
+    public ulong NumberOfSpanningTrees { get; private set; }
 
     public NumberOfSpanningTreesAlgorithm( AlgorithmManager algoManager, bool display ) : base( algoManager ) { }
 
@@ -21,7 +21,7 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
 
         int n = weightMatrix.GetLength(0);
         
-        long[,] laplacian = new long[n,n];
+        double[,] laplacian = new double[n,n];
 
         for (int i = 0; i < n; i++)
             for (int j = 0; j < n; j++)
@@ -40,9 +40,7 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
             }
         }
 
-        long det = 1;
-
-        long dividingFactor = 1;
+        double det = 1;
 
         for (int i = 0; i < n - 1; i++)
         {
@@ -73,30 +71,25 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
             {
                 if (laplacian[j,i] != 0)
                 {
-                    // we're scaling a row by the pivot value, so add a factor to divide later
-                    dividingFactor *= laplacian[i,i];
-
-                    long coeff = laplacian[j,i];
+                    double coeff = laplacian[j,i] / laplacian[i,i];
                     for (int k = i; k < n - 1; k++)
                     {
-                        laplacian[j,k] = laplacian[j,k]*laplacian[i,i] - laplacian[i,k]*coeff;
+                        laplacian[j,k] = laplacian[j,k] - laplacian[i,k]*coeff;
                     }
                 }
             }
-
-            Debug.Log(det.ToString() + ", " + dividingFactor.ToString());
         }
 
-        this.NumberOfSpanningTrees = Math.Abs(det / dividingFactor);
+        this.NumberOfSpanningTrees = (ulong) Math.Abs(det);
     }
 
-    private void SwapRows(long[,] array, int row1, int row2)
+    private void SwapRows(double[,] array, int row1, int row2)
     {
         if (row1 == row2) return;
 
         for (int i = 0; i < array.GetLength(0); i++)
         {
-            long temp = array[row1,i];
+            double temp = array[row1,i];
             array[row1,i] = array[row2,i];
             array[row2,i] = temp;
         }
