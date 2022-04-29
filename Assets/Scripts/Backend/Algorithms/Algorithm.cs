@@ -23,15 +23,6 @@ public class AlgorithmResult
     }
 }
 
-public class AlgorithmException : Exception
-{
-    public AlgorithmException() : base() { }
-    public AlgorithmException( string message ) : base( message ) { }
-    public AlgorithmException( string message, Exception inner ) : base( message, inner ) { }
-
-    protected AlgorithmException( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base( info, context ) { }
-}
-
 public abstract class Algorithm
 {
     protected AlgorithmManager AlgoManager { get; private set; }
@@ -48,6 +39,9 @@ public abstract class Algorithm
     
     // All the vertex parameters associated with an algorithm
     public Vertex[] vertexParms = null;
+
+    // All the edge parameters associated with an algorithm
+    public Edge[] edgeParms = null;
 
     public Algorithm( AlgorithmManager algoManager )
     {
@@ -148,4 +142,13 @@ public abstract class Algorithm
     }
 
     public new abstract int GetHashCode();
+}
+
+public class AlgorithmException : Exception
+{
+    public AlgorithmException() : base() { }
+    public AlgorithmException( string message ) : base( message ) { }
+    public AlgorithmException( string message, Exception inner ) : base( message, inner ) { }
+
+    protected AlgorithmException( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base( info, context ) { }
 }

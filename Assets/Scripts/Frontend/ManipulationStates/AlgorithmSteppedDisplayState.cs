@@ -54,19 +54,19 @@ public class AlgorithmSteppedDisplayState : ManipulationState
         foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
         {
             bool contained = false;
-            if (this.currentStep.considerVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.considerVerts?.Contains(vertexObj.Vertex) ?? false)
             {
                 vertexObj.AlgorithmResultLevel = 1;
                 this.highlightedVertices.Add(vertexObj);
                 contained = true;
             }
-            if (this.currentStep.resultVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.resultVerts?.Contains(vertexObj.Vertex) ?? false)
             {
                 vertexObj.AlgorithmResultLevel = 3;
                 this.highlightedVertices.Add(vertexObj);
                 contained = true;
             }
-            if (this.currentStep.newVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.newVerts?.Contains(vertexObj.Vertex) ?? false)
             {
                 vertexObj.AlgorithmResultLevel = 2;
                 this.highlightedVertices.Add(vertexObj);
