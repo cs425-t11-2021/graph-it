@@ -20,9 +20,7 @@ public class VertexObj : MonoBehaviour
     
     private Color normalColor = Color.black;
     private Color selectedColor = new Color32(0, 125, 255, 255);
-
-    private int resultStatus = 0;
-
+    
     // Property for whether or not the vertex object is selected
     private bool selected;
     public bool Selected {
@@ -32,30 +30,14 @@ public class VertexObj : MonoBehaviour
             // If the vertex object becomes selected, make its label editable
             if (value) {
                 this.labelObj.MakeEditable();
-                this.spriteRenderer.color = selectedColor;
+                this.visualsAnimator.ChangeState("selected");
             }
             else {
                 this.labelObj.MakeUneditable();
-                this.spriteRenderer.color = normalColor;
+                this.visualsAnimator.ChangeState("default");
             }
             // Change the animator to show that the vertex is selected
             // this.animator.SetBool("Selected", value);
-        }
-    }
-
-    public int AlgorithmResultLevel
-    {
-        set
-        {
-            this.resultStatus = value;
-            if (this.resultStatus == 0)
-            {
-                this.spriteRenderer.color = this.normalColor;
-            }
-            else if (this.resultStatus == 1)
-            {
-                this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-            }
         }
     }
 
@@ -73,6 +55,8 @@ public class VertexObj : MonoBehaviour
     private Vector3 previousPosition;
     public event Action OnVertexObjMove;
     
+    public GraphVisualsAnimator visualsAnimator;
+    
     private void Awake() {
         // Vertex objects starts non active
         this.gameObject.SetActive(false);
@@ -84,6 +68,7 @@ public class VertexObj : MonoBehaviour
         this.spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
         this.labelObj = GetComponentInChildren<VertexLabelObj>();
         AddColliderBasedOnSprite(false);
+        this.visualsAnimator = GetComponent<GraphVisualsAnimator>();
 
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
     }
@@ -94,19 +79,6 @@ public class VertexObj : MonoBehaviour
         {
             this.previousPosition = this.transform.position;
             this.OnVertexObjMove?.Invoke();
-        }
-
-        if (resultStatus == 1)
-        {
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-        }
-        else if (resultStatus == 2)
-        {
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[1];
-        }
-        else if (resultStatus == 3)
-        {
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[2];
         }
     }
 

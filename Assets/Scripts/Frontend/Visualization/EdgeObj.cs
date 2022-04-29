@@ -42,6 +42,8 @@ public class EdgeObj : MonoBehaviour
     [SerializeField] private float edgeWidthScaleFactor = 0.05f;
     // Edge weights/labels
     public EdgeLabelObj labelObj;
+
+    public GraphVisualsAnimator visualsAnimator;
     
     // Property for getting and setting whether or not the edge is selected, and edit the edge's color to match
     public bool Selected {
@@ -49,49 +51,22 @@ public class EdgeObj : MonoBehaviour
         set {
             this.selected = value;
             if (value) {
-                this.shapeRenderer.color = new Color32(0, 125, 255, 255);
-                this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
-                this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+                // this.shapeRenderer.color = new Color32(0, 125, 255, 255);
+                // this.arrowSpriteRenderer.color = new Color32(0, 125, 255, 255);
+                // this.spriteRenderer.color = new Color32(0, 125, 255, 255);
+                this.visualsAnimator.ChangeState("selected");
                 labelObj.MakeEditable();
                 shapeRenderer.sortingOrder = -1;
                 spriteRenderer.sortingOrder = -1;
             }
             else {
-                this.shapeRenderer.color = new Color32(0, 0, 0, 255);
-                this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
-                this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                // this.shapeRenderer.color = new Color32(0, 0, 0, 255);
+                // this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
+                // this.spriteRenderer.color = new Color32(0, 0, 0, 255);
+                this.visualsAnimator.ChangeState("default");
                 labelObj.MakeUneditable();
                 shapeRenderer.sortingOrder = -2;
                 spriteRenderer.sortingOrder = -2;
-            }
-        }
-    }
-
-    private int resultStatus = 0;
-    public int AlgorithmResultLevel
-    {
-        set
-        {
-            this.resultStatus = value;
-            if (this.resultStatus == 0)
-            {
-                this.shapeRenderer.color = new Color32(0, 0, 0, 255);
-                this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
-                this.spriteRenderer.color = new Color32(0, 0, 0, 255);
-                shapeRenderer.sortingOrder = -2;
-                spriteRenderer.sortingOrder = -2;
-            }
-            else
-            {
-                shapeRenderer.sortingOrder = -1;
-                spriteRenderer.sortingOrder = -1;
-            }
-
-            if (this.resultStatus == 1)
-            {
-                this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[0];
-                this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-                this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
             }
         }
     }
@@ -104,6 +79,9 @@ public class EdgeObj : MonoBehaviour
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
         this.shapeController = this.curvedVisuals.GetComponent<SpriteShapeController>();
         this.shapeRenderer = this.curvedVisuals.GetComponent<SpriteShapeRenderer>();
+        this.visualsAnimator = GetComponent<GraphVisualsAnimator>();
+
+        this.visualsAnimator.OnVisualsUpdate += UpdateSpline;
     }
 
     public void Initiate(Edge edge, VertexObj vertex1, VertexObj vertex2) {
@@ -129,28 +107,6 @@ public class EdgeObj : MonoBehaviour
         this.Vertex2.OnVertexObjMove += UpdateLabelPosition;
         
         UpdateSpline();
-    }
-
-    private void Update()
-    {
-        if (resultStatus == 1)
-        {
-            this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[0];
-            this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-        }
-        else if (resultStatus == 2)
-        {
-            this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[1];
-            this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[1];
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[1];
-        }
-        else if (resultStatus == 3)
-        {
-            this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[2];
-            this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[2];
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[2];
-        }
     }
 
     public void UpdateSpline()
@@ -247,7 +203,7 @@ public class EdgeObj : MonoBehaviour
         this.shapeController.spline.SetLeftTangent(4, Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(0f, -largeArm, 0f));
         this.shapeController.spline.SetRightTangent(4, Quaternion.AngleAxis(angle, Vector3.forward) * new Vector3(-smallArm, 0, 0f));
         
-        pointsOnCurve = new Vector3[] {new Vector3(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f), 0f, 0f), new Vector3(0f, largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f), 0f), new Vector3(-(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f)), 0f, 0f), new Vector3(0f, -(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f)), 0f)};
+        pointsOnCurve = new Vector3[] {new Vector3(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale, 0f, 0f), new Vector3(0f, largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale, 0f), new Vector3(-(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale), 0f, 0f), new Vector3(0f, -(largeRadius - (1 + this.Edge.Thickness) * this.edgeWidthScaleFactor * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale), 0f)};
         
         this.shapeController.spline.InsertPointAt(5,  Quaternion.AngleAxis(angle, Vector3.forward) * pointsOnCurve[0]);
         this.shapeController.spline.SetTangentMode(5, ShapeTangentMode.Broken);
@@ -280,7 +236,7 @@ public class EdgeObj : MonoBehaviour
             Vector3 dir =  (Quaternion.AngleAxis(angle - 20, Vector3.forward) * pointsOnCurve[1]).normalized;
             this.arrow.rotation = Quaternion.AngleAxis(angle - 110, Vector3.forward);
             this.arrow.position = this.transform.parent.position + (dir * this.arrowSpriteRenderer.size.x);
-            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f) * visualsAnimator.Scale) * (this.hovering ? 1.33f : 1f), 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -294,7 +250,7 @@ public class EdgeObj : MonoBehaviour
         this.straightVisuals.SetActive(true);
         
         Vector2 distance = this.Vertex2.transform.position - this.Vertex1.transform.position;
-        this.straightVisuals.transform.localScale = new Vector3(distance.magnitude * 2 - 4 * (Vertex2.spriteRadius + SettingsManager.Singleton.EdgeVertexGap) - 2 * (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f), (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor * 2f * (this.hovering ? 1.33f : 1f), 1);
+        this.straightVisuals.transform.localScale = new Vector3(distance.magnitude * 2 - 4 * (Vertex2.spriteRadius + SettingsManager.Singleton.EdgeVertexGap) - 2 * (this.Edge.Directed ? this.arrowSpriteRenderer.size.x / 2f : 0f), (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor * 2f * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale, 1);
         this.straightVisuals.transform.localPosition = distance.normalized * (Vertex1.spriteRadius + SettingsManager.Singleton.EdgeVertexGap);
         
         float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
@@ -303,7 +259,7 @@ public class EdgeObj : MonoBehaviour
         if (this.Edge.Directed) {
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.arrow.localPosition = distance * (1f - (this.arrowSpriteRenderer.size.x + this.Vertex2.spriteRadius) / distance.magnitude) - distance.normalized * SettingsManager.Singleton.EdgeVertexGap;
-            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale, 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -322,26 +278,26 @@ public class EdgeObj : MonoBehaviour
         
         this.shapeController.spline.Clear();
         
-        this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(0,  pointsOnCurve[0] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale);
         this.shapeController.spline.SetTangentMode(0, ShapeTangentMode.Linear);
         
-        this.shapeController.spline.InsertPointAt(1,  pointsOnCurve[1] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(1,  pointsOnCurve[1] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale);
         this.shapeController.spline.SetTangentMode(1, ShapeTangentMode.Continuous);
         this.shapeController.spline.SetLeftTangent(1, -distance * .25f);
         this.shapeController.spline.SetRightTangent(1, distance * .25f);
 
-        this.shapeController.spline.InsertPointAt(2,  pointsOnCurve[2] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f));
+        this.shapeController.spline.InsertPointAt(2,  pointsOnCurve[2] + normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale);
         this.shapeController.spline.SetTangentMode(2, ShapeTangentMode.Linear);
 
-        this.shapeController.spline.InsertPointAt(3,  pointsOnCurve[2] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) + (pointsOnCurve[1] - pointsOnCurve[2]).normalized * 0.1f);
+        this.shapeController.spline.InsertPointAt(3,  pointsOnCurve[2] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale + (pointsOnCurve[1] - pointsOnCurve[2]).normalized * 0.1f);
         this.shapeController.spline.SetTangentMode(3, ShapeTangentMode.Linear);
 
-        this.shapeController.spline.InsertPointAt(4,  pointsOnCurve[1] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.66f : 1.25f));
+        this.shapeController.spline.InsertPointAt(4,  pointsOnCurve[1] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.66f : 1.25f) * visualsAnimator.Scale);
         this.shapeController.spline.SetTangentMode(4, ShapeTangentMode.Continuous);
         this.shapeController.spline.SetLeftTangent(4, distance * .25f);
         this.shapeController.spline.SetRightTangent(4, -distance * .25f);
         
-        this.shapeController.spline.InsertPointAt(5,  pointsOnCurve[0] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) + (pointsOnCurve[1] - pointsOnCurve[0]).normalized * 0.1f);
+        this.shapeController.spline.InsertPointAt(5,  pointsOnCurve[0] - normal * (this.Edge.Thickness + 1) * this.edgeWidthScaleFactor / 2f * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale + (pointsOnCurve[1] - pointsOnCurve[0]).normalized * 0.1f);
         this.shapeController.spline.SetTangentMode(5, ShapeTangentMode.Linear);
 
         if (this.Edge.Directed) {
@@ -349,7 +305,7 @@ public class EdgeObj : MonoBehaviour
             float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
             this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
             this.arrow.position = this.Vertex2.transform.position + -distance.normalized * (this.arrowSpriteRenderer.size.x + this.Vertex2.spriteRadius) - distance.normalized * SettingsManager.Singleton.EdgeVertexGap;
-            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f), 1f);
+            this.arrow.localScale = new Vector3(1f, (.5f + (1f + this.Edge.Thickness) * (.25f)) * (this.hovering ? 1.33f : 1f) * visualsAnimator.Scale, 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
@@ -417,34 +373,12 @@ public class EdgeObj : MonoBehaviour
         UpdateSpline();
     }
 
-    // public void ChangeThickness(int change)
-    // {
-    //     uint newThickness = this.Edge.Thickness;
-    //     if (change > 0)
-    //     {
-    //         newThickness = this.Edge.Thickness + 1;
-    //         if (newThickness > 5)
-    //         {
-    //             newThickness = 5;
-    //         }
-    //     }
-    //     else
-    //     {
-    //         if (this.Edge.Thickness != 0)
-    //         {
-    //             newThickness = this.Edge.Thickness - 1;
-    //         }
-    //     }
-        
-    //     Logger.Log("Edge thickness changed to " + newThickness, this, LogType.INFO);
-    //     SetThickness(newThickness);
-    // }
-
     private void OnDestroy()
     {
         this.Vertex1.OnVertexObjMove -= UpdateSpline;
         this.Vertex1.OnVertexObjMove -= UpdateLabelPosition;
         this.Vertex2.OnVertexObjMove -= UpdateSpline;
         this.Vertex2.OnVertexObjMove -= UpdateLabelPosition;
+        this.visualsAnimator.OnVisualsUpdate -= UpdateSpline;
     }
 }

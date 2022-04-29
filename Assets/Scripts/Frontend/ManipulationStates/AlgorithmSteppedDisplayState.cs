@@ -9,16 +9,12 @@ public class AlgorithmSteppedDisplayState : ManipulationState
 {
     private AlgorithmResult algorithmResult;
     private AlgorithmStep currentStep;
-    private List<EdgeObj> highlightedEdges;
-    private List<VertexObj> highlightedVertices;
     private List<string> infoResults;
 
     public override void OnStateEnter()
     {
         this.currentStep =  AlgorithmsPanel.Singleton.CurrentStep;
         this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;
-        this.highlightedEdges = new List<EdgeObj>();
-        this.highlightedVertices = new List<VertexObj>();
         this.infoResults = new List<string>();
 
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(true);
@@ -28,26 +24,23 @@ public class AlgorithmSteppedDisplayState : ManipulationState
             bool contained = false;
             if (this.currentStep.considerEdges?.Contains(edgeObj.Edge) ?? false)
             {
-                edgeObj.AlgorithmResultLevel = 1;
-                this.highlightedEdges.Add(edgeObj);
+                edgeObj.visualsAnimator.ChangeState("algorithm_considering");
                 contained = true;
             }
             if (this.currentStep.resultEdges?.Contains(edgeObj.Edge) ?? false)
             {
-                edgeObj.AlgorithmResultLevel = 3;
-                this.highlightedEdges.Add(edgeObj);
+                edgeObj.visualsAnimator.ChangeState("algorithm_result");
                 contained = true;
             }
             if (this.currentStep.newEdges?.Contains(edgeObj.Edge) ?? false)
             {
-                edgeObj.AlgorithmResultLevel = 2;
-                this.highlightedEdges.Add(edgeObj);
+                edgeObj.visualsAnimator.ChangeState("algorithm_new");
                 contained = true;
             }
             
             if (!contained)
             {
-                edgeObj.AlgorithmResultLevel = 0;
+                edgeObj.visualsAnimator.ChangeState("algorithm_none");
             }
         }
         
@@ -56,26 +49,23 @@ public class AlgorithmSteppedDisplayState : ManipulationState
             bool contained = false;
             if (this.currentStep.considerVertices?.Contains(vertexObj.Vertex) ?? false)
             {
-                vertexObj.AlgorithmResultLevel = 1;
-                this.highlightedVertices.Add(vertexObj);
+                vertexObj.visualsAnimator.ChangeState("algorithm_considering");
                 contained = true;
             }
             if (this.currentStep.resultVertices?.Contains(vertexObj.Vertex) ?? false)
             {
-                vertexObj.AlgorithmResultLevel = 3;
-                this.highlightedVertices.Add(vertexObj);
+                vertexObj.visualsAnimator.ChangeState("algorithm_result");
                 contained = true;
             }
             if (this.currentStep.newVertices?.Contains(vertexObj.Vertex) ?? false)
             {
-                vertexObj.AlgorithmResultLevel = 2;
-                this.highlightedVertices.Add(vertexObj);
+                vertexObj.visualsAnimator.ChangeState("algorithm_new");
                 contained = true;
             }
             
             if (!contained)
             {
-                vertexObj.AlgorithmResultLevel = 0;
+                vertexObj.visualsAnimator.ChangeState("algorithm_none");
             }
         }
         
@@ -104,8 +94,8 @@ public class AlgorithmSteppedDisplayState : ManipulationState
 
     public override void OnStateExit()
     {
-        this.highlightedEdges.ForEach(e => e.AlgorithmResultLevel = 0);
-        this.highlightedVertices.ForEach(v => v.AlgorithmResultLevel = 0);
+        Controller.Singleton.EdgeObjs.ForEach(e => e.visualsAnimator.ChangeState("default"));
+        Controller.Singleton.VertexObjs.ForEach(v => v.visualsAnimator.ChangeState("default"));
 
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(false);
         AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);

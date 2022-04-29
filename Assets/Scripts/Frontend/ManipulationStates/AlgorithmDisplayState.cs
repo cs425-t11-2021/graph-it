@@ -9,15 +9,11 @@ public class AlgorithmDisplayState : ManipulationState
 {
 
     private AlgorithmResult algorithmResult;
-    private List<EdgeObj> highlightedEdges;
-    private List<VertexObj> highlightedVertices;
     private List<string> infoResults;
 
     public override void OnStateEnter()
     {
         this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;
-        this.highlightedEdges = new List<EdgeObj>();
-        this.highlightedVertices = new List<VertexObj>();
         this.infoResults = new List<string>();
 
         foreach (KeyValuePair<string, (object, Type)> kvp in this.algorithmResult.results)
@@ -32,8 +28,11 @@ public class AlgorithmDisplayState : ManipulationState
                 {
                     if (edgeList.Contains(vertexObj.Vertex))
                     {
-                        vertexObj.AlgorithmResultLevel = 3;
-                        this.highlightedVertices.Add(vertexObj);
+                        vertexObj.visualsAnimator.ChangeState("algorithm_result");
+                    }
+                    else
+                    {
+                        vertexObj.visualsAnimator.ChangeState("algorithm_none");
                     }
                 }
             }
@@ -44,14 +43,42 @@ public class AlgorithmDisplayState : ManipulationState
                 {
                     if (edgeList.Contains(edgeObj.Edge))
                     {
-                        edgeObj.AlgorithmResultLevel = 3;
-                        this.highlightedEdges.Add(edgeObj);
+                        edgeObj.visualsAnimator.ChangeState("algorithm_result");
+                    }
+                    else
+                    {
+                        edgeObj.visualsAnimator.ChangeState("algorithm_none");
                     }
                 }
             }
             else if (resultType == typeof(float) || resultType == typeof(int) || resultType == typeof(bool))
             {
                 this.infoResults.Add(resultID.ToTitleCase() + ": " + Convert.ToString(kvp.Value.Item1));
+            }
+            else if (resultType == typeof(List<(int, Edge)>))
+            {
+                List<(int, Edge)> orderedEdges = ((List<(int, Edge)>) kvp.Value.Item1).OrderBy(pair => pair.Item1).ToList();
+                List<EdgeObj> edgeObjs = new List<EdgeObj>();
+
+                foreach ((int, Edge) pair in orderedEdges)
+                {
+                    edgeObjs.Add(Controller.Singleton.GetEdgeObj(pair.Item2));
+                }
+                
+                foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
+                {
+                    if (edgeObjs.Contains(edgeObj))
+                    {
+                        edgeObj.visualsAnimator.ChangeState("algorithm_new");
+                    }
+                    else
+                    {
+                        edgeObj.visualsAnimator.ChangeState("algorithm_none");
+                    }
+                }
+                
+                
+                ManipulationStateManager.Singleton.StartCoroutine(DisplayEdgesSequentially(0.2f, edgeObjs));
             }
         }
 
@@ -65,12 +92,26 @@ public class AlgorithmDisplayState : ManipulationState
         }
     }
 
+    IEnumerator DisplayEdgesSequentially(float gap, List<EdgeObj> edgeObjs)
+    {
+        while (true)
+        {
+            foreach ((EdgeObj e, int i) in edgeObjs.WithIndex())
+            {
+                e.visualsAnimator.ExpandEffect(edgeObjs.Count() * 0.25f + 1.5f - 0.2f * i, 1.5f, "algorithm_result");
+                yield return new WaitForSeconds(gap);
+            }
+            yield return new WaitForSeconds(3f);
+        }
+    }
+
     public override void OnStateExit()
     {
-        this.highlightedEdges.ForEach(e => e.AlgorithmResultLevel = 0);
-        this.highlightedVertices.ForEach(v => v.AlgorithmResultLevel = 0);
+        Controller.Singleton.EdgeObjs.ForEach(e => e.visualsAnimator.ChangeState("default"));
+        Controller.Singleton.VertexObjs.ForEach(v => v.visualsAnimator.ChangeState("default"));
         
         AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = "";
         AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);
+        ManipulationStateManager.Singleton.StopAllCoroutines();
     }
 }
