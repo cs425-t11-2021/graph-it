@@ -107,7 +107,7 @@ public class NumberOfSpanningTreesAlgorithm : Algorithm
         if ( this.running )
             return this.GetRunningResult();
         AlgorithmResult result = new AlgorithmResult( AlgorithmResultType.SUCCESS );
-        result.results[ "number of spanning trees" ] = ( this.NumberOfSpanningTrees, typeof(int) );
+        result.results[ "number of spanning trees" ] = ( this.NumberOfSpanningTrees, typeof(ulong) );
         return result;
     }
 

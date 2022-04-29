@@ -150,15 +150,45 @@ public class Edge
     public void SetStyle( uint style, bool recordChange=true )
     {
         if ( recordChange )
-            this.CreateMod( Modification.EDGE_STYLE, ( this, this.style, style ) );
+            this.CreateMod( Modification.EDGE_STYLES, ( new List< Edge >() { this }, new List< uint >() { this.style }, new List< uint >() { style } ) );
         this.style = style;
+    }
+
+    public static void SetStyle( List< Edge > edges, uint style, bool recordChange=true )
+    {
+        List< uint > newStyles = new List< uint >( edges.Select( e => style ) );
+        Edge.SetStyles( edges, newStyles, recordChange );
+    }
+
+    public static void SetStyles( List< Edge > edges, List< uint > styles, bool recordChange=true )
+    {
+        List< uint > oldStyles = new List< uint >( edges.Select( e => e.style ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_STYLES, ( edges, oldStyles, styles ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetStyle( styles[ i ], false );
     }
 
     public void SetColor( uint color, bool recordChange=true )
     {
         if ( recordChange )
-            this.CreateMod( Modification.EDGE_COLOR, ( this, this.color, color ) );
+            this.CreateMod( Modification.EDGE_COLORS, ( new List< Edge >() { this }, new List< uint >() { this.color }, new List< uint >() { color } ) );
         this.color = color;
+    }
+
+    public static void SetColor( List< Edge > edges, uint color, bool recordChange=true )
+    {
+        List< uint > newColors = new List< uint >( edges.Select( e => color ) );
+        Edge.SetColors( edges, newColors, recordChange );
+    }
+
+    public static void SetColors( List< Edge > edges, List< uint > colors, bool recordChange=true )
+    {
+        List< uint > oldColors = new List< uint >( edges.Select( e => e.style ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_COLORS, ( edges, oldColors, colors ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetColor( colors[ i ], false );
     }
 
     public void SetThickness( uint thickness, bool recordChange=true )
@@ -220,15 +250,46 @@ public class Edge
     public void SetTailStyle( uint style, bool recordChange=true )
     {
         if ( recordChange )
-            this.CreateMod( Modification.EDGE_TAIL_STYLE, ( this, this.tailStyle, style ) );
+            this.CreateMod( Modification.EDGE_TAIL_STYLES, ( new List< Edge >() { this }, new List< uint >() { this.tailStyle }, new List< uint >() { style } ) );
         this.tailStyle = style;
+    }
+
+    public static void SetTailStyle( List< Edge > edges, uint tailStyle, bool recordChange=true )
+    {
+        List< uint > newStyles = new List< uint >( edges.Select( e => tailStyle ) );
+        Edge.SetTailStyles( edges, newStyles, recordChange );
+    }
+
+    public static void SetTailStyles( List< Edge > edges, List< uint > tailStyles, bool recordChange=true )
+    {
+        List< uint > oldStyles = new List< uint >( edges.Select( e => e.tailStyle ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_TAIL_STYLES, ( edges, oldStyles, tailStyles ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetTailStyle( tailStyles[ i ], false );
     }
 
     public void SetHeadStyle( uint style, bool recordChange=true )
     {
         if ( recordChange )
-            this.CreateMod( Modification.EDGE_HEAD_STYLE, ( this, this.headStyle, style ) );
+            this.CreateMod( Modification.EDGE_HEAD_STYLES, ( new List< Edge >() { this }, new List< uint >() { this.headStyle }, new List< uint >() { style } ) );
         this.headStyle = style;
+    }
+
+    // TODO: static SetHeadStyles
+    public static void SetHeadStyle( List< Edge > edges, uint headStyle, bool recordChange=true )
+    {
+        List< uint > newStyles = new List< uint >( edges.Select( e => headStyle ) );
+        Edge.SetHeadStyles( edges, newStyles, recordChange );
+    }
+
+    public static void SetHeadStyles( List< Edge > edges, List< uint > headStyles, bool recordChange=true )
+    {
+        List< uint > oldStyles = new List< uint >( edges.Select( e => e.headStyle ) );
+        if ( recordChange )
+            edges[ 0 ].CreateMod( Modification.EDGE_HEAD_STYLES, ( edges, oldStyles, headStyles ) );
+        for ( int i = 0; i < edges.Count; ++i )
+            edges[ i ].SetHeadStyle( headStyles[ i ], false );
     }
 
     public void ResetWeight() => this.Weight = 1;

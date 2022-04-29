@@ -20,6 +20,8 @@ public class OnHover : MonoBehaviour
     }
     
    public void OnHoverMouse(){
+       if (!this.enabled) return;
+       
         this.newLabel = Instantiate(labelPrefab, UIManager.Singleton.mainCanvas.transform).GetComponent<OnHoverLabel>();
         this.newLabel.CreateLabel(this.labelDescription, this.size);
         this.newLabel.transform.SetAsLastSibling();

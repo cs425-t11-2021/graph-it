@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class UIManager : SingletonBehavior<UIManager>
 {
@@ -30,13 +31,17 @@ public class UIManager : SingletonBehavior<UIManager>
 
     // Property for whether or not the menu bar buttons are enabled
     public bool MenuBarEnabled {
-        set => Array.ForEach(this.menuButtons, menuButton => menuButton.ToggleButtonEnabled = value);
+        set {
+            Array.ForEach(this.menuButtons, menuButton => menuButton.ToggleButtonEnabled = value);
+        }
     }
 
     public bool GraphInfoEnabled{
         set{
             Button[] closeGraphPanel = this.graphInfoPanel.GetComponentsInChildren<Button>(true);
             Array.ForEach(closeGraphPanel, button => button.enabled = value);
+            OnHover[] onHoverEffects = this.graphInfoPanel.GetComponentsInChildren<OnHover>(true);
+            Array.ForEach(onHoverEffects, effect => effect.enabled = value);
         }
     }
 
@@ -53,6 +58,10 @@ public class UIManager : SingletonBehavior<UIManager>
             Array.ForEach(algsButtons, togButton => togButton.enabled = value);
             Button[] closeAlgPanel = this.algPanel.GetComponentsInChildren<Button>(true);
             Array.ForEach(closeAlgPanel, button => button.enabled = value);
+            TMP_InputField[] fields = this.algPanel.GetComponentsInChildren<TMP_InputField>(true);
+            Array.ForEach(fields, f => f.interactable = value);
+            OnHover[] onHoverEffects = this.algPanel.GetComponentsInChildren<OnHover>(true);
+            Array.ForEach(onHoverEffects, effect => effect.enabled = value);
         }
     }
 
@@ -70,6 +79,9 @@ public class UIManager : SingletonBehavior<UIManager>
 
             Button[] tabButtons = this.tabsBar.GetComponentsInChildren<Button>(true);
             Array.ForEach(tabButtons, button => button.enabled = value);
+
+            OnHover[] onHoverEffects = this.tabsBar.GetComponentsInChildren<OnHover>(true);
+            Array.ForEach(onHoverEffects, effect => effect.enabled = value);
         }
     }
     // Property for whether or not the toolbar is enabled
@@ -79,6 +91,8 @@ public class UIManager : SingletonBehavior<UIManager>
             Array.ForEach(toolbarButtons, button => button.enabled = value);
             ToggleButton[] toolbarToggleButtons = this.toolbar.GetComponentsInChildren<ToggleButton>(true);
             Array.ForEach(toolbarToggleButtons, button => button.enabled = value);
+            OnHover[] onHoverEffects = this.toolbar.GetComponentsInChildren<OnHover>(true);
+            Array.ForEach(onHoverEffects, effect => effect.enabled = value);
         }
     }
 
