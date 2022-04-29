@@ -990,5 +990,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
-  offset: {x: 0, y: 0, z: 0}
-  size: {x: 240, y: 40}
+  offset: {x: 0.15, y: -0.15, z: 0}
+  size: {x: 300, y: 50}
