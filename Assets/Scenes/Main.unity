@@ -10236,6 +10236,7 @@ MonoBehaviour:
   extraInfoPanel: {fileID: 5318350212348023388}
   stepByStepToggle: {fileID: 608032728}
   stepByStepPanel: {fileID: 1397969197}
+  stepPanelTitle: {fileID: 1346521542}
   stepAlgorithmText: {fileID: 1903288616}
   autoStepThroughToggle: {fileID: 1007614993}
   deprecationWarning: {fileID: 1980265096}
@@ -14705,7 +14706,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1159227432}
   m_HandleRect: {fileID: 1159227431}
   m_Direction: 2
-  m_Value: 1.0000004
+  m_Value: 1
   m_Size: 0.56297845
   m_NumberOfSteps: 0
   m_OnValueChanged:

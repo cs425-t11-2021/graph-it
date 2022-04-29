@@ -17,6 +17,7 @@ public class AlgorithmSteppedDisplayState : ManipulationState
         this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;
         this.infoResults = new List<string>();
 
+        AlgorithmsPanel.Singleton.stepPanelTitle.text = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName + " Steps";
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(true);
 
         foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)

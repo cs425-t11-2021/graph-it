@@ -84,6 +84,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] public GameObject extraInfoPanel;
     [SerializeField] private GameObject stepByStepToggle;
     [SerializeField] public GameObject stepByStepPanel;
+    [SerializeField] public TMP_Text stepPanelTitle;
     [SerializeField] private TMP_Text stepAlgorithmText;
     [SerializeField] private ToggleButton autoStepThroughToggle;
 
@@ -312,8 +313,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void ToggleAlgorithmResultDisplay() {
         if (this.resultButton.Checked) {
             if (this.StepByStep) {
+                GoToFirstStep();
                 GetNextStep();
-                // ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
             }
             else {
                 ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
@@ -328,9 +329,17 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void SetStepByStep(bool enabled)
     {
         this.StepByStep = enabled;
-        Toolbar.Singleton.EnterViewMode();
         this.ExtraInfoClosed = false;
-        this.resultButton.UpdateStatus(false);
+
+        if (!enabled && ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmSteppedDisplayState)
+        {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
+        }
+        else if (enabled && ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState)
+        {
+            GoToFirstStep();
+            GetNextStep();
+        }
     }
 
     public void GetNextStep() {
@@ -451,8 +460,17 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public void CloseStepByStep()
     {
-        Toolbar.Singleton.EnterViewMode();
-        this.resultButton.UpdateStatus(false);
+        if (this.ExtraInfoClosed)
+        {
+            Toolbar.Singleton.EnterViewMode();
+            this.resultButton.UpdateStatus(false);
+        }
+        else
+        {
+            // ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
+            this.stepByStepToggle.GetComponent<Toggle>().isOn = false;
+        }
+        
         this.ExtraInfoClosed = false;
     }
 
