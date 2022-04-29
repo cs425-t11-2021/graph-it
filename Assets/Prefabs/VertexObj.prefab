@@ -976,6 +976,8 @@ MonoBehaviour:
     color: {r: 0, g: 0.6392157, b: 0, a: 1}
   - name: algorithm_none
     color: {r: 0, g: 0, b: 0, a: 0.5882353}
+  - name: algorithm_parameter
+    color: {r: 0, g: 1, b: 0, a: 1}
   defaultSortingOrder: 0
 --- !u!114 &124410965053639713
 MonoBehaviour:

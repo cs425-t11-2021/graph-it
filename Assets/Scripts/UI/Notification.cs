@@ -24,6 +24,9 @@ public class Notification : MonoBehaviour
          this.textMesh.text = content;
          this.durationRemaining = float.PositiveInfinity;
          this.alwaysOnBottom = true;
+         Animator anim = GetComponent<Animator>();
+         anim.speed = 0f;
+         anim.Play("NotificationEnter", 0, 1f);
          return this;
     }
 

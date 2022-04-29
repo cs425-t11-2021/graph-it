@@ -10,6 +10,7 @@ public class AlgorithmSteppedDisplayState : ManipulationState
     private AlgorithmResult algorithmResult;
     private AlgorithmStep currentStep;
     private List<string> infoResults;
+    private Notification notification;
 
     public override void OnStateEnter()
     {
@@ -86,6 +87,14 @@ public class AlgorithmSteppedDisplayState : ManipulationState
                 labelCreator.enabled = true;
                 labelCreator.Label = "Vertex added to result";
             }
+            if (this.currentStep.paramVerts?.Contains(vertexObj.Vertex) ?? false)
+            {
+                vertexObj.visualsAnimator.ChangeState("algorithm_parameter");
+                contained = true;
+                
+                labelCreator.enabled = true;
+                labelCreator.Label = "Vertex parameter";
+            }
             
             if (!contained)
             {
@@ -115,6 +124,8 @@ public class AlgorithmSteppedDisplayState : ManipulationState
                 AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);
             }
         }
+        
+        this.notification = NotificationManager.Singleton.CreateNotification(string.Format("Showing <#0000FF>{0}</color> results.", AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName));
     }
 
     public override void OnStateExit()
@@ -132,5 +143,11 @@ public class AlgorithmSteppedDisplayState : ManipulationState
 
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(false);
         AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);
+        
+        if (this.notification != null)
+        {
+            Controller.Destroy(this.notification.gameObject);
+            this.notification = null;
+        }
     }
 }
