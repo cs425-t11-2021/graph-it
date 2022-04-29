@@ -34,7 +34,7 @@ public class GraphInfoAlgorithmAssociation
                 if (result.type == AlgorithmResultType.ERROR)
                 {
                     GraphInfo.Singleton.SetInfoAlgorithmResult(this, lead + ": <color=red>Error</color>");
-                    NotificationManager.Singleton.CreateNotification(this.algorithmClass + "<color=red> Error: " + result.desc + "</color>", 3);
+                    // NotificationManager.Singleton.CreateNotification(this.algorithmClass + "<color=red> Error: " + result.desc + "</color>", 3);
                 }
                 else if (result.type == AlgorithmResultType.SUCCESS)
                 {

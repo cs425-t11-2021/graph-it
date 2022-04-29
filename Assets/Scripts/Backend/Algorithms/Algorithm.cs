@@ -98,10 +98,7 @@ public abstract class Algorithm
                 this.error = true;
                 this.AlgoManager.MarkComplete( this );
                 this.errorDesc = e.Message;
-                Logger.Log( "Algorithm Error; Finishing Thread.", this, LogType.DEBUG );
-
-                // // TODO: tell front end there was an error
-                // RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( this.GetType() + " <color=red>" + this.errorDesc + "</color>", 3 ) );
+                Logger.Log( string.Format("Algorithm Error: {0} Finishing Thread.", e.Message), this, LogType.ERROR );
             }
         }
         
