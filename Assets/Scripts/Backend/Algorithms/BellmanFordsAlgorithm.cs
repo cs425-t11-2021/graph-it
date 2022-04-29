@@ -106,7 +106,7 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
         }
 
         // get path from tree
-        float cost = 0;
+        this.cost = 0;
         Vertex prevVert = this.dest;
         this.vertexPath.Add( prevVert );
 
@@ -129,7 +129,7 @@ public class BellmanFordsAlgorithm : LoggedAlgorithm
                 this.edgePath.Add( prevEdge );
                 prevVert = prevEdge.vert1 == prevVert ? prevEdge.vert2 : prevEdge.vert1;
                 this.vertexPath.Add( prevVert );
-                cost += prevEdge.Weight;
+                this.cost += prevEdge.Weight;
 
                 // add result step
                 this.AddStep(
