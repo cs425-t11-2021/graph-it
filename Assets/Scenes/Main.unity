@@ -10350,7 +10350,7 @@ MonoBehaviour:
     description: 
     activationButton: {fileID: 0}
   - algorithmClass: GirthAlgorithm
-    displayName: Girth
+    displayName: GIRTH
     enabled: 1
     requiredVertices: 0
     activationMethod: RunGirth
