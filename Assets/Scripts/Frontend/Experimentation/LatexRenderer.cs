@@ -31,7 +31,18 @@ public class LatexRenderer : SingletonBehavior<LatexRenderer>
             {
                 (string formula, Action<Texture> textureAction) = latexRequestQueue.Dequeue();
                 UnityWebRequest www = UnityWebRequestTexture.GetTexture("https://latex.codecogs.com/png.image?" + formula);
+                www.timeout = 5;
                 yield return www.SendWebRequest();
+                
+                while(!www.isDone) {
+                    yield return null;
+                }
+
+                if (www.result != UnityWebRequest.Result.Success)
+                {
+                    Logger.Log(www.error, this, LogType.ERROR);
+                }
+
                 textureAction(DownloadHandlerTexture.GetContent(www));
                 Logger.Log("Latex texture for " + formula + " received", this, LogType.INFO);
             }

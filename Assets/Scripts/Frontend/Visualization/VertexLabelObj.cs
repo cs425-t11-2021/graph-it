@@ -80,7 +80,7 @@ public class VertexLabelObj : MonoBehaviour
                 this.latexMode = true;
                 this.image.rectTransform.sizeDelta = new Vector2(this.latexTexture.width, this.latexTexture.height);
                 this.image.texture = this.latexTexture;
-                if (!this.inputField.interactable)
+                if (!this.raycaster.enabled)
                     this.image.enabled = true;
             }
         }
@@ -187,7 +187,11 @@ public class VertexLabelObj : MonoBehaviour
             this.latexFormula = formula;
 
             waitingForLatex = true;
-            LatexRenderer.Singleton.AddToLatexQueue(formula, result => this.latexTexture = result);
+            LatexRenderer.Singleton.AddToLatexQueue(formula, result =>
+            {
+                this.latexTexture = result;
+                // MakeUneditable();
+            });
 
             Logger.Log("Vertex label changed to " + formula, this, LogType.INFO);
             
