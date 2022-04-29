@@ -13,7 +13,7 @@ public class EdgeDrawingState : ManipulationState
         
         this.startingVertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
 
-        this.edgeTemplate = GameObject.Instantiate(Controller.Singleton.edgeTemplatePrefab, InputManager.Singleton.CursorWorldPosition, Quaternion.identity).GetComponent<EdgeTemplate>();
+        this.edgeTemplate = GameObject.Instantiate(Controller.Singleton.edgeTemplatePrefab, InputManager.Singleton.CursorWorldPosition, Quaternion.identity).GetComponentInChildren<EdgeTemplate>();
         this.edgeTemplate.Initiate(this.startingVertex.transform.position);
         this.edgeTemplate.Directed = false;
     }
@@ -22,7 +22,7 @@ public class EdgeDrawingState : ManipulationState
     {
         InputManager.Singleton.OnMouseRightClick -= OnRightClick;
         
-        GameObject.Destroy(edgeTemplate.gameObject);
+        GameObject.Destroy(edgeTemplate.transform.parent.gameObject);
     }
 
     public override void OnClick()

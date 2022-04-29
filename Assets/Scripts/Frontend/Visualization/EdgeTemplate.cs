@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EdgeTemplate : MonoBehaviour
 {
+    [SerializeField] private Transform arrow;
     private Vector2 startingPoint;
-    private Transform arrow;
     private SpriteRenderer arrowSpriteRenderer;
     public bool Directed {get; set;}
 
@@ -14,7 +14,6 @@ public class EdgeTemplate : MonoBehaviour
     }
 
     private void Awake() {
-        this.arrow = this.transform.GetChild(0);
         this.arrowSpriteRenderer = this.arrow.GetComponent<SpriteRenderer>();
     }
 
@@ -25,17 +24,18 @@ public class EdgeTemplate : MonoBehaviour
     // Method to stretch the edge so it extends from one point to another 
     private void StretchBetweenPoints(Vector2 point1, Vector2 point2)
     {
-        this.transform.position = point1;
-        Vector2 dir = point2 - point1;
-        this.transform.localScale = new Vector3(dir.magnitude * 2, transform.localScale.y, 1);
-
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        Vector2 distance = point2 - point1;
+        this.transform.localScale = new Vector3(distance.magnitude * 2 - 2 * (this.Directed ? this.arrowSpriteRenderer.size.x * .95f : 0f), (1 + 1) * 0.05f * 2f, 1);
+        this.transform.parent.position = point1;
+        // this.transform.position = point1;
+        
+        float angle = Mathf.Atan2(distance.normalized.y, distance.normalized.x) * Mathf.Rad2Deg;
         this.transform.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
 
         if (this.Directed) {
-            this.arrow.localPosition = new Vector3((this.Directed ? 0.5f : 0f) - (this.arrowSpriteRenderer.size.x / this.transform.localScale.x), 0f, 0f);
-            this.arrow.localScale = new Vector3(1f / this.transform.lossyScale.x, 1f / (this.transform.lossyScale.y - 0.1f), 1);
-            this.arrow.localRotation = Quaternion.AngleAxis(this.Directed ? 0f : 180f, Vector3.forward);
+            this.arrow.rotation = Quaternion.AngleAxis(angle, Vector3.forward);
+            this.arrow.localPosition = distance * (1f - (this.arrowSpriteRenderer.size.x) / distance.magnitude) ;
+            this.arrow.localScale = new Vector3(1f, (.5f + (1f + 1f) * (.25f)), 1f);
             this.arrow.gameObject.SetActive(true);
         }
         else {
