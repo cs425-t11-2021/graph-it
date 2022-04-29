@@ -306,8 +306,9 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             association.activationButton.UpdateStatus(association.activationButton.Checked);
         }
 
-        if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState) {
+        if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState || ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmSteppedDisplayState) {
             Toolbar.Singleton.EnterViewMode();
+            this.resultButton.UpdateStatus(false);
             this.ExtraInfoClosed = false;
         }
     }
@@ -414,6 +415,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             GetNextStep();
             yield return new WaitForSeconds(.5f);
         }
+
+        this.autoStepThroughPlaying = false;
         this.autoStepThroughToggle.UpdateStatus(false);
     }
     
