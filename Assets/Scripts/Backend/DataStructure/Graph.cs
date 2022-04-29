@@ -255,9 +255,6 @@ public class Graph
 
     public void Remove( List< Vertex > vertices, List< Edge > edges, bool recordChange=true )
     {
-        this.Remove( edges, false );
-        this.Remove( vertices, false );
-
         if ( recordChange )
         {
             HashSet< Vertex > vertexSet = new HashSet< Vertex >( vertices );
@@ -265,6 +262,9 @@ public class Graph
             edgeSet.UnionWith( edges );
             new GraphModification( this, Modification.REMOVE_COLLECTION, ( vertexSet, edgeSet ) );
         }
+
+        this.Remove( edges, false );
+        this.Remove( vertices, false );
     }
 
     public void Remove( List< Vertex > vertices, Edge edge, bool recordChange=true )

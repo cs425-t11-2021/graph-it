@@ -64,7 +64,7 @@ public class EditMenu : MenuButton
             undoButton.GetComponentInChildren<TMP_Text>().color = Color.gray;
         }
         else {
-            undoButton.GetComponentInChildren<TMP_Text>().text = "Undo " + Controller.Singleton.Graph.Changes.Peek().Mod.ToString();
+            undoButton.GetComponentInChildren<TMP_Text>().text = "Undo " + GraphModification.aliases[Controller.Singleton.Graph.Changes.Peek().Mod];
             undoButton.interactable = true;
             undoButton.GetComponentInChildren<TMP_Text>().color = Color.black;
         }
@@ -75,7 +75,7 @@ public class EditMenu : MenuButton
             redoButton.GetComponentInChildren<TMP_Text>().color = Color.gray;
         }
         else {
-            redoButton.GetComponentInChildren<TMP_Text>().text = "Redo " + Controller.Singleton.Graph.UndoneChanges.Peek().Mod.ToString();
+            redoButton.GetComponentInChildren<TMP_Text>().text = "Redo " + GraphModification.aliases[Controller.Singleton.Graph.UndoneChanges.Peek().Mod];
             redoButton.interactable = true;
             redoButton.GetComponentInChildren<TMP_Text>().color = Color.black;
         }

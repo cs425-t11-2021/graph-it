@@ -108,5 +108,6 @@ public class AlgorithmSteppedDisplayState : ManipulationState
         this.highlightedVertices.ForEach(v => v.AlgorithmResultLevel = 0);
 
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(false);
+        AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);
     }
 }

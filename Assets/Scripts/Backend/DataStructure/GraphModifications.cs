@@ -29,6 +29,25 @@ public enum Modification
 
 public class GraphModification
 {
+    public static readonly Dictionary<Modification, string> aliases = new Dictionary<Modification, string> {
+        {Modification.VERTEX_LABEL, "Change Vertex Label"},
+        {Modification.VERTEX_POS, "Change Vertex Position"},
+        {Modification.VERTEX_STYLE, "Change Vertex Style"},
+        {Modification.VERTEX_SIZE, "Change Vertex Size"},
+        {Modification.VERTEX_COLOR, "Change Vertex Color"},
+        {Modification.EDGE_DIRECTED, "Change Edge Directed"},
+        {Modification.EDGE_LABEL, "Change Edge Label"},
+        {Modification.EDGE_STYLE, "Change Edge Style"},
+        {Modification.EDGE_COLOR, "Change Edge Color"},
+        {Modification.EDGE_THICKNESSES, "Change Edge Thickness"},
+        {Modification.EDGE_CURVATURES, "Change Edge Curavture"},
+        {Modification.EDGE_TAIL_STYLE, "Change Edge Tail Style"},
+        {Modification.EDGE_HEAD_STYLE, "Change Edge Head Style"},
+        {Modification.EDGE_REVERSE, "Reverse Edge"},
+        {Modification.ADD_COLLECTION, "Add Collection"},
+        {Modification.REMOVE_COLLECTION, "Remove Collection"}
+    };
+
     private Graph graph;
     public Modification Mod { get; private set; }
     public object Modified { get; private set; }

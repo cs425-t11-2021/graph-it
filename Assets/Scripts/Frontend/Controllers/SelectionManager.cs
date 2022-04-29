@@ -23,7 +23,7 @@ public class SelectionManager : SingletonBehavior<SelectionManager>
         this.selectedVertices = new List<VertexObj>();
         this.selectedEdges = new List<EdgeObj>();
 
-        Controller.Singleton.OnInstanceChanged += (newInstance) => DeSelectAll();
+        Controller.Singleton.OnInstanceChanged += (previous, current) => DeSelectAll();
     }
 
     // Select a vertex if it's not selected

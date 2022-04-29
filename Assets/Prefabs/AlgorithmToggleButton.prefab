@@ -334,7 +334,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   labelPrefab: {fileID: 2954843947706007661, guid: 4f2b011603ef72848904de4a8e2352c5, type: 3}
   labelDescription: Display info here
-  offset: {x: 100, y: 45, z: 0}
+  offset: {x: 0, y: 0, z: 0}
   size: {x: 200, y: 100}
 --- !u!114 &7158508273230804293
 MonoBehaviour:

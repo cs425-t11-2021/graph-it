@@ -13,7 +13,7 @@ public class AlgorithmInitiationState : ManipulationState
         this.currentAssociation = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm;
         Debug.Log(this.currentAssociation);
         if (this.currentAssociation == null) {
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            Toolbar.Singleton.EnterViewMode();
         }
 
         SelectionManager.Singleton.DeSelectAll();
@@ -23,7 +23,7 @@ public class AlgorithmInitiationState : ManipulationState
             AlgorithmsPanel.Singleton.runButton.UpdateStatus(false);
             SelectionManager.Singleton.DeSelectAll();
             AlgorithmsPanel.Singleton.RunGraphDisplayAlgorithm(this.currentAssociation);
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+            Toolbar.Singleton.EnterViewMode();
             return;
         }
 
@@ -43,7 +43,7 @@ public class AlgorithmInitiationState : ManipulationState
             SelectionManager.Singleton.DeSelectAll();
             SelectionManager.Singleton.SelectVertex(vertexObj);
             
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;        
+            Toolbar.Singleton.EnterViewMode();       
         }
     }
 

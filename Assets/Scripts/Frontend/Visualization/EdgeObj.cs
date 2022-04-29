@@ -68,7 +68,6 @@ public class EdgeObj : MonoBehaviour
     }
 
     private int resultStatus = 0;
-    private float resultTimer = 0f;
     public int AlgorithmResultLevel
     {
         set
@@ -93,7 +92,6 @@ public class EdgeObj : MonoBehaviour
                 this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[0];
                 this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
                 this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-                this.resultTimer = 0f;
             }
         }
     }
@@ -137,24 +135,9 @@ public class EdgeObj : MonoBehaviour
     {
         if (resultStatus == 1)
         {
-            if (resultTimer <= 0f)
-            {
-                resultTimer = 0.33f;
-                if (this.spriteRenderer.color == new Color32(0, 0, 0, 255))
-                {
-                    this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[0];
-                    this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-                    this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-                }
-                else
-                {
-                    this.shapeRenderer.color = new Color32(0, 0, 0, 255);
-                    this.arrowSpriteRenderer.color = new Color32(0, 0, 0, 255);
-                    this.spriteRenderer.color = new Color32(0, 0, 0, 255);
-                }
-            }
-
-            resultTimer -= Time.deltaTime;
+            this.shapeRenderer.color = Controller.Singleton.algorithmResultColors[0];
+            this.arrowSpriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
+            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
         }
         else if (resultStatus == 2)
         {
