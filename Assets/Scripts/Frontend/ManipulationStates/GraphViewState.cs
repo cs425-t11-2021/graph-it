@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using Vector2 = System.Numerics.Vector2;
 
 // Default viewing state, double click to add vertex, left click to select, shift + left click to select multiple
 public class GraphViewState : ManipulationState
@@ -117,6 +119,9 @@ public class GraphViewState : ManipulationState
     public void OnDragEnd() {
         if (!this.graphMovementInProgress) return;
 
+        List<Vertex> vertices = new List<Vertex>();
+        List<System.Numerics.Vector2> newPositions = new List<Vector2>();
+
         // Tell the vertices to stop following the cursor and add them back to the grid
         foreach (VertexObj selectedVertex in SelectionManager.Singleton.SelectedVertices) {
             selectedVertex.GetComponent<VertexMovement>().FollowCursor = false;
@@ -128,8 +133,11 @@ public class GraphViewState : ManipulationState
             }
 
             // Update the stored position info in the verterices
-            selectedVertex.Vertex.Pos = new System.Numerics.Vector2( selectedVertex.transform.position.x, selectedVertex.transform.position.y );
+            vertices.Add(selectedVertex.Vertex);
+            newPositions.Add(new System.Numerics.Vector2( selectedVertex.transform.position.x, selectedVertex.transform.position.y ));
         }
+        
+        Vertex.SetPoses(vertices, newPositions);
 
         this.graphMovementInProgress = false;
     }

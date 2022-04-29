@@ -40,7 +40,7 @@ public class GraphModification
         { Modification.EDGE_STYLES,       "Change Edge Style"      },
         { Modification.EDGE_COLORS,       "Change Edge Color"      },
         { Modification.EDGE_THICKNESSES,  "Change Edge Thickness"  },
-        { Modification.EDGE_CURVATURES,   "Change Edge Curavture"  },
+        { Modification.EDGE_CURVATURES,   "Change Edge Curvature"  },
         { Modification.EDGE_TAIL_STYLES,  "Change Edge Tail Style" },
         { Modification.EDGE_HEAD_STYLES,  "Change Edge Head Style" },
         { Modification.EDGE_REVERSE,      "Reverse Edge"           },
@@ -136,7 +136,7 @@ public class GraphModification
             posData.Item1[ i ].SetPos( posData.Item2[ i ], false );
 
             // TODO: Update front end
-            // Controller.Singleton.GetVertexObj( posData.Item1 ).transform.position = new Vector3(posData.Item2.X, posData.Item2.Y, 0);
+            Controller.Singleton.GetVertexObj( posData.Item1[i] ).MovePosition(new Vector3( posData.Item2[i].X, posData.Item2[i].Y, 0 ));
         }
     }
 
@@ -148,7 +148,7 @@ public class GraphModification
             styleData.Item1[ i ].SetStyle( styleData.Item2[ i ], false );
 
             // TODO: Update front end
-            // Controller.Singleton.GetVertexObj( styleData.Item1 ).SetStyle( styleData.Item2, false );
+            Controller.Singleton.GetVertexObj( styleData.Item1[ i ] ).SetStyle( styleData.Item2[ i ], false );
         }
     }
 
@@ -398,7 +398,7 @@ public class GraphModification
             posData.Item1[ i ].SetPos( posData.Item3[ i ], false );
 
             // TODO: Update front end
-            // Controller.Singleton.GetVertexObj( posData.Item1 ).transform.position = new Vector3( posData.Item3.X, posData.Item3.Y, 0 );
+            Controller.Singleton.GetVertexObj( posData.Item1[i] ).MovePosition(new Vector3( posData.Item3[i].X, posData.Item3[i].Y, 0 ));
         }
     }
 
@@ -410,7 +410,7 @@ public class GraphModification
             styleData.Item1[ i ].SetStyle( styleData.Item3[ i ], false );
 
             // Update front end
-            // Controller.Singleton.GetVertexObj( styleData.Item1 ).SetStyle( styleData.Item3, false );
+            Controller.Singleton.GetVertexObj( styleData.Item1[ i ] ).SetStyle( styleData.Item3[ i ], false );
         }
     }
 

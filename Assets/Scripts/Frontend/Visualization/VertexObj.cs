@@ -197,4 +197,14 @@ public class VertexObj : MonoBehaviour
             Destroy(newCol);
         }
     }
+
+    public void MovePosition(Vector3 newPosition)
+    {
+        if (Grid.Singleton.GridEnabled)
+        {
+            Grid.Singleton.RemoveFromOccupied(this);
+            this.transform.position = newPosition;
+            this.transform.position = Grid.Singleton.FindClosestGridPosition(this);
+        }
+    }
 }
