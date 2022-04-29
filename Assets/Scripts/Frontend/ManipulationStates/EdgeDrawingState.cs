@@ -34,12 +34,12 @@ public class EdgeDrawingState : ManipulationState
 
     public void OnRightClick()
     {
-        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        Toolbar.Singleton.EnterViewMode();
     }
 
     public override void OnVertexClick(GameObject clicked)
     {
         Controller.Singleton.AddEdge(startingVertex.Vertex, clicked.GetComponent<VertexObj>().Vertex, this.edgeTemplate.Directed);
-        ManipulationStateManager.Singleton.ActiveState = ManipulationState.viewState;
+        Toolbar.Singleton.EnterViewMode();
     }
 }

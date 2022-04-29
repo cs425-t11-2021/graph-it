@@ -18,9 +18,30 @@ public class CameraZoom : MonoBehaviour
     // Reference to the Camera component attached to this object
     private Camera cam;
 
+    // Store values for different tabes
+    private Dictionary<uint, (float, Vector3)> storedZoomValues;
+
     private void Awake() {
         // Get a reference to the Camera component of the current gameObject
         cam = gameObject.GetComponent<Camera>();
+
+        this.storedZoomValues = new Dictionary<uint, (float, Vector3)>();
+
+        Controller.Singleton.OnInstanceCreated += instance => {
+            this.storedZoomValues[instance.id] = (8, new Vector3(0, 0, -10f));
+        };
+
+        Controller.Singleton.OnInstanceDeleted += instance => {
+            this.storedZoomValues.Remove(instance.id);
+        };
+
+        Controller.Singleton.OnInstanceChanged += (previous, current) => {
+            if (previous != null && this.storedZoomValues.ContainsKey(previous.id))
+                this.storedZoomValues[previous.id] = (this.cam.orthographicSize, this.cam.transform.position);
+
+            this.cam.orthographicSize = this.storedZoomValues[current.id].Item1;
+            this.cam.transform.position = this.storedZoomValues[current.id].Item2;
+        };
     }
 
     private void Update() {
@@ -50,22 +71,4 @@ public class CameraZoom : MonoBehaviour
         // Set camera position to new position
         transform.position = targetPos;
     }
-
-    // // Method which changes the camera's orthographic size to zooom in or out until the zoom target is reached
-    // // Uses the zoomSpeed variable to limit the speed at which the camera zoom occurs
-    // private void ZoomUntilTarget() {
-    //     // Change the camera size based on the difference between target size, current size, and zoom speed
-    //     float zoomDifference = zoomTarget - camera.orthographicSize;
-    //     camera.orthographicSize += zoomDifference * zoomSpeed * Time.deltaTime;
-
-    //     // Clamp the camera's size to make sure the zoom doesn't overshoot the target
-    //     if (zoomDifference > 0) {
-    //         camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, 0f, zoomTarget);
-    //     }
-    //     else {
-    //         camera.orthographicSize = Mathf.Clamp(camera.orthographicSize, zoomTarget, float.PositiveInfinity);
-    //     }
-
-    //     transform.position = Vector3.MoveTowards(transform.position, zoomCenter, centeringSpeed * Time.deltaTime);
-    // }
 }

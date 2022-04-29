@@ -22,7 +22,6 @@ public class VertexObj : MonoBehaviour
     private Color selectedColor = new Color32(0, 125, 255, 255);
 
     private int resultStatus = 0;
-    private float resultTimer = 0f;
 
     // Property for whether or not the vertex object is selected
     private bool selected;
@@ -56,7 +55,6 @@ public class VertexObj : MonoBehaviour
             else if (this.resultStatus == 1)
             {
                 this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-                this.resultTimer = 0f;
             }
         }
     }
@@ -100,19 +98,7 @@ public class VertexObj : MonoBehaviour
 
         if (resultStatus == 1)
         {
-            if (resultTimer <= 0f)
-            {
-                resultTimer = 0.33f;
-                if (this.spriteRenderer.color == normalColor)
-                {
-                    this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-                }
-                else
-                {
-                    this.spriteRenderer.color = this.normalColor;
-                }
-            }
-            resultTimer -= Time.deltaTime;
+            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
         }
         else if (resultStatus == 2)
         {

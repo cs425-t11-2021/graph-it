@@ -9,11 +9,6 @@ public class GraphViewState : ManipulationState
 
     // Subscribe to appropriate input events on state enter
     public override void OnStateEnter() {
-        GameObject cursorVertex = InputManager.Singleton.CurrentHoveringVertex;
-        if (cursorVertex) {
-            // SelectionManager.Singleton.SelectVertex(cursorVertex.GetComponent<VertexObj>());
-        }
-
         InputManager.Singleton.OnMouseDragStart += OnDragStart;
         InputManager.Singleton.OnMouseDragEnd += OnDragEnd;
         InputManager.Singleton.OnMouseClickInPlace += OnClickInPlace;

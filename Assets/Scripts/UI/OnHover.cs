@@ -20,10 +20,12 @@ public class OnHover : MonoBehaviour
     }
     
    public void OnHoverMouse(){
+       if (!this.enabled) return;
+       
         this.newLabel = Instantiate(labelPrefab, UIManager.Singleton.mainCanvas.transform).GetComponent<OnHoverLabel>();
         this.newLabel.CreateLabel(this.labelDescription, this.size);
         this.newLabel.transform.SetAsLastSibling();
-        this.newLabel.transform.position = this.transform.position + this.offset;
+        this.newLabel.transform.position = (Vector3) this.GetComponent<RectTransform>().GetScreenRect().center + this.offset;
    }
 
     public void OnHoverExit()
