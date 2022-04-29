@@ -419,7 +419,6 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         this.autoStepThroughPlaying = false;
         this.autoStepThroughToggle.UpdateStatus(false);
     }
-    
 
     public void Search(string term)
     {

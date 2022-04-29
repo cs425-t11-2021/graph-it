@@ -16,11 +16,9 @@ public class UIManager : SingletonBehavior<UIManager>
     [SerializeField] private GameObject algPanel;
     [SerializeField] private Button openAlgPanel;
     [SerializeField] private GameObject tabsBar;
-    //[SerializeField] private GameObject importFileMenu;
-    //[SerializeField] private GameObject exportFileMenu;
-    //[SerializeField] private GameObject importErrorDialog;
     [SerializeField] private GameObject toolbar;
     [SerializeField] public GameObject mainCanvas;
+    [SerializeField] public GameObject worldCanvas;
     [SerializeField] public GameObject selectionRect;
     
 

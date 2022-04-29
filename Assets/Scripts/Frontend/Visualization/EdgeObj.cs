@@ -361,7 +361,7 @@ public class EdgeObj : MonoBehaviour
     }
     // When Cursor enters a edge obj, increase its sprite object size by 33%
     // TODO: Change this to be controlled by an animator later
-    private void OnMouseOver()
+    private void OnMouseEnter()
     {
         this.hovering = true;
         UpdateSpline();

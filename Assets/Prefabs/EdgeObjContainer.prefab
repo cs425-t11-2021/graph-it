@@ -1048,6 +1048,7 @@ GameObject:
   - component: {fileID: 9056994100037127504}
   - component: {fileID: 9056994100037127506}
   - component: {fileID: 1601714112661618325}
+  - component: {fileID: 5730833882106916066}
   m_Layer: 8
   m_Name: EdgeObj
   m_TagString: Edge
@@ -1140,3 +1141,18 @@ MonoBehaviour:
   - name: algorithm_none
     color: {r: 0, g: 0, b: 0, a: 0.5882353}
   defaultSortingOrder: -5
+--- !u!114 &5730833882106916066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9056994100037127510}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56cd1f573cf084936aadd4016c103acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  offset: {x: 0, y: 0, z: 0}
+  size: {x: 249, y: 40}
