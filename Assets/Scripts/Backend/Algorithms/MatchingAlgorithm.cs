@@ -9,8 +9,8 @@ using System.Collections.Generic;
 public class MatchingAlgorithm : Algorithm
 {
     private int nu;
-    private List< Vertex > maxMatchingVertices;
-    private List< Edge > maxMatchingEdges;
+    private List< Vertex > maxMatchingVertices = null;
+    private List< Edge > maxMatchingEdges = null;
 
     public MatchingAlgorithm( AlgorithmManager algoManager, bool display ) : base(algoManager)
     {
@@ -23,30 +23,35 @@ public class MatchingAlgorithm : Algorithm
 
     public override void Run()
     {
-        List< Edge > edges = this.Graph.Adjacency.Values.Where( edge => edge.Directed || edge.vert1 < edge.vert2 ).ToList();
-        bool[] set = new bool[ edges.Count ];
-        this.nu = edges.Count;
-
-        while ( !this.IsMatching( edges, set ) || !this.HasSpecifiedCardinality( set, this.nu ) )
+        List< Edge > edges = this.Graph.Adjacency.Values.ToList();
+        if ( edges.Count == 0 )
+            this.nu = 0;
+        else
         {
-            if ( this.nu < 0 ) // something really bad happended
-                this.CreateError( "Matching could not be computed." );
-            if ( set.All( s => s ) )
+            bool[] set = new bool[ edges.Count ];
+            this.nu = edges.Count;
+
+            while ( !this.IsMatching( edges, set ) || !this.HasSpecifiedCardinality( set, this.nu ) )
             {
-                this.nu--;
-                Array.Clear( set, 0, set.Length );
+                if ( this.nu < 0 ) // something really bad happended
+                    this.CreateError( "Matching could not be computed." );
+                if ( set.All( s => s ) )
+                {
+                    this.nu--;
+                    Array.Clear( set, 0, set.Length );
+                }
+                this.UpdateSet( set );
             }
-            this.UpdateSet( set );
-        }
 
-        // retrieve max matching
-        this.maxMatchingEdges = new List< Edge >();
-        for ( int i = 0; i < set.Length; ++i )
-        {
-            if ( set[ i ] )
-                this.maxMatchingEdges.Add( edges[ i ] );
+            // retrieve max matching
+            this.maxMatchingEdges = new List< Edge >();
+            for ( int i = 0; i < set.Length; ++i )
+            {
+                if ( set[ i ] )
+                    this.maxMatchingEdges.Add( edges[ i ] );
+            }
+            this.maxMatchingVertices = new List< Vertex >( Edge.GetIncidentVertices( this.maxMatchingEdges ) );
         }
-        this.maxMatchingVertices = new List< Vertex >( Edge.GetIncidentVertices( this.maxMatchingEdges ) );
     }
 
     private bool IsMatching( List< Edge > edges, bool[] set )
