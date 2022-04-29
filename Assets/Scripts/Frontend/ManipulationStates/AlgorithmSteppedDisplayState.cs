@@ -62,7 +62,7 @@ public class AlgorithmSteppedDisplayState : ManipulationState
             InWorldHover labelCreator = vertexObj.GetComponent<InWorldHover>();
             
             bool contained = false;
-            if (this.currentStep.considerVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.considerVerts?.Contains(vertexObj.Vertex) ?? false)
             {
                 vertexObj.visualsAnimator.ChangeState("algorithm_considering");
                 contained = true;
@@ -70,7 +70,7 @@ public class AlgorithmSteppedDisplayState : ManipulationState
                 labelCreator.enabled = true;
                 labelCreator.Label = "Vertex under consideration";
             }
-            if (this.currentStep.resultVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.resultVerts?.Contains(vertexObj.Vertex) ?? false)
             {
                 vertexObj.visualsAnimator.ChangeState("algorithm_result");
                 contained = true;
@@ -78,7 +78,7 @@ public class AlgorithmSteppedDisplayState : ManipulationState
                 labelCreator.enabled = true;
                 labelCreator.Label = "Vertex in result";
             }
-            if (this.currentStep.newVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.newVerts?.Contains(vertexObj.Vertex) ?? false)
             {
                 vertexObj.visualsAnimator.ChangeState("algorithm_new");
                 contained = true;

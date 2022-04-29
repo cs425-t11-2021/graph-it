@@ -72,6 +72,19 @@ public class Graph
         }
     }
 
+    public bool NegativeWeighted // true is there is an edge with negative weight
+    {
+        get
+        {
+            foreach ( KeyValuePair< ( Vertex, Vertex ), Edge > kvp in this.Adjacency )
+            {
+                if ( kvp.Value.Weight < 0 )
+                    return true;
+            }
+            return false;
+        }
+    }
+
     public bool Simple // false if multiple edges. false if loops on vertices (unless directed)
     {
         get
@@ -155,71 +168,71 @@ public class Graph
 
     public ( List< Vertex >, List< Edge > ) Add( List< Vertex > vertices, List< Edge > edges, bool recordChange=true )
     {
-        this.Add( vertices, false );
-        this.Add( edges, false );
-
         if ( recordChange )
             new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >( vertices ), new HashSet< Edge >( edges ) ) );
+
+        this.Add( vertices, false );
+        this.Add( edges, false );
         return ( vertices, edges );
     }
 
     public ( List< Vertex >, Edge ) Add( List< Vertex > vertices, Edge edge, bool recordChange=true )
     {
-        this.Add( vertices, false );
-        this.Add( edge, false );
-
         if ( recordChange )
             new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >( vertices ), new HashSet< Edge >() { edge } ) );
+
+        this.Add( vertices, false );
+        this.Add( edge, false );
         return ( vertices, edge );
     }
 
     public ( Vertex, List< Edge > ) Add( Vertex vert, List< Edge > edges, bool recordChange=true )
     {
-        this.Add( vert, false );
-        this.Add( edges, false );
-
         if ( recordChange )
             new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >() { vert }, new HashSet< Edge >( edges ) ) );
+
+        this.Add( vert, false );
+        this.Add( edges, false );
         return ( vert, edges );
     }
 
     public List< Vertex > Add( List< Vertex > vertices, bool recordChange=true )
     {
-        foreach ( Vertex vert in vertices )
-            this.Add( vert, false );
-
         if ( recordChange )
             new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >( vertices ), ( HashSet< Edge > ) null ) );
+
+        foreach ( Vertex vert in vertices )
+            this.Add( vert, false );
         return vertices;
     }
 
     public List< Edge > Add( List< Edge > edges, bool recordChange=true )
     {
-        foreach ( Edge edge in edges )
-            this.Add( edge, false );
-
         if ( recordChange )
             new GraphModification( this, Modification.ADD_COLLECTION, ( ( HashSet< Vertex > ) null, new HashSet< Edge >( edges ) ) );
+
+        foreach ( Edge edge in edges )
+            this.Add( edge, false );
         return edges;
     }
 
     public ( Vertex, Edge ) Add( Vertex vert, Edge edge, bool recordChange=true )
     {
-        this.Add( vert, false );
-        this.Add( edge, false );
-
         if ( recordChange )
             new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >() { vert }, new HashSet< Edge >() { edge } ) );
+
+        this.Add( vert, false );
+        this.Add( edge, false );
         return ( vert, edge );
     }
 
     public Vertex Add( Vertex vert, bool recordChange=true )
     {
-        vert.CreateMod = ( Action< Modification, System.Object > ) this.CreateModificationAction;
-        this.Vertices.Add( vert );
-
         if ( recordChange )
             new GraphModification( this, Modification.ADD_COLLECTION, ( new HashSet< Vertex >() { vert }, ( HashSet< Edge > ) null ) );
+
+        vert.CreateMod = ( Action< Modification, System.Object > ) this.CreateModificationAction;
+        this.Vertices.Add( vert );
         return vert;
     }
 
@@ -231,6 +244,9 @@ public class Graph
 
     public Edge Add( Edge edge, bool recordChange=true )
     {
+        if ( recordChange )
+            new GraphModification( this, Modification.ADD_COLLECTION, ( ( HashSet< Vertex > ) null, new HashSet< Edge >() { edge } ) );
+
         if ( !this.Vertices.Contains( edge.vert1 ) || !this.Vertices.Contains( edge.vert2 ) )
             throw new System.Exception( "Edge is incident to one or more vertices that have not been added to the graph." );
 
@@ -243,8 +259,6 @@ public class Graph
         if ( !edge.Directed )
             this.Adjacency[ ( edge.vert2, edge.vert1 ) ] = edge;
 
-        if ( recordChange )
-            new GraphModification( this, Modification.ADD_COLLECTION, ( ( HashSet< Vertex > ) null, new HashSet< Edge >() { edge } ) );
         return edge;
     }
 
@@ -269,9 +283,6 @@ public class Graph
 
     public void Remove( List< Vertex > vertices, Edge edge, bool recordChange=true )
     {
-        this.Remove( vertices, false );
-        this.Remove( edge, false );
-
         if ( recordChange )
         {
             HashSet< Vertex > vertexSet = new HashSet< Vertex >( vertices );
@@ -279,66 +290,72 @@ public class Graph
             edgeSet.Add( edge );
             new GraphModification( this, Modification.REMOVE_COLLECTION, ( vertexSet, edgeSet ) );
         }
+
+        this.Remove( vertices, false );
+        this.Remove( edge, false );
     }
 
     public void Remove( Vertex vert, List< Edge > edges, bool recordChange=true )
     {
-        this.Remove( vert, false );
-        this.Remove( edges, false );
-
         if ( recordChange )
         {
             HashSet< Edge > edgeSet = this.GetIncidentEdges( vert );
             edgeSet.UnionWith( edges );
             new GraphModification( this, Modification.REMOVE_COLLECTION, ( new HashSet< Vertex >() { vert }, edgeSet ) );
         }
+
+        this.Remove( vert, false );
+        this.Remove( edges, false );
     }
 
     public void Remove( List< Vertex > vertices, bool recordChange=true )
     {
-        foreach ( Vertex vert in vertices )
-            this.Remove( vert, false );
-
         if ( recordChange )
         {
             HashSet< Vertex > vertexSet = new HashSet< Vertex >( vertices );
             new GraphModification( this, Modification.REMOVE_COLLECTION, ( vertexSet, this.GetIncidentEdges( vertexSet ) ) );
         }
+
+        foreach ( Vertex vert in vertices )
+            this.Remove( vert, false );
     }
 
     public void Remove( List< Edge > edges, bool recordChange=true )
     {
-        foreach ( Edge edge in edges )
-            this.Remove( edge, false );
-
         if ( recordChange )
             new GraphModification( this, Modification.REMOVE_COLLECTION, ( ( HashSet< Edge > ) null, new HashSet< Edge >( edges ) ) );
+
+        foreach ( Edge edge in edges )
+            this.Remove( edge, false );
     }
 
     public void Remove( Vertex vert, Edge edge, bool recordChange=true )
     {
-        this.Remove( vert, false );
-        this.Remove( edge, false );
-
         if ( recordChange )
         {
             HashSet< Edge > edgeSet = this.GetIncidentEdges( vert );
             edgeSet.Add( edge );
             new GraphModification( this, Modification.REMOVE_COLLECTION, ( new HashSet< Vertex >() { vert }, edgeSet ) );
         }
+
+        this.Remove( vert, false );
+        this.Remove( edge, false );
     }
 
     public void Remove( Vertex vert, bool recordChange=true )
     {
-        this.Remove( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), false );
-        this.Vertices.Remove( vert );
-
         if ( recordChange )
             new GraphModification( this, Modification.REMOVE_COLLECTION, ( new HashSet< Vertex >() { vert }, this.GetIncidentEdges( vert ) ) );
+
+        this.Remove( this.Adjacency.Values.Where( edge => edge.vert1 == vert || edge.vert2 == vert ).ToList(), false );
+        this.Vertices.Remove( vert );
     }
 
     public void Remove( Edge edge, bool recordChange=true )
     {
+        if ( recordChange )
+            new GraphModification( this, Modification.REMOVE_COLLECTION, ( ( HashSet< Vertex > ) null, new HashSet< Edge >() { edge } ) );
+
         if ( edge.Directed )
             this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
         else
@@ -346,9 +363,6 @@ public class Graph
             this.Adjacency.Remove( ( edge.vert1, edge.vert2 ) );
             this.Adjacency.Remove( ( edge.vert2, edge.vert1 ) );
         }
-
-        if ( recordChange )
-            new GraphModification( this, Modification.REMOVE_COLLECTION, ( ( HashSet< Vertex > ) null, new HashSet< Edge >() { edge } ) );
     }
 
     public void Undo()
