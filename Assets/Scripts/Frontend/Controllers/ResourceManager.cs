@@ -9,7 +9,7 @@ public class ResourceManager : SingletonBehavior<ResourceManager>
 
     private void Awake()
     {
-        LoadVertexSprites();
+        // LoadVertexSprites();
     }
 
     public void LoadVertexSprites()
