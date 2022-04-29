@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class AlgorithmInitiationState : ManipulationState
 {
 
     private GraphDisplayAlgorithmAssociation currentAssociation;
+    private Notification notification;
     private int selectedVertices = 0;
 
     public override void OnStateEnter()
@@ -33,7 +35,7 @@ public class AlgorithmInitiationState : ManipulationState
             labelCreator.Label = "Select for " + this.currentAssociation.displayName;
         }
 
-        NotificationManager.Singleton.CreateNotification(string.Format("Please select <#0000FF> {0} </color> vertices for <#0000FF> {1}</color>.", this.currentAssociation.requiredVertices, this.currentAssociation.algorithmClass), 3);
+        this.notification = NotificationManager.Singleton.CreateNotification(string.Format("Please select <#0000FF> {0} </color> vertices for <#0000FF> {1}</color>.", this.currentAssociation.requiredVertices, this.currentAssociation.displayName));
     }
 
     public override void OnVertexClick(GameObject clicked)
@@ -60,6 +62,12 @@ public class AlgorithmInitiationState : ManipulationState
         {
             InWorldHover labelCreator = vertexObj.GetComponent<InWorldHover>();
             labelCreator.enabled = false;
+        }
+
+        if (this.notification != null)
+        {
+            Controller.Destroy(this.notification.gameObject);
+            this.notification = null;
         }
     }
 }

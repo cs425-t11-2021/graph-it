@@ -44,7 +44,7 @@ public class GraphDisplayAlgorithmAssociation
                 if (result.type == AlgorithmResultType.ERROR)
                 {
                     Logger.Log("Graph display algorithm " + algorithmClass + " errored.", this, LogType.ERROR);
-                    NotificationManager.Singleton.CreateNotification(string.Format("{0} <color=red>Error: {1}</color>", algorithmClass, result.desc), 3);
+                    NotificationManager.Singleton.CreateNotification(string.Format("{0} <color=red>Error: {1}</color>", this.displayName, result.desc), 3);
                 }
                 else
                 {
@@ -59,7 +59,7 @@ public class GraphDisplayAlgorithmAssociation
                         AlgorithmsPanel.Singleton.AlgorithmVertexPrams = vertexParms;
                     }
 
-                    NotificationManager.Singleton.CreateNotification("<#0000FF>" + this.algorithmClass + "</color> finished.", 3);
+                    NotificationManager.Singleton.CreateNotification("<#0000FF>" + this.displayName + "</color> finished.", 3);
                 }
             };
         }
@@ -286,10 +286,6 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             this.runButton.UpdateStatus(false);
         }
     }
-
-    // public void DisplayAlgorithmResult() {
-    //     ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
-    // }
 
     public void ClearAlgorithmResults() {
         this.algorithmResults = new AlgorithmResult[this.associations.Length];

@@ -10,6 +10,7 @@ public class AlgorithmDisplayState : ManipulationState
 
     private AlgorithmResult algorithmResult;
     private List<string> infoResults;
+    private Notification notification;
 
     public override void OnStateEnter()
     {
@@ -90,6 +91,8 @@ public class AlgorithmDisplayState : ManipulationState
             AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = output;
             AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);
         }
+        
+        this.notification = NotificationManager.Singleton.CreateNotification(string.Format("Showing <#0000FF>{0}</color> results.", AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName));
     }
 
     IEnumerator DisplayEdgesSequentially(float gap, List<EdgeObj> edgeObjs)
@@ -113,5 +116,11 @@ public class AlgorithmDisplayState : ManipulationState
         AlgorithmsPanel.Singleton.extraInfoPanel.GetComponentInChildren<TMP_InputField>(true).text = "";
         AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);
         ManipulationStateManager.Singleton.StopAllCoroutines();
+        
+        if (this.notification != null)
+        {
+            Controller.Destroy(this.notification.gameObject);
+            this.notification = null;
+        }
     }
 }
