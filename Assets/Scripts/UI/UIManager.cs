@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using TMPro;
 
 public class UIManager : SingletonBehavior<UIManager>
 {
@@ -53,6 +54,8 @@ public class UIManager : SingletonBehavior<UIManager>
             Array.ForEach(algsButtons, togButton => togButton.enabled = value);
             Button[] closeAlgPanel = this.algPanel.GetComponentsInChildren<Button>(true);
             Array.ForEach(closeAlgPanel, button => button.enabled = value);
+            TMP_InputField[] fields = this.algPanel.GetComponentsInChildren<TMP_InputField>(true);
+            Array.ForEach(fields, f => f.interactable = value);
         }
     }
 
