@@ -102,6 +102,11 @@ public abstract class Algorithm
             RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
     }
 
+    protected void UpdateUIWithEstimate()
+    {
+        RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoEstimate( this, this.AlgoManager ) );
+    }
+
     public abstract AlgorithmResult GetResult();
 
     protected AlgorithmResult GetErrorResult() => new AlgorithmResult( AlgorithmResultType.ERROR, this.errorDesc );

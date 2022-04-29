@@ -40,6 +40,33 @@ public class GraphInfoAlgorithmAssociation
                 {
                     GraphInfo.Singleton.SetInfoAlgorithmResult( this, lead + ": " + Convert.ToString(Convert.ChangeType(result.results.First().Value.Item1, result.results.First().Value.Item2)));
                 }
+                else if (result.type == AlgorithmResultType.ESTIMATE)
+                {
+                    GraphInfo.Singleton.SetInfoAlgorithmResult( this, 
+                        "<color=grey><size=-8>" +
+                        result.results.Keys.ElementAt(0).ToTitleCase() + ": " + Convert.ToString(Convert.ChangeType(result.results.Values.ElementAt(0).Item1, result.results.Values.ElementAt(0).Item2)) + "\n" +
+                        result.results.Keys.ElementAt(1).ToTitleCase() + ": " + Convert.ToString(Convert.ChangeType(result.results.Values.ElementAt(1).Item1, result.results.Values.ElementAt(1).Item2)) + "</size></color>");
+                }
+            };
+        }
+    }
+
+    public Action OnEstimateUpdateUI
+    {
+        get
+        {
+            return () =>
+            {
+                AlgorithmResult result = (AlgorithmResult) Type.GetType("AlgorithmManager").GetMethod(completedMethod + "Estimate")
+                    .Invoke(Controller.Singleton.AlgorithmManager, null);
+                
+                if (result.type == AlgorithmResultType.ESTIMATE)
+                {
+                    GraphInfo.Singleton.SetInfoAlgorithmResult( this, 
+                        "<color=grey>" +
+                        result.results.Keys.ElementAt(0).ToTitleCase() + ": " + Convert.ToString(Convert.ChangeType(result.results.Values.ElementAt(0).Item1, result.results.Values.ElementAt(0).Item2)) + "\n" +
+                        result.results.Keys.ElementAt(1).ToTitleCase() + ": " + Convert.ToString(Convert.ChangeType(result.results.Values.ElementAt(1).Item1, result.results.Values.ElementAt(1).Item2)) + "</color>");
+                }
             };
         }
     }
@@ -92,6 +119,27 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
             if (association.algorithmClass == algorithmName)
             {
                 association.OnCompleteUpdateUI();
+                RefreshGraphInfoUI();
+                return;
+            }
+        }
+    }
+
+    public void UpdateGraphInfoEstimate(Algorithm algorithm, AlgorithmManager algoMan)
+    {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
+        string algorithmName = algorithm.GetType().ToString();
+
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                association.OnEstimateUpdateUI();
                 RefreshGraphInfoUI();
                 return;
             }

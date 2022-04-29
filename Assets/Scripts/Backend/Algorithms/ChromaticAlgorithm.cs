@@ -34,6 +34,7 @@ public class ChromaticAlgorithm : Algorithm
             this.WaitUntilMaxDegreeComplete();
             this.upperBound = ( int ) this.AlgoManager.GetMaxDegree().results[ "maximum degree" ].Item1 + 1;
             this.estimated = true;
+            this.UpdateUIWithEstimate();
 
             this.chi = this.lowerBound;
             while ( !this.IsProperColoring( coloring ) )
@@ -87,8 +88,8 @@ public class ChromaticAlgorithm : Algorithm
         if ( this.estimated && !this.complete )
         {
             result = new AlgorithmResult( AlgorithmResultType.ESTIMATE );
-            result.results[ "chromatic number lower bound" ] = ( this.lowerBound, typeof ( int ) );
-            result.results[ "chromatic number upper bound" ] = ( this.upperBound, typeof ( int ) );
+            result.results[ "chromatic lower bound" ] = ( this.lowerBound, typeof ( int ) );
+            result.results[ "chromatic upper bound" ] = ( this.upperBound, typeof ( int ) );
             return result;
         }
         if ( this.running )

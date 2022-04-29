@@ -119,6 +119,14 @@ public class AlgorithmManager
             throw new System.Exception( "Cannot retrieve algorithm result when algorithm is not complete." ); // TODO: replace with custom error
         return this.complete[ hash ].GetResult();
     }
+    
+    public AlgorithmResult GetEstimate( Type algorithm, params object[] parms )
+    {
+        int hash = ( int ) algorithm.GetMethod( "GetHash" ).Invoke( null, parms );
+        if (!this.IsRunning(hash))
+            return GetResult(algorithm, parms);
+        return this.running[ hash ].GetResult();
+    }
 
     public AlgorithmResult GetAdjacencyMatrix() => this.GetResult( typeof ( AdjacencyMatrixAlgorithm ) );
 
@@ -133,6 +141,7 @@ public class AlgorithmManager
     public AlgorithmResult GetDiameter() => this.GetResult( typeof ( DiameterAlgorithm ) );
 
     public AlgorithmResult GetChromatic() => this.GetResult( typeof ( ChromaticAlgorithm ) );
+    public AlgorithmResult GetChromaticEstimate() => this.GetEstimate( typeof ( ChromaticAlgorithm ) );
 
     public AlgorithmResult GetIndependence() => this.GetResult( typeof ( IndependenceAlgorithm ) );
 
@@ -147,7 +156,7 @@ public class AlgorithmManager
     public AlgorithmResult GetFleurys() => this.GetResult( typeof ( FleurysAlgorithm ) );
 
     public AlgorithmResult GetPrims( Vertex root ) => this.GetResult( typeof ( PrimsAlgorithm ), root );
-
+    
     public AlgorithmResult GetKruskals() => this.GetResult( typeof ( KruskalsAlgorithm ) );
 
     public AlgorithmResult GetDijkstras( Vertex src, Vertex dest ) => this.GetResult( typeof ( DijkstrasAlgorithm ), src, dest );
