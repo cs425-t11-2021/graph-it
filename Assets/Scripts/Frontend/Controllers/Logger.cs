@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
+using UnityEngine;
+using Object = System.Object;
 
 // Enum for types of logging messages
 public enum LogType {ERROR, WARNING, INFO, DEBUG}
@@ -18,12 +17,12 @@ public class Logger : SingletonBehavior<Logger>
     public static string TEST = "Test.";
 
     // Static method to print a log
-    public static void Log(string message, System.Object caller, LogType logType = LogType.DEBUG) {
-        Logger.Singleton.SendLog(message, caller, logType);
+    public static void Log(string message, Object caller, LogType logType = LogType.DEBUG) {
+        Singleton.SendLog(message, caller, logType);
     }
 
     // Method to print a log
-    private void SendLog(string message, System.Object caller, LogType logType = LogType.DEBUG) {
+    private void SendLog(string message, Object caller, LogType logType = LogType.DEBUG) {
         Type callerType = caller.GetType();
 
         if (logType <= this.loggingLevel) {

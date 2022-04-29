@@ -1,9 +1,5 @@
 using System;
-using System.Reflection;
-using System.Collections;
-using System.Collections.Generic;
 using System.Collections.Concurrent;
-using UnityEngine;
 
 // Class used by algorithms to run actions on the main Unity thread
 public class RunInMain : SingletonBehavior<RunInMain>

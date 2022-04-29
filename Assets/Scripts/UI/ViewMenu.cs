@@ -1,10 +1,7 @@
 //All code developed by Team 11
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
+
 using TMPro;
-using UnityEngine.EventSystems;
+using UnityEngine;
 
 // Class for hosting functions called by buttons of the View dropdown menu, inherits from MenuButton
 public class ViewMenu : MenuButton

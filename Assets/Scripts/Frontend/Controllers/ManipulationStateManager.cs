@@ -1,6 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+
 
 // Class for managing the manipulation FSM
 public class ManipulationStateManager : SingletonBehavior<ManipulationStateManager>

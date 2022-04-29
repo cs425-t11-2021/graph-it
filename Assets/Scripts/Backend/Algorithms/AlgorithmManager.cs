@@ -52,6 +52,7 @@ public class AlgorithmManager
         {
             if ( this.IsComplete( hash ) )
             {
+                Logger.Log(algorithm.ToString(), this, LogType.WARNING);
                 RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this.complete.GetValue( hash ), this ) );
                 RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this.complete.GetValue( hash ), this.complete.GetValue( hash ).vertexParms, this ) );
             }

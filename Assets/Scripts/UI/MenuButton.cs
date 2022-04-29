@@ -1,11 +1,6 @@
 //All code developed by Team 11
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 // Base class derived by all menu bar buttons
 public abstract class MenuButton : MonoBehaviour

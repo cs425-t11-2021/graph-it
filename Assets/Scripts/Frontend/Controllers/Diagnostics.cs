@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.Scripting;
+using Debug = UnityEngine.Debug;
 
 public class Diagnostics : SingletonBehavior<Diagnostics>
 {
@@ -16,7 +18,7 @@ public class Diagnostics : SingletonBehavior<Diagnostics>
         {
             Debug.developerConsoleVisible = true;
             StartCoroutine(LogMemoryUse());
-            Logger.Log("Incremental GC: " + UnityEngine.Scripting.GarbageCollector.isIncremental, this, LogType.WARNING);
+            Logger.Log("Incremental GC: " + GarbageCollector.isIncremental, this, LogType.WARNING);
         }
     }
 
@@ -25,7 +27,7 @@ public class Diagnostics : SingletonBehavior<Diagnostics>
         int iteration = 0;
         while (true)
         {
-            long memory = System.Diagnostics.Process.GetCurrentProcess().PrivateMemorySize64 / (1024*1024);
+            long memory = Process.GetCurrentProcess().PrivateMemorySize64 / (1024*1024);
             if (this.previousSecondMemory != 0)
             {
                 Logger.Log(String.Format("Process Memory: {0} mb, Rate: {1} mb/s", memory, memory - this.previousSecondMemory), this, LogType.INFO);

@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Security.Cryptography;
 using UnityEngine;
 
 public class AlgorithmInitiationState : ManipulationState
@@ -13,7 +10,6 @@ public class AlgorithmInitiationState : ManipulationState
     public override void OnStateEnter()
     {
         this.currentAssociation = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm;
-        Debug.Log(this.currentAssociation);
         if (this.currentAssociation == null) {
             Toolbar.Singleton.EnterViewMode();
         }

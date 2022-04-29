@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -31,7 +29,7 @@ public class ResourceManager : SingletonBehavior<ResourceManager>
             if (file.Extension == ".png")
             {
                 //Converts desired path into byte array
-                byte[] pngBytes = System.IO.File.ReadAllBytes(file.FullName);
+                byte[] pngBytes = File.ReadAllBytes(file.FullName);
  
                 //Creates texture and loads byte array data to create image
                 Texture2D tex = new Texture2D(2, 2);

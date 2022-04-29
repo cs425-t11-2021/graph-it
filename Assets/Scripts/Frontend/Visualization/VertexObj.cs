@@ -4,9 +4,8 @@
 #pragma warning disable 0436
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Vector2 = System.Numerics.Vector2;
 
 public class VertexObj : MonoBehaviour
 {
@@ -94,7 +93,7 @@ public class VertexObj : MonoBehaviour
         this.labelObj.Initiate(vertex.Label);
 
         // Update associated Vertex positions;
-        this.Vertex.SetPos( new System.Numerics.Vector2( transform.position.x, transform.position.y ), false );
+        this.Vertex.SetPos( new Vector2( transform.position.x, transform.position.y ), false );
     }
 
     // Set the hover animation when the mouse is hoving over the vertex object

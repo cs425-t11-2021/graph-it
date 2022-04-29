@@ -135,7 +135,7 @@ public class GirthAlgorithm : Algorithm
         return result;
     }
 
-    public static int GetHash() => typeof ( FleurysAlgorithm ).GetHashCode();
+    public static int GetHash() => typeof ( GirthAlgorithm ).GetHashCode();
 
-    public override int GetHashCode() => FleurysAlgorithm.GetHash();
+    public override int GetHashCode() => GirthAlgorithm.GetHash();
 }

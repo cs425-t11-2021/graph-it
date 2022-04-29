@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // https://answers.unity.com/questions/1013011/convert-recttransform-rect-to-screen-space.html

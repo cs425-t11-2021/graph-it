@@ -1,7 +1,7 @@
 // Taken from https://thomaslevesque.com/2019/11/18/using-foreach-with-index-in-c/
 
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 public static class ForeachExtension
 {

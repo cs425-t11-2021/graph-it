@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 // Script for controlling the movement of vertices (being dragged by the mouse)

@@ -1,10 +1,8 @@
 //All code developed by Team 11
+
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using System.Linq;
-using TMPro;
-using UnityEngine.EventSystems;
 
 public class VertexLabelObj : MonoBehaviour
 {

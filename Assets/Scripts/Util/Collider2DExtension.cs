@@ -1,9 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Permissions;
 using UnityEngine;
 
 public static class Collider2DExtension

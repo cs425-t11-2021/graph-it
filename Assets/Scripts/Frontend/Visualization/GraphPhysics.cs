@@ -1,5 +1,5 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
 public class GraphPhysics : SingletonBehavior<GraphPhysics> {
     // Length of each edge (manually set for now, could implment an algorithm to determine the distance from graph size/shape or whatever)
