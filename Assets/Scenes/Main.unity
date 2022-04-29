@@ -10209,7 +10209,7 @@ MonoBehaviour:
     description: 
     activationButton: {fileID: 0}
   - algorithmClass: GirthAlgorithm
-    displayName: GIRTH
+    displayName: Girth
     enabled: 1
     requiredVertices: 0
     activationMethod: RunGirth
@@ -14698,8 +14698,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1159227432}
   m_HandleRect: {fileID: 1159227431}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.5121978
+  m_Value: 1.0000001
+  m_Size: 0.51219773
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -26337,7 +26337,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9850f836b15844948ae334bf78b594e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  labelObjPrefab: {fileID: 6196723052038055303, guid: da4251d5d588c4967a753fddf11e6197, type: 3}
 --- !u!114 &4782475346978306230
 MonoBehaviour:
   m_ObjectHideFlags: 0
