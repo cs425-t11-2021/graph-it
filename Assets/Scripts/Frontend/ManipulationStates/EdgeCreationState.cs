@@ -1,6 +1,7 @@
 using UnityEngine;
 
-// State for adding edges from a given vertex
+// Manipulation state activated from the toolbar for quickly adding new edges between vertices. When shift is held, enable the
+// creation of multiple edges from a single vertex.
 public class EdgeCreationState : ManipulationState
 {
     private VertexObj startingVertex;

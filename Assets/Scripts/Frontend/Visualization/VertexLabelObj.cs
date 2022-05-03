@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Class responsible for controlling the labels on edge objects. Functionalities include being able to detect Latex statements
+// and request the corresponding latex texture.
 public class VertexLabelObj : MonoBehaviour
 {
     //TODO: ADD COMMENTS

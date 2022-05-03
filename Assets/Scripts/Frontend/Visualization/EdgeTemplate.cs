@@ -1,5 +1,7 @@
 using UnityEngine;
 
+// Class responsible for controlling the behavior of the semi-transparent edge display that appears when the user double clicks
+// a vertex to create a new edge.
 public class EdgeTemplate : MonoBehaviour
 {
     [SerializeField] private Transform arrow;

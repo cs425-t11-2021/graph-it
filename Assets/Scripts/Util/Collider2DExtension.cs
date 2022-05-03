@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// Extension of the Unity Collider2D and PolygonCollider classes which adds a copy constructor for them.
 public static class Collider2DExtension
 {
     public static CircleCollider2D CopyFromCollider(this CircleCollider2D self, CircleCollider2D other)

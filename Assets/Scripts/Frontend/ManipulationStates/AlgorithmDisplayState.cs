@@ -5,13 +5,18 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 
+// State in the manipulation FSM representing the state in which the result of an algorithm is being displayed. All graph
+// manipulations are disabled. This state is a temporary solution.
 public class AlgorithmDisplayState : ManipulationState
 {
-
+    // Current AlgorithmResult being displayed
     private AlgorithmResult algorithmResult;
+    // List of extra information involved with the result
     private List<string> infoResults;
+    // Notification created by this class
     private Notification notification;
-
+    
+    // When the state is first entered, change the color of the graph components based on the result
     public override void OnStateEnter()
     {
         this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;

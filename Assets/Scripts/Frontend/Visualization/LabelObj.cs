@@ -2,6 +2,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+// Function for implementing graph labels that are independent of both edges and vertices. This feature is currently not finished
+// and graph labels are not currently enabled.
 public class LabelObj : MonoBehaviour
 {
     private string content;

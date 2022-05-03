@@ -3,7 +3,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// Class which stores a instance of graph datastructure along with its associated Unity objects
+// Class which stores a instance of graph data structure along with its associated Unity objects. This class
+// enables support for opening multiple graphs (tab system)
 public class GraphInstance
 {
     public uint id;

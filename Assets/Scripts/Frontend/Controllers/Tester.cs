@@ -1,8 +1,6 @@
 //All code developed by Team 11
 
-
-
-// Script used for testing purposes, disable before build
+// Class to store any functionality needed for temproary feature testing, currently empty.
 public class Tester : SingletonBehavior<Tester>
 {
 

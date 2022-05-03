@@ -1,5 +1,7 @@
 using UnityEngine;
 
+// Manipulation state which represents when the user double clicks on an vertex to create a new edge. Clicking on a blank part
+// of the graph toggles between directed/undirected edge.
 public class EdgeDrawingState : ManipulationState
 {
     private VertexObj startingVertex;

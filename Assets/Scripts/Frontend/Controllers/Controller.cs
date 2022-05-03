@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-// Central class for managing the graph instance, creation and deletion of graph objects
+// Central class for managing the graph instance, creation and deletion of graph objects. This class contains utility functions that are needed for 
+// various other modules in the program such as functions to find the Unity visualization object that correspond to each component in the graph data structure.
 public class Controller : SingletonBehavior<Controller>
 {
     // Prefabs for the unity vertex and edge objects

@@ -3,6 +3,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// Class for adding the zoom functionality to the camera. Limits are set for panning so the user cannot zoom too close
+// or too far from the graph.
 public class CameraZoom : MonoBehaviour
 {
     // The speed of zooming in and out (default at 100f)

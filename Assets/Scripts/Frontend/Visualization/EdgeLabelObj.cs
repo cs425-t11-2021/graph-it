@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+// Class responsible for controlling the labels on edge objects. Functionalities include automatically detecting numerical
+// labels and assigning it as the edge's weight.
 public class EdgeLabelObj : MonoBehaviour
 {
     // private double weight;

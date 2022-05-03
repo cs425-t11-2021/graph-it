@@ -5,7 +5,7 @@ using Object = System.Object;
 // Enum for types of logging messages
 public enum LogType {ERROR, WARNING, INFO, DEBUG}
 
-// Class for a program wider logger that takes into account different levels of logs
+// Class for a program wide logger that takes into account different levels of logs.
 public class Logger : SingletonBehavior<Logger>
 {
     // Level of logging currently being displayed in Unity

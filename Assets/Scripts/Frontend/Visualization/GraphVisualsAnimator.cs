@@ -10,6 +10,8 @@ public struct VisualState
     public Color color;
 }
 
+// Class used to handle the color and size rendering of Vertex and Edge objects for more flexibility. This functionality used to be
+// handled by the VertexObj and EdgeObj themselves. Uses a simplified FSM system.
 public class GraphVisualsAnimator : MonoBehaviour
 {
     [SerializeField] private Renderer[] renderers;

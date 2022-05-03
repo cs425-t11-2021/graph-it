@@ -1,6 +1,7 @@
 using UnityEngine;
 
-// Abstract base class of all manipulation states
+// Abstract base class of all manipulation states for the manipulation FSM. Also stores a reference to all the currently
+// supported manipulation states in the program.
 public abstract class ManipulationState
 {
     // Instance of each manipulation state

@@ -1,6 +1,7 @@
 using UnityEngine;
 
-// Selection state, left click to select multiple components, left click and drag on graph to select using the selection box
+// Manipulation state representing the selection state activated from toolbar, left click to select multiple components, left click and drag on graph to select using the selection box.
+// Has since been renamed to multi-select state but the code has yet to be updated.
 public class SelectionState : ManipulationState
 {
     // Reference to the selection box

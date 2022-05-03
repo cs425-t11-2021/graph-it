@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.Scripting;
 using Debug = UnityEngine.Debug;
 
+// Utility tool used to diagnose the memory usage of the program, including heap space. Should only be enabled for debugging purposes.
 public class Diagnostics : SingletonBehavior<Diagnostics>
 {
     [SerializeField] private bool printMemoryLogs = false;
@@ -21,7 +22,8 @@ public class Diagnostics : SingletonBehavior<Diagnostics>
             Logger.Log("Incremental GC: " + GarbageCollector.isIncremental, this, LogType.WARNING);
         }
     }
-
+    
+    // Function to log memory usage to the counsole
     private IEnumerator LogMemoryUse()
     {
         int iteration = 0;

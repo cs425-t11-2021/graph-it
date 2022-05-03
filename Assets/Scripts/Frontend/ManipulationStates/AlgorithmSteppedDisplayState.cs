@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using TMPro;
 
+// State in the manipulation FSM representing the state in which the result of an algorithm is being displayed and step-through is enabled. All graph
+// manipulations are disabled. This state is a temporary solution.
 public class AlgorithmSteppedDisplayState : ManipulationState
 {
     private AlgorithmResult algorithmResult;

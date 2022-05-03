@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Numerics;
 
-// Default viewing state, double click to add vertex, left click to select, shift + left click to select multiple
+// Default graph manipulation state, double click to add vertex, left click to select, shift + left click to select multiple.
+// This state has since been renamed in the UI to single selection mode, but the code has yet to be updated.
 public class GraphViewState : ManipulationState
 {
     // Whether or not graph objects are current being moved

@@ -1,5 +1,6 @@
 using UnityEngine;
 
+// In-world version of the OnHover UI label class.
 public class InWorldHover : MonoBehaviour
 {
     [SerializeField] private GameObject labelPrefab;

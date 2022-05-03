@@ -1,5 +1,7 @@
 using UnityEngine;
 
+// State in the manipulation FSM representing the state in which the user initiates an algorithm from the algorithm panel. All graph
+// manipulations are disabled aside from choosing vertices for the algorithm's parameter. This state is a temporary solution.
 public class AlgorithmInitiationState : ManipulationState
 {
 

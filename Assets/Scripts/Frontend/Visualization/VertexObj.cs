@@ -7,6 +7,8 @@ using System;
 using UnityEngine;
 using Vector2 = System.Numerics.Vector2;
 
+// Main class for controlling the vertex objects, corresponding to an vertex in the graph data structure. Handles most of the 
+// visual aspects of a vertex such as the sprite style.
 public class VertexObj : MonoBehaviour
 {
     // Property reference of the vertex associated with the vertex object

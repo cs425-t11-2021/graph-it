@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
 
+// Main class for controlling the edge objects, corresponding to an edge in the graph data structure. Handles most of the 
+// visual aspects of an edge such as curvature displays. Uses different Unity systems for curved vs straight edges to
+// improve performance.
 public class EdgeObj : MonoBehaviour
 {
     // Property reference of edge associated with the edge object

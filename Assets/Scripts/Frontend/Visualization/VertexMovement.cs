@@ -1,6 +1,6 @@
 using UnityEngine;
 
-// Script for controlling the movement of vertices (being dragged by the mouse)
+// Class for controlling the movement of vertices (being dragged by the mouse).
 public class VertexMovement : MonoBehaviour
 {
     // The distance between the starting position of the vertex and the cursor world position

@@ -1,4 +1,4 @@
-// Help from the following tutorials:
+// Received help from the following tutorials:
 // https://youtu.be/lT-SRLKUe5k
 // https://forum.unity.com/threads/rendering-screenshot-larger-than-screen-resolution.254760/
 
@@ -6,7 +6,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 
-// Class responsible for creating savable images from the current graph
+// Class responsible for creating savable images from the current graph.
 public class ScreenshotManager : SingletonBehavior<ScreenshotManager>
 {
     // Reference to the screenshot camera

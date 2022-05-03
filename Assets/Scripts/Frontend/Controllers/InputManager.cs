@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-// Central class for managing mouse and keyboard input using C# events
+// Central class for managing mouse and keyboard input using C# events. 
 public class InputManager : SingletonBehavior<InputManager>
 {
     // Actions associated with various input related events
