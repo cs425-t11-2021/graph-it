@@ -1,3 +1,4 @@
+//All code developed by Team 11
 //This is a testing script to experiment with detecting mouse hover over a UI element
 
 using System.Collections;
