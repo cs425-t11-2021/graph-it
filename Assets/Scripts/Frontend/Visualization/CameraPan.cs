@@ -1,9 +1,9 @@
 //All code developed by Team 11
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.EventSystems;
 
+using UnityEngine;
+
+// Class for adding the panning functionality to the camera. Limits are set for panning so the user cannot pan too far away
+// and lose the graph.
 public class CameraPan : MonoBehaviour
 {
     // Camera panning speed (default 100f)

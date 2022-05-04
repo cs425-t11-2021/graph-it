@@ -1,13 +1,13 @@
 //All code developed by Team 11 -- code that is not is indicated
 ////The file system (for importing, exporting, and saving)uses the UnityStandAloneFileBrowser Plugin found here: https://github.com/gkngkc/UnityStandaloneFileBrowser
-using System.Collections;
-using System.Collections.Generic;
+
 using System.IO;
-using System.Linq;
+using SFB;
+using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using SFB; //not developed by Team 11, from UnityStandAloneFileBrowser Plugin
+
+//not developed by Team 11, from UnityStandAloneFileBrowser Plugin
 
 // Class for hosting functions called by buttons of the File dropdown menu, inherits from MenuButton
 public class FileMenu : MenuButton
@@ -52,7 +52,7 @@ public class FileMenu : MenuButton
     public void Quit()
     {
         #if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
+        EditorApplication.isPlaying = false;
         #else
         Application.Quit();
         #endif

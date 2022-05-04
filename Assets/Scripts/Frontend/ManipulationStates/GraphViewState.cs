@@ -1,6 +1,8 @@
-using UnityEngine;
+using System.Collections.Generic;
+using System.Numerics;
 
-// Default viewing state, double click to add vertex, left click to select, shift + left click to select multiple
+// Default graph manipulation state, double click to add vertex, left click to select, shift + left click to select multiple.
+// This state has since been renamed in the UI to single selection mode, but the code has yet to be updated.
 public class GraphViewState : ManipulationState
 {
     // Whether or not graph objects are current being moved
@@ -32,7 +34,7 @@ public class GraphViewState : ManipulationState
         if (InputManager.Singleton.CurrentHoveringVertex) {
             VertexObj vertex = InputManager.Singleton.CurrentHoveringVertex.GetComponent<VertexObj>();
 
-            ManipulationStateManager.Singleton.ActiveState = ManipulationState.edgeDrawingState;
+            ManipulationStateManager.Singleton.ActiveState = edgeDrawingState;
             SelectionManager.Singleton.SelectVertex(vertex);
         }
         else {
@@ -117,6 +119,9 @@ public class GraphViewState : ManipulationState
     public void OnDragEnd() {
         if (!this.graphMovementInProgress) return;
 
+        List<Vertex> vertices = new List<Vertex>();
+        List<Vector2> newPositions = new List<Vector2>();
+
         // Tell the vertices to stop following the cursor and add them back to the grid
         foreach (VertexObj selectedVertex in SelectionManager.Singleton.SelectedVertices) {
             selectedVertex.GetComponent<VertexMovement>().FollowCursor = false;
@@ -128,8 +133,11 @@ public class GraphViewState : ManipulationState
             }
 
             // Update the stored position info in the verterices
-            selectedVertex.Vertex.Pos = new System.Numerics.Vector2( selectedVertex.transform.position.x, selectedVertex.transform.position.y );
+            vertices.Add(selectedVertex.Vertex);
+            newPositions.Add(new Vector2( selectedVertex.transform.position.x, selectedVertex.transform.position.y ));
         }
+        
+        Vertex.SetPoses(vertices, newPositions);
 
         this.graphMovementInProgress = false;
     }

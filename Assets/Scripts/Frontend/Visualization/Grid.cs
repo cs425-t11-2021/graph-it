@@ -1,9 +1,10 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
+// Class responsible for the vertex grid system. Functions include snapping vertices to a grid, and finding the closest gird location to a certain position.
+// Grid size and spacing can be adjusted.
 public class Grid : SingletonBehavior<Grid>
 {
     // Prefab for the grid lines object

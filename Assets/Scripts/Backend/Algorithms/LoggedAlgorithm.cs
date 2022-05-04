@@ -13,14 +13,18 @@ public struct AlgorithmStep
     public StepType type;
     public string desc;
 
-    public List< Vertex > resultVertices;
-    public List< Edge > resultEdges;
+    public List< Vertex > paramVerts;
+    public List< Edge > paramEdges;
 
-    public List< Vertex > newVertices;
+    public List< Vertex > newVerts;
     public List< Edge > newEdges;
 
-    public List< Vertex > considerVertices;
+    public List< Vertex > resultVerts;
+    public List< Edge > resultEdges;
+
+    public List< Vertex > considerVerts;
     public List< Edge > considerEdges;
+
 
     public AlgorithmStep( StepType type, string desc ) : this()
     {
@@ -83,26 +87,27 @@ public abstract class LoggedAlgorithm : Algorithm
         return this.steps[ this.step ];
     }
 
-    // TODO: copy each list here
     protected void AddStep(
         StepType type,
         string desc,
-        List< Vertex > resultVerts,
-        List< Edge > resultEdges,
-        List< Vertex > newVerts,
-        List< Edge > newEdges,
-        List< Vertex > considerVerts,
-        List< Edge > considerEdges
+        IEnumerable< Vertex > newVerts=null,
+        IEnumerable< Edge   > newEdges=null,
+        IEnumerable< Vertex > resultVerts=null,
+        IEnumerable< Edge   > resultEdges=null,
+        IEnumerable< Vertex > considerVerts=null,
+        IEnumerable< Edge   > considerEdges=null
     )
     {
         AlgorithmStep step = new AlgorithmStep( type, desc );
         step.index = this.steps.Count + 1;
-        step.resultVertices = resultVerts;
-        step.resultEdges = resultEdges;
-        step.newVertices = newVerts;
-        step.newEdges = newEdges;
-        step.considerVertices = considerVerts;
-        step.considerEdges = considerEdges;
+        step.paramVerts    = this.vertexParms is null ? null : new List< Vertex >( this.vertexParms );
+        step.paramEdges    = this.edgeParms   is null ? null : new List< Edge   >( this.edgeParms   );
+        step.newVerts      = newVerts         is null ? null : new List< Vertex >( newVerts         );
+        step.newEdges      = newEdges         is null ? null : new List< Edge   >( newEdges         );
+        step.resultVerts   = resultVerts      is null ? null : new List< Vertex >( resultVerts      );
+        step.resultEdges   = resultEdges      is null ? null : new List< Edge   >( resultEdges      );
+        step.considerVerts = considerVerts    is null ? null : new List< Vertex >( considerVerts    );
+        step.considerEdges = considerEdges    is null ? null : new List< Edge   >( considerEdges    );
         this.steps.Add( step );
     }
 }

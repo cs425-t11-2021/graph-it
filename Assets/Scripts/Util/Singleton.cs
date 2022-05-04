@@ -1,7 +1,7 @@
 using UnityEngine;
 
-// Class wrapper for Monobehavior that ensures the behavior is a singleton and throws an error
-// if the singletong pattern is violated
+// Class wrapper for Monobehavior that ensures the behavior is a singleton (only one instance instantiated at once) and throws an error
+// if the singletong pattern is violated.
 public abstract class SingletonBehavior<T> : MonoBehaviour where T : MonoBehaviour {
     private static T singleton = null;
     public static T Singleton {

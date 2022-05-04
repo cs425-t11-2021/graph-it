@@ -1,12 +1,10 @@
-using System;
-using System.Collections;
-using System.Collections.Concurrent;
+// Utilitizes 3rd party TableUI API from the Unity Asset Store
+
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.UI.TableUI;
-using System.Linq;
 
+// Work in progress feature for displaying an adjacency matrix for the graph on screen. Not currently working as intended.
 public class AdjacencyMatrix : MonoBehaviour
 {
     private TableUI table;

@@ -438,7 +438,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: -2
   m_Sprite: {fileID: 21300000, guid: 8ac680d404e1542729d9d53a0607e8eb, type: 3}
   m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
@@ -1047,6 +1047,8 @@ GameObject:
   - component: {fileID: 9056994100037127511}
   - component: {fileID: 9056994100037127504}
   - component: {fileID: 9056994100037127506}
+  - component: {fileID: 1601714112661618325}
+  - component: {fileID: 5730833882106916066}
   m_Layer: 8
   m_Name: EdgeObj
   m_TagString: Edge
@@ -1087,6 +1089,7 @@ MonoBehaviour:
   arrow: {fileID: 9056994099221006109}
   edgeWidthScaleFactor: 0.08
   labelObj: {fileID: 5501775363169806817}
+  visualsAnimator: {fileID: 0}
 --- !u!50 &9056994100037127506
 Rigidbody2D:
   serializedVersion: 4
@@ -1108,3 +1111,48 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &1601714112661618325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9056994100037127510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee77d6208ed4e4cca9b24bfb26e55eb2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderers:
+  - {fileID: 4023813123963490117}
+  - {fileID: 796166261921502659}
+  - {fileID: 9056994099221006106}
+  states:
+  - name: default
+    color: {r: 0, g: 0, b: 0, a: 1}
+  - name: selected
+    color: {r: 0, g: 0.49019608, b: 1, a: 1}
+  - name: algorithm_considering
+    color: {r: 0.6093805, g: 0.39044145, b: 0.7735849, a: 1}
+  - name: algorithm_new
+    color: {r: 0.3254902, g: 0.59607846, b: 0.83137256, a: 1}
+  - name: algorithm_result
+    color: {r: 0, g: 0.6392157, b: 0, a: 1}
+  - name: algorithm_none
+    color: {r: 0, g: 0, b: 0, a: 0.5882353}
+  defaultSortingOrder: -5
+--- !u!114 &5730833882106916066
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9056994100037127510}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56cd1f573cf084936aadd4016c103acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  labelPrefab: {fileID: 5991872394988445793, guid: 0a850dcad104df34cac7a8339c262045, type: 3}
+  offset: {x: 0, y: 0, z: 0}
+  size: {x: 249, y: 40}

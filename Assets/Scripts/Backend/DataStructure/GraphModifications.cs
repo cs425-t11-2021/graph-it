@@ -8,20 +8,20 @@ using UnityEngine;
 public enum Modification
 {
     VERTEX_LABEL,       // modified is tuple consisting of vertex, oldLabel, newLabel
-    VERTEX_POS,         // modified is tuple consisting of vertex, x0, y0, x1, y1
-    VERTEX_STYLE,       // modified is tuple consisting of vertex, oldStyle, newStyle
-    VERTEX_SIZE,        // modified is tuple consisting of vertex, oldSize, newSize
-    VERTEX_COLOR,       // modified is tuple consisting of vertex, oldColor, newColor
+    VERTEX_POSES,       // modified is tuple consisting of list of vertices, list of oldPoses (Vector2), list of newPoses (Vector2)
+    VERTEX_STYLES,      // modified is tuple consisting of list of vertices, list of oldStyle, list of newStyle
+    VERTEX_SIZES,       // modified is tuple consisting of list of vertices, list of oldSizes, list of newSizes
+    VERTEX_COLORS,      // modified is tuple consisting of list of vertices, list of oldColors, list of newColors
 
-    EDGE_DIRECTED,      // modified is a pair of vertex, newDirected. Guaranteed be called when directed value is different
+    EDGE_DIRECTED,    // modified is tuple consisting of edge, newDirected. Guaranteed be called when directed value is different ** TODO: support a collection of edges, this will require some modifications to how we change direction in front end
     EDGE_LABEL,         // modified is tuple consisting of edge, oldLabel, newLabel
-    EDGE_STYLE,         // modified is tuple consisting of edge, oldStyle, newStyle
-    EDGE_COLOR,         // modified is tuple consisting of edge, oldColor, newColor
+    EDGE_STYLES,        // modified is tuple consisting of list of edges, list of oldStyles, list of newStyles **
+    EDGE_COLORS,        // modified is tuple consisting of edge, oldColor, newColor **
     EDGE_THICKNESSES,   // modified is tuple consisting of list of edges, list of oldThicknesses, list of newThickness
     EDGE_CURVATURES,    // modified is tuple consisting of list of edges, list of oldCurvatures, list of newCurvatures
-    EDGE_TAIL_STYLE,    // modified is tuple consisting of edge, oldTail, newTail
-    EDGE_HEAD_STYLE,    // modified is tuple consisting of edge, oldHead, newHead
-    EDGE_REVERSE,       // modified is reversed edge
+    EDGE_TAIL_STYLES,   // modified is tuple consisting of edge, oldTail, newTail **
+    EDGE_HEAD_STYLES,   // modified is tuple consisting of edge, oldHead, newHead **
+    EDGE_REVERSE,       // modified is reversed edge ** TODO: support a colleciton of edges
 
     ADD_COLLECTION,     // modified is tuple consisting of hash set of vertices, hash set of edges
     REMOVE_COLLECTION   // modified is tuple consisting of hash set of vertices, hash set of edges
@@ -30,22 +30,22 @@ public enum Modification
 public class GraphModification
 {
     public static readonly Dictionary<Modification, string> aliases = new Dictionary<Modification, string> {
-        {Modification.VERTEX_LABEL, "Change Vertex Label"},
-        {Modification.VERTEX_POS, "Change Vertex Position"},
-        {Modification.VERTEX_STYLE, "Change Vertex Style"},
-        {Modification.VERTEX_SIZE, "Change Vertex Size"},
-        {Modification.VERTEX_COLOR, "Change Vertex Color"},
-        {Modification.EDGE_DIRECTED, "Change Edge Directed"},
-        {Modification.EDGE_LABEL, "Change Edge Label"},
-        {Modification.EDGE_STYLE, "Change Edge Style"},
-        {Modification.EDGE_COLOR, "Change Edge Color"},
-        {Modification.EDGE_THICKNESSES, "Change Edge Thickness"},
-        {Modification.EDGE_CURVATURES, "Change Edge Curavture"},
-        {Modification.EDGE_TAIL_STYLE, "Change Edge Tail Style"},
-        {Modification.EDGE_HEAD_STYLE, "Change Edge Head Style"},
-        {Modification.EDGE_REVERSE, "Reverse Edge"},
-        {Modification.ADD_COLLECTION, "Add Collection"},
-        {Modification.REMOVE_COLLECTION, "Remove Collection"}
+        { Modification.VERTEX_LABEL,      "Change Vertex Label"    },
+        { Modification.VERTEX_POSES,      "Change Vertex Position" },
+        { Modification.VERTEX_STYLES,     "Change Vertex Style"    },
+        { Modification.VERTEX_SIZES,      "Change Vertex Size"     },
+        { Modification.VERTEX_COLORS,     "Change Vertex Color"    },
+        { Modification.EDGE_DIRECTED,     "Change Edge Directed"   },
+        { Modification.EDGE_LABEL,        "Change Edge Label"      },
+        { Modification.EDGE_STYLES,       "Change Edge Style"      },
+        { Modification.EDGE_COLORS,       "Change Edge Color"      },
+        { Modification.EDGE_THICKNESSES,  "Change Edge Thickness"  },
+        { Modification.EDGE_CURVATURES,   "Change Edge Curvature"  },
+        { Modification.EDGE_TAIL_STYLES,  "Change Edge Tail Style" },
+        { Modification.EDGE_HEAD_STYLES,  "Change Edge Head Style" },
+        { Modification.EDGE_REVERSE,      "Reverse Edge"           },
+        { Modification.ADD_COLLECTION,    "Add Collection"         },
+        { Modification.REMOVE_COLLECTION, "Remove Collection"      }
     };
 
     private Graph graph;
@@ -59,9 +59,6 @@ public class GraphModification
         this.Modified = modified;
         this.graph.Changes.Push( this );
         this.graph.UndoneChanges.Clear();
-
-        // Graph.PrintStack( this.graph.Changes ); // testing
-        // Debug.Log( "" );
     }
 
     public void Undo()
@@ -71,17 +68,17 @@ public class GraphModification
             case Modification.VERTEX_LABEL:
                 this.UndoVertexLabel();
                 break;
-            case Modification.VERTEX_POS:
-                this.UndoVertexPos();
+            case Modification.VERTEX_POSES:
+                this.UndoVertexPoses();
                 break;
-            case Modification.VERTEX_STYLE:
-                this.UndoVertexStyle();
+            case Modification.VERTEX_STYLES:
+                this.UndoVertexStyles();
                 break;
-            case Modification.VERTEX_SIZE:
-                this.UndoVertexSize();
+            case Modification.VERTEX_SIZES:
+                this.UndoVertexSizes();
                 break;
-            case Modification.VERTEX_COLOR:
-                this.UndoVertexColor();
+            case Modification.VERTEX_COLORS:
+                this.UndoVertexColors();
                 break;
             case Modification.EDGE_DIRECTED:
                 this.UndoEdgeDirected();
@@ -89,11 +86,11 @@ public class GraphModification
             case Modification.EDGE_LABEL:
                 this.UndoEdgeLabel();
                 break;
-            case Modification.EDGE_STYLE:
-                this.UndoEdgeStyle();
+            case Modification.EDGE_STYLES:
+                this.UndoEdgeStyles();
                 break;
-            case Modification.EDGE_COLOR:
-                this.UndoEdgeColor();
+            case Modification.EDGE_COLORS:
+                this.UndoEdgeColors();
                 break;
             case Modification.EDGE_THICKNESSES:
                 this.UndoEdgeThicknesses();
@@ -101,11 +98,11 @@ public class GraphModification
             case Modification.EDGE_CURVATURES:
                 this.UndoEdgeCurvatures();
                 break;
-            case Modification.EDGE_TAIL_STYLE:
-                this.UndoEdgeTailStyle();
+            case Modification.EDGE_TAIL_STYLES:
+                this.UndoEdgeTailStyles();
                 break;
-            case Modification.EDGE_HEAD_STYLE:
-                this.UndoEdgeHeadStyle();
+            case Modification.EDGE_HEAD_STYLES:
+                this.UndoEdgeHeadStyles();
                 break;
             case Modification.EDGE_REVERSE:
                 this.UndoEdgeReverse();
@@ -131,49 +128,62 @@ public class GraphModification
         Controller.Singleton.GetVertexObj( labelData.Item1 ).labelObj.UpdateVertexLabel(labelData.Item2, false);
     }
 
-    private void UndoVertexPos()
+    private void UndoVertexPoses()
     {
-        ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) posData = ( ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) ) this.Modified;
-        posData.Item1.SetPos( posData.Item2, false );
-        
-        // Update front end
-        Controller.Singleton.GetVertexObj( posData.Item1 ).transform.position = new Vector3(posData.Item2.X, posData.Item2.Y, 0);
+        ( List< Vertex >, List< System.Numerics.Vector2 >, List< System.Numerics.Vector2 > ) posData = ( ( List< Vertex >, List< System.Numerics.Vector2 >, List< System.Numerics.Vector2 > ) ) this.Modified;
+        for ( int i = 0; i < posData.Item1.Count; ++i )
+        {
+            posData.Item1[ i ].SetPos( posData.Item2[ i ], false );
+
+            // TODO: Update front end
+            Controller.Singleton.GetVertexObj( posData.Item1[i] ).MovePosition(new Vector3( posData.Item2[i].X, posData.Item2[i].Y, 0 ));
+        }
     }
 
-    private void UndoVertexStyle()
+    private void UndoVertexStyles()
     {
-        ( Vertex, uint, uint ) styleData = ( ( Vertex, uint, uint ) ) this.Modified;
-        styleData.Item1.SetStyle( styleData.Item2, false );
-        
-        // Update front end
-        Controller.Singleton.GetVertexObj( styleData.Item1 ).SetStyle(styleData.Item2, false);
+        ( List< Vertex >, List< uint >, List< uint > ) styleData = ( ( List< Vertex >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < styleData.Item1.Count; ++i )
+        {
+            styleData.Item1[ i ].SetStyle( styleData.Item2[ i ], false );
+
+            // TODO: Update front end
+            Controller.Singleton.GetVertexObj( styleData.Item1[ i ] ).SetStyle( styleData.Item2[ i ], false );
+        }
     }
 
-    private void UndoVertexSize()
+    private void UndoVertexSizes()
     {
-        ( Vertex, uint, uint ) sizeData = ( ( Vertex, uint, uint ) ) this.Modified;
-        sizeData.Item1.SetSize( sizeData.Item2, false );
+        ( List< Vertex >, List< uint >, List< uint > ) sizeData = ( ( List< Vertex >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < sizeData.Item1.Count; ++i )
+        {
+            sizeData.Item1[ i ].SetSize( sizeData.Item2[ i ], false );
+
+            // Update front end
+            // TODO: FRONT END NOT IMPLEMENTED
+        }
         
-        // Update front end
-        // TODO: FRONT END NOT IMPLEMENTED
     }
 
-    private void UndoVertexColor()
+    private void UndoVertexColors()
     {
-        ( Vertex, uint, uint ) colorData = ( ( Vertex, uint, uint ) ) this.Modified;
-        colorData.Item1.SetColor( colorData.Item2, false );
-        
-        // Update front end
-        // TODO: FRONT END NOT IMPLEMENTED
+        ( List< Vertex >, List< uint >, List< uint > ) colorData = ( ( List< Vertex >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < colorData.Item1.Count; ++i )
+        {
+            colorData.Item1[ i ].SetColor( colorData.Item2[ i ], false );
+
+            // Update front end
+            // TODO: FRONT END NOT IMPLEMENTED
+        }
     }
 
     private void UndoEdgeDirected()
     {
         ( Edge, bool ) directedData = ( ( Edge, bool ) ) this.Modified;
         directedData.Item1.SetDirected( directedData.Item2, false );
-        
+
         // Update front end
-        Controller.Singleton.GetEdgeObj( directedData.Item1 ).SetDirectedness(directedData.Item2, false);
+        Controller.Singleton.GetEdgeObj( directedData.Item1 ).SetDirectedness( directedData.Item2, false );
     }
 
     private void UndoEdgeLabel()
@@ -182,39 +192,49 @@ public class GraphModification
         labelData.Item1.SetLabel( labelData.Item2, false );
         
         // Update front end
-        Controller.Singleton.GetEdgeObj( labelData.Item1 ).labelObj.UpdateEdgeLabel(labelData.Item2, false);
+        Controller.Singleton.GetEdgeObj( labelData.Item1 ).labelObj.UpdateEdgeLabel( labelData.Item2, false );
     }
 
-    private void UndoEdgeStyle()
+    private void UndoEdgeStyles()
     {
-        ( Edge, uint, uint ) styleData = ( ( Edge, uint, uint ) ) this.Modified;
-        styleData.Item1.SetStyle( styleData.Item2, false );
+        ( List< Edge >, List< uint >, List< uint > ) styleData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < styleData.Item1.Count; ++i )
+        {
+            styleData.Item1[ i ].SetStyle( styleData.Item2[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
-    private void UndoEdgeColor()
+    private void UndoEdgeColors()
     {
-        ( Edge, uint, uint ) colorData = ( ( Edge, uint, uint ) ) this.Modified;
-        colorData.Item1.SetColor( colorData.Item2, false );
+        ( List< Edge >, List< uint >, List< uint > ) colorData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < colorData.Item1.Count; ++i )
+        {
+            colorData.Item1[ i ].SetColor( colorData.Item2[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
     private void UndoEdgeThicknesses()
     {
         ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
-        for (int i = 0; i < thicknessData.Item1.Count; ++i)
+        for ( int i = 0; i < thicknessData.Item1.Count; ++i )
         {
-            thicknessData.Item1[i].SetThickness(thicknessData.Item2[i], false);
+            thicknessData.Item1[i].SetThickness(thicknessData.Item2[ i ], false);
             
             // Update front end
-            Controller.Singleton.GetEdgeObj( thicknessData.Item1[i] ).UpdateSpline();
+            Controller.Singleton.GetEdgeObj( thicknessData.Item1[ i ] ).UpdateSpline();
         }
-
-        
     }
 
     private void UndoEdgeCurvatures()
     {
         ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
-        for (int i = 0; i < curveData.Item1.Count; ++i)
+        for ( int i = 0; i < curveData.Item1.Count; ++i )
         {
             curveData.Item1[i].SetCurvature(curveData.Item2[i], false);
             
@@ -223,16 +243,28 @@ public class GraphModification
         }
     }
 
-    private void UndoEdgeTailStyle()
+    private void UndoEdgeTailStyles()
     {
-        ( Edge, uint, uint ) tailStyleData = ( ( Edge, uint, uint ) ) this.Modified;
-        tailStyleData.Item1.SetTailStyle( tailStyleData.Item2, false );
+        ( List< Edge >, List< uint >, List< uint > ) tailStyleData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < tailStyleData.Item1.Count; ++i )
+        {
+            tailStyleData.Item1[ i ].SetTailStyle( tailStyleData.Item2[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
-    private void UndoEdgeHeadStyle()
+    private void UndoEdgeHeadStyles()
     {
-        ( Edge, uint, uint ) headStyleData = ( ( Edge, uint, uint ) ) this.Modified;
-        headStyleData.Item1.SetHeadStyle( headStyleData.Item2, false );
+        ( List< Edge >, List< uint >, List< uint > ) headStyleData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < headStyleData.Item1.Count; ++i )
+        {
+            headStyleData.Item1[ i ].SetHeadStyle( headStyleData.Item2[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
     private void UndoEdgeReverse()
@@ -300,17 +332,17 @@ public class GraphModification
             case Modification.VERTEX_LABEL:
                 this.RedoVertexLabel();
                 break;
-            case Modification.VERTEX_POS:
-                this.RedoVertexPos();
+            case Modification.VERTEX_POSES:
+                this.RedoVertexPoses();
                 break;
-            case Modification.VERTEX_STYLE:
-                this.RedoVertexStyle();
+            case Modification.VERTEX_STYLES:
+                this.RedoVertexStyles();
                 break;
-            case Modification.VERTEX_SIZE:
-                this.RedoVertexSize();
+            case Modification.VERTEX_SIZES:
+                this.RedoVertexSizes();
                 break;
-            case Modification.VERTEX_COLOR:
-                this.RedoVertexColor();
+            case Modification.VERTEX_COLORS:
+                this.RedoVertexColors();
                 break;
             case Modification.EDGE_DIRECTED:
                 this.RedoEdgeDirected();
@@ -318,11 +350,11 @@ public class GraphModification
             case Modification.EDGE_LABEL:
                 this.RedoEdgeLabel();
                 break;
-            case Modification.EDGE_STYLE:
-                this.RedoEdgeStyle();
+            case Modification.EDGE_STYLES:
+                this.RedoEdgeStyles();
                 break;
-            case Modification.EDGE_COLOR:
-                this.RedoEdgeColor();
+            case Modification.EDGE_COLORS:
+                this.RedoEdgeColors();
                 break;
             case Modification.EDGE_THICKNESSES:
                 this.RedoEdgeThicknesses();
@@ -330,11 +362,11 @@ public class GraphModification
             case Modification.EDGE_CURVATURES:
                 this.RedoEdgeCurvatures();
                 break;
-            case Modification.EDGE_TAIL_STYLE:
-                this.RedoEdgeTailStyle();
+            case Modification.EDGE_TAIL_STYLES:
+                this.RedoEdgeTailStyles();
                 break;
-            case Modification.EDGE_HEAD_STYLE:
-                this.RedoEdgeHeadStyle();
+            case Modification.EDGE_HEAD_STYLES:
+                this.RedoEdgeHeadStyles();
                 break;
             case Modification.EDGE_REVERSE:
                 this.RedoEdgeReverse();
@@ -346,7 +378,7 @@ public class GraphModification
                 this.RedoRemoveCollection();
                 break;
         }
-        
+
         // Update Algorithm Manager
         GraphInfo.Singleton.UpdateGraphInfo();
     }
@@ -358,35 +390,52 @@ public class GraphModification
         
     }
 
-    private void RedoVertexPos()
+    private void RedoVertexPoses()
     {
-        ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) posData = ( ( Vertex, System.Numerics.Vector2, System.Numerics.Vector2 ) ) this.Modified;
-        posData.Item1.SetPos( posData.Item3, false );
+        ( List< Vertex >, List< System.Numerics.Vector2 >, List< System.Numerics.Vector2 > ) posData = ( ( List< Vertex >, List< System.Numerics.Vector2 >, List< System.Numerics.Vector2 > ) ) this.Modified;
+        for ( int i = 0; i < posData.Item1.Count; ++i )
+        {
+            posData.Item1[ i ].SetPos( posData.Item3[ i ], false );
 
-        // Update front end
-        Controller.Singleton.GetVertexObj( posData.Item1 ).transform.position =
-            new Vector3(posData.Item3.X, posData.Item3.Y, 0);
+            // TODO: Update front end
+            Controller.Singleton.GetVertexObj( posData.Item1[i] ).MovePosition(new Vector3( posData.Item3[i].X, posData.Item3[i].Y, 0 ));
+        }
     }
 
-    private void RedoVertexStyle()
+    private void RedoVertexStyles()
     {
-        ( Vertex, uint, uint ) styleData = ( ( Vertex, uint, uint ) ) this.Modified;
-        styleData.Item1.SetStyle( styleData.Item3, false );
+        ( List< Vertex >, List< uint >, List< uint > ) styleData = ( ( List< Vertex >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < styleData.Item1.Count; ++i )
+        {
+            styleData.Item1[ i ].SetStyle( styleData.Item3[ i ], false );
 
-        // Update front end
-        Controller.Singleton.GetVertexObj( styleData.Item1 ).SetStyle(styleData.Item3, false);
+            // Update front end
+            Controller.Singleton.GetVertexObj( styleData.Item1[ i ] ).SetStyle( styleData.Item3[ i ], false );
+        }
     }
 
-    private void RedoVertexSize()
+    private void RedoVertexSizes()
     {
-        ( Vertex, uint, uint ) sizeData = ( ( Vertex, uint, uint ) ) this.Modified;
-        sizeData.Item1.SetSize( sizeData.Item3, false );
+        ( List< Vertex >, List< uint >, List< uint > ) sizeData = ( ( List< Vertex >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < sizeData.Item1.Count; ++i )
+        {
+            sizeData.Item1[ i ].SetSize( sizeData.Item3[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
-    private void RedoVertexColor()
+    private void RedoVertexColors()
     {
-        ( Vertex, uint, uint ) colorData = ( ( Vertex, uint, uint ) ) this.Modified;
-        colorData.Item1.SetColor( colorData.Item3, false );
+        ( List< Vertex >, List< uint >, List< uint > ) colorData = ( ( List< Vertex >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < colorData.Item1.Count; ++i )
+        {
+            colorData.Item1[ i ].SetColor( colorData.Item3[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
     private void RedoEdgeDirected()
@@ -407,22 +456,34 @@ public class GraphModification
         Controller.Singleton.GetEdgeObj( labelData.Item1 ).labelObj.UpdateEdgeLabel(labelData.Item3, false);
     }
 
-    private void RedoEdgeStyle()
+    private void RedoEdgeStyles()
     {
-        ( Edge, uint, uint ) styleData = ( ( Edge, uint, uint ) ) this.Modified;
-        styleData.Item1.SetStyle( styleData.Item3, false );
+        ( List< Edge >, List< uint >, List< uint > ) styleData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < styleData.Item1.Count; ++i )
+        {
+            styleData.Item1[ i ].SetStyle( styleData.Item3[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
-    private void RedoEdgeColor()
+    private void RedoEdgeColors()
     {
-        ( Edge, uint, uint ) colorData = ( ( Edge, uint, uint ) ) this.Modified;
-        colorData.Item1.SetColor( colorData.Item3, false );
+        ( List< Edge >, List< uint >, List< uint > ) colorData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < colorData.Item1.Count; ++i )
+        {
+            colorData.Item1[ i ].SetColor( colorData.Item3[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
     private void RedoEdgeThicknesses()
     {
         ( List< Edge >, List< uint >, List< uint > ) thicknessData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
-        for (int i = 0; i < thicknessData.Item1.Count; ++i)
+        for ( int i = 0; i < thicknessData.Item1.Count; ++i )
         {
             thicknessData.Item1[i].SetThickness(thicknessData.Item3[i], false);
             
@@ -434,7 +495,7 @@ public class GraphModification
     private void RedoEdgeCurvatures()
     {
         ( List< Edge >, List< int >, List< int > ) curveData = ( ( List< Edge >, List< int >, List< int > ) ) this.Modified;
-        for (int i = 0; i < curveData.Item1.Count; ++i)
+        for ( int i = 0; i < curveData.Item1.Count; ++i )
         {
             curveData.Item1[i].SetCurvature(curveData.Item3[i], false);
             
@@ -443,16 +504,28 @@ public class GraphModification
         }
     }
 
-    private void RedoEdgeTailStyle()
+    private void RedoEdgeTailStyles()
     {
-        ( Edge, uint, uint ) tailStyleData = ( ( Edge, uint, uint ) ) this.Modified;
-        tailStyleData.Item1.SetTailStyle( tailStyleData.Item3, false );
+        ( List< Edge >, List< uint >, List< uint > ) tailStyleData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < tailStyleData.Item1.Count; ++i )
+        {
+            tailStyleData.Item1[ i ].SetTailStyle( tailStyleData.Item3[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
-    private void RedoEdgeHeadStyle()
+    private void RedoEdgeHeadStyles()
     {
-        ( Edge, uint, uint ) headStyleData = ( ( Edge, uint, uint ) ) this.Modified;
-        headStyleData.Item1.SetHeadStyle( headStyleData.Item3, false );
+        ( List< Edge >, List< uint >, List< uint > ) headStyleData = ( ( List< Edge >, List< uint >, List< uint > ) ) this.Modified;
+        for ( int i = 0; i < headStyleData.Item1.Count; ++i )
+        {
+            headStyleData.Item1[ i ].SetHeadStyle( headStyleData.Item3[ i ], false );
+
+            // TODO: Update front end
+            // FRONT END NOT IMPLEMENTED
+        }
     }
 
     private void RedoEdgeReverse()

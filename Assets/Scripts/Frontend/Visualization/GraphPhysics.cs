@@ -1,6 +1,8 @@
-using UnityEngine;
 using System;
+using UnityEngine;
 
+// DEPRECATED. Class used to give physics 2d components such as joints to the different graph objects for the purposes of spreading
+// out vertices of the graph using the Physics system. Has since been fully replaced with the grid system and is no longer in use.
 public class GraphPhysics : SingletonBehavior<GraphPhysics> {
     // Length of each edge (manually set for now, could implment an algorithm to determine the distance from graph size/shape or whatever)
     private float edgeLength = 5;

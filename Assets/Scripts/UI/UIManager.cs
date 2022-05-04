@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
 using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UIManager : SingletonBehavior<UIManager>
 {
@@ -16,11 +14,9 @@ public class UIManager : SingletonBehavior<UIManager>
     [SerializeField] private GameObject algPanel;
     [SerializeField] private Button openAlgPanel;
     [SerializeField] private GameObject tabsBar;
-    //[SerializeField] private GameObject importFileMenu;
-    //[SerializeField] private GameObject exportFileMenu;
-    //[SerializeField] private GameObject importErrorDialog;
     [SerializeField] private GameObject toolbar;
     [SerializeField] public GameObject mainCanvas;
+    [SerializeField] public GameObject worldCanvas;
     [SerializeField] public GameObject selectionRect;
     
 

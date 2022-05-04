@@ -1,11 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security.Permissions;
 using UnityEngine;
 
+// Extension of the Unity Collider2D and PolygonCollider classes which adds a copy constructor for them.
 public static class Collider2DExtension
 {
     public static CircleCollider2D CopyFromCollider(this CircleCollider2D self, CircleCollider2D other)

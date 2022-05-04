@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-// Class for managing the manipulation FSM
+// Class for managing the manipulation state finite state machine. Each state in the FSM corresponds to a mode of graph manipulation.
+// Examples of graph manipulation modes include single select mode, multi-select mode, add vertex mode, etc.
 public class ManipulationStateManager : SingletonBehavior<ManipulationStateManager>
 {
     // Current active manipulation state

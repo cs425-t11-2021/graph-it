@@ -1,10 +1,7 @@
-using System.Collections;
 using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-// Central class for managing mouse and keyboard input using C# events
+// Central class for managing mouse and keyboard input using C# events. 
 public class InputManager : SingletonBehavior<InputManager>
 {
     // Actions associated with various input related events

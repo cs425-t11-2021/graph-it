@@ -4,10 +4,11 @@
 #pragma warning disable 0436
 
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Vector2 = System.Numerics.Vector2;
 
+// Main class for controlling the vertex objects, corresponding to an vertex in the graph data structure. Handles most of the 
+// visual aspects of a vertex such as the sprite style.
 public class VertexObj : MonoBehaviour
 {
     // Property reference of the vertex associated with the vertex object
@@ -20,9 +21,7 @@ public class VertexObj : MonoBehaviour
     
     private Color normalColor = Color.black;
     private Color selectedColor = new Color32(0, 125, 255, 255);
-
-    private int resultStatus = 0;
-
+    
     // Property for whether or not the vertex object is selected
     private bool selected;
     public bool Selected {
@@ -32,30 +31,14 @@ public class VertexObj : MonoBehaviour
             // If the vertex object becomes selected, make its label editable
             if (value) {
                 this.labelObj.MakeEditable();
-                this.spriteRenderer.color = selectedColor;
+                this.visualsAnimator.ChangeState("selected");
             }
             else {
                 this.labelObj.MakeUneditable();
-                this.spriteRenderer.color = normalColor;
+                this.visualsAnimator.ChangeState("default");
             }
             // Change the animator to show that the vertex is selected
             // this.animator.SetBool("Selected", value);
-        }
-    }
-
-    public int AlgorithmResultLevel
-    {
-        set
-        {
-            this.resultStatus = value;
-            if (this.resultStatus == 0)
-            {
-                this.spriteRenderer.color = this.normalColor;
-            }
-            else if (this.resultStatus == 1)
-            {
-                this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-            }
         }
     }
 
@@ -73,6 +56,8 @@ public class VertexObj : MonoBehaviour
     private Vector3 previousPosition;
     public event Action OnVertexObjMove;
     
+    public GraphVisualsAnimator visualsAnimator;
+    
     private void Awake() {
         // Vertex objects starts non active
         this.gameObject.SetActive(false);
@@ -84,6 +69,7 @@ public class VertexObj : MonoBehaviour
         this.spriteRenderer = spriteObj.GetComponent<SpriteRenderer>();
         this.labelObj = GetComponentInChildren<VertexLabelObj>();
         AddColliderBasedOnSprite(false);
+        this.visualsAnimator = GetComponent<GraphVisualsAnimator>();
 
         this.spriteRadius = this.spriteRenderer.bounds.size.x / 2f;
     }
@@ -94,19 +80,6 @@ public class VertexObj : MonoBehaviour
         {
             this.previousPosition = this.transform.position;
             this.OnVertexObjMove?.Invoke();
-        }
-
-        if (resultStatus == 1)
-        {
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[0];
-        }
-        else if (resultStatus == 2)
-        {
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[1];
-        }
-        else if (resultStatus == 3)
-        {
-            this.spriteRenderer.color = Controller.Singleton.algorithmResultColors[2];
         }
     }
 
@@ -122,7 +95,7 @@ public class VertexObj : MonoBehaviour
         this.labelObj.Initiate(vertex.Label);
 
         // Update associated Vertex positions;
-        this.Vertex.SetPos( new System.Numerics.Vector2( transform.position.x, transform.position.y ), false );
+        this.Vertex.SetPos( new Vector2( transform.position.x, transform.position.y ), false );
     }
 
     // Set the hover animation when the mouse is hoving over the vertex object
@@ -195,6 +168,16 @@ public class VertexObj : MonoBehaviour
             CircleCollider2D newCol = this.spriteRenderer.gameObject.AddComponent<CircleCollider2D>();
             this.collider = this.gameObject.AddComponent<CircleCollider2D>().CopyFromCollider(newCol);
             Destroy(newCol);
+        }
+    }
+
+    public void MovePosition(Vector3 newPosition)
+    {
+        if (Grid.Singleton.GridEnabled)
+        {
+            Grid.Singleton.RemoveFromOccupied(this);
+            this.transform.position = newPosition;
+            this.transform.position = Grid.Singleton.FindClosestGridPosition(this);
         }
     }
 }

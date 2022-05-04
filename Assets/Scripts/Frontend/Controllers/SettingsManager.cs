@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -9,7 +7,8 @@ public struct ColorScheme {
     Color textColor;
 }
 
-// Monobehavior which manages the program settings such as visuals
+// Class which handles storing and updating various visual settings such as enabling graph labels, snap to grid, etc. 
+// This class will be hooked up to a UI settings page in the future.
 public class SettingsManager : SingletonBehavior<SettingsManager>
 {
     [Header("Default Visual Settings")]

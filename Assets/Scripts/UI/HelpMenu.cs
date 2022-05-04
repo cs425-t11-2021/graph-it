@@ -1,7 +1,5 @@
 //code adapted and modified from this tutorial: https://www.youtube.com/watch?v=_wpnqOnWELY
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class HelpMenu : MenuButton
