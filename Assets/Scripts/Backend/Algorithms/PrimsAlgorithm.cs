@@ -41,12 +41,8 @@ public class PrimsAlgorithm : LoggedAlgorithm
         this.AddStep(
             StepType.ADD_TO_RESULT,
             "Add root to tree.",
-            new List< Vertex >( mstVerticesSet ),
-            null,
-            new List< Vertex >( mstVerticesSet ),
-            null,
-            null,
-            null
+            newVerts : mstVerticesSet,
+            resultVerts : mstVerticesSet
         );
 
         int mstVerticesPrevCount = -1;
@@ -59,12 +55,10 @@ public class PrimsAlgorithm : LoggedAlgorithm
             this.AddStep(
                 StepType.CONSIDER,
                 "Find minimally weighted incident edge.",
-                new List< Vertex >( mstVerticesSet ),
-                new List< Edge >( this.mstEdges ),
-                null,
-                null,
-                new List< Vertex >( Edge.GetIncidentVertices( incidentEdges ) ),
-                new List< Edge >( incidentEdges )
+                resultVerts : mstVerticesSet,
+                resultEdges : this.mstEdges,
+                considerVerts : Edge.GetIncidentVertices( incidentEdges ),
+                considerEdges : incidentEdges
             );
 
             foreach ( Edge edge in incidentEdges )
@@ -79,12 +73,12 @@ public class PrimsAlgorithm : LoggedAlgorithm
                     this.AddStep(
                         StepType.ADD_TO_RESULT,
                         "Add minimally weighted incident edge with weight " + edge.Weight,
-                        new List< Vertex >( mstVerticesSet ),
-                        new List< Edge >( this.mstEdges ),
-                        new List< Vertex >() { edge.vert1, edge.vert2 },
-                        new List< Edge >() { edge },
-                        new List< Vertex >( Edge.GetIncidentVertices( incidentEdges ) ),
-                        new List< Edge >( incidentEdges )
+                        newVerts : new List< Vertex >() { edge.vert1, edge.vert2 },
+                        newEdges : new List< Edge >() { edge },
+                        resultVerts : mstVerticesSet,
+                        resultEdges : this.mstEdges,
+                        considerVerts : Edge.GetIncidentVertices( incidentEdges ),
+                        considerEdges : incidentEdges
                     );
                     break;
                 }
@@ -97,12 +91,8 @@ public class PrimsAlgorithm : LoggedAlgorithm
         this.AddStep(
             StepType.FINISHED,
             "Prim's Algorithm finished.",
-            new List< Vertex >( this.mstVertices ),
-            new List< Edge >( this.mstEdges ),
-            null,
-            null,
-            null,
-            null
+            resultVerts : this.mstVertices,
+            resultEdges : this.mstEdges
         );
     }
 

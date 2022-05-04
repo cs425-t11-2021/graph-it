@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+// from https://answers.unity.com/questions/1013011/convert-recttransform-rect-to-screen-space.html
+
 using UnityEngine;
 
-// https://answers.unity.com/questions/1013011/convert-recttransform-rect-to-screen-space.html
-
+// Extension to the Unity RectTransform class that adds a function to return a rect in screen coordinates.
 public static class RectTransformExtension
 {
     public static Rect GetScreenRect(this RectTransform transform)

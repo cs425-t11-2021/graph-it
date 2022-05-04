@@ -1,32 +1,12 @@
 //All code developed by Team 11
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 
-// Struct which stores a instance of graph datastructure along with its associated Unity objects
-public class GraphInstance
-{
-    public uint id;
-    public Graph graph;
-    public Transform container;
-    public List<VertexObj> vertexObjs;
-    public List<EdgeObj> edgeObjs;
-    public AlgorithmManager algorithmManager;
-
-    public GraphInstance(Transform container, uint id, AlgorithmManager algoMan, Graph existingGraph = null)
-    {
-        this.id = id;
-        this.graph = existingGraph ?? new Graph();
-        this.vertexObjs = new List<VertexObj>();
-        this.edgeObjs = new List<EdgeObj>();
-        this.container = container;
-        this.algorithmManager = algoMan;
-    }
-}
-
-// Central class for managing the graph instance, creation and deletion of graph objects
+// Central class for managing the graph instance, creation and deletion of graph objects. This class contains utility functions that are needed for 
+// various other modules in the program such as functions to find the Unity visualization object that correspond to each component in the graph data structure.
 public class Controller : SingletonBehavior<Controller>
 {
     // Prefabs for the unity vertex and edge objects
@@ -35,8 +15,6 @@ public class Controller : SingletonBehavior<Controller>
     [SerializeField] public GameObject edgeTemplatePrefab;
     // Mask of Collider Layers that should receive mouse input
     [SerializeField] private LayerMask clickableLayers;
-
-    [SerializeField] public Color[] algorithmResultColors;
     
     // List of currently available graph instances
     private List<GraphInstance> instances = new List<GraphInstance>();
@@ -280,7 +258,7 @@ public class Controller : SingletonBehavior<Controller>
 
         // Update the graph ds
         if (updateDS)
-            Controller.Singleton.Graph.Remove(vertexObj.Vertex);
+            Singleton.Graph.Remove(vertexObj.Vertex);
         this.activeGraphInstance.vertexObjs.Remove(vertexObj);
         Destroy(vertexObj.gameObject);
         Logger.Log("Removed a vertex from the current graph instance.", this, LogType.INFO);
@@ -291,7 +269,7 @@ public class Controller : SingletonBehavior<Controller>
 
     public void RemoveEdge(EdgeObj edgeObj, bool updateDS = true, bool invokeEvents = true) {
         if (updateDS)
-            Controller.Singleton.Graph.Remove(edgeObj.Edge);
+            Singleton.Graph.Remove(edgeObj.Edge);
         this.activeGraphInstance.edgeObjs.Remove(edgeObj);
         Destroy(edgeObj.transform.parent.gameObject);
         Logger.Log("Removed an edge from the current graph instance.", this, LogType.INFO);
@@ -310,7 +288,7 @@ public class Controller : SingletonBehavior<Controller>
         }
 
         if (updateDS)
-            Controller.Singleton.Graph.Remove(vertices.Select(v => v.Vertex).ToList(), edges.Select(e => e.Edge).ToList());
+            Singleton.Graph.Remove(vertices.Select(v => v.Vertex).ToList(), edges.Select(e => e.Edge).ToList());
         
         this.OnGraphModified?.Invoke();
     }
@@ -322,7 +300,7 @@ public class Controller : SingletonBehavior<Controller>
 
     public void AddEdge(Vertex vertex1, Vertex vertex2, bool directed = false) {
         // If the requested edge already exists, return
-        if (!directed && Controller.Singleton.Graph.IsAdjacent(vertex1, vertex2))  {
+        if (!directed && Singleton.Graph.IsAdjacent(vertex1, vertex2))  {
             Logger.Log("Attempting to add undirected edge between two vertices that are already connected.", this, LogType.WARNING);
             return;
         }
@@ -333,11 +311,11 @@ public class Controller : SingletonBehavior<Controller>
             CreateCurvedEdgeObj(curvedEdge, int.MaxValue);
             GraphInfo.Singleton.UpdateGraphInfo();
         }
-        else if (Controller.Singleton.Graph.IsAdjacent(vertex2, vertex1))
+        else if (Singleton.Graph.IsAdjacent(vertex2, vertex1))
         {
             // TEMPOARY
             EdgeObj foundEdge = null;
-            foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
+            foreach (EdgeObj edgeObj in Singleton.EdgeObjs)
             {
                 if (!edgeObj.Edge.Directed && ((edgeObj.Edge.vert1 == vertex2 && edgeObj.Edge.vert2 == vertex2) || (edgeObj.Edge.vert1 == vertex1 && edgeObj.Edge.vert2 == vertex2)))
                 {

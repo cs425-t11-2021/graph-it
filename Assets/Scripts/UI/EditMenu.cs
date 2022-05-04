@@ -1,10 +1,9 @@
 //All code developed by Team 11
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
+
 using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 // Class for hosting functions called by buttons of the Edit dropdown menu, inherits from MenuButton
 public class EditMenu : MenuButton

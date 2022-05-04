@@ -1,9 +1,10 @@
 //All code developed by Team 11
 using System;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
 
+// Class which handles the selection functionality of the program. Includes functions to create a new selection, deselect,
+// and change the property of selected obejcts.
 public class SelectionManager : SingletonBehavior<SelectionManager>
 {
     // Lists to store the graph objects of currently selected vertices and edges

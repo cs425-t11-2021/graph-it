@@ -49,10 +49,10 @@ public class KruskalsAlgorithm : LoggedAlgorithm
         this.AddStep(
             StepType.CONSIDER,
             "Find minimally weighted edge that connects disjoint trees.",
+            null,
+            null,
             new List< Vertex >( this.Graph.Vertices ),
             new List< Edge >( this.mstEdges ),
-            null,
-            null,
             new List< Vertex >( Edge.GetIncidentVertices( edges ) ),
             new List< Edge >( edges )
         );
@@ -71,10 +71,10 @@ public class KruskalsAlgorithm : LoggedAlgorithm
                 this.AddStep(
                     StepType.ADD_TO_RESULT,
                     "Add minimally weighted edge with weight " + edges[ i ].Weight + " that connects disjoint trees.",
-                    new List< Vertex >( this.Graph.Vertices ),
-                    new List< Edge >( this.mstEdges ),
                     new List< Vertex >() { edges[ i ].vert1, edges[ i ].vert2 },
                     new List< Edge >() { edges[ i ] },
+                    new List< Vertex >( this.Graph.Vertices ),
+                    new List< Edge >( this.mstEdges ),
                     null,
                     null
                 );
@@ -83,10 +83,10 @@ public class KruskalsAlgorithm : LoggedAlgorithm
                 this.AddStep(
                     StepType.CONSIDER,
                     "Find minimally weighted edge that connects disjoint trees.",
+                    null,
+                    null,
                     new List< Vertex >( this.Graph.Vertices ),
                     new List< Edge >( this.mstEdges ),
-                    null,
-                    null,
                     new List< Vertex >( Edge.GetIncidentVertices( edges.GetRange( i, edges.Count - i ) ) ),
                     new List< Edge >( edges.GetRange( i, edges.Count - i ) )
                 );
@@ -99,10 +99,10 @@ public class KruskalsAlgorithm : LoggedAlgorithm
         this.AddStep(
             StepType.FINISHED,
             "Kruskal's Algorithm finished.",
+            null,
+            null,
             new List< Vertex >( this.Graph.Vertices ),
             new List< Edge >( this.mstEdges ),
-            null,
-            null,
             null,
             null
         );

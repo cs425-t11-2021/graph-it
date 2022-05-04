@@ -2,18 +2,20 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
+// Class responsible for implementing the feature of copy and paste in the front end. Links up with corresponding GraphModification
+// class in the backend.
 public class CopyManager : SingletonBehavior<CopyManager>
 {
+    // Structure to store the current clipboard
     private (uint, List<Vertex>, List<Edge>)? clipboard;
 
     private void Awake()
     {
         clipboard = null;
     }
-
+    
+    // Save the current selection, including the graph instance id, into the clipboard
     public void CopyCurrentSelection()
     {
         if (SelectionManager.Singleton.SelectedVertices.Count == 0) return;
@@ -44,7 +46,8 @@ public class CopyManager : SingletonBehavior<CopyManager>
         
         NotificationManager.Singleton.CreateNotification("Selection copied.", 3);
     }
-
+    
+    // Create all objects currently stored in the clipboard in scene
     public void Paste()
     {
         if (this.clipboard == null) return;

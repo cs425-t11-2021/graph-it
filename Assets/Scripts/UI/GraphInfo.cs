@@ -13,49 +13,6 @@ using TMPro;
 using System.Reflection;
 using Object = System.Object;
 
-[System.Serializable]
-public class GraphInfoAlgorithmAssociation
-{
-    public string algorithmClass = "";
-    public bool enabled = false;
-    public string lead = "";
-    public string activationMethod = "";
-    public string completedMethod = "";
-
-    public Action OnCompleteUpdateUI
-    {
-        get
-        {
-            return () =>
-            {
-                AlgorithmResult result = (AlgorithmResult) Type.GetType("AlgorithmManager").GetMethod(completedMethod)
-                    .Invoke(Controller.Singleton.AlgorithmManager, null);
-                
-                if (result.type == AlgorithmResultType.ERROR)
-                {
-                    GraphInfo.Singleton.SetInfoAlgorithmResult(this, lead + ": <color=red>Error</color>");
-                    NotificationManager.Singleton.CreateNotification(this.algorithmClass + "<color=red> Error: " + result.desc + "</color>", 3);
-                }
-                else if (result.type == AlgorithmResultType.SUCCESS)
-                {
-                    GraphInfo.Singleton.SetInfoAlgorithmResult( this, lead + ": " + Convert.ToString(Convert.ChangeType(result.results.First().Value.Item1, result.results.First().Value.Item2)));
-                }
-            };
-        }
-    }
-
-    public Action OnCalculatingUpdateUI
-    {
-        get
-        {
-            return () =>
-            {
-                GraphInfo.Singleton.SetInfoAlgorithmResult(this, lead + ": ...");
-            };
-        }
-    }
-}
-
 public class GraphInfo : SingletonBehavior<GraphInfo>
 {
 
@@ -92,6 +49,27 @@ public class GraphInfo : SingletonBehavior<GraphInfo>
             if (association.algorithmClass == algorithmName)
             {
                 association.OnCompleteUpdateUI();
+                RefreshGraphInfoUI();
+                return;
+            }
+        }
+    }
+
+    public void UpdateGraphInfoEstimate(Algorithm algorithm, AlgorithmManager algoMan)
+    {
+        // Fix for #126
+        if (algoMan != Controller.Singleton.AlgorithmManager)
+        {
+            return;
+        }
+        
+        string algorithmName = algorithm.GetType().ToString();
+
+        foreach (GraphInfoAlgorithmAssociation association in this.associations)
+        {
+            if (association.algorithmClass == algorithmName)
+            {
+                association.OnEstimateUpdateUI();
                 RefreshGraphInfoUI();
                 return;
             }

@@ -3,43 +3,47 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using System;
+using UnityEngine;
 
 public class Notification : MonoBehaviour
 {
     private TMP_Text textMesh;
     private float durationRemaining = 999f;
-    private Func<bool> predicate = null;
+    private bool alwaysOnBottom = false;
 
     private void Awake() {
         this.textMesh = GetComponentInChildren<TMP_Text>();
     }
 
-    public void Initiate(string content, float duration) {
+    public Notification Initiate(string content, float duration) {
         this.textMesh.text = content;
         this.durationRemaining = duration;
+        return this;
     }
 
-    public void Initiate(string content, Func<bool> predicate) {
+    public Notification Initiate(string content) {
          this.textMesh.text = content;
-         this.predicate = predicate;
+         this.durationRemaining = float.PositiveInfinity;
+         this.alwaysOnBottom = true;
+         Animator anim = GetComponent<Animator>();
+         anim.speed = 0f;
+         anim.Play("NotificationEnter", 0, 1f);
+         return this;
     }
 
     private void Update() {
-        if (predicate == null) {
-            if (durationRemaining > 0f) {
-                this.durationRemaining -= Time.deltaTime;
-            }
-            else {
-                Destroy(this.gameObject);
-                return;
+        if (durationRemaining > 0f) {
+            this.durationRemaining -= Time.deltaTime;
+
+            if (this.alwaysOnBottom)
+            {
+                this.transform.SetAsLastSibling();
             }
         }
         else {
-            if (predicate()) {
-                Destroy(this.gameObject);
-                return;
-            }
+            Destroy(this.gameObject);
+            return;
         }
+        
     }
 }

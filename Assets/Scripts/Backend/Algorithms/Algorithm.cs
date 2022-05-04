@@ -23,15 +23,6 @@ public class AlgorithmResult
     }
 }
 
-public class AlgorithmException : Exception
-{
-    public AlgorithmException() : base() { }
-    public AlgorithmException( string message ) : base( message ) { }
-    public AlgorithmException( string message, Exception inner ) : base( message, inner ) { }
-
-    protected AlgorithmException( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base( info, context ) { }
-}
-
 public abstract class Algorithm
 {
     protected AlgorithmManager AlgoManager { get; private set; }
@@ -48,6 +39,9 @@ public abstract class Algorithm
     
     // All the vertex parameters associated with an algorithm
     public Vertex[] vertexParms = null;
+
+    // All the edge parameters associated with an algorithm
+    public Edge[] edgeParms = null;
 
     public Algorithm( AlgorithmManager algoManager )
     {
@@ -98,10 +92,7 @@ public abstract class Algorithm
                 this.error = true;
                 this.AlgoManager.MarkComplete( this );
                 this.errorDesc = e.Message;
-                Logger.Log( "Algorithm Error; Finishing Thread.", this, LogType.DEBUG );
-
-                // // TODO: tell front end there was an error
-                // RunInMain.Singleton.queuedTasks.Enqueue( () => NotificationManager.Singleton.CreateNotification( this.GetType() + " <color=red>" + this.errorDesc + "</color>", 3 ) );
+                Logger.Log( string.Format("Algorithm Error: {0} Finishing Thread.", e.Message), this, LogType.ERROR );
             }
         }
         
@@ -109,6 +100,11 @@ public abstract class Algorithm
             RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoResults( this, this.AlgoManager ) );
         else if ( this.type == AlgorithmType.DISPLAY )
             RunInMain.Singleton.queuedTasks.Enqueue( () => AlgorithmsPanel.Singleton.UpdateGraphDisplayResults( this, this.vertexParms, this.AlgoManager ) );
+    }
+
+    protected void UpdateUIWithEstimate()
+    {
+        RunInMain.Singleton.queuedTasks.Enqueue( () => GraphInfo.Singleton.UpdateGraphInfoEstimate( this, this.AlgoManager ) );
     }
 
     public abstract AlgorithmResult GetResult();
@@ -148,4 +144,13 @@ public abstract class Algorithm
     }
 
     public new abstract int GetHashCode();
+}
+
+public class AlgorithmException : Exception
+{
+    public AlgorithmException() : base() { }
+    public AlgorithmException( string message ) : base( message ) { }
+    public AlgorithmException( string message, Exception inner ) : base( message, inner ) { }
+
+    protected AlgorithmException( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base( info, context ) { }
 }

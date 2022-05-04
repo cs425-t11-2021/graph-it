@@ -1,81 +1,104 @@
-using System.Reflection;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
 
+// State in the manipulation FSM representing the state in which the result of an algorithm is being displayed and step-through is enabled. All graph
+// manipulations are disabled. This state is a temporary solution.
 public class AlgorithmSteppedDisplayState : ManipulationState
 {
     private AlgorithmResult algorithmResult;
     private AlgorithmStep currentStep;
-    private List<EdgeObj> highlightedEdges;
-    private List<VertexObj> highlightedVertices;
     private List<string> infoResults;
+    private Notification notification;
 
     public override void OnStateEnter()
     {
         this.currentStep =  AlgorithmsPanel.Singleton.CurrentStep;
         this.algorithmResult = AlgorithmsPanel.Singleton.AlgorithmResult;
-        this.highlightedEdges = new List<EdgeObj>();
-        this.highlightedVertices = new List<VertexObj>();
         this.infoResults = new List<string>();
 
+        AlgorithmsPanel.Singleton.stepPanelTitle.text = AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName + " Steps";
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(true);
 
         foreach (EdgeObj edgeObj in Controller.Singleton.EdgeObjs)
         {
+            InWorldHover labelCreator = edgeObj.GetComponent<InWorldHover>();
+
             bool contained = false;
             if (this.currentStep.considerEdges?.Contains(edgeObj.Edge) ?? false)
             {
-                edgeObj.AlgorithmResultLevel = 1;
-                this.highlightedEdges.Add(edgeObj);
+                edgeObj.visualsAnimator.ChangeState("algorithm_considering");
                 contained = true;
+
+                labelCreator.enabled = true;
+                labelCreator.Label = "Edge under consideration";
             }
             if (this.currentStep.resultEdges?.Contains(edgeObj.Edge) ?? false)
             {
-                edgeObj.AlgorithmResultLevel = 3;
-                this.highlightedEdges.Add(edgeObj);
+                edgeObj.visualsAnimator.ChangeState("algorithm_result");
                 contained = true;
+                
+                labelCreator.enabled = true;
+                labelCreator.Label = "Edge in result";
             }
             if (this.currentStep.newEdges?.Contains(edgeObj.Edge) ?? false)
             {
-                edgeObj.AlgorithmResultLevel = 2;
-                this.highlightedEdges.Add(edgeObj);
+                edgeObj.visualsAnimator.ChangeState("algorithm_new");
                 contained = true;
+                
+                labelCreator.enabled = true;
+                labelCreator.Label = "Edge added to result";
             }
             
             if (!contained)
             {
-                edgeObj.AlgorithmResultLevel = 0;
+                edgeObj.visualsAnimator.ChangeState("algorithm_none");
+                labelCreator.enabled = false;
             }
         }
         
         foreach (VertexObj vertexObj in Controller.Singleton.VertexObjs)
         {
+            InWorldHover labelCreator = vertexObj.GetComponent<InWorldHover>();
+            
             bool contained = false;
-            if (this.currentStep.considerVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.considerVerts?.Contains(vertexObj.Vertex) ?? false)
             {
-                vertexObj.AlgorithmResultLevel = 1;
-                this.highlightedVertices.Add(vertexObj);
+                vertexObj.visualsAnimator.ChangeState("algorithm_considering");
                 contained = true;
+                
+                labelCreator.enabled = true;
+                labelCreator.Label = "Vertex under consideration";
             }
-            if (this.currentStep.resultVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.resultVerts?.Contains(vertexObj.Vertex) ?? false)
             {
-                vertexObj.AlgorithmResultLevel = 3;
-                this.highlightedVertices.Add(vertexObj);
+                vertexObj.visualsAnimator.ChangeState("algorithm_result");
                 contained = true;
+                
+                labelCreator.enabled = true;
+                labelCreator.Label = "Vertex in result";
             }
-            if (this.currentStep.newVertices?.Contains(vertexObj.Vertex) ?? false)
+            if (this.currentStep.newVerts?.Contains(vertexObj.Vertex) ?? false)
             {
-                vertexObj.AlgorithmResultLevel = 2;
-                this.highlightedVertices.Add(vertexObj);
+                vertexObj.visualsAnimator.ChangeState("algorithm_new");
                 contained = true;
+                
+                labelCreator.enabled = true;
+                labelCreator.Label = "Vertex added to result";
+            }
+            if (this.currentStep.paramVerts?.Contains(vertexObj.Vertex) ?? false)
+            {
+                vertexObj.visualsAnimator.ChangeState("algorithm_parameter");
+                contained = true;
+                
+                labelCreator.enabled = true;
+                labelCreator.Label = "Vertex parameter";
             }
             
             if (!contained)
             {
-                vertexObj.AlgorithmResultLevel = 0;
+                vertexObj.visualsAnimator.ChangeState("algorithm_none");
+                labelCreator.enabled = false;
             }
         }
         
@@ -100,14 +123,30 @@ public class AlgorithmSteppedDisplayState : ManipulationState
                 AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(true);
             }
         }
+        
+        this.notification = NotificationManager.Singleton.CreateNotification(string.Format("Showing <#0000FF>{0}</color> results.", AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm.displayName));
     }
 
     public override void OnStateExit()
     {
-        this.highlightedEdges.ForEach(e => e.AlgorithmResultLevel = 0);
-        this.highlightedVertices.ForEach(v => v.AlgorithmResultLevel = 0);
+        Controller.Singleton.EdgeObjs.ForEach(e =>
+        {
+            e.visualsAnimator.ChangeState("default");
+            e.GetComponent<InWorldHover>().enabled = false;
+        });
+        Controller.Singleton.VertexObjs.ForEach(v =>
+        {
+            v.visualsAnimator.ChangeState("default");
+            v.GetComponent<InWorldHover>().enabled = false;
+        });
 
         AlgorithmsPanel.Singleton.stepByStepPanel.SetActive(false);
         AlgorithmsPanel.Singleton.extraInfoPanel.SetActive(false);
+        
+        if (this.notification != null)
+        {
+            Controller.Destroy(this.notification.gameObject);
+            this.notification = null;
+        }
     }
 }

@@ -1,70 +1,11 @@
 //All code developed by Team 11
+
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using Object = System.Object;
-
-public enum ResultType { EdgeList, VertexList }
-
-[Serializable]
-public struct DisplayAlgorithmExtraInfo
-{
-    public string lead;
-    public string getInfoMethod;
-}
-
-[Serializable]
-public class GraphDisplayAlgorithmAssociation
-{
-    public string algorithmClass = "";
-    public string displayName = "";
-    public bool enabled = false;
-    public int requiredVertices = 0;
-    public string activationMethod = "";
-    public string completedMethod = "";
-    public string description = "";
-    // public string[] results;
-    // public DisplayAlgorithmExtraInfo[] extraInfo;
-    
-    [HideInInspector] public ToggleButton activationButton;
-
-    public Action<Vertex[]> OnCompleteUpdateDisplay
-    {
-        get
-        {
-            return (vertexParms) =>
-            {
-                AlgorithmResult result = (AlgorithmResult) Type.GetType("AlgorithmManager").GetMethod(completedMethod)
-                    .Invoke(Controller.Singleton.AlgorithmManager, (Object[]) vertexParms);
-                
-                if (result.type == AlgorithmResultType.ERROR)
-                {
-                    Logger.Log("Graph display algorithm " + algorithmClass + " errored.", this, LogType.ERROR);
-                    NotificationManager.Singleton.CreateNotification(string.Format("{0} <color=red>Error: {1}</color>", algorithmClass, result.desc), 3);
-                }
-                else
-                {
-                    foreach (KeyValuePair<string, (object, Type)> kvp in result.results)
-                    {
-                        
-                    }
-                    
-                    AlgorithmsPanel.Singleton.StoreAlgorithmResult(this.algorithmClass, result, vertexParms);
-                    if (AlgorithmsPanel.Singleton.CurrentlySelectedAlgorithm == this) {
-                        AlgorithmsPanel.Singleton.AlgorithmResult = result;
-                        AlgorithmsPanel.Singleton.AlgorithmVertexPrams = vertexParms;
-                    }
-
-                    NotificationManager.Singleton.CreateNotification("<#0000FF>" + this.algorithmClass + "</color> finished.", 3);
-                }
-            };
-        }
-    }
-}
 
 public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 {
@@ -84,6 +25,7 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     [SerializeField] public GameObject extraInfoPanel;
     [SerializeField] private GameObject stepByStepToggle;
     [SerializeField] public GameObject stepByStepPanel;
+    [SerializeField] public TMP_Text stepPanelTitle;
     [SerializeField] private TMP_Text stepAlgorithmText;
     [SerializeField] private ToggleButton autoStepThroughToggle;
 
@@ -287,10 +229,6 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
         }
     }
 
-    // public void DisplayAlgorithmResult() {
-    //     ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
-    // }
-
     public void ClearAlgorithmResults() {
         this.algorithmResults = new AlgorithmResult[this.associations.Length];
         this.algorithmVertexPrams = new Vertex[this.associations.Length][];
@@ -306,8 +244,9 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             association.activationButton.UpdateStatus(association.activationButton.Checked);
         }
 
-        if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState) {
+        if (ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState || ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmSteppedDisplayState) {
             Toolbar.Singleton.EnterViewMode();
+            this.resultButton.UpdateStatus(false);
             this.ExtraInfoClosed = false;
         }
     }
@@ -315,8 +254,8 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void ToggleAlgorithmResultDisplay() {
         if (this.resultButton.Checked) {
             if (this.StepByStep) {
+                GoToFirstStep();
                 GetNextStep();
-                // ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmSteppedDisplayState;
             }
             else {
                 ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
@@ -331,9 +270,17 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
     public void SetStepByStep(bool enabled)
     {
         this.StepByStep = enabled;
-        Toolbar.Singleton.EnterViewMode();
         this.ExtraInfoClosed = false;
-        this.resultButton.UpdateStatus(false);
+
+        if (!enabled && ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmSteppedDisplayState)
+        {
+            ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
+        }
+        else if (enabled && ManipulationStateManager.Singleton.ActiveState == ManipulationState.algorithmDisplayState)
+        {
+            GoToFirstStep();
+            GetNextStep();
+        }
     }
 
     public void GetNextStep() {
@@ -414,9 +361,10 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
             GetNextStep();
             yield return new WaitForSeconds(.5f);
         }
+
+        this.autoStepThroughPlaying = false;
         this.autoStepThroughToggle.UpdateStatus(false);
     }
-    
 
     public void Search(string term)
     {
@@ -453,8 +401,17 @@ public class AlgorithmsPanel : SingletonBehavior<AlgorithmsPanel>
 
     public void CloseStepByStep()
     {
-        Toolbar.Singleton.EnterViewMode();
-        this.resultButton.UpdateStatus(false);
+        if (this.ExtraInfoClosed)
+        {
+            Toolbar.Singleton.EnterViewMode();
+            this.resultButton.UpdateStatus(false);
+        }
+        else
+        {
+            // ManipulationStateManager.Singleton.ActiveState = ManipulationState.algorithmDisplayState;
+            this.stepByStepToggle.GetComponent<Toggle>().isOn = false;
+        }
+        
         this.ExtraInfoClosed = false;
     }
 

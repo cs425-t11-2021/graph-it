@@ -1,4 +1,4 @@
-// State for quickly creating vertices, left click on graph to create a new vertex
+// Manipulation state enabling quickly creating vertices, selected from the toolbar. Left click on graph to create a new vertex.
 public class VertexCreationState : ManipulationState
 {
     public override void OnStateEnter()

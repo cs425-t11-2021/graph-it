@@ -1,9 +1,9 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+// Class responsible for loading in dynamic resources from files on disk. Examples of such resources include custom vertex sprites
+// and algorithm association files (still WIP)
 public class ResourceManager : SingletonBehavior<ResourceManager>
 {
 
@@ -11,9 +11,10 @@ public class ResourceManager : SingletonBehavior<ResourceManager>
 
     private void Awake()
     {
-        LoadVertexSprites();
+        // LoadVertexSprites();
     }
-
+    
+    // Load custom vertex sprites from the Stream Assets folder
     public void LoadVertexSprites()
     {
         List<Sprite> vertexSprites = new List<Sprite>();
@@ -31,7 +32,7 @@ public class ResourceManager : SingletonBehavior<ResourceManager>
             if (file.Extension == ".png")
             {
                 //Converts desired path into byte array
-                byte[] pngBytes = System.IO.File.ReadAllBytes(file.FullName);
+                byte[] pngBytes = File.ReadAllBytes(file.FullName);
  
                 //Creates texture and loads byte array data to create image
                 Texture2D tex = new Texture2D(2, 2);

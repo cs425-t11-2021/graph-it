@@ -1,6 +1,8 @@
 //All code developed by Team 11
 using System.Collections;
 using System.Collections.Generic;
+//code adapted and modified from this tutorial: https://www.youtube.com/watch?v=_wpnqOnWELY
+
 using UnityEngine;
 
 public class HelpMenu : MenuButton
